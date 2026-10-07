@@ -9,3 +9,4 @@ test-results/
 !.env.example
 src/generated/
 *.tsbuildinfo
+.claude/settings.local.json
