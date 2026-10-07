@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client"
+  output = "../src/generated/prisma"
+}
+datasource db {
+  provider = "postgresql"
+}
+enum AccountStatus {
+  ACTIVE
+  SUSPENDED
+}
+enum MembershipStatus {
+  ACTIVE
+  REVOKED
+}
+enum MembershipRole {
+  FARMER
+  AGENT
+  ADMIN
+}
+enum OrganizationKind {
+  PERSONAL
+  ORGANIZATION
+}
+model User {
+  id String @id @default(uuid()) @db.Uuid
+  authSubject String @unique @db.Uuid
+  status AccountStatus @default(ACTIVE)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  memberships Membership[]
+  audits AuditEvent[]
+}
+model Organization {
+  id String @id @default(uuid()) @db.Uuid
+  name String @db.VarChar(120)
+  kind OrganizationKind
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  memberships Membership[]
+  audits AuditEvent[]
+}
+model Membership {
+  userId String @db.Uuid
+  organizationId String @db.Uuid
+  role MembershipRole
+  status MembershipStatus @default(ACTIVE)
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  @@id([userId, organizationId])
+  @@index([organizationId, status])
+}
+model AuditEvent {
+  id String @id @default(uuid()) @db.Uuid
+  actorId String @db.Uuid
+  tenantId String @db.Uuid
+  action String @db.VarChar(80)
+  targetId String? @db.Uuid
+  requestId String @db.Uuid
+  occurredAt DateTime @default(now()) @db.Timestamptz(6)
+  actor User @relation(fields: [actorId], references: [id], onDelete: Restrict)
+  tenant Organization @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  @@unique([tenantId, requestId, action])
+  @@index([tenantId, occurredAt, id])
+}

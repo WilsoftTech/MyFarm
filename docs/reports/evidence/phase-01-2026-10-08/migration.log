@@ -1,0 +1,13 @@
+
+> myfarm@0.1.0 db:migrate
+> prisma migrate deploy
+
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+Datasource "db": PostgreSQL database "myfarm_phase01_test", schema "public" at "127.0.0.1:55431"
+
+1 migration found in prisma/migrations
+
+
+No pending migrations to apply.

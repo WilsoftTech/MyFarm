@@ -1,0 +1,1 @@
+{"verdict":"PASS","sourceDatabase":"myfarm_phase01_test","restoredDatabase":"myfarm_phase01_restore","before":{"users":0,"organizations":1,"memberships":0,"audits":0},"after":{"users":0,"organizations":1,"memberships":0,"audits":0},"syntheticRecordRestored":true,"rlsRestored":true}
