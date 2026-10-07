@@ -1,4 +1,6 @@
 # MyFarm
+Keep accurate farm records, track income & expenses, manage resources, monitor performance and improve farm profitability.
+
 Phase 1 engineering foundation. Supabase PostgreSQL + Supabase Auth, Next.js App Router, strict TypeScript and Prisma. Phase 2 farm registration is not implemented.
 
 Read [project status](docs/PROJECT-STATUS.md), [Phase 1](docs/phases/phase-01-engineering-foundation.md) and [local setup](docs/engineering/foundation-local-setup.md).
