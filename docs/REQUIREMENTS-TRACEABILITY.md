@@ -1,16 +1,16 @@
 # Requirements traceability
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — content/scope/status/structure/link review.
-- Implementation status: REFERENCE ONLY — N/A (no directly implementable scope).
-- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase 00 session.
-- Related phase/task IDs: Phase 00 session; MYF-P00-T001 through MYF-P00-T010; future phase references remain pending.
-- Verified completed work: Reference/protocol/navigation/report review performed; no phase completion implied.
-- Remaining work/blockers: Keep aligned with verified task/evidence changes; Phase 00 discovery gate still unmet.
-- Evidence/report links: [Phase 00 closeout](reports/phase-00-closeout-2026-10-08.md); [every-document review](reports/phase-00-document-review-2026-10-08.md).
+- Documentation review: REVIEWED — Phase01 status, applicability and evidence/link review; affected content reconciled; no independent farmer validation or hosted verification.
+- Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
+- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase01 implementation session.
+- Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced.
+- Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
+- Remaining work/blockers: Maintain alignment after Phase01 live verification; historical results stay historical and source body remains immutable.
+- Evidence/report links: [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
-Status date: 2026-10-08. Grouped explicit capabilities map to unique requirements/tasks/acceptance tests below. Phase 0 preparation is PARTIALLY COMPLETE — 0% (no fully verified task); Phases 1–24 remain NOT STARTED — 0%. Proposed safeguards/schema are identified in phase F and [decisions](DECISION-LOG.md). Paragraph locators refer to [complete normalized source](reports/source-extract.md), not guessed page numbers.
+Status date: 2026-10-08. Grouped explicit capabilities map to unique requirements/tasks/acceptance tests below. Phase0 is COMPLETED100% by owner acceptance, without empirical research verification. Phase1 is BLOCKED30.77% (4/13 verified tasks); Phases2–24 remain NOT STARTED0%. Proposed safeguards/schema are identified in phase F and [decisions](DECISION-LOG.md). Paragraph locators refer to [complete normalized source](reports/source-extract.md), not guessed page numbers.
 
 ## Phase 00 Product Discovery and Scope Definition
 
@@ -24,10 +24,10 @@ Status date: 2026-10-08. Grouped explicit capabilities map to unique requirement
 
 | ID | Source | Requirement | Phase/task | Acceptance | Test expectation | Status |
 |---|---|---|---|---|---|---|
-| MYF-P01-R001 | P0089–P0110 | Use Next.js App Router, React, TypeScript, Tailwind, shadcn/ui, Zod and React Hook Form with farmer PWA and agent/admin boundaries. | [Phase 1](phases/phase-01-engineering-foundation.md) / MYF-P01-T001, MYF-P01-T002, MYF-P01-T003 | MYF-P01-AC001: Validated typed form works; UI cannot directly call persistence. | Invalid form input, component behavior and import-boundary review. | NOT STARTED |
-| MYF-P01-R002 | P0111–P0126 | Use PostgreSQL/Neon, Prisma, Vercel, private object-storage interface; Vitest, React Testing Library, Playwright; structured logs/errors/audits/health. | [Phase 1](phases/phase-01-engineering-foundation.md) / MYF-P01-T004, MYF-P01-T005, MYF-P01-T006 | MYF-P01-AC002: Isolated DB connects; private storage and redacted diagnostics demonstrated. | Connectivity, health degradation, private file and secret-log tests. | NOT STARTED |
-| MYF-P01-R003 | P0130–P0147 | Separate UI → application → domain → repository → database; plan recordFarmExpense, calculateEnterpriseProfit, recordHarvest, closeSeason, transferInventory. | [Phase 1](phases/phase-01-engineering-foundation.md) / MYF-P01-T007, MYF-P01-T008, MYF-P01-T009 | MYF-P01-AC003: Domain functions test without browser/DB; future interfaces do not implement later scope. | Domain unit test and dependency review. | NOT STARTED |
-| MYF-P01-R004 | P0148–P0164 | Provide lint, typecheck, test, build, CI, migration workflow, auth, error handling and basic security. | [Phase 1](phases/phase-01-engineering-foundation.md) / MYF-P01-T010, MYF-P01-T011, MYF-P01-T012 | MYF-P01-AC004: All four commands exit zero with logs; expired session denied; migration rehearsed. | CI run, clean migration, authentication and error integration tests. | NOT STARTED |
+| MYF-P01-R001 | P0089–P0110 | Use Next.js App Router, React, TypeScript, Tailwind, shadcn/ui, Zod and React Hook Form with farmer PWA and agent/admin boundaries. | [Phase 1](phases/phase-01-engineering-foundation.md) / MYF-P01-T001, MYF-P01-T002, MYF-P01-T003 | MYF-P01-AC001: Validated typed form works; UI cannot directly call persistence. | Invalid form input, component behavior and import-boundary review. | COMPLETED — 100% of linked T001–T003; AC001 passes locally; [evidence](reports/phase-01-closeout-2026-10-08.md) |
+| MYF-P01-R002 | P0111–P0126 | Use PostgreSQL/Supabase, Prisma, Vercel, private object-storage interface; Vitest, React Testing Library, Playwright; structured logs/errors/audits/health. | [Phase 1](phases/phase-01-engineering-foundation.md) / MYF-P01-T004, MYF-P01-T005, MYF-P01-T006 | MYF-P01-AC002: Isolated DB connects; private storage and redacted diagnostics demonstrated. | Connectivity, health degradation, private file and secret-log tests. | BLOCKED — 33.33% (T004 of T004–T006); hosted storage/provider AC pending; [evidence](reports/phase-01-closeout-2026-10-08.md) |
+| MYF-P01-R003 | P0130–P0147 | Separate UI → application → domain → repository → database; plan recordFarmExpense, calculateEnterpriseProfit, recordHarvest, closeSeason, transferInventory. | [Phase 1](phases/phase-01-engineering-foundation.md) / MYF-P01-T007, MYF-P01-T008, MYF-P01-T009 | MYF-P01-AC003: Domain functions test without browser/DB; future interfaces do not implement later scope. | Domain unit test and dependency review. | PARTIALLY COMPLETE — 0% of linked tasks (upstream chain pending); local boundary tests pass; [evidence](reports/phase-01-closeout-2026-10-08.md) |
+| MYF-P01-R004 | P0148–P0164 | Provide lint, typecheck, test, build, CI, migration workflow, auth, error handling and basic security. | [Phase 1](phases/phase-01-engineering-foundation.md) / MYF-P01-T010, MYF-P01-T011, MYF-P01-T012 | MYF-P01-AC004: All four commands exit zero with logs; expired session denied; migration rehearsed. | CI run, clean migration, authentication and error integration tests. | BLOCKED — 0% of linked tasks; local four gates pass, hosted CI/auth pending; [evidence](reports/phase-01-closeout-2026-10-08.md) |
 
 ## Phase 02 Farmer Identity and Farm Registry
 
@@ -218,7 +218,7 @@ Status date: 2026-10-08. Grouped explicit capabilities map to unique requirement
 | MYF-U-R001 | Pasted request §§1–2 | Whole source, MyFarm, Uganda/global, poultry/crop, assumptions separately | P00 tasks; source/decision reports | Complete extract, no invented research | Source/terminology comparison | NOT STARTED |
 | MYF-U-R002 | Pasted request §§3–5,8 | Required files and A–O phase specs with proposed schemas/tasks | Every phase final task | 61 required files; 25 A–O specs | File/section/ID/link audit | NOT STARTED |
 | MYF-U-R003 | Pasted request §6 | Deterministic money/stock, idempotent sync, authorization and safe AI | P04/P05/P07/P11/P12/P17 feature tasks | Invariants defined with objective test oracles | Money/stock/replay/IDOR/confirmation tests | NOT STARTED |
-| MYF-U-R004 | Pasted request §§7,15 | Documentation-only now; future scope outside MVP | Every phase final task | Only Markdown documentation written | Workspace scope inspection | NOT STARTED |
+| MYF-U-R004 | Pasted request §§7,15 | Documentation-only now; future scope outside MVP | Every phase final task | Only Markdown documentation written | Workspace scope inspection | REFERENCE ONLY — historical documentation-only assignment superseded by explicit Phase1 authorization |
 | MYF-U-R005 | Pasted request §§9–11 | Agent protocol, four commands, verified status and closeout | P01 quality task and all audit tasks | Truthful command evidence; initial NOT STARTED | CI/status/closeout review | NOT STARTED |
 | MYF-U-R006 | Pasted request §§12–16 | Traceability/audit/final report | Documentation audit; all phase final tasks | Requirements map to task/AC/test/status | Source/dependency/coverage audit | NOT STARTED |
 
@@ -228,4 +228,4 @@ These statuses describe implementation. Authored docs do not complete phase task
 
 [Research register](product/research-evidence-register.md) contains planning facts only, no accepted farmer evidence. District is Rukungiri. [Interim closeout](reports/phase-00-closeout-2026-10-08.md) maps T001–T010 and all three ACs; none passes in full yet. Source/user control rows remain implementation pending; updated metadata does not claim later tasks completed.
 
-Phase0 closure exception: [owner acceptance](reports/phase-00-owner-approval-2026-10-08.md). Phase1 verified implementation remains pending.
+Phase0 closure exception: [owner acceptance](reports/phase-00-owner-approval-2026-10-08.md). Phase1 current evidence is in [closeout](reports/phase-01-closeout-2026-10-08.md); T001–T004 verified complete, T005–T013 partial/unverified.

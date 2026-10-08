@@ -1,13 +1,13 @@
 # Coding standards
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — status/applicability/structure/link review; no runtime or independent product validation.
-- Implementation status: REFERENCE ONLY — N/A (no directly implementable scope).
-- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase 00 session.
-- Related phase/task IDs: Phase 00 session; MYF-P00-T001 through MYF-P00-T010; future phase references remain pending.
-- Verified completed work: Reference/protocol/navigation/report review performed; no phase completion implied.
-- Remaining work/blockers: Keep aligned with verified task/evidence changes; Phase 00 discovery gate still unmet.
-- Evidence/report links: [Phase 00 closeout](../reports/phase-00-closeout-2026-10-08.md); [every-document review](../reports/phase-00-document-review-2026-10-08.md).
+- Documentation review: REVIEWED — Phase01 status, applicability and evidence/link review; affected content reconciled; no independent farmer validation or hosted verification.
+- Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
+- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase01 implementation session.
+- Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced.
+- Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
+- Remaining work/blockers: Maintain alignment after Phase01 live verification; historical results stay historical and source body remains immutable.
+- Evidence/report links: [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
 Future implementation uses strict TypeScript with explicit DTOs/schema boundaries. Domain functions accept validated primitives/value objects and return deterministic results/errors; no React, provider HTTP or Prisma dependency in domain logic. Application services orchestrate authorization, transactions and adapters. Repositories require a verified access context and scoped parents, never optional tenant filters.

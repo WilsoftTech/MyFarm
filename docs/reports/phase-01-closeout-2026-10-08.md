@@ -1,5 +1,15 @@
 # Phase 01 closeout — 2026-10-08
 
+<!-- MYFARM-STATUS-START -->
+- Documentation review: REVIEWED — Phase01 status, applicability and evidence/link review; affected content reconciled; no independent farmer validation or hosted verification.
+- Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
+- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase01 implementation session.
+- Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced.
+- Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
+- Remaining work/blockers: Maintain alignment after Phase01 live verification; historical results stay historical and source body remains immutable.
+- Evidence/report links: [Phase01 closeout](phase-01-closeout-2026-10-08.md); [every-document review](phase-01-document-review-2026-10-08.md).
+<!-- MYFARM-STATUS-END -->
+
 ## Phase identity and implementation scope
 
 Phase 01 Engineering Foundation, Africa/Nairobi. Owner: the user; execution: Codex on Windows at D:\Myfarm, Node24.13.0/npm11.6.2. No Git repository/commit/remote exists. The user accepted Phase0 and explicitly authorized Phase1, then selected **Supabase PostgreSQL + Supabase Auth**. [Owner acceptance](phase-00-owner-approval-2026-10-08.md) preserves the lack of empirical farmer evidence.
@@ -40,7 +50,7 @@ AC001 PASS locally: typed validated form, component/browser behavior and import 
 
 Migration **202610080001_foundation** creates User, Organization, Membership, AuditEvent, UUIDs/status/role enums, unique membership and audit request/action keys, restricted foreign-key deletes, scoped indexes and RLS on all four tables. No farmer/money/stock/offline tables.
 
-Fresh install and replay applied only to PostgreSQL17 database myfarm_phase01_test, Docker container myfarm-phase01-verification, localhost55431. Both exit0; replay has no pending migrations. [Migration log](evidence/phase-01-2026-10-08/migration.log). Hosted migration NOT RUN. Upgrade from prior schema N/A: no previous application exists.
+Fresh install and replay applied only to PostgreSQL17 database myfarm_phase01_test, Docker container myfarm-phase01-verification, localhost55431. Both exit0; replay has no pending migrations. [Migration log](evidence/phase-01-2026-10-08/migration.log). The dedicated test container was stopped after evidence collection; data is retained for later tests. Hosted migration NOT RUN. Upgrade from prior schema N/A: no previous application exists.
 
 Synthetic backup/restore used pg_dump/pg_restore into myfarm_phase01_restore inside that container. Source/restored counts users0/organizations1/memberships0/audits0; synthetic organization and RLS restored. Source synthetic row then removed. [Restore log](evidence/phase-01-2026-10-08/restore.log). This does not establish production RPO/RTO. Empty test environment rollback is disposal/recreation; persistent environments require backup/restore, not table drops.
 

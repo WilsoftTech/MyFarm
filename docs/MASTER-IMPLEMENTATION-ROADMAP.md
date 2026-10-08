@@ -1,13 +1,13 @@
 # Master implementation roadmap
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — content/scope/status/structure/link review.
-- Implementation status: REFERENCE ONLY — N/A (no directly implementable scope).
-- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase 00 session.
-- Related phase/task IDs: Phase 00 session; MYF-P00-T001 through MYF-P00-T010; future phase references remain pending.
-- Verified completed work: Reference/protocol/navigation/report review performed; no phase completion implied.
-- Remaining work/blockers: Keep aligned with verified task/evidence changes; Phase 00 discovery gate still unmet.
-- Evidence/report links: [Phase 00 closeout](reports/phase-00-closeout-2026-10-08.md); [every-document review](reports/phase-00-document-review-2026-10-08.md).
+- Documentation review: REVIEWED — Phase01 status, applicability and evidence/link review; affected content reconciled; no independent farmer validation or hosted verification.
+- Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
+- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase01 implementation session.
+- Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced.
+- Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
+- Remaining work/blockers: Maintain alignment after Phase01 live verification; historical results stay historical and source body remains immutable.
+- Evidence/report links: [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
 Source roadmap remains authoritative. Preserve Phase 0–24 in order; cumulative gates apply. Phase 8 closes MVP, Phase 9 validates field use. No release dates or implementation approvals are inferred.
@@ -95,3 +95,7 @@ Phase 0 PARTIALLY COMPLETE — 0% (0/10 fully verified tasks). Rukungiri distric
 ## Current owner authorization
 
 Phase0 is **COMPLETED — 100% by explicit owner acceptance**, with no empirical farmer research claimed. Phase1 is authorized immediately. This supersedes earlier Phase0-only/advance-gate restrictions in this document. Read [owner approval](reports/phase-00-owner-approval-2026-10-08.md). Later-phase implementation and technical-check waivers are not implied.
+
+## Current implementation session
+
+Phase0 owner-accepted100%; Phase1 BLOCKED30.77% (T001–T004 verified, T005–T013 pending/partial), explicitly authorized. Supabase PostgreSQL + Supabase Auth replaces Neon in active implementation, without modifying the source extract. Finish live provider/storage/CI/deployment evidence before Phase1 closes. No Phase2 advancement. [Closeout](reports/phase-01-closeout-2026-10-08.md).

@@ -1,20 +1,20 @@
 # Decision log
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — content/scope/status/structure/link review.
-- Implementation status: REFERENCE ONLY — N/A (no directly implementable scope).
-- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase 00 session.
-- Related phase/task IDs: Phase 00 session; MYF-P00-T001 through MYF-P00-T010; future phase references remain pending.
-- Verified completed work: Reference/protocol/navigation/report review performed; no phase completion implied.
-- Remaining work/blockers: Keep aligned with verified task/evidence changes; Phase 00 discovery gate still unmet.
-- Evidence/report links: [Phase 00 closeout](reports/phase-00-closeout-2026-10-08.md); [every-document review](reports/phase-00-document-review-2026-10-08.md).
+- Documentation review: REVIEWED — Phase01 status, applicability and evidence/link review; affected content reconciled; no independent farmer validation or hosted verification.
+- Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
+- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase01 implementation session.
+- Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced.
+- Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
+- Remaining work/blockers: Maintain alignment after Phase01 live verification; historical results stay historical and source body remains immutable.
+- Evidence/report links: [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
-Date: 2026-10-08, Africa/Nairobi. Human owner roles below are **unassigned**, not invented personnel. No field research or engineering implementation has been verified. [ADRs](architecture/architecture-decisions.md) explain tradeoffs.
+Date: 2026-10-08, Africa/Nairobi. Human owner roles below are **unassigned**, not invented personnel. No field research has been verified. Phase1 local engineering/test evidence is in the current closeout. [ADRs](architecture/architecture-decisions.md) explain tradeoffs.
 
 ## Confirmed source/request constraints
 
-MyFarm naming; Uganda first/global extensibility; initial poultry/crops; source phase order 0–24; MVP closes 8 and pilot 9; Next.js/React/TypeScript/Tailwind/shadcn/RHF/Zod, server domain services, Prisma/PostgreSQL/Neon, Vercel/private storage, Dexie/PWA/custom sync, Vitest/RTL/Playwright; deterministic finance, stock/wallet histories, server authorization and safe AI/voice. Current user authorization covers Phase 0 research/preparation and status updates only; Phase 1 is not authorized. These constraints do not select auth/provider/price/schema policy.
+MyFarm naming; Uganda first/global extensibility; initial poultry/crops; source phase order 0–24; MVP closes 8 and pilot 9; Next.js/React/TypeScript/Tailwind/shadcn/RHF/Zod, server domain services, Prisma/PostgreSQL/Supabase, Vercel/private storage, Dexie/PWA/custom sync, Vitest/RTL/Playwright; deterministic finance, stock/wallet histories, server authorization and safe AI/voice. Current user authorization closes Phase0 by owner acceptance and authorizes Phase1. Supabase PostgreSQL + Supabase Auth is selected. Production/paid services and later phases are not implied.
 
 ## Proposals, assumptions and scope interpretations
 
@@ -41,8 +41,8 @@ Q01 is **PARTIALLY RESOLVED**: user selected Rukungiri. Remaining components and
 |---|---|---|---|---|
 | Q01 | First district confirmed: Rukungiri (user, 2026-10-08). Remaining: interviewer, segment validation, recruitment size/window/route, consent/storage and evidence threshold | Product/research owner | 0 | Approve sampling/consent and real evidence-backed scope before engineering |
 | Q02 | Languages, literacy/accessibility, shared devices, supported phone/browser and charging | Product/research owner | 0–1 | Observe actual devices/users; prioritize supported UI and recovery choices |
-| Q03 | Authentication provider, phone/email credential flow, account recovery/session policy | Engineering/security owner | 1 | Threat/cost/accessibility review and provider contract tests |
-| Q04 | Pinned compatible stack/runtime versions, region, object store, plan/limit/cost | Engineering/operations owner | 1 | Current official docs plus compatibility/latency/private-media test |
+| Q03 | PARTIALLY RESOLVED: Supabase Auth selected; email/password existing-account foundation implemented, live recovery/session/rate-limit policy pending | Engineering/security owner | 1 | Threat/cost/accessibility review and provider contract tests |
+| Q04 | PARTIALLY RESOLVED: stack pinned, Supabase PG selected/private-storage adapter prepared; region/plan/cost/hosted validation pending | Engineering/operations owner | 1 | Current official docs plus compatibility/latency/private-media test |
 | Q05 | User–Farmer cardinality, personal tenant, membership, ownership transfer, location catalogs | Product/domain/security owner | 2 | Approved entity/policy mapping and isolation tests |
 | Q06 | Document/contact/GPS purpose, retention, erasure/export, backups and history preservation | Product/privacy owner | 2 | Reviewed data inventory/retention policy; no compliance claim assumed |
 | Q07 | Overlapping seasons, perennial crops, multi-plot enterprise, close/reopen rules | Agricultural/product owner | 3 | Domain examples for crop/poultry lifecycle validated with farmers |
@@ -96,3 +96,19 @@ No source requirement/task/dependency was waived. Independent preparation of lat
 ## D-P00-005 — approved owner closure and Phase1 authorization
 
 APPROVED, direct user instruction 2026-10-08: Phase0 COMPLETED 100% by owner acceptance; proceed Phase1 immediately. Original research verification remains absent. [Approval record](reports/phase-00-owner-approval-2026-10-08.md) records accepted risk and percentage exception. No fabricated approvals, participants or passing research tests.
+
+## D-P01-001 — Supabase provider selection
+
+APPROVED, direct user answer2026-10-08: “Supabase PostgreSQL + Supabase Auth”. Supersedes source-baseline Neon for active architecture/roadmap/specifications; authoritative source extract is preserved. No hosted resource or capability is assumed. [Dependencies](engineering/foundation-dependencies.md), [setup](engineering/foundation-local-setup.md).
+
+## D-P01-002 — Foundation subset and defaults
+
+IMPLEMENTED within authorized Phase1: User/Organization/Membership/AuditEvent only, no farmer provisioning/registry. Existing-account email/password flow, current server getUser verification, scoped membership, private read TTL60seconds, audited retry collision checks, server-only Prisma and RLS-denied browser tables. Ordinary defaults require live recovery/role/pool/bucket validation before closure. Later domain models remain proposed.
+
+## D-P01-003 — Session audit outcome
+
+OBSERVED: local lint/typecheck/test/build pass;40 unit/component,10 DB integration,14 E2E tests pass; migration/restore pass; npm audit zero. Phase1 BLOCKED30.77% (T001–T004 complete, T005–T013 remain). Independent later groundwork does not bypass task dependencies. [Closeout](reports/phase-01-closeout-2026-10-08.md). No hosted CI/provider/deployment success is invented.
+
+## D-P01-004 — Development configuration
+
+User replied “I’ll configure .env.local”. No secret requested in chat. .env.example documents isolated project settings. Hosted migration/storage setup is not applied automatically; confirm isolated target first. No Phase2 execution authorized.

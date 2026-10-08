@@ -1,13 +1,13 @@
 # Observability
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — status/applicability/structure/link review; no runtime or independent product validation.
-- Implementation status: NOT STARTED — 0% (runtime implementation not verified).
-- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase 00 session.
-- Related phase/task IDs: Future Phases 01–24 as referenced; session review Phase 00; MYF-P01-T001 through MYF-P01-T013.
-- Verified completed work: Architecture reference reviewed for current applicability; no runtime implementation completed.
-- Remaining work/blockers: Affected future tasks/decisions and phase authorization; no database/app/deployment present.
-- Evidence/report links: [Phase 00 closeout](../reports/phase-00-closeout-2026-10-08.md); [every-document review](../reports/phase-00-document-review-2026-10-08.md).
+- Documentation review: REVIEWED — Phase01 status, applicability and evidence/link review; affected content reconciled; no independent farmer validation or hosted verification.
+- Implementation status: PARTIALLY COMPLETE — 30.77% of associated Phase01 dependency chain (4/13); full cross-phase scope has no claimed completion percentage.
+- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase01 implementation session.
+- Related phase/task IDs: Phase01 foundation T001–T013 (4 verified); cross-phase requirements remain pending; Phase01 review session.
+- Verified completed work: Foundation subset implemented/tested as described in the Phase01 closeout; no later feature/hosted provider completion inferred.
+- Remaining work/blockers: Phase01 external auth/storage/CI/deployment evidence and later-phase architecture requirements pending.
+- Evidence/report links: [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
 Source requires structured logging, error tracking, audit events and health monitoring. Vendor choice and SLOs remain unresolved; no telemetry service has been configured.
@@ -29,3 +29,10 @@ Separate operational logs from append audit history. Audit fields: actor/scope/a
 Health endpoints: public minimal liveness; restricted readiness for dependency failures without secrets/tenant details. Provider outage should degrade relevant capability, not leak diagnostic internals. Monitor synthetic scope-safe main flow where approved.
 
 Set actionable thresholds/owner/escalation in Q34 before production. Pilot metrics definition Q18 distinguishes attempt vs committed transaction; never inflate use by retries. Incident report records start/end, impact, recovery, root cause and retest. [Security](security-architecture.md), [testing](testing-strategy.md) and [reports](../reports/README.md) define evidence.
+
+
+## Phase1 implemented evidence and limits
+
+Structured allowlisted logs and safe failures, public liveness and authenticated DB readiness are implemented/tested. No farmer payload/raw exception/secret serialization. Hosted error/telemetry delivery remains unconfigured.
+
+[Closeout](../reports/phase-01-closeout-2026-10-08.md); [setup](../engineering/foundation-local-setup.md).

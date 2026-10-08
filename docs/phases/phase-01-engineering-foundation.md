@@ -1,16 +1,16 @@
 # Phase 01 Engineering Foundation
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — status/applicability/structure/link review; no runtime or independent product validation.
-- Implementation status: NOT STARTED — 0% (0/13 verified tasks).
-- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase 00 session.
-- Related phase/task IDs: Phase 01; MYF-P01-T001 through MYF-P01-T013; review session Phase 00.
-- Verified completed work: No implementation tasks completed; existing specification/status/IDs reviewed only.
-- Remaining work/blockers: All 13 implementation tasks pending; prior exit gates and explicit phase authorization required.
-- Evidence/report links: [Phase 00 closeout](../reports/phase-00-closeout-2026-10-08.md); [every-document review](../reports/phase-00-document-review-2026-10-08.md).
+- Documentation review: REVIEWED — Phase01 status, applicability and evidence/link review; affected content reconciled; no independent farmer validation or hosted verification.
+- Implementation status: BLOCKED — 30.77% (4/13 verified completed task IDs).
+- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase01 implementation session.
+- Related phase/task IDs: Phase 01; MYF-P01-T001 through MYF-P01-T013; review session Phase01.
+- Verified completed work: T001–T004 verified; local40 unit/component,10 PostgreSQL integration and14 E2E tests plus four quality gates pass; later groundwork not counted.
+- Remaining work/blockers: T005–T013 incomplete; live Supabase auth/storage/role/SSL/pool, recovery/rate limits, hosted CI/deployment and optional dependency diagnostics pending.
+- Evidence/report links: [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **NOT STARTED**. Date: 2026-10-08. This is a specification, not implementation approval. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **BLOCKED — 30.77% (4/13 verified task IDs)**. Date: 2026-10-08. Phase1 is explicitly authorized; current verification is in [closeout](../reports/phase-01-closeout-2026-10-08.md). Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
@@ -20,14 +20,14 @@ Target users: Engineering owner; future farmer/agent/admin users. Expected outco
 
 ## B. Source Requirements
 
-Source: P0087–P0164 in [complete extract](../reports/source-extract.md). Examples are illustrative. Exclusions: later phase features and any application implementation during this assignment. Prepare tenant context, stable command IDs and future interfaces; no billing, AI or agent workflow now.
+Source: P0087–P0164 in [complete extract](../reports/source-extract.md). Examples are illustrative. Exclusions: later phase features; only Phase1 application foundation is authorized. Prepare tenant context, stable command IDs and future interfaces; no billing, AI or agent workflow now.
 
 Ambiguities: Q03 auth provider/recovery; Q04 pinned versions, region, object storage and budget. Resolve affected policy before dependent tasks; do not invent rules.
 
 | Requirement | Source | Capability |
 |---|---|---|
 | MYF-P01-R001 | P0089–P0110 | Use Next.js App Router, React, TypeScript, Tailwind, shadcn/ui, Zod and React Hook Form with farmer PWA and agent/admin boundaries. |
-| MYF-P01-R002 | P0111–P0126 | Use PostgreSQL/, Prisma, Vercel, private object-storage interface; Vitest, React Testing Library, Playwright; structured logs/errors/audits/health. |
+| MYF-P01-R002 | P0111–P0126 | Use PostgreSQL/Supabase, Prisma, Vercel, private object-storage interface; Vitest, React Testing Library, Playwright; structured logs/errors/audits/health. |
 | MYF-P01-R003 | P0130–P0147 | Separate UI → application → domain → repository → database; plan recordFarmExpense, calculateEnterpriseProfit, recordHarvest, closeSeason, transferInventory. |
 | MYF-P01-R004 | P0148–P0164 | Provide lint, typecheck, test, build, CI, migration workflow, auth, error handling and basic security. |
 
@@ -69,7 +69,7 @@ Offline: see [sync](../architecture/offline-sync-architecture.md); Phases 1–6 
 
 ## F. Database Design
 
-**Proposal until implementation approval. No migrations created now.**
+**Foundation subset implemented/rehearsed locally:** User/Organization/Membership/AuditEvent in migration202610080001_foundation. No hosted migration applied. Later schema proposals remain unapproved.
 
 User(id UUID,authSubject text unique,status enum); Organization(id UUID,name text,kind enum); Membership(userId UUID,organizationId UUID,role enum,status enum,unique pair); AuditEvent(id UUID,actorId UUID?,tenantId UUID?,action text,targetId UUID?,requestId text,occurredAt timestamptz).
 
@@ -89,7 +89,7 @@ Loading announced; recoverable errors retain input and safe retry. Empty states 
 
 ## H. Implementation Tasks
 
-Execute these small stages sequentially after authorization. Field/model/provider policies remain proposals until affected decisions are resolved. Each capability separates contract/domain work, authorized service/evidence work, and user-visible acceptance. All task IDs remain pending.
+Execute these small stages sequentially after authorization. Field/model/provider policies remain proposals until affected decisions are resolved. Each capability separates contract/domain work, authorized service/evidence work, and user-visible acceptance. T001–T004 verified complete; T005–T013 remain partial/unverified. Independent groundwork beyond blocked stages is not counted complete.
 
 ### MYF-P01-T001 — Specify and implement domain contract for MYF-P01-R001
 
@@ -241,10 +241,10 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 
 ## O. Completion Checklist
 
-- [ ] MYF-P01-T001 complete with evidence.
-- [ ] MYF-P01-T002 complete with evidence.
-- [ ] MYF-P01-T003 complete with evidence.
-- [ ] MYF-P01-T004 complete with evidence.
+- [x] MYF-P01-T001 verified complete; [session evidence](../reports/phase-01-closeout-2026-10-08.md).
+- [x] MYF-P01-T002 verified complete; [session evidence](../reports/phase-01-closeout-2026-10-08.md).
+- [x] MYF-P01-T003 verified complete; [session evidence](../reports/phase-01-closeout-2026-10-08.md).
+- [x] MYF-P01-T004 verified complete; [session evidence](../reports/phase-01-closeout-2026-10-08.md).
 - [ ] MYF-P01-T005 complete with evidence.
 - [ ] MYF-P01-T006 complete with evidence.
 - [ ] MYF-P01-T007 complete with evidence.
@@ -258,3 +258,7 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 - [ ] Security/integrity audit, remediation and retest complete.
 - [ ] Applicable quality/E2E/integration/migration evidence recorded.
 - [ ] L gate approved; closeout/status updated from evidence.
+
+## Current session evidence
+
+Supabase PostgreSQL + Supabase Auth is selected. Local40 unit/component,10 integration and14 browser tests pass, as do lint/typecheck/build, migration replay and synthetic restore. Live provider/storage/CI/deployment evidence is pending; closeout verdict FAIL. T007–T010 groundwork is tested but not counted complete because the upstream stage chain remains open. No Phase2 implementation.

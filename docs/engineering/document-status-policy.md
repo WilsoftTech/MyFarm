@@ -1,13 +1,13 @@
 # Document status and verified progress policy
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — content/scope/status/structure/link review.
-- Implementation status: REFERENCE ONLY — N/A (no directly implementable scope).
-- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase 00 session.
-- Related phase/task IDs: Phase 00 session; MYF-P00-T001 through MYF-P00-T010; future phase references remain pending.
-- Verified completed work: Reference/protocol/navigation/report review performed; no phase completion implied.
-- Remaining work/blockers: Keep aligned with verified task/evidence changes; Phase 00 discovery gate still unmet.
-- Evidence/report links: [Phase 00 closeout](../reports/phase-00-closeout-2026-10-08.md); [every-document review](../reports/phase-00-document-review-2026-10-08.md).
+- Documentation review: REVIEWED — Phase01 status, applicability and evidence/link review; affected content reconciled; no independent farmer validation or hosted verification.
+- Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
+- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase01 implementation session.
+- Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced.
+- Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
+- Remaining work/blockers: Maintain alignment after Phase01 live verification; historical results stay historical and source body remains immutable.
+- Evidence/report links: [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
 This policy implements the user's phase-by-phase status-update instruction received 2026-10-08. It supersedes the older NOT STARTED/IN PROGRESS/BLOCKED/COMPLETE vocabulary; source content/phase requirements remain authoritative.
@@ -32,7 +32,7 @@ For partially prepared work with no fully verified tasks, use PARTIALLY COMPLETE
 
 ## Progress calculation
 
-Phase percentage = 100 × verified completed phase task IDs ÷ total task IDs. Do not count partial tasks or subdivide them retrospectively to increase progress. Round display to one decimal when necessary; retain numerator/denominator.
+Phase percentage = 100 × verified completed phase task IDs ÷ total task IDs. Do not count partial tasks or subdivide them retrospectively to increase progress. Round display to two decimals when necessary; retain numerator/denominator.
 
 A complete contract/schema/UI file is not sufficient when task acceptance requires approval, actual research, tests or dependent evidence. Task checklist is the authoritative progress input, backed by reports. Requirement progress counts completed linked tasks only and separately records whether full AC passes. Global/project totals cannot become 100% from one phase.
 

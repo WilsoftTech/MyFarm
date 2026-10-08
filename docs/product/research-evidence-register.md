@@ -1,13 +1,13 @@
 # Phase 0 research evidence register
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — content/scope/status/structure/link review.
-- Implementation status: PARTIALLY COMPLETE — 0% (related Phase 00: 0/10 verified tasks).
-- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase 00 session.
-- Related phase/task IDs: Phase 00; MYF-P00-T001 through MYF-P00-T009.
-- Verified completed work: Source-aligned product/research preparation reviewed; district confirmed; no complete evidence-dependent task.
-- Remaining work/blockers: Authentic consented farmer evidence, research setup and approved discovery decision.
-- Evidence/report links: [Phase 00 closeout](../reports/phase-00-closeout-2026-10-08.md); [every-document review](../reports/phase-00-document-review-2026-10-08.md).
+- Documentation review: REVIEWED — Phase01 status, applicability and evidence/link review; affected content reconciled; no independent farmer validation or hosted verification.
+- Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
+- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase01 implementation session.
+- Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced.
+- Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
+- Remaining work/blockers: Maintain alignment after Phase01 live verification; historical results stay historical and source body remains immutable.
+- Evidence/report links: [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
 District selection is the only new confirmed research-planning decision: Rukungiri, stated by the user on 2026-10-08. **Accepted farmer interviews: 0. Accepted farmer observations: 0.** No farmer research results are available.

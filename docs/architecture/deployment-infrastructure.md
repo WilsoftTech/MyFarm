@@ -1,16 +1,16 @@
 # Deployment and infrastructure
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — status/applicability/structure/link review; no runtime or independent product validation.
-- Implementation status: NOT STARTED — 0% (runtime implementation not verified).
-- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase 00 session.
-- Related phase/task IDs: Future Phases 01–24 as referenced; session review Phase 00; MYF-P01-T001 through MYF-P01-T013.
-- Verified completed work: Architecture reference reviewed for current applicability; no runtime implementation completed.
-- Remaining work/blockers: Affected future tasks/decisions and phase authorization; no database/app/deployment present.
-- Evidence/report links: [Phase 00 closeout](../reports/phase-00-closeout-2026-10-08.md); [every-document review](../reports/phase-00-document-review-2026-10-08.md).
+- Documentation review: REVIEWED — Phase01 status, applicability and evidence/link review; affected content reconciled; no independent farmer validation or hosted verification.
+- Implementation status: PARTIALLY COMPLETE — 30.77% of associated Phase01 dependency chain (4/13); full cross-phase scope has no claimed completion percentage.
+- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase01 implementation session.
+- Related phase/task IDs: Phase01 foundation T001–T013 (4 verified); cross-phase requirements remain pending; Phase01 review session.
+- Verified completed work: Foundation subset implemented/tested as described in the Phase01 closeout; no later feature/hosted provider completion inferred.
+- Remaining work/blockers: Phase01 external auth/storage/CI/deployment evidence and later-phase architecture requirements pending.
+- Evidence/report links: [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
-Baseline target: Vercel application, Neon PostgreSQL, suitable private object storage. **Design only; no resources, deployment or external paid service created.** Regions/versions/cost/quotas/auth/media provider unresolved in Q03/Q04/Q34.
+Baseline target: Vercel application, Supabase PostgreSQL, suitable private object storage. **Local foundation build/test environment verified; no hosted or external paid service created.** Regions/versions/cost/quotas/auth/media provider unresolved in Q03/Q04/Q34.
 
 Environments: local development with isolated DB; CI test DB; preview app with synthetic data and separate credentials; staging provider sandbox; production only after approved phase gates and deployment authorization. Preview must never default to production connection strings, buckets or payment callbacks.
 
@@ -23,3 +23,10 @@ Serverless requests do not guarantee indefinite background tasks. MVP sync is bo
 Backups/restore tests start with persistent sensitive data, not Phase 24 only. Record provider capability, retention, protected backup access, RPO/RTO and drill evidence. Rollback/recovery distinguishes code rollback from restored DB and lost provider-side effects; reconcile receipt/payment histories after restore.
 
 Capacity/cost model proposal: active farmers × records/day and offline backlog burst; storage bytes/media retention; DB query/connection peaks; later AI/audio/image calls and provider fee volume. No fabricated price estimate. Review Uganda latency/region/data obligations and current provider documentation before deployment. [DB](database-architecture.md), [observability](observability.md), [migration policy](../engineering/migration-policy.md) and [decisions](../DECISION-LOG.md) govern operation.
+
+
+## Phase1 implemented evidence and limits
+
+Local production build/browser server and PostgreSQL17 test container verified. Vercel remains target; hosted preview/CI/provider credentials not present. Supabase PG/Auth selected. No hosted or paid resource provisioned.
+
+[Closeout](../reports/phase-01-closeout-2026-10-08.md); [setup](../engineering/foundation-local-setup.md).

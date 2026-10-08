@@ -1,24 +1,24 @@
 # Project status
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — content/scope/status/structure/link review.
-- Implementation status: REFERENCE ONLY — N/A (no directly implementable scope).
-- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase 00 session.
-- Related phase/task IDs: Phase 00 session; MYF-P00-T001 through MYF-P00-T010; future phase references remain pending.
-- Verified completed work: Reference/protocol/navigation/report review performed; no phase completion implied.
-- Remaining work/blockers: Keep aligned with verified task/evidence changes; Phase 00 discovery gate still unmet.
-- Evidence/report links: [Phase 00 closeout](reports/phase-00-closeout-2026-10-08.md); [every-document review](reports/phase-00-document-review-2026-10-08.md).
+- Documentation review: REVIEWED — Phase01 status, applicability and evidence/link review; affected content reconciled; no independent farmer validation or hosted verification.
+- Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
+- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase01 implementation session.
+- Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced.
+- Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
+- Remaining work/blockers: Maintain alignment after Phase01 live verification; historical results stay historical and source body remains immutable.
+- Evidence/report links: [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
-Last inspected: 2026-10-08, Africa/Nairobi. Workspace was empty before documentation: no application, package manifest, Git repository, migrations or test evidence. Only Markdown documentation authored.
+Last inspected: 2026-10-08, Africa/Nairobi. Phase1 application, Prisma migration, tests and CI configuration now exist. No Git repository/remote or hosted provider/CI/deployment evidence is present. Root user instructions/design files are preserved.
 
-Current phase: **Phase 1 — PARTIALLY COMPLETE — 0% (0/13 verified tasks at start)**. Phase0 **COMPLETED — 100% by owner acceptance**; [approval record](reports/phase-00-owner-approval-2026-10-08.md). No farmer research is claimed.
+Current phase: **Phase1 — BLOCKED — 30.77% (4/13 verified completed IDs)**. Phase0 **COMPLETED — 100% by owner acceptance**; [approval](reports/phase-00-owner-approval-2026-10-08.md). Farmer research remains unverified. No Phase2 implementation.
 
 
 | Phase | Specification | Status | Completed | Pending | Test evidence |
 |---|---|---|---|---|---|
 | 0 | [Product Discovery and Scope Definition](phases/phase-00-product-discovery.md) | COMPLETED — 100% (owner acceptance) | T001–T010 administratively accepted; 0/10 original research-task evidence verified | Empirical field validation remains a risk/follow-up | [Owner approval](reports/phase-00-owner-approval-2026-10-08.md) |
-| 1 | [Engineering Foundation](phases/phase-01-engineering-foundation.md) | PARTIALLY COMPLETE — 0% | None yet | T001–T013 | Foundation implementation started; checks pending |
+| 1 | [Engineering Foundation](phases/phase-01-engineering-foundation.md) | BLOCKED — 30.77% | T001–T004 verified complete | T005–T013 partial/unverified; upstream and provider gates pending | [Phase1 closeout](reports/phase-01-closeout-2026-10-08.md) |
 | 2 | [Farmer Identity and Farm Registry](phases/phase-02-farmer-registry.md) | NOT STARTED — 0% | None | All H tasks | None |
 | 3 | [Enterprises Crops Livestock and Seasons](phases/phase-03-enterprises-seasons.md) | NOT STARTED — 0% | None | All H tasks | None |
 | 4 | [Farm Accounting Engine](phases/phase-04-farm-accounting.md) | NOT STARTED — 0% | None | All H tasks | None |
@@ -45,13 +45,13 @@ Current phase: **Phase 1 — PARTIALLY COMPLETE — 0% (0/13 verified tasks at s
 
 ## Blockers and decisions
 
-Rukungiri district confirmed by direct user reply on 2026-10-08 (Q01 partially resolved). No real interview/validated first-customer/retention evidence. Interviewer, recruitment/consent/storage plan and Q02 languages/devices remain unconfirmed. Current authorization is Phase 0 only; discovery evidence/gate and explicit Phase 1 authorization are required before engineering. Provider, money basis/valuation, offline recovery, pilot thresholds, regulated services and SLO choices remain open in [decision log](DECISION-LOG.md).
+Supabase PostgreSQL + Supabase Auth is approved. Live development credentials are pending (.env.local absent; user will configure it). Actual Supabase auth/private bucket/DB-role/SSL/pool tests, recovery/rate-limit configuration, hosted CI and isolated hosting evidence remain blockers. No production/paid service was provisioned. Optional Windows Sharp/WASI npm dependency-tree diagnostics remain documented.
 
-Documentation evidence: [audit report](reports/documentation-audit.md). App lint/typecheck/test/build: **NOT APPLICABLE — research-only Phase 0, no application/package manifest**. Runtime integration/E2E/security/migration/offline/concurrency checks are likewise not applicable; documentation checks and gate audit are applicable. No passing app tests claimed.
+All four mandatory local commands pass. Unit/component40 tests, PostgreSQL integration10 tests, browser14 tests pass; fresh/replayed migration and synthetic restore pass; dependency audit reports zero vulnerabilities. [Exact evidence and limitations](reports/phase-01-closeout-2026-10-08.md).
 
 ## Next recommended action
 
-Conduct Phase 0 field research, synthesize actual evidence and approve first customer/pain/MVP scope. Then obtain explicit engineering authorization for Phase 1. After each verified closeout, record completed/pending task IDs, migrations, API changes, reports/command logs, blockers and next allowed task. Status vocabulary: NOT STARTED (0%), PARTIALLY COMPLETE (verified task percentage), COMPLETED (100%), BLOCKED (verified percentage), REFERENCE ONLY (N/A). See [document status policy](engineering/document-status-policy.md). Completion requires gate evidence; nonblocking verdict conditions list owner/deadline.
+Finish Phase1 live provider/CI/deployment verification after configuration, then re-audit the remaining tasks and exit gate. Do not start Phase2 automatically. Progress is 4/13 ×100 =30.77%; partial work is not counted. [Status policy](engineering/document-status-policy.md).
 
 ## Phase 0 session evidence — 2026-10-08
 
@@ -59,4 +59,4 @@ Prepared [research operations](product/research-operations.md), empty [evidence 
 
 ## Current authorization — owner update 2026-10-08
 
-The user explicitly closed Phase0 and authorized immediate Phase1. This supersedes earlier “Phase0 only”/unmet-gate restrictions for advancement. Historical missing-evidence reports are retained. Phase1 may build/test local foundation; external provider selection/credentials, deployment and later phases remain separate decisions.
+The user explicitly closed Phase0 and authorized immediate Phase1. This supersedes earlier “Phase0 only”/unmet-gate restrictions for advancement. Historical missing-evidence reports are retained. Phase1 may build/test local foundation; Supabase provider is selected; credentials/deployment and later phases remain separate prerequisites.

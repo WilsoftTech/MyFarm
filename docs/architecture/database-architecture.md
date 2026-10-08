@@ -1,13 +1,13 @@
 # Database architecture
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — status/applicability/structure/link review; no runtime or independent product validation.
-- Implementation status: NOT STARTED — 0% (runtime implementation not verified).
-- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase 00 session.
-- Related phase/task IDs: Future Phases 01–24 as referenced; session review Phase 00; MYF-P01-T001 through MYF-P01-T013.
-- Verified completed work: Architecture reference reviewed for current applicability; no runtime implementation completed.
-- Remaining work/blockers: Affected future tasks/decisions and phase authorization; no database/app/deployment present.
-- Evidence/report links: [Phase 00 closeout](../reports/phase-00-closeout-2026-10-08.md); [every-document review](../reports/phase-00-document-review-2026-10-08.md).
+- Documentation review: REVIEWED — Phase01 status, applicability and evidence/link review; affected content reconciled; no independent farmer validation or hosted verification.
+- Implementation status: PARTIALLY COMPLETE — 30.77% of associated Phase01 dependency chain (4/13); full cross-phase scope has no claimed completion percentage.
+- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase01 implementation session.
+- Related phase/task IDs: Phase01 foundation T001–T013 (4 verified); cross-phase requirements remain pending; Phase01 review session.
+- Verified completed work: Foundation subset implemented/tested as described in the Phase01 closeout; no later feature/hosted provider completion inferred.
+- Remaining work/blockers: Phase01 external auth/storage/CI/deployment evidence and later-phase architecture requirements pending.
+- Evidence/report links: [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
 **Proposed logical/physical schema, not an approved migration.** PostgreSQL is authoritative; Prisma repositories expose domain-specific operations. All tenant-owned records carry explicit tenant scope and relevant farm scope. A farmer personal workspace and organization workspace share isolation abstractions without implementing billing in MVP.
@@ -29,3 +29,10 @@ Index tenant/farm/date/id lists and parent relations; use stable keyset paginati
 ## Evolution/recovery
 
 Phase F enumerates entity fields; [domain model](domain-model.md) covers relationships. Apply [migration policy](../engineering/migration-policy.md), test staged backfill/constraints and offline schema compatibility. Managed backups do not prove restoration: rehearse recoveries and reconcile pending receipts/provider state. RPO/RTO, retention and erasure policies remain Q06/Q16/Q34. [Financial](financial-integrity.md) and [sync](offline-sync-architecture.md) impose extra invariants.
+
+
+## Phase1 implemented evidence and limits
+
+Implemented only User/Organization/Membership/AuditEvent with restricted FKs, unique memberships/audit request actions and RLS deny for browser roles. Prisma7 adapter-pg, scoped bounded repositories, transaction rollback/concurrency and synthetic restore tested. Later farm/money/quantity schemas remain proposed.
+
+[Closeout](../reports/phase-01-closeout-2026-10-08.md); [setup](../engineering/foundation-local-setup.md).

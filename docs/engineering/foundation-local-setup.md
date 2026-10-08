@@ -1,5 +1,15 @@
 # Foundation local setup and provider verification
 
+<!-- MYFARM-STATUS-START -->
+- Documentation review: REVIEWED — Phase01 status, applicability and evidence/link review; affected content reconciled; no independent farmer validation or hosted verification.
+- Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
+- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase01 implementation session.
+- Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced.
+- Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
+- Remaining work/blockers: Maintain alignment after Phase01 live verification; historical results stay historical and source body remains immutable.
+- Evidence/report links: [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md).
+<!-- MYFARM-STATUS-END -->
+
 Phase 01, 2026-10-08. The user selected Supabase PostgreSQL + Supabase Auth and will configure .env.local. No hosted resources have been created or modified.
 
 ## Application
@@ -30,7 +40,7 @@ POST /api/v1/scopes/{scopeId}/files/{objectId} requires same-origin JSON {reques
 
 Run npm run lint, npm run typecheck, npm test, npm run build and npm run check:boundaries. npm run test:integration requires TEST_DATABASE_URL pointing to localhost database named myfarm_phase01_test, with the migration already applied; the suite rejects other targets.
 
-The Phase1 local verification container is named myfarm-phase01-verification, bound only to 127.0.0.1:55431. .env.test.local and .cache/phase01-db.env contain disposable test credentials and are ignored. Never copy them into hosted settings.
+The Phase1 local verification container is named myfarm-phase01-verification, bound only to 127.0.0.1:55431. It was stopped after evidence collection; restart it with docker start myfarm-phase01-verification before rerunning integration checks. The restore script requires a fresh restore database and intentionally does not overwrite an existing one. .env.test.local and .cache/phase01-db.env contain disposable test credentials and are ignored. Never copy them into hosted settings.
 
 npm run test:e2e starts its own production server on 127.0.0.1:3101. The browser suite uses an intentionally nonfunctional Supabase configuration fixture for public sign-in form validation; it does not represent a live provider. No real user credentials or farm data are required. Provider sign-in/revocation, private bucket access and hosted deployment remain separate checks.
 

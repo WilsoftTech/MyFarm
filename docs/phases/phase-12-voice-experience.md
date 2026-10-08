@@ -1,13 +1,13 @@
 # Phase 12 Voice First Farmer Experience
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — status/applicability/structure/link review; no runtime or independent product validation.
+- Documentation review: REVIEWED — Phase01 status, applicability and evidence/link review; affected content reconciled; no independent farmer validation or hosted verification.
 - Implementation status: NOT STARTED — 0% (0/10 verified tasks).
-- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase 00 session.
-- Related phase/task IDs: Phase 12; MYF-P12-T001 through MYF-P12-T010; review session Phase 00.
-- Verified completed work: No implementation tasks completed; existing specification/status/IDs reviewed only.
-- Remaining work/blockers: All 10 implementation tasks pending; prior exit gates and explicit phase authorization required.
-- Evidence/report links: [Phase 00 closeout](../reports/phase-00-closeout-2026-10-08.md); [every-document review](../reports/phase-00-document-review-2026-10-08.md).
+- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase01 implementation session.
+- Related phase/task IDs: Phase 12; MYF-P12-T001 through MYF-P12-T010; review session Phase01.
+- Verified completed work: No tasks implemented or verified in this phase; status/provider applicability reviewed only.
+- Remaining work/blockers: All 10 tasks and their acceptance/exit gates pending; Phase01 completion and future phase authorization required.
+- Evidence/report links: [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
 Status: **NOT STARTED**. Date: 2026-10-08. This is a specification, not implementation approval. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
@@ -34,7 +34,7 @@ Ambiguities: Q21 language accuracy/audio privacy/offline transcription/accessibi
 
 Prerequisite phases: Phase 11 exit gate plus cumulative earlier gates.
 
-Database inputs: earlier owned registry/production/transaction entities actually needed plus F proposals. Phase 0 is evidence documents only. Services: TranscribeAudio, ExtractIntent, ValidateVoiceDraft, ConfirmCommand, ExecuteConfirmedCommand. Infrastructure: authenticated Next.js, isolated PostgreSQL/Neon, private object storage; Dexie/PWA sync from Phase 7.
+Database inputs: earlier owned registry/production/transaction entities actually needed plus F proposals. Phase 0 is evidence documents only. Services: TranscribeAudio, ExtractIntent, ValidateVoiceDraft, ConfirmCommand, ExecuteConfirmedCommand. Infrastructure: authenticated Next.js, isolated PostgreSQL/Supabase, private object storage; Dexie/PWA sync from Phase 7.
 
 Integrations: approved auth/persistence/provider adapters; use fakes before reviewed provider contracts. [Cross-phase matrix](../MASTER-IMPLEMENTATION-ROADMAP.md) records forward extension points. Stable IDs, tenant context and version fields precede sync/institutional features. No new infrastructure without measured need.
 
