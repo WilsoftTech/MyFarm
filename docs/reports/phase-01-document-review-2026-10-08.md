@@ -20,7 +20,7 @@
 
 ## Current every-document inventory
 
-Phase 01 PARTIALLY COMPLETE — 76.92% (10/13 verified task IDs). Verdict: FAIL. Completed T001–T010. Remaining T011–T013: hosted CI, preview and final audit evidence pending.
+Phase 01 BLOCKED — 76.92% (10/13 verified task IDs). Verdict: FAIL. Completed T001–T010. Remaining T011–T013: hosted CI and dependency-gated final closure. Protected preview builds and live authenticated hosted verification succeeds; CI startup failure prevents completion.
 
 | Document | Implementation status | Documentation review |
 |---|---|---|
@@ -52,7 +52,7 @@ Phase 01 PARTIALLY COMPLETE — 76.92% (10/13 verified task IDs). Verdict: FAIL.
 | engineering/security-checklist.md | REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope). | REVIEWED 2026-10-08 |
 | MASTER-IMPLEMENTATION-ROADMAP.md | REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope). | REVIEWED 2026-10-08 |
 | phases/phase-00-product-discovery.md | COMPLETED — 100% by explicit owner acceptance (original empirical verification0/10). | REVIEWED 2026-10-08 |
-| phases/phase-01-engineering-foundation.md | PARTIALLY COMPLETE — 76.92% (10/13 verified Phase01 tasks; later scope not counted). | REVIEWED 2026-10-08 |
+| phases/phase-01-engineering-foundation.md | BLOCKED — 76.92% (10/13 verified Phase01 tasks; later scope not counted). | REVIEWED 2026-10-08 |
 | phases/phase-02-farmer-registry.md | NOT STARTED — 0% (0/13 verified tasks). | REVIEWED 2026-10-08 |
 | phases/phase-03-enterprises-seasons.md | NOT STARTED — 0% (0/13 verified tasks). | REVIEWED 2026-10-08 |
 | phases/phase-04-farm-accounting.md | NOT STARTED — 0% (0/16 verified tasks). | REVIEWED 2026-10-08 |
@@ -97,6 +97,7 @@ Phase 01 PARTIALLY COMPLETE — 76.92% (10/13 verified task IDs). Verdict: FAIL.
 | reports/phase-01-audit-2026-10-08.md | REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope). | REVIEWED 2026-10-08 |
 | reports/phase-01-closeout-2026-10-08.md | REFERENCE ONLY — N/A | REVIEWED 2026-10-08 |
 | reports/phase-01-document-review-2026-10-08.md | REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope). | REVIEWED 2026-10-08 |
+| reports/phase-01-hosted-verification-2026-10-08.md | REFERENCE ONLY — N/A | REVIEWED 2026-10-08 |
 | reports/phase-01-provider-verification-2026-10-08.md | REFERENCE ONLY - N/A (evidence report). | REVIEWED 2026-10-08 |
 | reports/README.md | REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope). | REVIEWED 2026-10-08 |
 | reports/source-analysis.md | REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope). | REVIEWED 2026-10-08 |

@@ -1,0 +1,16 @@
+{
+  "id": "dpl_6zxhdqsioES8idqQaDMT5mbcekPR",
+  "url": "myfarm-phase01-preview-2agd46ome-williskarugaba-wilsoft.vercel.app",
+  "target": "preview",
+  "readyState": "READY",
+  "createdAt": 1791421961104,
+  "buildMachine": {
+    "cores": 2,
+    "memory": 8192,
+    "machine": "basic",
+    "selectionType": "fixed",
+    "selectionSource": "plan-default"
+  },
+  "framework": "nextjs",
+  "nodeVersion": "24.x"
+}

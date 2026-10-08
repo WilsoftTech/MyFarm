@@ -1,0 +1,2 @@
+actionlint 1.7.12 -shellcheck= .github/workflows/quality.yml
+exitCode=0

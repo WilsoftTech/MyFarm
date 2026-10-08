@@ -1,0 +1,24 @@
+import fs from 'node:fs';import dotenv from 'dotenv';import {spawnSync} from 'node:child_process';import {createServerClient} from '@supabase/ssr';import {createClient} from '@supabase/supabase-js';import pg from 'pg';import {randomUUID} from 'node:crypto';
+const env=dotenv.parse(fs.readFileSync('.env.local'));const f=JSON.parse(fs.readFileSync('.cache/provider-fixtures.json'));const credentials=JSON.parse(fs.readFileSync('.cache/provider-fixture-credentials.json'));const host='myfarm-phase01-preview-2agd46ome-williskarugaba-wilsoft.vercel.app';const base='https://'+host;const results=[];let stage='login';let client;let db;
+function check(name,condition){stage=name;if(!condition)throw Error(name);results.push({check:name,result:'PASS'});console.log(name+': PASS');}
+try{
+let cookies=[];client=createServerClient(env.NEXT_PUBLIC_SUPABASE_URL,env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,{cookies:{getAll:()=>cookies,setAll:items=>{cookies=items;}}});const login=await client.auth.signInWithPassword(credentials[0]);check('Real provider authentication for preview',!login.error);
+function request(path,{authenticated=true,post}={}){
+stage='HTTP '+path;
+let config='silent\nshow-error\nwrite-out = "\\nSTATUS:%{http_code}"\n';if(authenticated)config+='header = '+JSON.stringify('Cookie: '+cookies.map(c=>c.name+'='+c.value).join('; '))+'\n';
+if(post)config+='request = "POST"\nheader = "Content-Type: application/json"\nheader = '+JSON.stringify('Origin: '+base)+'\ndata = '+JSON.stringify(JSON.stringify(post))+'\n';
+fs.writeFileSync('.cache/preview-curl.conf',config);const r=spawnSync(process.env.ComSpec,['/d','/s','/c',`npx --yes vercel@62.7.0 curl ${path} --deployment ${host} -- --config .cache/preview-curl.conf`],{encoding:'utf8',windowsHide:true});if(r.status!==0)throw Error('Preview curl failed');const text=r.stdout;const match=text.match(/STATUS:(\d{3})\s*$/);if(!match)throw Error('Missing HTTP status');const body=text.slice(0,match.index);let json;try{json=JSON.parse(body);}catch{}return {status:Number(match[1]),body,json};
+}
+check('Hosted public health',request('/api/health',{authenticated:false}).status===200);
+check('Hosted anonymous session denied',request('/api/v1/session',{authenticated:false}).status===401);
+const overview=request('/api/v1/session');check('Hosted authenticated session and tenant',overview.status===200&&overview.json?.scopes?.length===1);
+check('Hosted database health with restricted TLS login',request('/api/v1/health').status===200);
+check('Hosted workspace renders',request('/workspace').status===200);
+check('Hosted cross-tenant scope denied',request('/api/v1/scopes/'+f.tenants[1]).status===403);
+const path='/api/v1/scopes/'+f.tenants[0]+'/files/'+f.objects[0];const requestId=randomUUID();const grant=request(path,{post:{requestId}});check('Hosted same-origin private grant',grant.status===200&&grant.json?.expiresInSeconds===60);check('Hosted grant downloads private object',(await fetch(grant.json.url)).status===200);
+const admin=dotenv.parse(fs.readFileSync('.cache/phase01-provider-admin.env'));db=new pg.Client({connectionString:admin.DATABASE_URL,ssl:{rejectUnauthorized:true,ca:fs.readFileSync(env.DATABASE_CA_CERT_PATH,'utf8')}});await db.connect();
+for(let i=0;i<29;i++)await db.query('INSERT INTO "AuditEvent" (id,"actorId","tenantId",action,"requestId") VALUES ($1,$2,$3,\'PRIVATE_FILE_READ\',$4)',[randomUUID(),f.users[0].actorId,f.tenants[0],randomUUID()]);
+check('Hosted distinct grant throttled',request(path,{post:{requestId:randomUUID()}}).status===429);
+check('Hosted identical retry remains permitted',request(path,{post:{requestId}}).status===200);
+await client.auth.signOut({scope:'global'});check('Hosted revoked session denied',request('/api/v1/session').status===401);
+}catch(e){results.push({check:stage,result:'FAIL',errorCode:e.code??e.name});console.log(JSON.stringify({failedCheck:stage,errorCode:e.code??e.name}));process.exitCode=1;}finally{if(db)await db.end();if(client)await client.auth.signOut().catch(()=>{});fs.writeFileSync('docs/reports/evidence/phase-01-2026-10-08-mcp/preview-tests.json',JSON.stringify({deployment:base,result:process.exitCode?'FAIL':'PASS',results},null,2));}

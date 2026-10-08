@@ -2,5 +2,44 @@
 > myfarm@0.1.0 test:e2e
 > playwright test
 
-Error: http://127.0.0.1:3101/api/health is already used, make sure that nothing is running on the port/url or set reuseExistingServer:true in config.webServer.
 
+Running 14 tests using 3 workers
+
+  ok  1 [desktop] › tests\e2e\foundation.spec.ts:14:1 › anonymous APIs fail closed with no caching (180ms)
+  ok  4 [desktop] › tests\e2e\foundation.spec.ts:20:1 › health and manifest expose no secrets (63ms)
+  ok  5 [desktop] › tests\e2e\foundation.spec.ts:25:1 › keyboard skip link targets content (683ms)
+  ok  2 [desktop] › tests\e2e\foundation.spec.ts:9:1 › anonymous users cannot open protected workspace (1.2s)
+  ok  7 [desktop] › tests\e2e\foundation.spec.ts:35:1 › private-file grants reject cross-origin requests (42ms)
+  ok  3 [desktop] › tests\e2e\foundation.spec.ts:2:1 › public shell works on desktop and mobile (1.4s)
+  ok  6 [desktop] › tests\e2e\foundation.spec.ts:30:1 › invalid sign-in is rejected without auth request (354ms)
+  ok 10 [mobile] › tests\e2e\foundation.spec.ts:14:1 › anonymous APIs fail closed with no caching (69ms)
+  ok 11 [mobile] › tests\e2e\foundation.spec.ts:20:1 › health and manifest expose no secrets (33ms)
+  ok 12 [mobile] › tests\e2e\foundation.spec.ts:25:1 › keyboard skip link targets content (957ms)
+  ok  9 [mobile] › tests\e2e\foundation.spec.ts:9:1 › anonymous users cannot open protected workspace (1.3s)
+  ok 14 [mobile] › tests\e2e\foundation.spec.ts:35:1 › private-file grants reject cross-origin requests (36ms)
+  ok  8 [mobile] › tests\e2e\foundation.spec.ts:2:1 › public shell works on desktop and mobile (1.5s)
+  ok 13 [mobile] › tests\e2e\foundation.spec.ts:30:1 › invalid sign-in is rejected without auth request (490ms)
+
+  14 passed (8.2m)
+[WebServer] (node:2908) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+(node:21036) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:17052) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27212) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] {"event":"request_failed","requestId":"fcd4b4eb-5f15-4677-88fa-c044cd3f597a","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"0759fd8f-2aa8-476f-bf0c-67b27374ca50","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"ba7f117a-125d-4b0b-ab75-fc3063d3e5d3","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"373a5a85-1293-4e86-95e2-1435c7f6c6cc","code":"FORBIDDEN"}
+(node:14268) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9072) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] {"event":"request_failed","requestId":"13ae4f31-5a00-4276-bcfd-63c7361909c1","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"09ff8a5f-b8db-4623-959d-7da36b0ee032","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"e65721d0-b1c8-4c95-8650-eca65d68552a","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"38956889-421b-4974-a0ca-0c5d66de7499","code":"FORBIDDEN"}

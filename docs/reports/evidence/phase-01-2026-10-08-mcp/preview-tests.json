@@ -1,0 +1,54 @@
+{
+  "deployment": "https://myfarm-phase01-preview-2agd46ome-williskarugaba-wilsoft.vercel.app",
+  "result": "PASS",
+  "results": [
+    {
+      "check": "Real provider authentication for preview",
+      "result": "PASS"
+    },
+    {
+      "check": "Hosted public health",
+      "result": "PASS"
+    },
+    {
+      "check": "Hosted anonymous session denied",
+      "result": "PASS"
+    },
+    {
+      "check": "Hosted authenticated session and tenant",
+      "result": "PASS"
+    },
+    {
+      "check": "Hosted database health with restricted TLS login",
+      "result": "PASS"
+    },
+    {
+      "check": "Hosted workspace renders",
+      "result": "PASS"
+    },
+    {
+      "check": "Hosted cross-tenant scope denied",
+      "result": "PASS"
+    },
+    {
+      "check": "Hosted same-origin private grant",
+      "result": "PASS"
+    },
+    {
+      "check": "Hosted grant downloads private object",
+      "result": "PASS"
+    },
+    {
+      "check": "Hosted distinct grant throttled",
+      "result": "PASS"
+    },
+    {
+      "check": "Hosted identical retry remains permitted",
+      "result": "PASS"
+    },
+    {
+      "check": "Hosted revoked session denied",
+      "result": "PASS"
+    }
+  ]
+}
