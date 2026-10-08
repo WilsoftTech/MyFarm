@@ -25,6 +25,6 @@ const submit = vi.fn(() => pending); render(<SignInForm submit={submit} />);
 await userEvent.type(screen.getByLabelText("Email address"), "a@example.com");
 await userEvent.type(screen.getByLabelText("Password"), "secret");
 await userEvent.click(screen.getByRole("button", { name: "Sign in" }));
-expect(screen.getByRole("button", { name: "Signing inâ€¦" })).toBeDisabled(); expect(submit).toHaveBeenCalledTimes(1);
+expect(screen.getByRole("button", { name: "Signing in…" })).toBeDisabled(); expect(submit).toHaveBeenCalledTimes(1);
 resolve({ ok: false, message: "Try again" }); expect(await screen.findByRole("alert")).toHaveTextContent("Try again");
 });

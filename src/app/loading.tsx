@@ -1,1 +1,1 @@
-export default function Loading() { return <p role="status" aria-live="polite">Loading MyFarmâ€¦</p>; }
+export default function Loading() { return <p role="status" aria-live="polite">Loading MyFarm…</p>; }

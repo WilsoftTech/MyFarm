@@ -2,6 +2,8 @@ import { test, expect } from "@playwright/test";
 test("public shell works on desktop and mobile", async ({ page }) => {
 await page.goto("/");
 await expect(page.getByRole("heading", { name: "A clearer picture of your farm." })).toBeVisible();
+await expect(page.getByText("MyFarm · Built around the farm.")).toBeVisible();
+expect(await page.evaluate(() => /\u00C2|\u00E2\u20AC|\u00E2\u2020/.test(document.body.innerText + document.title))).toBe(false);
 await page.getByRole("link", { name: "Sign in to MyFarm" }).click();
 await expect(page.getByRole("heading", { name: "Sign in to MyFarm" })).toBeVisible();
 expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);

@@ -7,7 +7,7 @@ if (!url || !/^postgresql:\/\/[^@]+@127\.0\.0\.1:55431\/myfarm_phase01_test$/.te
 const source = new pg.Client({ connectionString: url });
 const destination = new pg.Client({ connectionString: url.replace("/myfarm_phase01_test", "/myfarm_phase01_restore") });
 const docker = "C:/Program Files/Docker/Docker/resources/bin/docker.exe";
-const container = "myfarm-phase01-verification";
+const container = process.env.MYFARM_TEST_CONTAINER ?? "myfarm-phase01-verification";
 function run(args) {
 const result = spawnSync(docker, ["exec", container, ...args], { encoding: "utf8" });
 if (result.status !== 0) throw new Error("Isolated container restore command failed: " + args[0]);

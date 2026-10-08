@@ -21,6 +21,6 @@ catch { setMessage("Connection interrupted. Your details are still here. Try aga
 <Input id="password" type="password" autoComplete="current-password" aria-invalid={!!errors.password} aria-describedby={errors.password ? "password-error" : undefined} {...register("password")} />
 {errors.password && <p id="password-error" role="alert" className="field-error">{errors.password.message}</p>}</div>
 {message && <p role="alert" className="field-error">{message}</p>}
-<Button type="submit" disabled={isSubmitting} className="w-full">{isSubmitting ? "Signing inâ€¦" : "Sign in"}</Button>
+<Button type="submit" disabled={isSubmitting} className="w-full">{isSubmitting ? "Signing in…" : "Sign in"}</Button>
 </form>;
 }
