@@ -1,0 +1,36 @@
+--------------+------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------
+ AuditEvent   | AuditEvent_actorId_occurredAt_idx        | CREATE INDEX "AuditEvent_actorId_occurredAt_idx" ON public."AuditEvent" USING btree ("actorId", "occurredAt")
+ AuditEvent   | AuditEvent_pkey                          | CREATE UNIQUE INDEX "AuditEvent_pkey" ON public."AuditEvent" USING btree (id)
+ AuditEvent   | AuditEvent_tenantId_occurredAt_id_idx    | CREATE INDEX "AuditEvent_tenantId_occurredAt_id_idx" ON public."AuditEvent" USING btree ("tenantId", "occurredAt", id)
+ AuditEvent   | AuditEvent_tenantId_requestId_action_key | CREATE UNIQUE INDEX "AuditEvent_tenantId_requestId_action_key" ON public."AuditEvent" USING btree ("tenantId", "requestId", action)
+ Membership   | Membership_organizationId_status_idx     | CREATE INDEX "Membership_organizationId_status_idx" ON public."Membership" USING btree ("organizationId", status)
+ Membership   | Membership_pkey                          | CREATE UNIQUE INDEX "Membership_pkey" ON public."Membership" USING btree ("userId", "organizationId")
+ Organization | Organization_pkey                        | CREATE UNIQUE INDEX "Organization_pkey" ON public."Organization" USING btree (id)
+ User         | User_authSubject_key                     | CREATE UNIQUE INDEX "User_authSubject_key" ON public."User" USING btree ("authSubject")
+ User         | User_pkey                                | CREATE UNIQUE INDEX "User_pkey" ON public."User" USING btree (id)
+(9 rows)
+
+--- RLS
+      relname       | relrowsecurity | relforcerowsecurity 
+--------------------+----------------+---------------------
+ AuditEvent         | t              | f
+ Membership         | t              | f
+ Organization       | t              | f
+ User               | t              | f
+ _prisma_migrations | f              | f
+(5 rows)
+
+--- policies (expected none: deny-all for non-owner roles)
+ schemaname | tablename | policyname 
+------------+-----------+------------
+(0 rows)
+
+--- NOT NULL columns
+  table_name  |                           string_agg                            
+--------------+-----------------------------------------------------------------
+ AuditEvent   | id, actorId, tenantId, action, targetId?, requestId, occurredAt
+ Membership   | userId, organizationId, role, status
+ Organization | id, name, kind, createdAt
+ User         | id, authSubject, status, createdAt
+(4 rows)
+

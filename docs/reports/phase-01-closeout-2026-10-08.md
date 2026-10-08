@@ -170,3 +170,7 @@ Phase0 is owner-accepted100%; absent farmer evidence remains product risk rather
 [Provider verification follow-up](phase-01-provider-verification-2026-10-08.md) records security remediation, 48 unit/component tests,10 integration,14 E2E and PASS for all mandatory local gates. Earlier results above remain historical. Supabase MCP OAuth succeeded; active chat tools require reload. Trusted-CA connectivity, hosted schema/auth/storage/role/CI/deployment evidence remain incomplete. Current verdict **FAIL**, phase **BLOCKED30.77%**, T001-T004 complete and T005-T013 remaining. No hosted migration or Phase2 implementation performed.
 
 Resumed verification: URL SSL override defect reproduced/fixed;51 unit/component tests and all mandatory local gates PASS. Strict hosted connectivity remains unsuccessful and active MCP tools absent. Current verdict FAIL and phase BLOCKED30.77%; completed T001-T004, remaining T005-T013. [Resumed evidence](phase-01-provider-verification-2026-10-08.md).
+
+## Final closure — local verification (2026-10-08)
+
+This report remains the historical record of earlier sessions. Phase 1 final closure, with all quality.yml steps reproduced locally and the owner-approved GitHub CI exception, is recorded in [Phase01 local verification and final closeout](phase-01-local-verification.md): PASS WITH CONDITIONS — LOCAL VERIFICATION, 13/13, verified code commit `bd9fadc`. GitHub-hosted CI remains unverified.

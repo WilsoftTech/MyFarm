@@ -1,0 +1,35 @@
+$ npm run test:e2e
+
+> myfarm@0.1.0 test:e2e
+> playwright test
+
+
+Running 14 tests using 3 workers
+
+  ok  2 [desktop] › tests\e2e\foundation.spec.ts:16:1 › anonymous APIs fail closed with no caching (270ms)
+  ok  4 [desktop] › tests\e2e\foundation.spec.ts:22:1 › health and manifest expose no secrets (216ms)
+  ok  3 [desktop] › tests\e2e\foundation.spec.ts:11:1 › anonymous users cannot open protected workspace (936ms)
+  ok  5 [desktop] › tests\e2e\foundation.spec.ts:27:1 › keyboard skip link targets content (494ms)
+  ok  7 [desktop] › tests\e2e\foundation.spec.ts:37:1 › private-file grants reject cross-origin requests (19ms)
+  ok  6 [desktop] › tests\e2e\foundation.spec.ts:32:1 › invalid sign-in is rejected without auth request (328ms)
+  ok  1 [desktop] › tests\e2e\foundation.spec.ts:2:1 › public shell works on desktop and mobile (1.5s)
+  ok 10 [mobile] › tests\e2e\foundation.spec.ts:16:1 › anonymous APIs fail closed with no caching (78ms)
+  ok 11 [mobile] › tests\e2e\foundation.spec.ts:22:1 › health and manifest expose no secrets (58ms)
+  ok  8 [mobile] › tests\e2e\foundation.spec.ts:2:1 › public shell works on desktop and mobile (781ms)
+  ok  9 [mobile] › tests\e2e\foundation.spec.ts:11:1 › anonymous users cannot open protected workspace (580ms)
+  ok 14 [mobile] › tests\e2e\foundation.spec.ts:37:1 › private-file grants reject cross-origin requests (29ms)
+  ok 13 [mobile] › tests\e2e\foundation.spec.ts:32:1 › invalid sign-in is rejected without auth request (396ms)
+  ok 12 [mobile] › tests\e2e\foundation.spec.ts:27:1 › keyboard skip link targets content (450ms)
+
+  14 passed (5.1s)
+[WebServer] ⚠ Warning: Next.js ignored bun.lock in <home> because it is outside the current Git repository (<scratch>\ci2).
+[WebServer]  To use this directory, set `outputFileTracingRoot` in your Next.js config.
+[WebServer] 
+[WebServer] {"event":"request_failed","requestId":"81c96dc4-9580-4927-9f98-e59f9f8dc55b","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"04912ddf-584f-4463-9eae-63d913f1482e","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"c3dcc596-19cb-4821-906c-e0408e531687","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"c272b0bd-6b57-4698-a011-4528a6be6b20","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"9c508e2d-eccc-4c33-804e-d648c700dba9","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"dba03b9b-e7c8-4107-97a6-a9e051b8411d","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"f81af138-38cc-4cbb-8c78-e0cd7569c4a6","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"f93a69b0-14da-4ec7-a0cf-db1547d3c5fa","code":"FORBIDDEN"}

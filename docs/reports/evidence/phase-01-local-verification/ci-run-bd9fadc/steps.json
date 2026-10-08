@@ -1,0 +1,90 @@
+[
+  {
+    "step": "01-npm-ci",
+    "command": "npm ci",
+    "startedAt": "2026-10-08T19:32:48.966Z",
+    "seconds": 31.617,
+    "exitCode": 0,
+    "signal": null
+  },
+  {
+    "step": "02-db-generate",
+    "command": "npm run db:generate",
+    "startedAt": "2026-10-08T19:33:20.586Z",
+    "seconds": 2.15,
+    "exitCode": 0,
+    "signal": null
+  },
+  {
+    "step": "03-lint",
+    "command": "npm run lint",
+    "startedAt": "2026-10-08T19:33:22.737Z",
+    "seconds": 4.29,
+    "exitCode": 0,
+    "signal": null
+  },
+  {
+    "step": "04-typecheck",
+    "command": "npm run typecheck",
+    "startedAt": "2026-10-08T19:33:27.028Z",
+    "seconds": 5.04,
+    "exitCode": 0,
+    "signal": null
+  },
+  {
+    "step": "05-boundaries",
+    "command": "npm run check:boundaries",
+    "startedAt": "2026-10-08T19:33:32.069Z",
+    "seconds": 0.454,
+    "exitCode": 0,
+    "signal": null
+  },
+  {
+    "step": "06-test",
+    "command": "npm test",
+    "startedAt": "2026-10-08T19:33:32.523Z",
+    "seconds": 4.498,
+    "exitCode": 0,
+    "signal": null
+  },
+  {
+    "step": "07-db-migrate",
+    "command": "npm run db:migrate",
+    "startedAt": "2026-10-08T19:33:37.022Z",
+    "seconds": 1.984,
+    "exitCode": 0,
+    "signal": null
+  },
+  {
+    "step": "08-test-integration",
+    "command": "npm run test:integration",
+    "startedAt": "2026-10-08T19:33:39.007Z",
+    "seconds": 1.836,
+    "exitCode": 0,
+    "signal": null
+  },
+  {
+    "step": "09-build",
+    "command": "npm run build",
+    "startedAt": "2026-10-08T19:33:40.844Z",
+    "seconds": 11.578,
+    "exitCode": 0,
+    "signal": null
+  },
+  {
+    "step": "10-playwright-install",
+    "command": "npx playwright install chromium",
+    "startedAt": "2026-10-08T19:33:52.422Z",
+    "seconds": 1.298,
+    "exitCode": 0,
+    "signal": null
+  },
+  {
+    "step": "11-test-e2e",
+    "command": "npm run test:e2e",
+    "startedAt": "2026-10-08T19:33:53.721Z",
+    "seconds": 6.117,
+    "exitCode": 0,
+    "signal": null
+  }
+]

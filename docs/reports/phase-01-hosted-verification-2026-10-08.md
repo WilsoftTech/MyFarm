@@ -46,3 +46,7 @@ T001–T010 verified complete; T011–T013 dependency/exit-gate blocked by manda
 The owner stopped Codex and handed Phase1 finalisation to Claude Code. During the handover a Claude debug run reused credentials after Codex had deleted its temporary fixtures, overwriting the uncommitted preview-tests.json with a spurious FAIL (`invalid_credentials`). Separately, running the harness from Git Bash without `MSYS_NO_PATHCONV=1` converts `/api/...` into a Windows path and makes `vercel curl` fail with "URL rejected"; this is a harness environment issue, not an application defect.
 
 Re-run on the same deployment with fresh disposable fixtures: `provider-fixtures.mjs setup` → `provider-db-fixtures.mjs setup` → `MSYS_NO_PATHCONV=1 node --use-system-ca .cache/preview-check.mjs` (**12/12 PASS**, exit 0) → database and provider cleanup PASS (2 temporary users and 2 private files deleted). [Results](evidence/phase-01-2026-10-08-mcp/preview-tests.json). GitHub CI remains `startup_failure`; task verdict above is unchanged.
+
+## Final closure — local verification (2026-10-08)
+
+This report remains the historical record of earlier sessions. Phase 1 final closure, with all quality.yml steps reproduced locally and the owner-approved GitHub CI exception, is recorded in [Phase01 local verification and final closeout](phase-01-local-verification.md): PASS WITH CONDITIONS — LOCAL VERIFICATION, 13/13, verified code commit `bd9fadc`. GitHub-hosted CI remains unverified.

@@ -3,22 +3,22 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — current Phase01 implementation/evidence/status review; no completion inferred from review.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-08 (Africa/Nairobi), live provider and hosted closeout session.
+- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase01 local verification closeout session.
 - Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced.
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
 - Remaining work/blockers: Maintain alignment after Phase01 live verification; historical results stay historical and source body remains immutable.
-- Evidence/report links: [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md).
+- Evidence/report links: [Phase01 local verification closeout](reports/phase-01-local-verification.md); [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
 Last inspected: 2026-10-08, Africa/Nairobi. Phase1 application, Prisma migration, tests and CI configuration now exist. Git main and remote WilsoftTech/MyFarm are present; hosted auth/storage/CI/deployment evidence is still absent. Root user instructions/design files are preserved.
 
-Current phase: **Phase1 — BLOCKED — 76.92% (10/13)**. Phase0 completed by owner acceptance; empirical farmer evidence absent. Phase2 not started in this checkout.
+Current phase: **Phase1 — COMPLETED — 100% (13/13), verdict PASS WITH CONDITIONS — LOCAL VERIFICATION** ([report](reports/phase-01-local-verification.md); GitHub-hosted CI not verified, owner exception [D-P01-LOCAL-CI-001](DECISION-LOG.md#d-p01-local-ci-001--phase-1-local-ci-substitution)). Phase0 completed by owner acceptance; empirical farmer evidence absent. Phase2 not started in this checkout.
 
 
 | Phase | Specification | Status | Completed | Pending | Test evidence |
 |---|---|---|---|---|---|
 | 0 | [Product Discovery and Scope Definition](phases/phase-00-product-discovery.md) | COMPLETED — 100% (owner acceptance) | T001–T010 administratively accepted; 0/10 original research-task evidence verified | Empirical field validation remains a risk/follow-up | [Owner approval](reports/phase-00-owner-approval-2026-10-08.md) |
-| 1 | [Engineering Foundation](phases/phase-01-engineering-foundation.md) | BLOCKED — 76.92% | T001–T010 verified | T011–T013 hosted CI/preview/final audit | [Closeout](reports/phase-01-closeout-2026-10-08.md) |
+| 1 | [Engineering Foundation](phases/phase-01-engineering-foundation.md) | COMPLETED — 100% (PASS WITH CONDITIONS — LOCAL VERIFICATION) | T001–T013 verified | Conditions C1–C5 (hosted CI unverified, provider SQL outside migrations, Phase2 migration order, production auth settings, streamed redirect) | [Local verification](reports/phase-01-local-verification.md) |
 | 2 | [Farmer Identity and Farm Registry](phases/phase-02-farmer-registry.md) | NOT STARTED — 0% | None | All H tasks | None |
 | 3 | [Enterprises Crops Livestock and Seasons](phases/phase-03-enterprises-seasons.md) | NOT STARTED — 0% | None | All H tasks | None |
 | 4 | [Farm Accounting Engine](phases/phase-04-farm-accounting.md) | NOT STARTED — 0% | None | All H tasks | None |
@@ -61,13 +61,13 @@ Prepared [research operations](product/research-operations.md), empty [evidence 
 
 The user explicitly closed Phase0 and authorized immediate Phase1. This supersedes earlier “Phase0 only”/unmet-gate restrictions for advancement. Historical missing-evidence reports are retained. Phase1 may build/test local foundation; Supabase provider is selected; credentials/deployment and later phases remain separate prerequisites.
 
-## Latest Phase 1 verification
+## Historical Phase 1 verification
 
 All four mandatory local gates pass; 48 unit/component, 10 integration and 14 browser tests pass. Supabase MCP OAuth completed, but the active chat requires reload to load its tools. Hosted connection requires a trusted CA; real auth/storage/CI/deployment gates remain open. [Follow-up report](reports/phase-01-provider-verification-2026-10-08.md).
 
 Latest resumed Phase1 session: mandatory local gates PASS;51 unit/component tests PASS. Strict read-only hosted probes still fail DNS/direct and CA/session-pool verification. MCP registered/enabled but absent from active tool catalogue. Phase1 remains BLOCKED30.77%, T001-T004 complete, T005-T013 pending. [Resumed evidence](reports/phase-01-provider-verification-2026-10-08.md).
 
-## Current session status
+## Historical session status (superseded by Phase01 local verification closeout)
 
 Phase 01 PARTIALLY COMPLETE — 76.92% (10/13 verified task IDs). Verdict: FAIL. Completed T001–T010. Remaining T011–T013: hosted CI, preview and final audit evidence pending.
 
@@ -78,7 +78,7 @@ Prisma migrations202610080001_foundation and202610080101_private_grant_rate_limi
 API change: same-origin private-file requests work with actual HTTP authority; excessive distinct grants return429 RATE_LIMITED. Offline sync, financial/stock writes, farmer registry and AI are NOT APPLICABLE to Phase1 and remain unimplemented. Restore/replay evidence from preceding isolated synthetic rehearsal remains applicable. Recovery email delivery and production operational settings are not claimed; production release must verify them. Source research remains absent despite Phase0 owner acceptance.
 
 
-## Current session status
+## Historical session status (superseded by Phase01 local verification closeout)
 
 Phase 01 PARTIALLY COMPLETE — 76.92% (10/13 verified task IDs). Verdict: FAIL. Completed T001–T010. Remaining T011–T013: hosted CI, preview and final audit evidence pending.
 
@@ -89,7 +89,7 @@ Prisma migrations202610080001_foundation and202610080101_private_grant_rate_limi
 API change: same-origin private-file requests work with actual HTTP authority; excessive distinct grants return429 RATE_LIMITED. Offline sync, financial/stock writes, farmer registry and AI are NOT APPLICABLE to Phase1 and remain unimplemented. Restore/replay evidence from preceding isolated synthetic rehearsal remains applicable. Recovery email delivery and production operational settings are not claimed; production release must verify them. Source research remains absent despite Phase0 owner acceptance.
 
 
-## Current session status
+## Historical session status (superseded by Phase01 local verification closeout)
 
 Phase 01 BLOCKED — 76.92% (10/13 verified task IDs). Verdict: FAIL. Completed T001–T010. Remaining T011–T013: hosted CI and dependency-gated final closure. Protected preview builds and live authenticated hosted verification succeeds; CI startup failure prevents completion.
 
@@ -99,3 +99,12 @@ Prisma migrations202610080001_foundation and202610080101_private_grant_rate_limi
 
 API change: same-origin private-file requests work with actual HTTP authority; excessive distinct grants return429 RATE_LIMITED. Offline sync, financial/stock writes, farmer registry and AI are NOT APPLICABLE to Phase1 and remain unimplemented. Restore/replay evidence from preceding isolated synthetic rehearsal remains applicable. Recovery email delivery and production operational settings are not claimed; production release must verify them. Source research remains absent despite Phase0 owner acceptance.
 
+## Current session status — Phase 1 local verification closeout
+
+Phase 01 COMPLETED — 100% (13/13 verified task IDs). Verdict: **PASS WITH CONDITIONS — LOCAL VERIFICATION**. Verified code commit `bd9fadc`.
+
+GitHub Actions cannot start (account billing lock; run 37743343360 executed zero steps). Under owner decision [D-P01-LOCAL-CI-001](DECISION-LOG.md#d-p01-local-ci-001--phase-1-local-ci-substitution) (Phase 1 only), every quality.yml step was reproduced from a clean clone against a fresh isolated postgres:17 service: all 11 steps PASS — lint 0 warnings, typecheck, boundaries, 59 unit/component, 2 migrations on a fresh DB, 11 PostgreSQL integration, production build, 14 E2E (desktop + mobile). Migration replay, drift (none), second-fresh-DB identical schema, constraints/indexes/RLS and backup/restore PASS. Production-mode `next start` against real Supabase Auth/storage: 28/28 PASS with disposable users, cleanup verified; anonymous production security probes 33/33 PASS; npm audit 0 vulnerabilities; no secrets in history, tracked files, evidence or client bundle.
+
+Defect fixed: double-encoded UTF-8 (mojibake) in home page, footer/title template, loading status and sign-in button; component test had asserted the corrupted label. Regression guard added. **GitHub-hosted CI remains unverified and is not claimed.** Conditions C1–C5 with owners/deadlines: [report §11](reports/phase-01-local-verification.md#11-conditions-nonblocking-owner-tracked).
+
+Next action: owner review of this closure; then rebase/merge Phase 2 onto the closed Phase 1 head after renaming its migration after `202610080101` (C3) and re-run verification. Restore hosted CI before any production release (C1).

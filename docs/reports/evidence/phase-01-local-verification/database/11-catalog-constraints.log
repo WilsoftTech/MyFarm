@@ -1,0 +1,13 @@
+        tbl         |            conname             | contype | fk_on_delete_update 
+--------------------+--------------------------------+---------+---------------------
+ _prisma_migrations | _prisma_migrations_pkey        | p       | 
+ "User"             | User_pkey                      | p       | 
+ "Organization"     | Organization_pkey              | p       | 
+ "Membership"       | Membership_organizationId_fkey | f       | r/c
+ "Membership"       | Membership_pkey                | p       | 
+ "Membership"       | Membership_userId_fkey         | f       | r/c
+ "AuditEvent"       | AuditEvent_actorId_fkey        | f       | r/c
+ "AuditEvent"       | AuditEvent_pkey                | p       | 
+ "AuditEvent"       | AuditEvent_tenantId_fkey       | f       | r/c
+(9 rows)
+

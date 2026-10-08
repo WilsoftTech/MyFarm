@@ -1,0 +1,21 @@
+$ npx prisma migrate deploy
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+Datasource "db": PostgreSQL database "myfarm_phase01_replay", schema "public" at "127.0.0.1:55431"
+
+2 migrations found in prisma/migrations
+
+Applying migration `202610080001_foundation`
+Applying migration `202610080101_private_grant_rate_limit`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 202610080001_foundation/
+    └─ migration.sql
+  └─ 202610080101_private_grant_rate_limit/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+exit=0

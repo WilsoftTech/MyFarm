@@ -1,0 +1,15 @@
+$ npm audit
+found 0 vulnerabilities
+exit=0
+
+$ npm audit --omit=dev
+found 0 vulnerabilities
+exit=0
+
+$ npm audit signatures
+
+424 packages have verified registry signatures
+
+166 packages have verified attestations
+
+exit=0

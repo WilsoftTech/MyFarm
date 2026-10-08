@@ -1,0 +1,43 @@
+$ node --use-system-ca .cache/provider-fixtures.mjs setup
+{"stage":"setup","adminApi":"PASS","temporaryUsersCreated":2,"privateFilesCreated":2}
+exit=0
+$ node --use-system-ca .cache/provider-db-fixtures.mjs setup
+{"stage":"setup","result":"PASS"}
+exit=0
+$ node --use-system-ca .cache/local-verification-live.mjs
+Restricted runtime TLS: PASS
+Real mobile sign-in and workspace: PASS
+Secure HttpOnly auth cookies: PASS
+Authenticated session API: PASS
+Guessed cross-tenant scope denied: PASS
+Farmer administrator route denied: PASS
+Assigned administrator workspace: PASS
+Assigned agent workspace: PASS
+Administrator has no global tenant bypass: PASS
+{"privateGrantStatuses":[200,200]}
+Concurrent private grants succeed: PASS
+Short-lived private grant: PASS
+Private signed file downloads: PASS
+Concurrent grant appends exactly one audit: PASS
+Audit retry payload collision denied: PASS
+Cross-tenant private grant denied: PASS
+Anonymous storage signing denied: PASS
+Second real provider identity: PASS
+Direct storage cross-tenant denial: PASS
+Owner real provider identity: PASS
+Provider session confirmed active: PASS
+Revoked membership API denied: PASS
+Revoked membership direct storage denied: PASS
+Provider recovery token generated without email: PASS
+Provider global sign-out: PASS
+Provider session revocation confirmed: PASS
+Revoked JWT cannot obtain new storage grant: PASS
+Revoked browser session API denied: PASS
+Revoked browser redirected to sign-in: PASS
+live exit=0
+$ node --use-system-ca .cache/provider-db-fixtures.mjs cleanup
+{"stage":"cleanup","result":"PASS"}
+exit=0
+$ node --use-system-ca .cache/provider-fixtures.mjs cleanup
+{"stage":"cleanup","ownedTemporaryUsersDeleted":2,"ownedPrivateFilesDeleted":2}
+exit=0

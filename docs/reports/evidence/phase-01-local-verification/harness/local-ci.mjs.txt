@@ -1,0 +1,42 @@
+// Reproduces .github/workflows/quality.yml step-by-step in a clean checkout.
+// Usage: node local-ci.mjs <checkoutDir> <logDir>
+import { spawnSync } from "node:child_process";
+import { mkdirSync, writeFileSync } from "node:fs";
+import path from "node:path";
+
+const [checkout, logDir] = process.argv.slice(2);
+if (!checkout || !logDir) throw new Error("usage: local-ci.mjs <checkoutDir> <logDir>");
+mkdirSync(logDir, { recursive: true });
+
+const url = "postgresql://myfarm:isolated-ci-password@127.0.0.1:55431/myfarm_phase01_test";
+const env = { ...process.env, CI: "true", GITHUB_ACTIONS: "", NEXT_TELEMETRY_DISABLED: "1", DATABASE_URL: url, DIRECT_URL: url, TEST_DATABASE_URL: url };
+for (const k of ["NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "SUPABASE_SERVICE_ROLE_KEY", "DATABASE_CA_CERT", "DATABASE_CA_CERT_PATH"]) delete env[k];
+
+const steps = [
+  ["01-npm-ci", "npm ci"],
+  ["02-db-generate", "npm run db:generate"],
+  ["03-lint", "npm run lint"],
+  ["04-typecheck", "npm run typecheck"],
+  ["05-boundaries", "npm run check:boundaries"],
+  ["06-test", "npm test"],
+  ["07-db-migrate", "npm run db:migrate"],
+  ["08-test-integration", "npm run test:integration"],
+  ["09-build", "npm run build"],
+  ["10-playwright-install", "npx playwright install chromium"],
+  ["11-test-e2e", "npm run test:e2e"],
+];
+const only = process.env.ONLY_STEPS?.split(",");
+const results = [];
+for (const [name, command] of steps) {
+  if (only && !only.includes(name)) continue;
+  const startedAt = new Date();
+  const r = spawnSync(process.env.ComSpec, ["/d", "/s", "/c", command], { cwd: checkout, env, encoding: "utf8", maxBuffer: 256 * 1024 * 1024, windowsHide: true, timeout: 20 * 60 * 1000 });
+  const seconds = (Date.now() - startedAt.getTime()) / 1000;
+  writeFileSync(path.join(logDir, name + ".log"), "$ " + command + "\n" + (r.stdout ?? "") + (r.stderr ?? ""));
+  const rec = { step: name, command, startedAt: startedAt.toISOString(), seconds, exitCode: r.status, signal: r.signal, error: r.error?.message };
+  results.push(rec);
+  console.log(JSON.stringify(rec));
+  if (r.status !== 0) break; // GitHub Actions stops the job at the first failing step
+}
+writeFileSync(path.join(logDir, "steps.json"), JSON.stringify(results, null, 2));
+if (results.some(r => r.exitCode !== 0)) process.exitCode = 1;

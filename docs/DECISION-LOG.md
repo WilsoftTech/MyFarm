@@ -130,3 +130,17 @@ Prisma migrations202610080001_foundation and202610080101_private_grant_rate_limi
 API change: same-origin private-file requests work with actual HTTP authority; excessive distinct grants return429 RATE_LIMITED. Offline sync, financial/stock writes, farmer registry and AI are NOT APPLICABLE to Phase1 and remain unimplemented. Restore/replay evidence from preceding isolated synthetic rehearsal remains applicable. Recovery email delivery and production operational settings are not claimed; production release must verify them. Source research remains absent despite Phase0 owner acceptance.
 
 [Current closeout](reports/phase-01-closeout-2026-10-08.md).
+
+## D-P01-LOCAL-CI-001 — Phase 1 Local CI Substitution
+
+APPROVED, direct owner instruction 2026-10-08 (Africa/Nairobi). Scope: **Phase 1 only**.
+
+- **Context:** GitHub Actions cannot run for WilsoftTech/MyFarm. Run [37743343360](https://github.com/WilsoftTech/MyFarm/actions/runs/37743343360) on `d9ef30b` executed zero steps; GitHub's annotation states "The job was not started because your account is locked due to a billing issue."
+- **Decision:** The owner authorizes equivalent local verification as the replacement criterion for the Phase 1 "CI run" requirement (MYF-P01-AC004, exit gate L, T011–T013).
+- **Requirements of the substitution:** every applicable `.github/workflows/quality.yml` step is reproduced locally from a clean checkout against an isolated `postgres:17` service with the workflow's environment; all applicable mandatory quality gates (static, unit/component, integration, E2E desktop/mobile, migration, real-auth, security, production-mode) run; every result is recorded with evidence; anything not reproducible is recorded NOT VERIFIED with a reason.
+- **Limits:** GitHub-hosted CI remains **unverified** and is not claimed to have passed. This exception does not apply to Phase 2 or any later phase, and does not remove CI requirements generally. Hosted CI must be revisited and pass before any future production release.
+- **Outcome:** All 11 workflow steps PASS locally at `bd9fadc`; database, real Supabase auth, production-mode and security verification PASS. Phase 1 closed **PASS WITH CONDITIONS — LOCAL VERIFICATION**, 13/13. [Report and evidence](reports/phase-01-local-verification.md).
+
+## D-P01-007 — Phase 1 closeout conditions
+
+OBSERVED/RECORDED 2026-10-08. Nonblocking conditions carried from Phase 1 closure, each with owner and deadline in the [local verification report](reports/phase-01-local-verification.md#11-conditions-nonblocking-owner-tracked): C1 hosted CI unverified; C2 provider SQL (`supabase/policies/`, including the session-check function) sits outside the Prisma migration chain; C3 Phase 2 migration `202610080002_farmer_registry` must be renamed after `202610080101` before merge; C4 recovery email/production auth settings/pooler-to-database TLS unverified; C5 anonymous protected pages return a streamed 200 with in-stream redirect (no content leak). A user-visible double-encoded UTF-8 defect found during verification was fixed with regression tests in `bd9fadc`.

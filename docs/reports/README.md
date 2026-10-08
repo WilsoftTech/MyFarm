@@ -22,6 +22,8 @@ Never fabricate results, farmer interviews or approvals. A report lists requirem
 
 ## Current Phase1 evidence
 
+**Final closure:** [Phase01 local verification and final closeout](phase-01-local-verification.md) — PASS WITH CONDITIONS — LOCAL VERIFICATION, 13/13, verified code commit `bd9fadc`; [evidence folder](evidence/phase-01-local-verification/). GitHub-hosted CI not verified (D-P01-LOCAL-CI-001). Entries below are historical.
+
 [Closeout](phase-01-closeout-2026-10-08.md), [audit](phase-01-audit-2026-10-08.md), [document review](phase-01-document-review-2026-10-08.md), [exact checks](evidence/phase-01-2026-10-08/checks.json). Phase1 BLOCKED30.77%;54 unit/component/browser tests plus10 real DB tests pass. No hosted provider/CI/deployment proof.
 
 Phase0 is now [owner-accepted100%](phase-00-owner-approval-2026-10-08.md); earlier zero-research/FAIL reports remain historical and are not rewritten as passing empirical evidence.
@@ -33,6 +35,8 @@ Resumed Phase1 evidence:51 unit/component tests and mandatory local gates PASS; 
 ## Current live verification and decision record
 
 Phase 01 BLOCKED — 76.92% (10/13 verified task IDs). Verdict: FAIL. Completed T001–T010. Remaining T011–T013: hosted CI and dependency-gated final closure. Protected preview builds and live authenticated hosted verification succeeds; CI startup failure prevents completion.
+
+**Superseded 2026-10-08 (local verification closeout):** Phase 01 COMPLETED — 100% (13/13). Verdict PASS WITH CONDITIONS — LOCAL VERIFICATION at `bd9fadc`; GitHub-hosted CI blocked by account billing lock and not verified (owner exception D-P01-LOCAL-CI-001, Phase 1 only). [local verification report](phase-01-local-verification.md).
 
 Live Supabase Auth and private storage:28 checks PASS. Current membership/session revocation, tenant isolation, private downloads, secure cookies, concurrent idempotency and recovery token generation verified. Temporary test users/files/database fixtures removed. Lint/typecheck/build/boundaries PASS0;58 unit/component tests and11 PostgreSQL integration tests PASS. Rate limiter:30 distinct private-file grants/actor/minute, shared transaction advisory lock, identical retries free, database clock window; concurrent boundary and expired-window test PASS. Same-origin authority handling repaired after real browser verification exposed Next.js internal hostname normalization. TLS URL overrides stripped; verified client-to-pooler TLS and Supabase CA. Pooler-to-database pg_stat_ssl reports false; no end-to-end provider-managed transport claim.
 

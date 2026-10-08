@@ -1,0 +1,70 @@
+// Anonymous production-mode probes against `next start`. Run from the repo root.
+import { spawn, spawnSync } from "node:child_process";
+import { readFileSync } from "node:fs";
+import net from "node:net";
+import dotenv from "dotenv";
+
+const env = dotenv.parse(readFileSync(".env.local"));
+const probe = net.createServer(); await new Promise(r => probe.listen(0, "127.0.0.1", r)); const port = probe.address().port; await new Promise(r => probe.close(r));
+const base = "http://127.0.0.1:" + port;
+const server = spawn(process.execPath, ["node_modules/next/dist/bin/next", "start", "--hostname", "127.0.0.1", "--port", String(port)], { env: { ...process.env, ...env, NODE_ENV: "production" }, windowsHide: true, stdio: ["ignore", "pipe", "pipe"] });
+let serverLog = ""; server.stdout.on("data", d => serverLog += d); server.stderr.on("data", d => serverLog += d);
+const results = [];
+const check = (name, ok, detail) => { results.push({ check: name, result: ok ? "PASS" : "FAIL", ...(detail === undefined ? {} : { detail }) }); console.log((ok ? "PASS " : "FAIL ") + name + (detail === undefined ? "" : " " + JSON.stringify(detail))); };
+const uuid = "11111111-1111-4111-8111-111111111111";
+try {
+  const deadline = Date.now() + 30000;
+  for (;;) { try { if ((await fetch(base + "/api/health")).ok) break; } catch {} if (Date.now() > deadline) throw new Error("server not ready"); await new Promise(r => setTimeout(r, 200)); }
+
+  const home = await fetch(base + "/");
+  const h = home.headers;
+  check("security headers on /", h.get("x-content-type-options") === "nosniff" && h.get("x-frame-options") === "DENY" && h.get("referrer-policy") === "strict-origin-when-cross-origin" && (h.get("content-security-policy") ?? "").includes("frame-ancestors 'none'") && !!h.get("permissions-policy"));
+  check("no x-powered-by", !h.has("x-powered-by"));
+  const html = await home.text();
+  check("home renders correct UTF-8 text", html.includes("MYFARM · UGANDA") && html.includes("MyFarm · Built around the farm.") && !/Â|â€|â†/.test(html));
+
+  for (const path of ["/.env", "/.env.local", "/.env.example", "/.git/config", "/prisma/schema.prisma", "/package.json", "/next.config.ts", "/src/proxy.ts", "/.next/server/app/page.js", "/_next/../.env.local", "/%2e%2e/.env.local", "/supabase/policies/runtime-role.sql", "/.cache/phase01-provider-admin.env"]) {
+    const r = await fetch(base + path, { redirect: "manual" }); const body = await r.text();
+    check("sensitive path not served " + path, r.status === 404 && !/DATABASE_URL|SUPABASE_SERVICE_ROLE|BEGIN CERTIFICATE|\[core\]|datasource db/.test(body), { status: r.status });
+  }
+
+  for (const [path, expected] of [["/api/v1/session", 401], ["/api/v1/health", 401], ["/api/v1/scopes/" + uuid, 401], ["/api/v1/scopes/not-a-uuid", 400]]) {
+    const r = await fetch(base + path); const body = await r.json();
+    check("anonymous " + path + " -> " + expected, r.status === expected && (r.headers.get("cache-control") ?? "").includes("no-store") && !("stack" in body) && Object.keys(body).sort().join() === "error,requestId", { status: r.status, error: body.error });
+  }
+
+  const post = (path, init) => fetch(base + path, { method: "POST", ...init });
+  const filePath = "/api/v1/scopes/" + uuid + "/files/" + uuid;
+  let r = await post(filePath, { headers: { "content-type": "application/json" }, body: JSON.stringify({ requestId: uuid }) });
+  check("file grant without Origin denied", r.status === 403, { status: r.status });
+  r = await post(filePath, { headers: { origin: "https://evil.test", "content-type": "application/json" }, body: JSON.stringify({ requestId: uuid }) });
+  check("file grant cross-origin denied", r.status === 403, { status: r.status });
+  r = await post(filePath, { headers: { origin: base, "content-type": "text/plain" }, body: "x" });
+  check("file grant wrong content-type rejected", r.status === 400, { status: r.status });
+  r = await post(filePath, { headers: { origin: base, "content-type": "application/json" }, body: "{not json" });
+  check("file grant malformed JSON rejected", r.status === 400, { status: r.status });
+  r = await post(filePath, { headers: { origin: base, "content-type": "application/json" }, body: JSON.stringify({ requestId: uuid, extra: 1 }) });
+  check("file grant unknown field rejected (strict schema)", r.status === 400, { status: r.status });
+  r = await post(filePath, { headers: { origin: base, "content-type": "application/json" }, body: JSON.stringify({ requestId: uuid }) });
+  check("file grant valid shape but anonymous -> 401", r.status === 401, { status: r.status });
+  r = await post("/api/v1/scopes/" + uuid + "/files/..%2f..%2fsecret", { headers: { origin: base, "content-type": "application/json" }, body: JSON.stringify({ requestId: uuid }) });
+  check("file grant path traversal object id rejected", r.status === 400 || r.status === 401 || r.status === 404, { status: r.status });
+  r = await post("/api/v1/session", { headers: { origin: base } });
+  check("unsupported method on session -> 405", r.status === 405, { status: r.status });
+
+  for (const path of ["/workspace", "/admin?scope=" + uuid, "/agent?scope=" + uuid]) {
+    const res = await fetch(base + path, { redirect: "manual" }); const body = await res.text();
+    const leaked = ["Welcome to MyFarm", "Your account is verified", "Administrator workspace", "Agent workspace", "No workspace assigned"].filter(x => body.includes(x));
+    // Root loading.tsx makes Next.js stream: a 200 shell carrying an in-stream 307 redirect, or a real 3xx when not streamed.
+    const redirected = ([303, 307, 308].includes(res.status) && (res.headers.get("location") ?? "").includes("/sign-in")) || (res.status === 200 && body.includes("NEXT_REDIRECT;replace;/sign-in") && body.includes(";307;"));
+    check("protected page denies anonymous " + path.split("?")[0] + " (no content, redirect to sign-in, no-store)", redirected && leaked.length === 0 && (res.headers.get("cache-control") ?? "").includes("no-store"), { status: res.status, leaked });
+  }
+  const forged = await fetch(base + "/api/v1/session", { headers: { cookie: "sb-sudqhluwsaijvjjcegpv-auth-token=base64-eyJhY2Nlc3NfdG9rZW4iOiJmb3JnZWQifQ" } });
+  check("forged auth cookie treated as unauthenticated", forged.status === 401, { status: forged.status });
+
+  check("server logs contain no secrets/stack traces", !/DATABASE_URL|service_role|postgres(ql)?:\/\/|eyJ[A-Za-z0-9_-]{20,}|\n\s+at /.test(serverLog));
+} catch (e) { check("probe harness", false, { error: e.message }); }
+finally { if (process.platform === "win32") spawnSync("taskkill", ["/PID", String(server.pid), "/T", "/F"], { stdio: "ignore" }); else server.kill(); }
+const failed = results.filter(r => r.result === "FAIL").length;
+console.log(JSON.stringify({ total: results.length, passed: results.length - failed, failed }));
+process.exitCode = failed ? 1 : 0;

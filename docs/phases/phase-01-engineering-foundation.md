@@ -2,15 +2,15 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — current Phase01 implementation/evidence/status review; no completion inferred from review.
-- Implementation status: BLOCKED — 76.92% (10/13 verified Phase01 tasks; later scope not counted).
-- Last reviewed: 2026-10-08 (Africa/Nairobi), live provider and hosted closeout session.
+- Implementation status: COMPLETED — 100% (13/13 verified Phase01 tasks; verdict PASS WITH CONDITIONS — LOCAL VERIFICATION; later scope not counted).
+- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase01 local verification closeout session.
 - Related phase/task IDs: Phase 01; MYF-P01-T001 through MYF-P01-T013; review session Phase01.
-- Verified completed work: T001–T010; live Supabase verification and local quality/security gates PASS; see current closeout.
-- Remaining work/blockers: T011–T013 hosted CI/preview/final review pending.
-- Evidence/report links: [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md).
+- Verified completed work: T001–T013; all quality.yml steps reproduced locally and PASS at bd9fadc; database, real Supabase auth, production-mode and security verification PASS.
+- Remaining work/blockers: No blocker. Conditions C1–C5 (GitHub-hosted CI unverified under owner exception D-P01-LOCAL-CI-001, provider SQL outside migration chain, Phase2 migration order, production auth settings, streamed redirect).
+- Evidence/report links: [local verification](../reports/phase-01-local-verification.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **BLOCKED — 76.92% (10/13 verified task IDs)**. Date: 2026-10-08. Phase1 is explicitly authorized; current verification is in [closeout](../reports/phase-01-closeout-2026-10-08.md). Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **COMPLETED — 100% (13/13 verified task IDs) — PASS WITH CONDITIONS — LOCAL VERIFICATION**. GitHub-hosted CI is not verified; see [local verification](../reports/phase-01-local-verification.md) and decision D-P01-LOCAL-CI-001. Date: 2026-10-08. Phase1 is explicitly authorized; current verification is in [closeout](../reports/phase-01-closeout-2026-10-08.md). Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
@@ -251,13 +251,13 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 - [x] MYF-P01-T008 verified complete; [evidence](../reports/phase-01-closeout-2026-10-08.md).
 - [x] MYF-P01-T009 verified complete; [evidence](../reports/phase-01-closeout-2026-10-08.md).
 - [x] MYF-P01-T010 verified complete; [evidence](../reports/phase-01-closeout-2026-10-08.md).
-- [ ] MYF-P01-T011 pending hosted closure evidence.
-- [ ] MYF-P01-T012 pending hosted closure evidence.
-- [ ] MYF-P01-T013 pending hosted closure evidence.
-- [ ] Every K criterion verified.
-- [ ] Security/integrity audit, remediation and retest complete.
-- [ ] Applicable quality/E2E/integration/migration evidence recorded.
-- [ ] L gate approved; closeout/status updated from evidence.
+- [x] MYF-P01-T011 verified complete under approved replacement criterion D-P01-LOCAL-CI-001; [evidence](../reports/phase-01-local-verification.md).
+- [x] MYF-P01-T012 verified complete; [evidence](../reports/phase-01-local-verification.md).
+- [x] MYF-P01-T013 audit and closeout complete; [evidence](../reports/phase-01-local-verification.md).
+- [x] Every K criterion verified (AC004 CI via approved local substitution).
+- [x] Security/integrity audit, remediation (UTF-8 text defect) and retest complete.
+- [x] Applicable quality/E2E/integration/migration evidence recorded.
+- [x] L gate met with conditions C1–C5; closeout/status updated from evidence. GitHub-hosted CI remains unverified (C1).
 
 ## Historical session evidence
 
@@ -267,14 +267,18 @@ Latest follow-up: 48 unit/component,10 DB integration,14 E2E tests and all local
 
 Resumed session:51 unit/component tests and all mandatory local checks PASS; MCP tools/trusted CA/live acceptance remain unavailable. T001-T004 complete, T005-T013 pending; verified progress30.77%. [Resumed evidence](../reports/phase-01-provider-verification-2026-10-08.md).
 
-## Latest verified session
+## Historical verified session
 
 Phase 01 PARTIALLY COMPLETE — 76.92% (10/13 verified task IDs). Verdict: FAIL. Completed T001–T010. Remaining T011–T013: hosted CI, preview and final audit evidence pending.
 
-## Latest verified session
+## Historical verified session
 
 Phase 01 PARTIALLY COMPLETE — 76.92% (10/13 verified task IDs). Verdict: FAIL. Completed T001–T010. Remaining T011–T013: hosted CI, preview and final audit evidence pending.
 
-## Latest verified session
+## Historical verified session
 
 Phase 01 BLOCKED — 76.92% (10/13 verified task IDs). Verdict: FAIL. Completed T001–T010. Remaining T011–T013: hosted CI and dependency-gated final closure. Protected preview builds and live authenticated hosted verification succeeds; CI startup failure prevents completion.
+
+## Current verified session — local verification closeout
+
+Phase 01 COMPLETED — 100% (13/13 verified task IDs). Verdict: **PASS WITH CONDITIONS — LOCAL VERIFICATION** at `bd9fadc`. All 11 quality.yml steps reproduced locally from a clean clone with an isolated postgres:17 service and PASS (59 unit/component, 11 integration, 14 E2E); migration fresh/replay/drift/restore PASS; real Supabase production-mode 28/28 and anonymous probes 33/33 PASS. GitHub-hosted CI blocked by account billing lock and NOT VERIFIED (owner exception D-P01-LOCAL-CI-001, Phase 1 only). [local verification](../reports/phase-01-local-verification.md).

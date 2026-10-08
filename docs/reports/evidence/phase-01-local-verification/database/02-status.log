@@ -1,0 +1,10 @@
+$ npx prisma migrate status
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+Datasource "db": PostgreSQL database "myfarm_phase01_test", schema "public" at "127.0.0.1:55431"
+
+2 migrations found in prisma/migrations
+
+Database schema is up to date!
+exit=0
