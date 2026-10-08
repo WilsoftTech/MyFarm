@@ -1,0 +1,39 @@
+Isolated Docker postgres:17 container myfarm-phase02-verification, 127.0.0.1:55432, database myfarm_phase02_rehearsal. Not shared, hosted or production.
+
+## fresh install — exit 0
+Datasource "db": PostgreSQL database "myfarm_phase02_rehearsal", schema "public" at "127.0.0.1:55432"
+
+2 migrations found in prisma/migrations
+
+Applying migration `202610080001_foundation`
+Applying migration `202610080002_farmer_registry`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 202610080001_foundation/
+    └─ migration.sql
+  └─ 202610080002_farmer_registry/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+
+## replay — exit 0
+Datasource "db": PostgreSQL database "myfarm_phase02_rehearsal", schema "public" at "127.0.0.1:55432"
+
+2 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+
+## drift check (empty = no drift) — exit 0
+-- This is an empty migration.
+
+Loaded Prisma config from prisma.config.ts.
+

@@ -1,0 +1,14 @@
+$ npm run test:integration
+
+> myfarm@0.1.0 test:integration
+> vitest run --project integration
+
+
+ RUN  v5.0.3 D:/Myfarm/.claude/worktrees/phase-02
+
+
+ Test Files  2 passed (2)
+      Tests  26 passed (26)
+   Start at  03:30:56
+   Duration  3.22s (tests 74%, import 17%, transform 9%, worker 1%)
+

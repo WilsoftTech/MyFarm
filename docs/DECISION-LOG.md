@@ -43,8 +43,8 @@ Q01 is **PARTIALLY RESOLVED**: user selected Rukungiri. Remaining components and
 | Q02 | Languages, literacy/accessibility, shared devices, supported phone/browser and charging | Product/research owner | 0–1 | Observe actual devices/users; prioritize supported UI and recovery choices |
 | Q03 | PARTIALLY RESOLVED: Supabase Auth selected; email/password existing-account foundation implemented, live recovery/session/rate-limit policy pending | Engineering/security owner | 1 | Threat/cost/accessibility review and provider contract tests |
 | Q04 | PARTIALLY RESOLVED: stack pinned, Supabase PG selected/private-storage adapter prepared; region/plan/cost/hosted validation pending | Engineering/operations owner | 1 | Current official docs plus compatibility/latency/private-media test |
-| Q05 | User–Farmer cardinality, personal tenant, membership, ownership transfer, location catalogs | Product/domain/security owner | 2 | Approved entity/policy mapping and isolation tests |
-| Q06 | Document/contact/GPS purpose, retention, erasure/export, backups and history preservation | Product/privacy owner | 2 | Reviewed data inventory/retention policy; no compliance claim assumed |
+| Q05 | RESOLVED for Phase2 by owner 2026-10-08 ([D-P02-002](#d-p02-002--q05-identity-model)): one farmer per user in a PERSONAL organization; many farms; no ownership transfer; free-text location. Agent-assisted onboarding and location catalogs remain open | Product/domain/security owner | 2 | Approved entity/policy mapping and isolation tests |
+| Q06 | PARTIALLY RESOLVED by owner 2026-10-08 ([D-P02-003](#d-p02-003--q06-data-minimization)): minimal contact/location fields, optional GPS, no identity numbers, documents deferred. Retention, erasure/export and backup policy remain open | Product/privacy owner | 2 | Reviewed data inventory/retention policy; no compliance claim assumed |
 | Q07 | Overlapping seasons, perennial crops, multi-plot enterprise, close/reopen rules | Agricultural/product owner | 3 | Domain examples for crop/poultry lifecycle validated with farmers |
 | Q08 | Unit catalog/conversions and unsupported enterprise type UX | Agricultural/domain owner | 3–5 | Approved unit definitions, rounding and catalog extensibility |
 | Q09 | Cash/accrual recognition, monetary precision/currency, allocation, tax and correction policy | Accounting/product owner | 4 | Approved numeric fixtures; no authoritative basis-dependent report before decision |
@@ -144,3 +144,27 @@ APPROVED, direct owner instruction 2026-10-08 (Africa/Nairobi). Scope: **Phase 1
 ## D-P01-007 — Phase 1 closeout conditions
 
 OBSERVED/RECORDED 2026-10-08. Nonblocking conditions carried from Phase 1 closure, each with owner and deadline in the [local verification report](reports/phase-01-local-verification.md#11-conditions-nonblocking-owner-tracked): C1 hosted CI unverified; C2 provider SQL (`supabase/policies/`, including the session-check function) sits outside the Prisma migration chain; C3 Phase 2 migration `202610080002_farmer_registry` must be renamed after `202610080101` before merge; C4 recovery email/production auth settings/pooler-to-database TLS unverified; C5 anonymous protected pages return a streamed 200 with in-stream redirect (no content leak). A user-visible double-encoded UTF-8 defect found during verification was fixed with regression tests in `bd9fadc`.
+
+## D-P02-001 — Phase2 started before the Phase1 exit gate
+
+APPROVED, direct user answer 2026-10-08: “phase 01 is being completed by codex. start phase 2 now”. The owner authorizes Phase2 implementation while Phase1 remains BLOCKED. This is an explicit sequencing override, not a waiver of Phase1 tasks or of the Phase2 L requirement that cumulative prerequisites hold: Phase2 cannot close until Phase1 closes. Phase2 work was done on branch `worktree-phase-02`, isolated from the concurrent Phase1 session.
+
+## D-P02-002 — Q05 identity model
+
+APPROVED, owner answer 2026-10-08 (“1 user = 1 farmer, many farms”). A signed-in active account registers one Farmer, which creates a new PERSONAL Organization and FARMER Membership in the same transaction; the farmer owns many Farms; each Farm has Plots. Farm access requires an ACTIVE FarmMember row **and** an ACTIVE FARMER membership in the farm's organization; organization ADMIN/AGENT roles grant no farm-data access. No ownership transfer, manager-registers-many-farmers flow or location catalog in Phase2. Accounts are still owner-provisioned (Phase1); Phase2 adds no self sign-up.
+
+## D-P02-003 — Q06 data minimization
+
+APPROVED, owner answer 2026-10-08 (“Minimal; defer documents”). Profile: name, phone, optional alternative phone, district, optional subcounty/village, preferred language, land ownership type, main activities. Farm: name, district, optional subcounty/village, optional approximate acreage, ownership, primary activity, optional GPS pair. Strict schemas reject undeclared fields (e.g. identity numbers). Phone is contact only, never a credential. **Document** upload/storage is deferred until a retention/erasure policy exists. Address and Contact are held as profile/farm columns rather than separate tables because Phase2 stores exactly one location and up to two phones; separate tables return when multiple addresses/contacts are approved.
+
+## D-P02-004 — Phase2 engineering defaults (PROPOSED, owner may change)
+
+Source P0186–P0204 names fields but not values. Engineering defaults, recorded for review rather than claimed as farmer findings:
+
+- Land ownership: OWNED, RENTED, FAMILY, COMMUNAL, OTHER. Activities: CROPS, POULTRY, OTHER_LIVESTOCK, OTHER. Plot area units: ACRE, HECTARE, SQUARE_METRE.
+- Preferred language is a stored preference code (en, lg, nyn); the interface remains English and no translation is implied.
+- Phones: Ugandan mobile forms (07…, 256…, +256…) normalize to +2567XXXXXXXX; other numbers must already be E.164.
+- Acreage numeric(12,4) ≥ 0, plot area numeric(18,6) ≥ 0 with a required unit; coordinates numeric(9,6) within ±90/±180 and only as a complete pair. Values stay decimal strings end to end.
+- Composite (id, tenantId) foreign keys make cross-tenant plot/farm/member links impossible in the database, plus CHECK constraints mirroring the domain rules and RLS on all new tables.
+- Idempotency: each create/update command carries a client request ID recorded as an audit receipt (unique tenant/request/action); a replay returns the original record. Profile updates use optimistic `version`. A request ID reused with a different payload replays the original rather than returning 409 (narrower than Phase1's file-grant check); revisit with the Phase7 sync contract.
+- Plot names are unique per farm.

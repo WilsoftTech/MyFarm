@@ -15,7 +15,8 @@ throw new FoundationError("UNAVAILABLE");
 }
 return <section><div className="flex flex-wrap items-start justify-between gap-5"><div><p className="text-sm text-primary">Your workspace</p><h1 className="mt-2 text-3xl font-bold">Welcome to MyFarm</h1></div><form action={signOutAction}><Button variant="outline">Sign out</Button></form></div>
 <p className="mt-6 leading-7">Your account is verified. Choose an available workspace below.</p>
-{overview.scopes.length === 0 ? <div className="mt-8 rounded-2xl border border-border bg-white p-6"><h2 className="font-semibold">No workspace assigned</h2><p className="mt-3 leading-7">Ask the project owner to assign access. Farm registration is coming in a later release.</p></div> :
+<Button asChild className="mt-6"><Link href="/farmer">My farmer profile and farms</Link></Button>
+{overview.scopes.length === 0 ? <div className="mt-8 rounded-2xl border border-border bg-white p-6"><h2 className="font-semibold">No workspace assigned</h2><p className="mt-3 leading-7">Register as a farmer above to start your farm records, or ask the project owner to assign access.</p></div> :
 <ul className="mt-8 grid gap-4 sm:grid-cols-2">{overview.scopes.map(scope => <li key={scope.organizationId} className="rounded-2xl border border-border bg-white p-6"><h2 className="text-xl font-semibold">{scope.name}</h2><p className="mt-2 text-sm">Access: {scope.role.toLowerCase()}</p><p className="mt-4 text-sm leading-6">Farm record tools are coming in later releases.</p>{scope.role === "AGENT" && <Link className="mt-4 block underline" href={"/agent?scope=" + scope.organizationId}>Open agent workspace</Link>}{scope.role === "ADMIN" && <Link className="mt-4 block underline" href={"/admin?scope=" + scope.organizationId}>Open administrator workspace</Link>}</li>)}</ul>}
 </section>;
 }
