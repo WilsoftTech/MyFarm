@@ -1,13 +1,13 @@
 # System architecture
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — Phase01 status, applicability and evidence/link review; affected content reconciled; no independent farmer validation or hosted verification.
-- Implementation status: PARTIALLY COMPLETE — 30.77% of associated Phase01 dependency chain (4/13); full cross-phase scope has no claimed completion percentage.
-- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase01 implementation session.
-- Related phase/task IDs: Phase01 foundation T001–T013 (4 verified); cross-phase requirements remain pending; Phase01 review session.
-- Verified completed work: Foundation subset implemented/tested as described in the Phase01 closeout; no later feature/hosted provider completion inferred.
-- Remaining work/blockers: Phase01 external auth/storage/CI/deployment evidence and later-phase architecture requirements pending.
-- Evidence/report links: [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md).
+- Documentation review: REVIEWED — current Phase01 implementation/evidence/status review; no completion inferred from review.
+- Implementation status: PARTIALLY COMPLETE — 76.92% (10/13 verified Phase01 tasks; later scope not counted).
+- Last reviewed: 2026-10-08 (Africa/Nairobi), live provider and hosted closeout session.
+- Related phase/task IDs: Phase01 foundation T001–T013 (10 verified); cross-phase requirements remain pending; Phase01 review session.
+- Verified completed work: T001–T010; live Supabase verification and local quality/security gates PASS; see current closeout.
+- Remaining work/blockers: T011–T013 hosted CI/preview/final review pending.
+- Evidence/report links: [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
 Baseline required by source/request: Next.js App Router/React/TypeScript PWA, server application services/domain/repositories, Prisma and PostgreSQL/Supabase, Vercel, private object storage, Dexie/IndexedDB and custom sync. Proposed deployment is one modular application, not microservices.

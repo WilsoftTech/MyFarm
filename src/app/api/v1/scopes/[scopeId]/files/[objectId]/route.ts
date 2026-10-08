@@ -6,13 +6,13 @@ import { auditService } from "@/modules/engineering-foundation/infrastructure/au
 import { privateStorage } from "@/modules/engineering-foundation/infrastructure/private-storage";
 import { PrivateFileService } from "@/modules/engineering-foundation/application/private-files";
 import { FoundationError } from "@/modules/engineering-foundation/domain/errors";
-import { failureResponse } from "@/modules/engineering-foundation/infrastructure/http";
+import { failureResponse, requireSameOrigin } from "@/modules/engineering-foundation/infrastructure/http";
 export const dynamic = "force-dynamic";
 const payload = z.object({ requestId: z.uuid() }).strict();
 export async function POST(request: Request, context: { params: Promise<{ scopeId: string; objectId: string }> }) {
 const requestId = crypto.randomUUID();
 try {
-if (request.headers.get("origin") !== new URL(request.url).origin) throw new FoundationError("FORBIDDEN");
+requireSameOrigin(request);
 if (!request.headers.get("content-type")?.startsWith("application/json")) throw new FoundationError("INVALID_INPUT");
 let body: unknown;
 try { body = await request.json(); } catch { throw new FoundationError("INVALID_INPUT"); }

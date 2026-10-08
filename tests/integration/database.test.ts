@@ -75,3 +75,17 @@ const rows = await tx.$queryRaw<{count: bigint}[]>`SELECT COUNT(*) AS count FROM
 expect(rows[0].count).toBe(0n);
 });
 });
+
+it("limits distinct private grants atomically while allowing retries and expired windows", async () => {
+await db.auditEvent.deleteMany({ where: { actorId: actor } });
+await db.auditEvent.createMany({ data: Array.from({ length: 29 }, () => ({ actorId: actor, tenantId: tenantA, action: "PRIVATE_FILE_READ", requestId: crypto.randomUUID() })) });
+const inputs = [0, 1].map(() => ({ actorId: actor, tenantId: tenantA, action: "PRIVATE_FILE_READ" as const, targetId: crypto.randomUUID(), requestId: crypto.randomUUID() }));
+const attempts = await Promise.allSettled(inputs.map(input => auditService(db).append(input)));
+expect(attempts.filter(result => result.status === "fulfilled")).toHaveLength(1);
+expect(attempts.find(result => result.status === "rejected")).toMatchObject({ reason: { code: "RATE_LIMITED" } });
+const accepted = inputs[attempts.findIndex(result => result.status === "fulfilled")];
+await expect(auditService(db).append(accepted)).resolves.toBeUndefined();
+expect(await db.auditEvent.count({ where: { actorId: actor } })).toBe(30);
+await db.auditEvent.updateMany({ where: { actorId: actor }, data: { occurredAt: new Date(Date.now() - 120000) } });
+await expect(auditService(db).append({ ...accepted, requestId: crypto.randomUUID() })).resolves.toBeUndefined();
+});

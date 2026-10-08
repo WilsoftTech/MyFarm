@@ -10,3 +10,4 @@ test-results/
 src/generated/
 *.tsbuildinfo
 .claude/settings.local.json
+.vercel/

@@ -1,0 +1,23 @@
+{
+  "command": "node --use-system-ca .cache/provider-inspect.mjs",
+  "authSettingsStatus": 200,
+  "emailEnabled": true,
+  "disableSignup": false,
+  "mailerAutoconfirm": false,
+  "connections": [
+    {
+      "mode": "direct",
+      "connected": false,
+      "errorCode": "ENOTFOUND"
+    },
+    {
+      "mode": "session-pool",
+      "connected": false,
+      "errorCode": "SELF_SIGNED_CERT_IN_CHAIN"
+    }
+  ],
+  "supabaseToolsInActiveChat": 0,
+  "mcpRegisteredEnabled": true,
+  "requestedCaFilePresent": false,
+  "hostedSqlExecuted": false
+}

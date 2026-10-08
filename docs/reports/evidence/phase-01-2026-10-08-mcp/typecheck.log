@@ -1,0 +1,11 @@
+$ npm run typecheck
+
+> myfarm@0.1.0 typecheck
+> prisma generate && tsc --noEmit
+
+
+✔ Generated Prisma Client (7.10.0) to .\src\generated\prisma in 90ms
+
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.

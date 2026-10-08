@@ -1,0 +1,45 @@
+
+> myfarm@0.1.0 test:e2e
+> playwright test
+
+[WebServer] (node:24768) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 14 tests using 3 workers
+
+(node:21728) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:24688) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:21420) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] {"event":"request_failed","requestId":"cc61ef8a-ae65-464c-ae00-fd1368abcb6e","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"faeac59d-3da3-4fff-aac4-041840a93a79","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"96deaa6c-d228-421f-93a6-395f31055f97","code":"UNAUTHENTICATED"}
+  ok  2 [desktop] › tests\e2e\foundation.spec.ts:14:1 › anonymous APIs fail closed with no caching (285ms)
+  ok  4 [desktop] › tests\e2e\foundation.spec.ts:20:1 › health and manifest expose no secrets (81ms)
+  ok  5 [desktop] › tests\e2e\foundation.spec.ts:25:1 › keyboard skip link targets content (477ms)
+  ok  3 [desktop] › tests\e2e\foundation.spec.ts:9:1 › anonymous users cannot open protected workspace (1.2s)
+[WebServer] {"event":"request_failed","requestId":"2b3817ff-20ab-400b-8a0c-306659f66a5b","code":"FORBIDDEN"}
+  ok  7 [desktop] › tests\e2e\foundation.spec.ts:35:1 › private-file grants reject cross-origin requests (83ms)
+  ok  6 [desktop] › tests\e2e\foundation.spec.ts:30:1 › invalid sign-in is rejected without auth request (537ms)
+  ok  1 [desktop] › tests\e2e\foundation.spec.ts:2:1 › public shell works on desktop and mobile (1.7s)
+(node:26384) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26392) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] {"event":"request_failed","requestId":"5184aa84-dbbe-46f0-9787-e690e57f98c3","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"c30475f3-5210-4c88-bbfb-deff41e236c9","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"f2a4389c-3a21-4380-b834-ad1240dee765","code":"UNAUTHENTICATED"}
+  ok  8 [mobile] › tests\e2e\foundation.spec.ts:14:1 › anonymous APIs fail closed with no caching (87ms)
+  ok 11 [mobile] › tests\e2e\foundation.spec.ts:20:1 › health and manifest expose no secrets (63ms)
+  ok 12 [mobile] › tests\e2e\foundation.spec.ts:25:1 › keyboard skip link targets content (711ms)
+  ok  9 [mobile] › tests\e2e\foundation.spec.ts:9:1 › anonymous users cannot open protected workspace (1.6s)
+[WebServer] {"event":"request_failed","requestId":"2058861a-7ae6-4956-bc32-f9886bc3bf1a","code":"FORBIDDEN"}
+  ok 13 [mobile] › tests\e2e\foundation.spec.ts:30:1 › invalid sign-in is rejected without auth request (886ms)
+  ok 14 [mobile] › tests\e2e\foundation.spec.ts:35:1 › private-file grants reject cross-origin requests (55ms)
+  ok 10 [mobile] › tests\e2e\foundation.spec.ts:2:1 › public shell works on desktop and mobile (1.7s)
+
+  14 passed (7.9s)

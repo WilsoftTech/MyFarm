@@ -1,0 +1,51 @@
+[
+  {
+    "command": "npm run lint",
+    "startedAt": "2026-10-08T00:15:11.621Z",
+    "exitCode": 0,
+    "signal": null
+  },
+  {
+    "command": "npm run typecheck",
+    "startedAt": "2026-10-08T00:15:16.506Z",
+    "exitCode": 0,
+    "signal": null
+  },
+  {
+    "command": "npm test",
+    "startedAt": "2026-10-08T00:15:25.757Z",
+    "exitCode": 0,
+    "signal": null
+  },
+  {
+    "command": "npm run check:boundaries",
+    "startedAt": "2026-10-08T00:15:33.964Z",
+    "exitCode": 0,
+    "signal": null
+  },
+  {
+    "command": "npm run build",
+    "startedAt": "2026-10-08T00:15:35.710Z",
+    "exitCode": 1,
+    "signal": null,
+    "attempt": "Initial concurrent build refused; corrected by sequential rerun."
+  },
+  {
+    "command": "npm run build",
+    "exitCode": 0,
+    "evidence": "build.log",
+    "recordedFrom": "Executed command exit status; final log preserved"
+  },
+  {
+    "command": "npm run test:integration",
+    "exitCode": 0,
+    "evidence": "integration.log",
+    "recordedFrom": "Executed command exit status; final log preserved"
+  },
+  {
+    "command": "npm run test:e2e",
+    "exitCode": 0,
+    "evidence": "e2e.log",
+    "recordedFrom": "Executed command exit status; final log preserved"
+  }
+]

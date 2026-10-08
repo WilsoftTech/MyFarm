@@ -1,0 +1,14 @@
+{
+  "verdict": "PASS",
+  "markdownDocuments": 78,
+  "internalLinksChecked": 1304,
+  "sourceBodySha256": "b9d9e3563f8ab80465a6c0ae1ebdc1d41ab13dfa43df3e467f3f04619ab416ca",
+  "phase01CompletedTaskIds": [
+    "MYF-P01-T001",
+    "MYF-P01-T002",
+    "MYF-P01-T003",
+    "MYF-P01-T004"
+  ],
+  "phase01VerifiedPercent": 30.77,
+  "errors": []
+}

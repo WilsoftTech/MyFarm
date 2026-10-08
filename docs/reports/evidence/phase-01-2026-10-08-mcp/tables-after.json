@@ -1,0 +1,11 @@
+{
+  "status": "fulfilled",
+  "value": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"tables\":[{\"name\":\"public.User\",\"rls_enabled\":true,\"rows\":0},{\"name\":\"public.Organization\",\"rls_enabled\":true,\"rows\":0},{\"name\":\"public.Membership\",\"rls_enabled\":true,\"rows\":0},{\"name\":\"public.AuditEvent\",\"rls_enabled\":true,\"rows\":0}]}"
+      }
+    ]
+  }
+}

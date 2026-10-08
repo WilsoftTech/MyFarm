@@ -60,4 +60,5 @@ model AuditEvent {
   tenant Organization @relation(fields: [tenantId], references: [id], onDelete: Restrict)
   @@unique([tenantId, requestId, action])
   @@index([tenantId, occurredAt, id])
+  @@index([actorId, occurredAt])
 }

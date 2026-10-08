@@ -1,16 +1,16 @@
 # Phase 01 Engineering Foundation
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — Phase01 status, applicability and evidence/link review; affected content reconciled; no independent farmer validation or hosted verification.
-- Implementation status: BLOCKED — 30.77% (4/13 verified completed task IDs).
-- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase01 implementation session.
+- Documentation review: REVIEWED — current Phase01 implementation/evidence/status review; no completion inferred from review.
+- Implementation status: PARTIALLY COMPLETE — 76.92% (10/13 verified Phase01 tasks; later scope not counted).
+- Last reviewed: 2026-10-08 (Africa/Nairobi), live provider and hosted closeout session.
 - Related phase/task IDs: Phase 01; MYF-P01-T001 through MYF-P01-T013; review session Phase01.
-- Verified completed work: T001–T004 verified; local40 unit/component,10 PostgreSQL integration and14 E2E tests plus four quality gates pass; later groundwork not counted.
-- Remaining work/blockers: T005–T013 incomplete; live Supabase auth/storage/role/SSL/pool, recovery/rate limits, hosted CI/deployment and optional dependency diagnostics pending.
-- Evidence/report links: [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md).
+- Verified completed work: T001–T010; live Supabase verification and local quality/security gates PASS; see current closeout.
+- Remaining work/blockers: T011–T013 hosted CI/preview/final review pending.
+- Evidence/report links: [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **BLOCKED — 30.77% (4/13 verified task IDs)**. Date: 2026-10-08. Phase1 is explicitly authorized; current verification is in [closeout](../reports/phase-01-closeout-2026-10-08.md). Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **PARTIALLY COMPLETE — 76.92% (10/13 verified task IDs)**. Date: 2026-10-08. Phase1 is explicitly authorized; current verification is in [closeout](../reports/phase-01-closeout-2026-10-08.md). Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
@@ -69,7 +69,7 @@ Offline: see [sync](../architecture/offline-sync-architecture.md); Phases 1–6 
 
 ## F. Database Design
 
-**Foundation subset implemented/rehearsed locally:** User/Organization/Membership/AuditEvent in migration202610080001_foundation. No hosted migration applied. Later schema proposals remain unapproved.
+**Foundation subset implemented/rehearsed locally:** User/Organization/Membership/AuditEvent in migration202610080001_foundation. Foundation and additive audit index applied to Supabase development; provider policies/helper roles separately applied and recorded. Later schema proposals remain unapproved.
 
 User(id UUID,authSubject text unique,status enum); Organization(id UUID,name text,kind enum); Membership(userId UUID,organizationId UUID,role enum,status enum,unique pair); AuditEvent(id UUID,actorId UUID?,tenantId UUID?,action text,targetId UUID?,requestId text,occurredAt timestamptz).
 
@@ -89,7 +89,7 @@ Loading announced; recoverable errors retain input and safe retry. Empty states 
 
 ## H. Implementation Tasks
 
-Execute these small stages sequentially after authorization. Field/model/provider policies remain proposals until affected decisions are resolved. Each capability separates contract/domain work, authorized service/evidence work, and user-visible acceptance. T001–T004 verified complete; T005–T013 remain partial/unverified. Independent groundwork beyond blocked stages is not counted complete.
+Execute these small stages sequentially after authorization. Field/model/provider policies remain proposals until affected decisions are resolved. Each capability separates contract/domain work, authorized service/evidence work, and user-visible acceptance. T001–T010 verified complete; remaining status is recorded in the current closeout. Independent groundwork beyond blocked stages is not counted complete.
 
 ### MYF-P01-T001 — Specify and implement domain contract for MYF-P01-R001
 
@@ -241,24 +241,36 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 
 ## O. Completion Checklist
 
-- [x] MYF-P01-T001 verified complete; [session evidence](../reports/phase-01-closeout-2026-10-08.md).
-- [x] MYF-P01-T002 verified complete; [session evidence](../reports/phase-01-closeout-2026-10-08.md).
-- [x] MYF-P01-T003 verified complete; [session evidence](../reports/phase-01-closeout-2026-10-08.md).
-- [x] MYF-P01-T004 verified complete; [session evidence](../reports/phase-01-closeout-2026-10-08.md).
-- [ ] MYF-P01-T005 complete with evidence.
-- [ ] MYF-P01-T006 complete with evidence.
-- [ ] MYF-P01-T007 complete with evidence.
-- [ ] MYF-P01-T008 complete with evidence.
-- [ ] MYF-P01-T009 complete with evidence.
-- [ ] MYF-P01-T010 complete with evidence.
-- [ ] MYF-P01-T011 complete with evidence.
-- [ ] MYF-P01-T012 complete with evidence.
-- [ ] MYF-P01-T013 complete with evidence.
+- [x] MYF-P01-T001 verified complete; [evidence](../reports/phase-01-closeout-2026-10-08.md).
+- [x] MYF-P01-T002 verified complete; [evidence](../reports/phase-01-closeout-2026-10-08.md).
+- [x] MYF-P01-T003 verified complete; [evidence](../reports/phase-01-closeout-2026-10-08.md).
+- [x] MYF-P01-T004 verified complete; [evidence](../reports/phase-01-closeout-2026-10-08.md).
+- [x] MYF-P01-T005 verified complete; [evidence](../reports/phase-01-closeout-2026-10-08.md).
+- [x] MYF-P01-T006 verified complete; [evidence](../reports/phase-01-closeout-2026-10-08.md).
+- [x] MYF-P01-T007 verified complete; [evidence](../reports/phase-01-closeout-2026-10-08.md).
+- [x] MYF-P01-T008 verified complete; [evidence](../reports/phase-01-closeout-2026-10-08.md).
+- [x] MYF-P01-T009 verified complete; [evidence](../reports/phase-01-closeout-2026-10-08.md).
+- [x] MYF-P01-T010 verified complete; [evidence](../reports/phase-01-closeout-2026-10-08.md).
+- [ ] MYF-P01-T011 pending hosted closure evidence.
+- [ ] MYF-P01-T012 pending hosted closure evidence.
+- [ ] MYF-P01-T013 pending hosted closure evidence.
 - [ ] Every K criterion verified.
 - [ ] Security/integrity audit, remediation and retest complete.
 - [ ] Applicable quality/E2E/integration/migration evidence recorded.
 - [ ] L gate approved; closeout/status updated from evidence.
 
-## Current session evidence
+## Historical session evidence
 
 Supabase PostgreSQL + Supabase Auth is selected. Local40 unit/component,10 integration and14 browser tests pass, as do lint/typecheck/build, migration replay and synthetic restore. Live provider/storage/CI/deployment evidence is pending; closeout verdict FAIL. T007–T010 groundwork is tested but not counted complete because the upstream stage chain remains open. No Phase2 implementation.
+
+Latest follow-up: 48 unit/component,10 DB integration,14 E2E tests and all local gates pass after provider-session/TLS/storage-helper remediation. MCP OAuth completed; tools need chat reload. T005-T013 remain unverified; [report](../reports/phase-01-provider-verification-2026-10-08.md).
+
+Resumed session:51 unit/component tests and all mandatory local checks PASS; MCP tools/trusted CA/live acceptance remain unavailable. T001-T004 complete, T005-T013 pending; verified progress30.77%. [Resumed evidence](../reports/phase-01-provider-verification-2026-10-08.md).
+
+## Latest verified session
+
+Phase 01 PARTIALLY COMPLETE — 76.92% (10/13 verified task IDs). Verdict: FAIL. Completed T001–T010. Remaining T011–T013: hosted CI, preview and final audit evidence pending.
+
+## Latest verified session
+
+Phase 01 PARTIALLY COMPLETE — 76.92% (10/13 verified task IDs). Verdict: FAIL. Completed T001–T010. Remaining T011–T013: hosted CI, preview and final audit evidence pending.

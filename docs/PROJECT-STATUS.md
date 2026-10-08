@@ -1,24 +1,24 @@
 # Project status
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — Phase01 status, applicability and evidence/link review; affected content reconciled; no independent farmer validation or hosted verification.
+- Documentation review: REVIEWED — current Phase01 implementation/evidence/status review; no completion inferred from review.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase01 implementation session.
+- Last reviewed: 2026-10-08 (Africa/Nairobi), live provider and hosted closeout session.
 - Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced.
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
 - Remaining work/blockers: Maintain alignment after Phase01 live verification; historical results stay historical and source body remains immutable.
-- Evidence/report links: [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md).
+- Evidence/report links: [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
-Last inspected: 2026-10-08, Africa/Nairobi. Phase1 application, Prisma migration, tests and CI configuration now exist. No Git repository/remote or hosted provider/CI/deployment evidence is present. Root user instructions/design files are preserved.
+Last inspected: 2026-10-08, Africa/Nairobi. Phase1 application, Prisma migration, tests and CI configuration now exist. Git main and remote WilsoftTech/MyFarm are present; hosted auth/storage/CI/deployment evidence is still absent. Root user instructions/design files are preserved.
 
-Current phase: **Phase1 — BLOCKED — 30.77% (4/13 verified completed IDs)**. Phase0 **COMPLETED — 100% by owner acceptance**; [approval](reports/phase-00-owner-approval-2026-10-08.md). Farmer research remains unverified. No Phase2 implementation.
+Current phase: **Phase1 — PARTIALLY COMPLETE — 76.92% (10/13)**. Phase0 completed by owner acceptance; empirical farmer evidence absent. Phase2 not started in this checkout.
 
 
 | Phase | Specification | Status | Completed | Pending | Test evidence |
 |---|---|---|---|---|---|
 | 0 | [Product Discovery and Scope Definition](phases/phase-00-product-discovery.md) | COMPLETED — 100% (owner acceptance) | T001–T010 administratively accepted; 0/10 original research-task evidence verified | Empirical field validation remains a risk/follow-up | [Owner approval](reports/phase-00-owner-approval-2026-10-08.md) |
-| 1 | [Engineering Foundation](phases/phase-01-engineering-foundation.md) | BLOCKED — 30.77% | T001–T004 verified complete | T005–T013 partial/unverified; upstream and provider gates pending | [Phase1 closeout](reports/phase-01-closeout-2026-10-08.md) |
+| 1 | [Engineering Foundation](phases/phase-01-engineering-foundation.md) | PARTIALLY COMPLETE — 76.92% | T001–T010 verified | T011–T013 hosted CI/preview/final audit | [Closeout](reports/phase-01-closeout-2026-10-08.md) |
 | 2 | [Farmer Identity and Farm Registry](phases/phase-02-farmer-registry.md) | NOT STARTED — 0% | None | All H tasks | None |
 | 3 | [Enterprises Crops Livestock and Seasons](phases/phase-03-enterprises-seasons.md) | NOT STARTED — 0% | None | All H tasks | None |
 | 4 | [Farm Accounting Engine](phases/phase-04-farm-accounting.md) | NOT STARTED — 0% | None | All H tasks | None |
@@ -43,13 +43,13 @@ Current phase: **Phase1 — BLOCKED — 30.77% (4/13 verified completed IDs)**. 
 | 23 | [SaaS and Multi Tenant Commercialization](phases/phase-23-saas-commercialization.md) | NOT STARTED — 0% | None | All H tasks | None |
 | 24 | [Production Hardening and Scale](phases/phase-24-production-hardening.md) | NOT STARTED — 0% | None | All H tasks | None |
 
-## Blockers and decisions
+## Historical blockers and decisions
 
 Supabase PostgreSQL + Supabase Auth is approved. Live development credentials are pending (.env.local absent; user will configure it). Actual Supabase auth/private bucket/DB-role/SSL/pool tests, recovery/rate-limit configuration, hosted CI and isolated hosting evidence remain blockers. No production/paid service was provisioned. Optional Windows Sharp/WASI npm dependency-tree diagnostics remain documented.
 
 All four mandatory local commands pass. Unit/component40 tests, PostgreSQL integration10 tests, browser14 tests pass; fresh/replayed migration and synthetic restore pass; dependency audit reports zero vulnerabilities. [Exact evidence and limitations](reports/phase-01-closeout-2026-10-08.md).
 
-## Next recommended action
+## Historical next action
 
 Finish Phase1 live provider/CI/deployment verification after configuration, then re-audit the remaining tasks and exit gate. Do not start Phase2 automatically. Progress is 4/13 ×100 =30.77%; partial work is not counted. [Status policy](engineering/document-status-policy.md).
 
@@ -60,3 +60,31 @@ Prepared [research operations](product/research-operations.md), empty [evidence 
 ## Current authorization — owner update 2026-10-08
 
 The user explicitly closed Phase0 and authorized immediate Phase1. This supersedes earlier “Phase0 only”/unmet-gate restrictions for advancement. Historical missing-evidence reports are retained. Phase1 may build/test local foundation; Supabase provider is selected; credentials/deployment and later phases remain separate prerequisites.
+
+## Latest Phase 1 verification
+
+All four mandatory local gates pass; 48 unit/component, 10 integration and 14 browser tests pass. Supabase MCP OAuth completed, but the active chat requires reload to load its tools. Hosted connection requires a trusted CA; real auth/storage/CI/deployment gates remain open. [Follow-up report](reports/phase-01-provider-verification-2026-10-08.md).
+
+Latest resumed Phase1 session: mandatory local gates PASS;51 unit/component tests PASS. Strict read-only hosted probes still fail DNS/direct and CA/session-pool verification. MCP registered/enabled but absent from active tool catalogue. Phase1 remains BLOCKED30.77%, T001-T004 complete, T005-T013 pending. [Resumed evidence](reports/phase-01-provider-verification-2026-10-08.md).
+
+## Current session status
+
+Phase 01 PARTIALLY COMPLETE — 76.92% (10/13 verified task IDs). Verdict: FAIL. Completed T001–T010. Remaining T011–T013: hosted CI, preview and final audit evidence pending.
+
+Live Supabase Auth and private storage:28 checks PASS. Current membership/session revocation, tenant isolation, private downloads, secure cookies, concurrent idempotency and recovery token generation verified. Temporary test users/files/database fixtures removed. Lint/typecheck/build/boundaries PASS0;58 unit/component tests and11 PostgreSQL integration tests PASS. Rate limiter:30 distinct private-file grants/actor/minute, shared transaction advisory lock, identical retries free, database clock window; concurrent boundary and expired-window test PASS. Same-origin authority handling repaired after real browser verification exposed Next.js internal hostname normalization. TLS URL overrides stripped; verified client-to-pooler TLS and Supabase CA. Pooler-to-database pg_stat_ssl reports false; no end-to-end provider-managed transport claim.
+
+Prisma migrations202610080001_foundation and202610080101_private_grant_rate_limit applied in isolated Supabase development project sudqhluwsaijvjjcegpv. Foundation applied via MCP then Prisma history reconciled; additive actor/time index generated by Prisma diff and deployed by Prisma CLI. Provider SQL artifacts in supabase/policies: private-storage, foundation-hardening and runtime-role. Five provider-specific MCP migrations recorded separately. Runtime role has SELECT foundation tables/INSERT audits, no direct auth.sessions read, no update/delete/DDL/bypass-RLS. LOGIN explicitly approved; password kept in ignored local configuration and explicitly approved preview secret. Auth frontend denied application tables; private session boolean restricted to backend role. Security advisors: no WARN/ERROR, only intentional deny-all _prisma_migrations RLS INFO. Performance: newly created tenant/date index unused INFO, no missing FK index. No new application dependencies; existing Supabase versions pinned exactly.
+
+API change: same-origin private-file requests work with actual HTTP authority; excessive distinct grants return429 RATE_LIMITED. Offline sync, financial/stock writes, farmer registry and AI are NOT APPLICABLE to Phase1 and remain unimplemented. Restore/replay evidence from preceding isolated synthetic rehearsal remains applicable. Recovery email delivery and production operational settings are not claimed; production release must verify them. Source research remains absent despite Phase0 owner acceptance.
+
+
+## Current session status
+
+Phase 01 PARTIALLY COMPLETE — 76.92% (10/13 verified task IDs). Verdict: FAIL. Completed T001–T010. Remaining T011–T013: hosted CI, preview and final audit evidence pending.
+
+Live Supabase Auth and private storage:28 checks PASS. Current membership/session revocation, tenant isolation, private downloads, secure cookies, concurrent idempotency and recovery token generation verified. Temporary test users/files/database fixtures removed. Lint/typecheck/build/boundaries PASS0;58 unit/component tests and11 PostgreSQL integration tests PASS. Rate limiter:30 distinct private-file grants/actor/minute, shared transaction advisory lock, identical retries free, database clock window; concurrent boundary and expired-window test PASS. Same-origin authority handling repaired after real browser verification exposed Next.js internal hostname normalization. TLS URL overrides stripped; verified client-to-pooler TLS and Supabase CA. Pooler-to-database pg_stat_ssl reports false; no end-to-end provider-managed transport claim.
+
+Prisma migrations202610080001_foundation and202610080101_private_grant_rate_limit applied in isolated Supabase development project sudqhluwsaijvjjcegpv. Foundation applied via MCP then Prisma history reconciled; additive actor/time index generated by Prisma diff and deployed by Prisma CLI. Provider SQL artifacts in supabase/policies: private-storage, foundation-hardening and runtime-role. Five provider-specific MCP migrations recorded separately. Runtime role has SELECT foundation tables/INSERT audits, no direct auth.sessions read, no update/delete/DDL/bypass-RLS. LOGIN explicitly approved; password kept in ignored local configuration and explicitly approved preview secret. Auth frontend denied application tables; private session boolean restricted to backend role. Security advisors: no WARN/ERROR, only intentional deny-all _prisma_migrations RLS INFO. Performance: newly created tenant/date index unused INFO, no missing FK index. No new application dependencies; existing Supabase versions pinned exactly.
+
+API change: same-origin private-file requests work with actual HTTP authority; excessive distinct grants return429 RATE_LIMITED. Offline sync, financial/stock writes, farmer registry and AI are NOT APPLICABLE to Phase1 and remain unimplemented. Restore/replay evidence from preceding isolated synthetic rehearsal remains applicable. Recovery email delivery and production operational settings are not claimed; production release must verify them. Source research remains absent despite Phase0 owner acceptance.
+

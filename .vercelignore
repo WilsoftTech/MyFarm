@@ -1,0 +1,9 @@
+.cache
+.claude
+.codex
+.agents
+docs
+test-results
+playwright-report
+.env*
+!.env.example

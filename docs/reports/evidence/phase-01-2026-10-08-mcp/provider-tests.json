@@ -1,0 +1,117 @@
+{
+  "result": "PASS",
+  "results": [
+    {
+      "check": "Restricted runtime TLS",
+      "result": "PASS"
+    },
+    {
+      "check": "Real mobile sign-in and workspace",
+      "result": "PASS"
+    },
+    {
+      "check": "Secure HttpOnly auth cookies",
+      "result": "PASS"
+    },
+    {
+      "check": "Authenticated session API",
+      "result": "PASS"
+    },
+    {
+      "check": "Guessed cross-tenant scope denied",
+      "result": "PASS"
+    },
+    {
+      "check": "Farmer administrator route denied",
+      "result": "PASS"
+    },
+    {
+      "check": "Assigned administrator workspace",
+      "result": "PASS"
+    },
+    {
+      "check": "Assigned agent workspace",
+      "result": "PASS"
+    },
+    {
+      "check": "Administrator has no global tenant bypass",
+      "result": "PASS"
+    },
+    {
+      "check": "Concurrent private grants succeed",
+      "result": "PASS"
+    },
+    {
+      "check": "Short-lived private grant",
+      "result": "PASS"
+    },
+    {
+      "check": "Private signed file downloads",
+      "result": "PASS"
+    },
+    {
+      "check": "Concurrent grant appends exactly one audit",
+      "result": "PASS"
+    },
+    {
+      "check": "Audit retry payload collision denied",
+      "result": "PASS"
+    },
+    {
+      "check": "Cross-tenant private grant denied",
+      "result": "PASS"
+    },
+    {
+      "check": "Anonymous storage signing denied",
+      "result": "PASS"
+    },
+    {
+      "check": "Second real provider identity",
+      "result": "PASS"
+    },
+    {
+      "check": "Direct storage cross-tenant denial",
+      "result": "PASS"
+    },
+    {
+      "check": "Owner real provider identity",
+      "result": "PASS"
+    },
+    {
+      "check": "Provider session confirmed active",
+      "result": "PASS"
+    },
+    {
+      "check": "Revoked membership API denied",
+      "result": "PASS"
+    },
+    {
+      "check": "Revoked membership direct storage denied",
+      "result": "PASS"
+    },
+    {
+      "check": "Provider recovery token generated without email",
+      "result": "PASS"
+    },
+    {
+      "check": "Provider global sign-out",
+      "result": "PASS"
+    },
+    {
+      "check": "Provider session revocation confirmed",
+      "result": "PASS"
+    },
+    {
+      "check": "Revoked JWT cannot obtain new storage grant",
+      "result": "PASS"
+    },
+    {
+      "check": "Revoked browser session API denied",
+      "result": "PASS"
+    },
+    {
+      "check": "Revoked browser redirected to sign-in",
+      "result": "PASS"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "status": "fulfilled",
+  "value": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"result\":{\"lints\":[{\"name\":\"unindexed_foreign_keys\",\"title\":\"Unindexed foreign keys\",\"level\":\"INFO\",\"facing\":\"EXTERNAL\",\"categories\":[\"PERFORMANCE\"],\"description\":\"Identifies foreign key constraints without a covering index, which can impact database performance.\",\"remediation\":\"https://supabase.com/docs/guides/database/database-linter?lint=0001_unindexed_foreign_keys\",\"count\":1,\"findings\":[{\"detail\":\"Table \\\\`public.AuditEvent\\\\` has a foreign key \\\\`AuditEvent_actorId_fkey\\\\` without a covering index. This can lead to suboptimal query performance.\",\"metadata\":{\"name\":\"AuditEvent\",\"type\":\"table\",\"schema\":\"public\",\"fkey_name\":\"AuditEvent_actorId_fkey\",\"fkey_columns\":[2]},\"observed_at\":\"2026-10-08T00:30:54.307Z\"}]},{\"name\":\"unused_index\",\"title\":\"Unused Index\",\"level\":\"INFO\",\"facing\":\"EXTERNAL\",\"categories\":[\"PERFORMANCE\"],\"description\":\"Detects if an index has never been used and may be a candidate for removal.\",\"remediation\":\"https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index\",\"count\":2,\"findings\":[{\"detail\":\"Index \\\\`Membership_organizationId_status_idx\\\\` on table \\\\`public.Membership\\\\` has not been used\",\"metadata\":{\"name\":\"Membership\",\"type\":\"table\",\"schema\":\"public\"},\"observed_at\":\"2026-10-08T00:30:54.307Z\"},{\"detail\":\"Index \\\\`AuditEvent_tenantId_occurredAt_id_idx\\\\` on table \\\\`public.AuditEvent\\\\` has not been used\",\"metadata\":{\"name\":\"AuditEvent\",\"type\":\"table\",\"schema\":\"public\"},\"observed_at\":\"2026-10-08T00:30:54.307Z\"}]}]}}"
+      }
+    ]
+  }
+}

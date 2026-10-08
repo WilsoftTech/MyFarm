@@ -1,13 +1,13 @@
 # Foundation local setup and provider verification
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — Phase01 status, applicability and evidence/link review; affected content reconciled; no independent farmer validation or hosted verification.
+- Documentation review: REVIEWED — current Phase01 implementation/evidence/status review; no completion inferred from review.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase01 implementation session.
+- Last reviewed: 2026-10-08 (Africa/Nairobi), live provider and hosted closeout session.
 - Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced.
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
 - Remaining work/blockers: Maintain alignment after Phase01 live verification; historical results stay historical and source body remains immutable.
-- Evidence/report links: [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md).
+- Evidence/report links: [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
 Phase 01, 2026-10-08. The user selected Supabase PostgreSQL + Supabase Auth and will configure .env.local. No hosted resources have been created or modified.
@@ -44,8 +44,40 @@ The Phase1 local verification container is named myfarm-phase01-verification, bo
 
 npm run test:e2e starts its own production server on 127.0.0.1:3101. The browser suite uses an intentionally nonfunctional Supabase configuration fixture for public sign-in form validation; it does not represent a live provider. No real user credentials or farm data are required. Provider sign-in/revocation, private bucket access and hosted deployment remain separate checks.
 
-.github/workflows/quality.yml defines PostgreSQL17-backed checks and browser verification on CI. A workflow file alone is not an executed CI run. No Git repository/remote was present, so hosted CI execution is pending.
+.github/workflows/quality.yml defines PostgreSQL17-backed checks and browser verification on CI. A workflow file alone is not an executed CI run. Git main/remote now exist, but no verified hosted CI run is recorded.
 
 ## Deferred scope
 
 No service worker, offline queue, IndexedDB or synchronization is enabled in Phase1. The manifest/icon are a shell foundation; offline operation is not advertised or tested as complete. Agent/admin pages are permission-guarded scaffolds. Recovery, supported languages/devices, region/budget, hosted deployment and production operations require their documented decisions/evidence.
+
+## Provider session and trusted TLS
+
+Protected requests validate getUser, verified JWT session_id/subject and auth.sessions existence/not_after on every request. Grant the server runtime role only the necessary session-column SELECT permissions; verify those in the isolated project. Browser roles receive no auth.sessions SELECT grant. The private storage helper lives in myfarm_private, which must not be exposed through Data API schemas.
+
+Hosted connections always verify TLS certificates. Download the project CA from Supabase dashboard Database Settings and configure DATABASE_CA_CERT_PATH with its local PEM path when required. Never disable certificate verification. The direct endpoint currently fails local DNS; session pooler connectivity needs trusted CA verification before adoption. [Latest provider evidence](../reports/phase-01-provider-verification-2026-10-08.md).
+
+Hosted configuration strips the pg ssl and uselibpqcompat URL options so the driver cannot replace explicit TLS verification or the trusted CA. A driver-level regression covers this override. If MCP registration is enabled but no tools appear, fully quit/reopen Codex before resuming the chat. [Resumed evidence](../reports/phase-01-provider-verification-2026-10-08.md).
+
+## Current live verification and decision record
+
+Phase 01 PARTIALLY COMPLETE — 76.92% (10/13 verified task IDs). Verdict: FAIL. Completed T001–T010. Remaining T011–T013: hosted CI, preview and final audit evidence pending.
+
+Live Supabase Auth and private storage:28 checks PASS. Current membership/session revocation, tenant isolation, private downloads, secure cookies, concurrent idempotency and recovery token generation verified. Temporary test users/files/database fixtures removed. Lint/typecheck/build/boundaries PASS0;58 unit/component tests and11 PostgreSQL integration tests PASS. Rate limiter:30 distinct private-file grants/actor/minute, shared transaction advisory lock, identical retries free, database clock window; concurrent boundary and expired-window test PASS. Same-origin authority handling repaired after real browser verification exposed Next.js internal hostname normalization. TLS URL overrides stripped; verified client-to-pooler TLS and Supabase CA. Pooler-to-database pg_stat_ssl reports false; no end-to-end provider-managed transport claim.
+
+Prisma migrations202610080001_foundation and202610080101_private_grant_rate_limit applied in isolated Supabase development project sudqhluwsaijvjjcegpv. Foundation applied via MCP then Prisma history reconciled; additive actor/time index generated by Prisma diff and deployed by Prisma CLI. Provider SQL artifacts in supabase/policies: private-storage, foundation-hardening and runtime-role. Five provider-specific MCP migrations recorded separately. Runtime role has SELECT foundation tables/INSERT audits, no direct auth.sessions read, no update/delete/DDL/bypass-RLS. LOGIN explicitly approved; password kept in ignored local configuration and explicitly approved preview secret. Auth frontend denied application tables; private session boolean restricted to backend role. Security advisors: no WARN/ERROR, only intentional deny-all _prisma_migrations RLS INFO. Performance: newly created tenant/date index unused INFO, no missing FK index. No new application dependencies; existing Supabase versions pinned exactly.
+
+API change: same-origin private-file requests work with actual HTTP authority; excessive distinct grants return429 RATE_LIMITED. Offline sync, financial/stock writes, farmer registry and AI are NOT APPLICABLE to Phase1 and remain unimplemented. Restore/replay evidence from preceding isolated synthetic rehearsal remains applicable. Recovery email delivery and production operational settings are not claimed; production release must verify them. Source research remains absent despite Phase0 owner acceptance.
+
+[Current closeout](../reports/phase-01-closeout-2026-10-08.md).
+
+## Current live verification and decision record
+
+Phase 01 PARTIALLY COMPLETE — 76.92% (10/13 verified task IDs). Verdict: FAIL. Completed T001–T010. Remaining T011–T013: hosted CI, preview and final audit evidence pending.
+
+Live Supabase Auth and private storage:28 checks PASS. Current membership/session revocation, tenant isolation, private downloads, secure cookies, concurrent idempotency and recovery token generation verified. Temporary test users/files/database fixtures removed. Lint/typecheck/build/boundaries PASS0;58 unit/component tests and11 PostgreSQL integration tests PASS. Rate limiter:30 distinct private-file grants/actor/minute, shared transaction advisory lock, identical retries free, database clock window; concurrent boundary and expired-window test PASS. Same-origin authority handling repaired after real browser verification exposed Next.js internal hostname normalization. TLS URL overrides stripped; verified client-to-pooler TLS and Supabase CA. Pooler-to-database pg_stat_ssl reports false; no end-to-end provider-managed transport claim.
+
+Prisma migrations202610080001_foundation and202610080101_private_grant_rate_limit applied in isolated Supabase development project sudqhluwsaijvjjcegpv. Foundation applied via MCP then Prisma history reconciled; additive actor/time index generated by Prisma diff and deployed by Prisma CLI. Provider SQL artifacts in supabase/policies: private-storage, foundation-hardening and runtime-role. Five provider-specific MCP migrations recorded separately. Runtime role has SELECT foundation tables/INSERT audits, no direct auth.sessions read, no update/delete/DDL/bypass-RLS. LOGIN explicitly approved; password kept in ignored local configuration and explicitly approved preview secret. Auth frontend denied application tables; private session boolean restricted to backend role. Security advisors: no WARN/ERROR, only intentional deny-all _prisma_migrations RLS INFO. Performance: newly created tenant/date index unused INFO, no missing FK index. No new application dependencies; existing Supabase versions pinned exactly.
+
+API change: same-origin private-file requests work with actual HTTP authority; excessive distinct grants return429 RATE_LIMITED. Offline sync, financial/stock writes, farmer registry and AI are NOT APPLICABLE to Phase1 and remain unimplemented. Restore/replay evidence from preceding isolated synthetic rehearsal remains applicable. Recovery email delivery and production operational settings are not claimed; production release must verify them. Source research remains absent despite Phase0 owner acceptance.
+
+[Current closeout](../reports/phase-01-closeout-2026-10-08.md).

@@ -1,13 +1,13 @@
 # Domain model
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — Phase01 status, applicability and evidence/link review; affected content reconciled; no independent farmer validation or hosted verification.
+- Documentation review: REVIEWED — current Phase01 implementation/evidence/status review; no completion inferred from review.
 - Implementation status: NOT STARTED — 0% (direct feature scope unimplemented).
-- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase01 implementation session.
+- Last reviewed: 2026-10-08 (Africa/Nairobi), live provider and hosted closeout session.
 - Related phase/task IDs: Future phase architecture as referenced; Phase01 review session T001–T013.
 - Verified completed work: Scope/status/provider applicability reviewed; no financial/offline/farm-domain runtime implementation verified.
 - Remaining work/blockers: Associated future tasks, business decisions and exit gates pending; no phase advancement.
-- Evidence/report links: [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md).
+- Evidence/report links: [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
 **Proposed relationships and bounded domains.** Source entities/fields are preserved in the relevant phase F; support rows such as receipts, assignments and consent grants are recommendations.

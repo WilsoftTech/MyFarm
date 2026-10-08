@@ -1,0 +1,11 @@
+{
+  "status": "fulfilled",
+  "value": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"migrations\":[{\"version\":\"20261008003012\",\"name\":\"myfarm_phase01_foundation\"},{\"version\":\"20261008003021\",\"name\":\"myfarm_phase01_private_storage\"},{\"version\":\"20261008003053\",\"name\":\"myfarm_phase01_foundation_hardening\"}]}"
+      }
+    ]
+  }
+}

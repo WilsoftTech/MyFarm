@@ -1,0 +1,11 @@
+{
+  "status": "fulfilled",
+  "value": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"result\":{\"lints\":[{\"name\":\"rls_enabled_no_policy\",\"title\":\"RLS Enabled No Policy\",\"level\":\"INFO\",\"facing\":\"EXTERNAL\",\"categories\":[\"SECURITY\"],\"description\":\"Detects cases where row level security (RLS) has been enabled on a table but no RLS policies have been created.\",\"remediation\":\"https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy\",\"count\":4,\"findings\":[{\"detail\":\"Table \\\\`public.AuditEvent\\\\` has RLS enabled, but no policies exist\",\"metadata\":{\"name\":\"AuditEvent\",\"type\":\"table\",\"schema\":\"public\"},\"observed_at\":\"2026-10-08T00:30:53.718Z\"},{\"detail\":\"Table \\\\`public.Membership\\\\` has RLS enabled, but no policies exist\",\"metadata\":{\"name\":\"Membership\",\"type\":\"table\",\"schema\":\"public\"},\"observed_at\":\"2026-10-08T00:30:53.718Z\"},{\"detail\":\"Table \\\\`public.Organization\\\\` has RLS enabled, but no policies exist\",\"metadata\":{\"name\":\"Organization\",\"type\":\"table\",\"schema\":\"public\"},\"observed_at\":\"2026-10-08T00:30:53.718Z\"},{\"detail\":\"Table \\\\`public.User\\\\` has RLS enabled, but no policies exist\",\"metadata\":{\"name\":\"User\",\"type\":\"table\",\"schema\":\"public\"},\"observed_at\":\"2026-10-08T00:30:53.718Z\"}]}]}}"
+      }
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+$ npm test
+
+> myfarm@0.1.0 test
+> vitest run --project unit --project component
+
+
+ RUN  v5.0.3 D:/Myfarm
+
+
+ Test Files  9 passed (9)
+      Tests  48 passed (48)
+   Start at  03:15:28
+   Duration  5.27s (tests 40%, environment 29%, import 13%, transform 12%, setup 4%, worker 1%)
+
+    Isolate  9 workers spawned · ~712ms startup each (spawn + environment, per file)
+             at least ~570ms faster with isolate: false — reuses workers across files instead of one per file
+
