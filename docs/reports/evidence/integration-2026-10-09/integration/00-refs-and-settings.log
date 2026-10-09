@@ -1,0 +1,15 @@
+# Remote refs and ancestry after integration, 2026-10-09T20:33:04Z
+e4ea43bcc676d5b1a6ca9c301534fc79fb3d8ade	refs/heads/codex/phase-01-closeout
+d85a77380c377a7cfff082a78bf690ebd3ee8b14	refs/heads/main
+d85a77380c377a7cfff082a78bf690ebd3ee8b14	refs/heads/phase-02-farmer-registry
+--- ancestry
+f159631 is ancestor of e4ea43b
+e4ea43b is ancestor of d85a773
+merge commits f159631..d85a773: 0
+commits f159631..d85a773: 12
+--- GitHub repository settings
+visibility=PUBLIC default=main
+{"message":"Branch not protected","documentation_url":"https://docs.github.com/rest/branches/branch-protection#get-branch-protection","status":"404"}gh: Branch not protected (HTTP 404)
+rulesets: []
+--- GitHub Actions annotation on d85a773 (main)
+The job was not started because your account is locked due to a billing issue.

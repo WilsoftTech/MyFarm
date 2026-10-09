@@ -1,0 +1,16 @@
+# Deploy watch: ~2 minutes after the push, GitHub API (deployments, statuses, check suites/runs). Captured 2026-10-09.
+--- deployments
+--- statuses d85a773
+--- suites d85a773
+coderabbitai	phase-02-farmer-registry	queued	-	0
+vercel	phase-02-farmer-registry	queued	-	0
+render	phase-02-farmer-registry	queued	-	0
+github-actions	phase-02-farmer-registry	completed	failure	1
+github-actions	main	completed	failure	1
+--- actions annotation (main run)
+The job was not started because your account is locked due to a billing issue.
+--- history check
+12
+0
+d85a773 Record final Phase 2 local CI run on documentation head
+

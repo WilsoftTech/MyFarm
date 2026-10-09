@@ -1,0 +1,10 @@
+// Read-only: public Auth settings + admin user count (service role, GET only). No identities printed.
+import { env } from "./env.mjs";
+const base = env.NEXT_PUBLIC_SUPABASE_URL.replace(/\/$/, "");
+const s = await (await fetch(base + "/auth/v1/settings", { headers: { apikey: env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY } })).json();
+console.log("settings:", JSON.stringify({ email: s.external?.email, disable_signup: s.disable_signup, mailer_autoconfirm: s.mailer_autoconfirm, phone: s.external?.phone }));
+const r = await fetch(base + "/auth/v1/admin/users?page=1&per_page=50", { headers: { apikey: env.SUPABASE_SERVICE_ROLE_KEY, Authorization: "Bearer " + env.SUPABASE_SERVICE_ROLE_KEY } });
+const j = await r.json(); console.log("admin users HTTP", r.status, "count:", (j.users ?? []).length, "total header:", r.headers.get("x-total-count"));
+console.log("test email shape:", JSON.stringify({ len: env.MYFARM_TEST_EMAIL.length, hasAt: env.MYFARM_TEST_EMAIL.includes("@"), trimmed: env.MYFARM_TEST_EMAIL === env.MYFARM_TEST_EMAIL.trim(), domainTld: env.MYFARM_TEST_EMAIL.split(".").pop() }));
+const pw = await fetch(base + "/auth/v1/token?grant_type=password", { method: "POST", headers: { apikey: env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, "content-type": "application/json" }, body: JSON.stringify({ email: env.MYFARM_TEST_EMAIL, password: env.MYFARM_TEST_PASSWORD }) });
+const pj = await pw.json(); console.log("password grant HTTP", pw.status, "error_code:", pj.error_code ?? pj.error ?? "none", pj.access_token ? "(session issued)" : "");

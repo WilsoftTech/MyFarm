@@ -1,0 +1,30 @@
+# Mutation checks on commit 5545257: each mutation must make the provisioning suite fail; files restored after each. 2026-10-09T20:34:36Z
+### mutation: runtime-role.sql loses one DROP POLICY IF EXISTS (not re-runnable)
+     × re-running every step on the provisioned database changes nothing 1351ms
+     × upgrades a database provisioned before the lockdown (today's hosted dev state) to the same end state 1820ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  2 failed | 7 passed (9)
+### mutation: private-storage.sql loses its BEGIN (not one transaction)
+     × runs migrations first and wraps every provider file in one transaction 8ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  1 failed | 8 passed (9)
+### mutation: lockdown no longer revokes existing tables (_prisma_migrations exposed)
+     × provisions a fresh database in the documented order, and a failing file leaves nothing behind 2118ms
+     × browser roles hold nothing on public objects, including _prisma_migrations 8ms
+     × no creator role's default privileges grant browser roles access; Supabase API behavior is kept 5ms
+     × objects created later by any creator role (Phase 3 tables) give browser roles nothing 13ms
+     × re-running every step on the provisioned database changes nothing 1545ms
+     × upgrades a database provisioned before the lockdown (today's hosted dev state) to the same end state 2137ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  6 failed | 3 passed (9)
+### mutation: lockdown no longer fixes default privileges for new tables
+     × provisions a fresh database in the documented order, and a failing file leaves nothing behind 1973ms
+     × browser roles hold nothing on public objects, including _prisma_migrations 8ms
+     × no creator role's default privileges grant browser roles access; Supabase API behavior is kept 5ms
+     × objects created later by any creator role (Phase 3 tables) give browser roles nothing 11ms
+     × re-running every step on the provisioned database changes nothing 1861ms
+     × upgrades a database provisioned before the lockdown (today's hosted dev state) to the same end state 2029ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  6 failed | 3 passed (9)
+### unmutated baseline
+      Tests  9 passed (9)

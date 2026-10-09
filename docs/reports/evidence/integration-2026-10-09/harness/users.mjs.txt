@@ -1,0 +1,10 @@
+// Read-only: list auth users as masked rows (no full emails).
+import { createRequire } from "node:module"; import fs from "node:fs"; import { env } from "./env.mjs";
+const require = createRequire("D:/Myfarm/.claude/worktrees/phase-02/package.json"); const { Client } = require("pg");
+const u = new URL(env.DIRECT_URL); for (const k of ["ssl","sslmode","sslcert","sslkey","sslrootcert","uselibpqcompat"]) u.searchParams.delete(k);
+const c = new Client({ connectionString: u.toString(), ssl: { rejectUnauthorized: true, ca: fs.readFileSync(env.DATABASE_CA_CERT_PATH,"utf8") } });
+await c.connect(); await c.query("BEGIN READ ONLY");
+const rows = (await c.query(`select a.id, a.email, a.created_at, a.email_confirmed_at is not null confirmed, a.last_sign_in_at, a.banned_until, exists(select 1 from public."User" x where x."authSubject"=a.id) app_row, (select count(*)::int from auth.sessions s where s.user_id=a.id) sessions from auth.users a order by a.created_at`)).rows;
+const t = env.MYFARM_TEST_EMAIL.toLowerCase();
+for (const r of rows) console.log(JSON.stringify({ id: r.id.slice(0,8)+"…", email: r.email ? r.email[0]+"***@"+r.email.split("@")[1] : null, matchesTestEmail: (r.email||"").toLowerCase()===t, created: r.created_at, confirmed: r.confirmed, lastSignIn: r.last_sign_in_at, banned: r.banned_until, appUserRow: r.app_row, sessions: r.sessions }));
+await c.query("ROLLBACK"); await c.end();

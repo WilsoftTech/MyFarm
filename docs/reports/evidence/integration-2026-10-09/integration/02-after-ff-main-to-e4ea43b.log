@@ -1,0 +1,20 @@
+# Deploy watch: ~2 minutes after the push, GitHub API (deployments, statuses, check suites/runs). Captured 2026-10-09.
+--- deployments
+--- statuses e4ea43b
+--- suites e4ea43b
+coderabbitai	codex/phase-01-closeout	queued	-	0	2026-10-09T06:26:26Z
+vercel	codex/phase-01-closeout	queued	-	0	2026-10-09T06:26:26Z
+render	codex/phase-01-closeout	queued	-	0	2026-10-09T06:26:27Z
+github-actions	codex/phase-01-closeout	completed	failure	1	2026-10-09T06:26:30Z
+github-actions	main	completed	failure	1	2026-10-09T19:13:40Z
+--- runs e4ea43b
+github-actions	verify	failure	2026-10-09T19:13:38Z
+github-actions	verify	failure	2026-10-09T06:26:28Z
+--- recent repo events
+PushEvent	WilsoftTech	2026-10-09T06:26:26Z	refs/heads/codex/phase-01-closeout
+CreateEvent	WilsoftTech	2026-10-08T01:11:58Z	codex/phase-01-closeout
+PushEvent	WilsoftTech	2026-10-08T00:05:41Z	refs/heads/main
+PushEvent	WilsoftTech	2026-10-07T23:56:27Z	refs/heads/main
+PushEvent	WilsoftTech	2026-10-08T07:21:11Z	refs/heads/codex/phase-01-closeout
+PushEvent	WilsoftTech	2026-10-08T01:16:03Z	refs/heads/codex/phase-01-closeout
+

@@ -3,11 +3,11 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase02 implementation and closeout session.
+- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase1+2 integration and provisioning-hardening session.
 - Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
 - Remaining work/blockers: Maintain alignment with the Phase02 closeout; historical sections stay historical; Phase3 not authorized.
-- Evidence/report links: [Phase02 closeout](phase-02-closeout-2026-10-09.md); [Phase02 every-document review](phase-02-document-review-2026-10-09.md); [Phase01 closeout](phase-01-closeout-2026-10-08.md); [every-document review](phase-01-document-review-2026-10-08.md); [latest provider/security report](phase-01-provider-verification-2026-10-08.md).
+- Evidence/report links: [Phase1+2 integration](phase-01-02-integration-2026-10-09.md); [Phase02 closeout](phase-02-closeout-2026-10-09.md); [Phase02 every-document review](phase-02-document-review-2026-10-09.md); [Phase01 closeout](phase-01-closeout-2026-10-08.md); [every-document review](phase-01-document-review-2026-10-08.md); [latest provider/security report](phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
 Current reports: [source extract](source-extract.md), [source analysis](source-analysis.md) and [documentation audit](documentation-audit.md). These establish documentation evidence only, not implemented product capabilities.
@@ -59,3 +59,7 @@ Phase 02 **COMPLETED — 100% (13/13 verified task IDs)**, verdict **PASS WITH C
 Phase 1 conditions C3 (migration order) and C5 (anonymous streamed redirect) are resolved. **GitHub-hosted CI remains NOT VERIFIED.** Conditions P2-C1–P2-C8 are listed in the [closeout](../reports/phase-02-closeout-2026-10-09.md#6-conditions-nonblocking-owner-tracked-limitations-and-deferred-work). Phase 3 is NOT STARTED and not authorized.
 
 [Phase2 closeout](phase-02-closeout-2026-10-09.md), [every-document review](phase-02-document-review-2026-10-09.md), [evidence folder](evidence/phase-02-2026-10-09/) (ci-run-e065e7a, ci-run-final, database, hosted, security, harness). The [interim 2026-10-08 Phase2 closeout](phase-02-closeout-2026-10-08.md) (BLOCKED 15.38%, FAIL) is historical and superseded.
+
+## Phase 1+2 integration and provisioning hardening (2026-10-09)
+
+[Integration report](phase-01-02-integration-2026-10-09.md), [evidence folder](evidence/integration-2026-10-09/): integration refs and deploy watches, read-only hosted browser-role review, clean-clone CI run on `5545257`, provisioning mutation checks, Supabase-image run, sign-in journey, npm audit and secret scan. GitHub-hosted CI remains NOT VERIFIED.

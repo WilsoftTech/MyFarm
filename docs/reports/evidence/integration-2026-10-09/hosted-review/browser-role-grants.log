@@ -1,0 +1,59 @@
+# Read-only review of browser-role privileges in hosted dev (sudqhluwsaijvjjcegpv), 2026-10-09T20:32:09Z; BEGIN READ ONLY … ROLLBACK
+### current_user / server
+  postgres | PostgreSQL 17.11 on aarch64-unknown-linux-gnu, compiled by gcc (GCC) 15.2.0, 64-bit
+### public relations: owner, kind, RLS, anon/authenticated privileges
+  AuditEvent | postgres | r | true | - | -
+  Farm | postgres | r | true | - | -
+  FarmMember | postgres | r | true | - | -
+  Farmer | postgres | r | true | - | -
+  FarmerProfile | postgres | r | true | - | -
+  Membership | postgres | r | true | - | -
+  Organization | postgres | r | true | - | -
+  Plot | postgres | r | true | - | -
+  User | postgres | r | true | - | -
+  _prisma_migrations | postgres | r | true | DELETE,INSERT,REFERENCES,SELECT,TRIGGER,TRUNCATE,UPDATE | DELETE,INSERT,REFERENCES,SELECT,TRIGGER,TRUNCATE,UPDATE
+### public functions: owner, security definer, anon/authenticated EXECUTE
+  rls_auto_enable() | postgres | true | false | false
+### default ACLs (all roles, all schemas)
+  postgres | public | S | {postgres=rwU/postgres,anon=rwU/postgres,authenticated=rwU/postgres,service_role=rwU/postgres}
+  postgres | public | f | {postgres=X/postgres,anon=X/postgres,authenticated=X/postgres,service_role=X/postgres}
+  postgres | public | r | {postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres}
+  postgres | storage | S | {postgres=rwU/postgres,anon=rwU/postgres,authenticated=rwU/postgres,service_role=rwU/postgres}
+  postgres | storage | f | {postgres=X/postgres,anon=X/postgres,authenticated=X/postgres,service_role=X/postgres}
+  postgres | storage | r | {postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres}
+  supabase_admin | extensions | S | {postgres=r*w*U*/supabase_admin}
+  supabase_admin | extensions | f | {postgres=X*/supabase_admin}
+  supabase_admin | extensions | r | {postgres=a*r*w*d*D*x*t*m*/supabase_admin}
+  supabase_admin | graphql | S | {postgres=rwU/supabase_admin,anon=rwU/supabase_admin,authenticated=rwU/supabase_admin,service_role=rwU/supabase_admin}
+  supabase_admin | graphql | f | {postgres=X/supabase_admin,anon=X/supabase_admin,authenticated=X/supabase_admin,service_role=X/supabase_admin}
+  supabase_admin | graphql | r | {postgres=arwdDxtm/supabase_admin,anon=arwdDxtm/supabase_admin,authenticated=arwdDxtm/supabase_admin,service_role=arwdDxtm/supabase_admin}
+  supabase_admin | graphql_public | S | {postgres=rwU/supabase_admin,anon=rwU/supabase_admin,authenticated=rwU/supabase_admin,service_role=rwU/supabase_admin}
+  supabase_admin | graphql_public | f | {postgres=X/supabase_admin,anon=X/supabase_admin,authenticated=X/supabase_admin,service_role=X/supabase_admin}
+  supabase_admin | graphql_public | r | {postgres=arwdDxtm/supabase_admin,anon=arwdDxtm/supabase_admin,authenticated=arwdDxtm/supabase_admin,service_role=arwdDxtm/supabase_admin}
+  supabase_admin | public | S | {postgres=rwU/supabase_admin,anon=rwU/supabase_admin,authenticated=rwU/supabase_admin,service_role=rwU/supabase_admin}
+  supabase_admin | public | f | {postgres=X/supabase_admin,anon=X/supabase_admin,authenticated=X/supabase_admin,service_role=X/supabase_admin}
+  supabase_admin | public | r | {postgres=arwdDxtm/supabase_admin,anon=arwdDxtm/supabase_admin,authenticated=arwdDxtm/supabase_admin,service_role=arwdDxtm/supabase_admin}
+  supabase_admin | realtime | S | {postgres=rwU/supabase_admin,dashboard_user=rwU/supabase_admin}
+  supabase_admin | realtime | f | {postgres=X/supabase_admin,dashboard_user=X/supabase_admin}
+  supabase_admin | realtime | r | {postgres=a*r*wdDxtm/supabase_admin,dashboard_user=arwdDxtm/supabase_admin}
+  supabase_auth_admin | auth | S | {postgres=rwU/supabase_auth_admin,dashboard_user=rwU/supabase_auth_admin}
+  supabase_auth_admin | auth | f | {postgres=X/supabase_auth_admin,dashboard_user=X/supabase_auth_admin}
+  supabase_auth_admin | auth | r | {postgres=arwdDxtm/supabase_auth_admin,dashboard_user=arwdDxtm/supabase_auth_admin}
+### roles that own objects in public
+  postgres
+### schema privileges (public, myfarm_private)
+  myfarm_private | anon | false | false
+  myfarm_private | authenticated | true | false
+  myfarm_private | myfarm_runtime | true | false
+  myfarm_private | postgres | true | true
+  public | anon | true | false
+  public | authenticated | true | false
+  public | myfarm_runtime | true | false
+  public | postgres | true | true
+### current_user membership in creator roles
+  postgres | true | true
+  supabase_admin | false | false
+  supabase_auth_admin | false | false
+  supabase_storage_admin | false | false
+### PostgREST exposed schemas (pgrst.db_schemas setting on authenticator)
+  authenticator | session_preload_libraries=supautils, safeupdate,statement_timeout=8s,lock_timeout=8s

@@ -1,0 +1,28 @@
+# Supplementary: real provisioning files on public.ecr.aws/supabase/postgres:17.6.1.166 (new container), commit 5545257, 2026-10-09T20:32:47Z
+PASS project connection is postgres and not superuser (as on hosted) {"u":"postgres","s":false}
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+PASS prisma migrate deploy as postgres 
+PASS before lockdown: anon can read _prisma_migrations (P2-C8 reproduced) 
+PASS before lockdown: authenticated can read _prisma_migrations (P2-C8 reproduced) 
+PASS applied supabase/policies/foundation-hardening.sql 
+PASS applied supabase/policies/private-storage.sql 
+PASS applied supabase/policies/runtime-role.sql 
+PASS applied supabase/policies/farmer-registry-runtime.sql 
+PASS applied supabase/policies/browser-role-lockdown.sql 
+PASS no browser/PUBLIC grant on any public relation []
+PASS after lockdown: anon cannot touch _prisma_migrations 
+PASS after lockdown: authenticated cannot touch _prisma_migrations 
+PASS new postgres-created table/sequence/function: anon gets nothing {"t":false,"s":false,"f":false}
+PASS new postgres-created table/sequence/function: authenticated gets nothing {"t":false,"s":false,"f":false}
+PASS service_role keeps its default access to new tables (Supabase behavior kept) 
+PASS residual: only supabase_admin (not changeable by postgres) still grants browsers defaults [{"r":"supabase_admin"}]
+PASS lockdown reported that residual as a WARNING WARNING: Not changeable from this role (owns nothing in public yet; objects it creates there would grant browser roles access): supabase_admin
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+PASS rerun: no pending migrations 
+PASS rerun: every provider file again, identical end state 
+PASS postgres can assume myfarm_runtime, which can read User 
+summary: 20/20 PASS

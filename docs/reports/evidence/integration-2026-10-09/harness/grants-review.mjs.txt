@@ -1,0 +1,24 @@
+// Read-only review of browser-role (anon/authenticated) privileges and default ACLs in hosted dev.
+import { createRequire } from "node:module"; import fs from "node:fs"; import { env } from "./env.mjs";
+const require = createRequire("D:/Myfarm/.claude/worktrees/phase-02/package.json"); const { Client } = require("pg");
+const u = new URL(env.DIRECT_URL); for (const k of ["ssl","sslmode","sslcert","sslkey","sslrootcert","uselibpqcompat"]) u.searchParams.delete(k);
+const c = new Client({ connectionString: u.toString(), ssl: { rejectUnauthorized: true, ca: fs.readFileSync(env.DATABASE_CA_CERT_PATH, "utf8") } });
+await c.connect(); await c.query("BEGIN READ ONLY");
+const q = async (title, sql) => { console.log("### " + title); for (const r of (await c.query(sql)).rows) console.log("  " + Object.values(r).join(" | ")); };
+await q("current_user / server", `select current_user, version()`);
+await q("public relations: owner, kind, RLS, anon/authenticated privileges", `
+  select c.relname, pg_get_userbyid(c.relowner) owner, c.relkind, c.relrowsecurity rls,
+    coalesce((select string_agg(privilege_type, ',' order by privilege_type) from information_schema.role_table_grants g where g.table_schema='public' and g.table_name=c.relname and g.grantee='anon'),'-') anon,
+    coalesce((select string_agg(privilege_type, ',' order by privilege_type) from information_schema.role_table_grants g where g.table_schema='public' and g.table_name=c.relname and g.grantee='authenticated'),'-') authenticated
+  from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='public' and c.relkind in ('r','p','v','m','S','f') order by 1`);
+await q("public functions: owner, security definer, anon/authenticated EXECUTE", `
+  select p.oid::regprocedure, pg_get_userbyid(p.proowner), p.prosecdef, has_function_privilege('anon', p.oid, 'EXECUTE') anon_exec, has_function_privilege('authenticated', p.oid, 'EXECUTE') auth_exec
+  from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' order by 1`);
+await q("default ACLs (all roles, all schemas)", `
+  select pg_get_userbyid(d.defaclrole) creator, coalesce(n.nspname,'<global>') schema, d.defaclobjtype type, d.defaclacl::text acl
+  from pg_default_acl d left join pg_namespace n on n.oid=d.defaclnamespace order by 1,2,3`);
+await q("roles that own objects in public", `select distinct pg_get_userbyid(c.relowner) from pg_class c join pg_namespace n on n.oid=c.relnamespace where n.nspname='public' union select distinct pg_get_userbyid(p.proowner) from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public'`);
+await q("schema privileges (public, myfarm_private)", `select n.nspname, r.rolname, has_schema_privilege(r.rolname, n.nspname, 'USAGE') usage, has_schema_privilege(r.rolname, n.nspname, 'CREATE') "create" from pg_namespace n cross join pg_roles r where n.nspname in ('public','myfarm_private') and r.rolname in ('anon','authenticated','myfarm_runtime','postgres') order by 1,2`);
+await q("current_user membership in creator roles", `select r.rolname, pg_has_role(current_user, r.oid, 'MEMBER') member, pg_has_role(current_user, r.oid, 'USAGE') usage from pg_roles r where r.rolname in ('postgres','supabase_admin','supabase_auth_admin','supabase_storage_admin')`);
+await q("PostgREST exposed schemas (pgrst.db_schemas setting on authenticator)", `select rolname, rolconfig from pg_roles where rolname='authenticator'`);
+await c.query("ROLLBACK"); await c.end();

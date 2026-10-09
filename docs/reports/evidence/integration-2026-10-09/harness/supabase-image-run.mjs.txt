@@ -1,0 +1,55 @@
+// Supplementary evidence: run MyFarm's real provisioning files against the official Supabase Postgres image
+// (public.ecr.aws/supabase/postgres:17.6.1.166, throwaway container myfarm-stepb-supabase-img on 127.0.0.1:55434).
+// Platform gaps the image lacks (GoTrue auth.sessions, storage tables, auth.jwt) are filled by the test emulation as
+// supabase_admin; everything MyFarm runs is executed as postgres, the role hosted Supabase gives the project.
+import { createRequire } from "node:module"; import fs from "node:fs"; import { execFileSync } from "node:child_process";
+const repo = "D:/Myfarm/.claude/worktrees/step-b";
+const require = createRequire(repo + "/package.json"); const { Client } = require("pg");
+const base = "postgresql://%s:isolated-ci-password@127.0.0.1:55434/postgres";
+const platform = new Client({ connectionString: base.replace("%s", "supabase_admin") });
+const project = new Client({ connectionString: base.replace("%s", "postgres") });
+await platform.connect(); await project.connect();
+const warnings = []; project.on("notice", n => warnings.push(`${n.severity}: ${n.message}`));
+const results = []; const check = (name, ok, detail = "") => { results.push(!!ok); console.log(ok ? "PASS" : "FAIL", name, detail); };
+const one = async (c, sql, p = []) => (await c.query(sql, p)).rows;
+const run = async (c, file) => { try { await c.query(fs.readFileSync(repo + "/" + file, "utf8")); } catch (e) { await c.query("ROLLBACK").catch(() => {}); throw e; } };
+const steps = JSON.parse(fs.readFileSync(repo + "/supabase/provisioning.json", "utf8")).steps;
+const snapshot = async () => JSON.stringify({
+  policies: await one(project, `SELECT schemaname, tablename, policyname, cmd, roles::text, qual, with_check FROM pg_policies WHERE schemaname IN ('public','storage') ORDER BY 1,2,3`),
+  acl: await one(project, `SELECT c.relname, a.grantee::regrole::text, a.privilege_type FROM pg_class c CROSS JOIN LATERAL aclexplode(c.relacl) a WHERE c.relnamespace IN ('public'::regnamespace) ORDER BY 1,2,3`),
+  defacl: await one(project, `SELECT pg_get_userbyid(defaclrole), defaclnamespace::regnamespace::text, defaclobjtype::text, defaclacl::text FROM pg_default_acl ORDER BY 1,2,3`),
+});
+const who = (await one(project, "SELECT current_user u, (SELECT rolsuper FROM pg_roles WHERE rolname = current_user) s"))[0];
+check("project connection is postgres and not superuser (as on hosted)", who.u === "postgres" && who.s === false, JSON.stringify(who));
+
+await run(platform, "tests/support/supabase-emulation.sql");
+const migrate = execFileSync(process.execPath, ["node_modules/prisma/build/index.js", "migrate", "deploy"], { cwd: repo, encoding: "utf8", env: { ...process.env, DATABASE_URL: base.replace("%s", "postgres"), DIRECT_URL: base.replace("%s", "postgres") } });
+check("prisma migrate deploy as postgres", /successfully applied/.test(migrate));
+for (const role of ["anon", "authenticated"]) check(`before lockdown: ${role} can read _prisma_migrations (P2-C8 reproduced)`, (await one(project, `SELECT has_table_privilege($1,'public._prisma_migrations','SELECT') ok`, [role]))[0].ok);
+for (const file of steps.slice(1)) { await run(project, file); check("applied " + file, true); }
+const first = await snapshot();
+const leftovers = await one(project, `SELECT c.relname, a.grantee::regrole::text g FROM pg_class c CROSS JOIN LATERAL aclexplode(c.relacl) a WHERE c.relnamespace='public'::regnamespace AND (a.grantee = 0 OR a.grantee::regrole::text IN ('anon','authenticated'))`);
+check("no browser/PUBLIC grant on any public relation", leftovers.length === 0, JSON.stringify(leftovers));
+for (const role of ["anon", "authenticated"]) check(`after lockdown: ${role} cannot touch _prisma_migrations`, !(await one(project, `SELECT has_table_privilege($1,'public._prisma_migrations','SELECT,INSERT,UPDATE,DELETE,TRUNCATE') ok`, [role]))[0].ok);
+await project.query("BEGIN");
+await project.query(`CREATE TABLE public.phase3_probe (id uuid PRIMARY KEY); CREATE SEQUENCE public.phase3_probe_seq; CREATE FUNCTION public.phase3_probe_fn() RETURNS int LANGUAGE sql AS 'SELECT 1'`);
+for (const role of ["anon", "authenticated"]) {
+  const r = (await one(project, `SELECT has_table_privilege($1,'public.phase3_probe','SELECT,INSERT,UPDATE,DELETE') t, has_sequence_privilege($1,'public.phase3_probe_seq','USAGE,SELECT,UPDATE') s, has_function_privilege($1,'public.phase3_probe_fn()','EXECUTE') f`, [role]))[0];
+  check(`new postgres-created table/sequence/function: ${role} gets nothing`, !r.t && !r.s && !r.f, JSON.stringify(r));
+}
+const sr = (await one(project, `SELECT has_table_privilege('service_role','public.phase3_probe','SELECT') ok`))[0].ok;
+check("service_role keeps its default access to new tables (Supabase behavior kept)", sr);
+await project.query("ROLLBACK");
+const residual = await one(project, `SELECT DISTINCT pg_get_userbyid(d.defaclrole) r FROM pg_default_acl d CROSS JOIN LATERAL aclexplode(d.defaclacl) a WHERE d.defaclnamespace IN (0,'public'::regnamespace) AND a.grantee::regrole::text IN ('anon','authenticated')`);
+check("residual: only supabase_admin (not changeable by postgres) still grants browsers defaults", JSON.stringify(residual) === JSON.stringify([{ r: "supabase_admin" }]), JSON.stringify(residual));
+check("lockdown reported that residual as a WARNING", warnings.some(w => /supabase_admin/.test(w)), warnings.filter(w => /Not changeable/.test(w)).join(" | "));
+const rerun = execFileSync(process.execPath, ["node_modules/prisma/build/index.js", "migrate", "deploy"], { cwd: repo, encoding: "utf8", env: { ...process.env, DATABASE_URL: base.replace("%s", "postgres"), DIRECT_URL: base.replace("%s", "postgres") } });
+check("rerun: no pending migrations", /No pending migrations/.test(rerun));
+for (const file of steps.slice(1)) await run(project, file);
+check("rerun: every provider file again, identical end state", (await snapshot()) === first);
+await project.query("BEGIN"); await project.query("SET LOCAL ROLE myfarm_runtime");
+const rt = (await one(project, `SELECT count(*)::int n FROM public."User"`))[0].n;
+await project.query("ROLLBACK");
+check("postgres can assume myfarm_runtime, which can read User", rt === 0);
+console.log(`summary: ${results.filter(Boolean).length}/${results.length} PASS`);
+await platform.end(); await project.end();

@@ -3,11 +3,11 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase02 implementation and closeout session.
+- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase1+2 integration and provisioning-hardening session.
 - Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
-- Remaining work/blockers: Maintain alignment with the Phase02 closeout; historical sections stay historical; Phase3 not authorized.
-- Evidence/report links: [Phase02 closeout](reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](reports/phase-02-document-review-2026-10-09.md); [Phase01 local verification closeout](reports/phase-01-local-verification.md); [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md).
+- Remaining work/blockers: Phase3 authorized, not started (begins from the provisioning-hardening branch); Step B push/merge and hosted application need owner approval; historical sections stay historical.
+- Evidence/report links: [Phase1+2 integration](reports/phase-01-02-integration-2026-10-09.md); [Phase02 closeout](reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](reports/phase-02-document-review-2026-10-09.md); [Phase01 local verification closeout](reports/phase-01-local-verification.md); [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
 Last inspected: 2026-10-08, Africa/Nairobi. Phase1 application, Prisma migration, tests and CI configuration now exist. Git main and remote WilsoftTech/MyFarm are present; hosted auth/storage/CI/deployment evidence is still absent. Root user instructions/design files are preserved.
@@ -20,7 +20,7 @@ Current phase: **Phase1 — COMPLETED — 100% (13/13), verdict PASS WITH CONDIT
 | 0 | [Product Discovery and Scope Definition](phases/phase-00-product-discovery.md) | COMPLETED — 100% (owner acceptance) | T001–T010 administratively accepted; 0/10 original research-task evidence verified | Empirical field validation remains a risk/follow-up | [Owner approval](reports/phase-00-owner-approval-2026-10-08.md) |
 | 1 | [Engineering Foundation](phases/phase-01-engineering-foundation.md) | COMPLETED — 100% (PASS WITH CONDITIONS — LOCAL VERIFICATION) | T001–T013 verified | Conditions C1, C2, C4 open; C3 resolved and C5 resolved for anonymous visitors in Phase2 (2026-10-09) | [Local verification](reports/phase-01-local-verification.md) |
 | 2 | [Farmer Identity and Farm Registry](phases/phase-02-farmer-registry.md) | COMPLETED — 100% (PASS WITH CONDITIONS — LOCAL VERIFICATION) | T001–T013 verified | Conditions P2-C1–P2-C8 (hosted CI, provider SQL, checksums, proposed defaults, retention policy, advisors, JWT redirect residual, migrations-table grants) | [Closeout](reports/phase-02-closeout-2026-10-09.md) |
-| 3 | [Enterprises Crops Livestock and Seasons](phases/phase-03-enterprises-seasons.md) | NOT STARTED — 0% | None | All H tasks | None |
+| 3 | [Enterprises Crops Livestock and Seasons](phases/phase-03-enterprises-seasons.md) | NOT STARTED — 0% (authorized 2026-10-09, D-P03-001) | None | All H tasks; Q07/Q08 resolved by owner | None |
 | 4 | [Farm Accounting Engine](phases/phase-04-farm-accounting.md) | NOT STARTED — 0% | None | All H tasks | None |
 | 5 | [Harvest Production and Inventory](phases/phase-05-harvest-inventory.md) | NOT STARTED — 0% | None | All H tasks | None |
 | 6 | [Production Activities and Farm Calendar](phases/phase-06-farm-activities.md) | NOT STARTED — 0% | None | All H tasks | None |
@@ -122,3 +122,13 @@ Phase 02 **COMPLETED — 100% (13/13 verified task IDs)**, verdict **PASS WITH C
 Phase 1 conditions C3 (migration order) and C5 (anonymous streamed redirect) are resolved. **GitHub-hosted CI remains NOT VERIFIED.** Conditions P2-C1–P2-C8 are listed in the [closeout](reports/phase-02-closeout-2026-10-09.md#6-conditions-nonblocking-owner-tracked-limitations-and-deferred-work). Phase 3 is NOT STARTED and not authorized.
 
 Next action: owner review of the Phase 2 closeout; push/merge branch `phase-02-farmer-registry` only when authorized; restore hosted CI (P1-C1/P2-C1). Do not start Phase 3 without explicit authorization.
+
+## Current session status — Phase 1+2 integration and provisioning hardening (2026-10-09)
+
+- **Integrated:** `main` fast-forwarded `f159631 → e4ea43b → d85a773` (Phase 1 then Phase 2); no deployment triggered; GitHub-hosted CI **NOT VERIFIED** under the one-time exception [D-INT-001](DECISION-LOG.md#d-int-001--phase-1-and-phase-2-integration-into-main).
+- **Provisioning hardening (Step B)** on branch `phase-02-provisioning-hardening` (`5545257`, not pushed): provider SQL transactional and re-runnable, single order in `supabase/provisioning.json`, new browser-role lockdown (fixes P2-C8 and default privileges for future tables), tests run the real files. Clean-clone local CI **11/11** (117 unit/component, 42 integration incl. 9 provisioning, 24 E2E); Supabase-image run 20/20; npm audit 0; no secrets. **Not applied to hosted dev** (needs approval, INT-C1).
+- **Sign-in:** root cause was zero Auth users in hosted dev; the owner provisioned the test account; sign-in/sign-out verified 11/11 locally on Phase 1 and `main`. Public sign-up is still enabled in Supabase (INT-C2).
+- **Conditions:** P2-C2 resolved locally; P2-C8 fix ready (hosted pending); P2-C1, C3–C7 open; new INT-C1–INT-C5. [Integration report](reports/phase-01-02-integration-2026-10-09.md).
+- **Phase 3:** authorized ([D-P03-001](DECISION-LOG.md#d-p03-001--phase-3-authorization-and-sequencing)); Q07/Q08 resolved; local CI extended (D-P03-004). **NOT STARTED — 0%.**
+
+Next action: owner approval to push `phase-02-provisioning-hardening` and fast-forward `main`, and to apply the updated provider files to hosted dev; then begin Phase 3 (MYF-P03-T001).

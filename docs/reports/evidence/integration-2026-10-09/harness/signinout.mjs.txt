@@ -1,0 +1,41 @@
+// Sign-in / sign-out journey for MYFARM_TEST_EMAIL against a running app. Prints no credentials.
+// Usage: node signinout.mjs http://localhost:3000
+import { createRequire } from "node:module"; import fs from "node:fs"; import { env } from "./env.mjs";
+const require = createRequire("D:/Myfarm/.claude/worktrees/phase-02/package.json");
+const { chromium } = require("@playwright/test"); const { Client } = require("pg");
+const base = process.argv[2];
+const u = new URL(env.DIRECT_URL); for (const k of ["ssl","sslmode","sslcert","sslkey","sslrootcert","uselibpqcompat"]) u.searchParams.delete(k);
+const activeSessions = async () => { // read-only
+  const c = new Client({ connectionString: u.toString(), ssl: { rejectUnauthorized: true, ca: fs.readFileSync(env.DATABASE_CA_CERT_PATH, "utf8") } });
+  await c.connect(); await c.query("BEGIN READ ONLY");
+  const n = (await c.query(`select count(*)::int n from auth.sessions s join auth.users a on a.id = s.user_id where lower(a.email) = lower($1) and (s.not_after is null or s.not_after > now())`, [env.MYFARM_TEST_EMAIL])).rows[0].n;
+  await c.query("ROLLBACK"); await c.end(); return n;
+};
+const results = []; const check = (name, ok, detail = "") => { results.push(ok); console.log(ok ? "PASS" : "FAIL", name, detail); };
+const path = p => new URL(p.url()).pathname;
+const browser = await chromium.launch(); const ctx = await browser.newContext(); const page = await ctx.newPage();
+const errors = []; page.on("pageerror", e => errors.push(e.message)); page.on("console", m => m.type() === "error" && errors.push(m.text().slice(0, 150)));
+
+await page.goto(base + "/workspace"); await page.waitForURL(/\/sign-in/, { timeout: 20000 }).catch(() => {});
+check("anonymous /workspace redirects to sign-in", path(page) === "/sign-in", path(page));
+await page.fill("#email", env.MYFARM_TEST_EMAIL); await page.fill("#password", env.MYFARM_TEST_PASSWORD);
+await Promise.all([page.waitForURL(/\/workspace/, { timeout: 20000 }).catch(() => {}), page.click("button[type=submit]")]);
+check("sign-in lands on /workspace", path(page) === "/workspace", path(page));
+check("workspace shows welcome", await page.getByRole("heading", { name: "Welcome to MyFarm" }).waitFor({ timeout: 20000 }).then(() => true, () => false));
+const cookies = (await ctx.cookies()).filter(c => c.name.startsWith("sb-"));
+check("session cookie HttpOnly + SameSite=Lax", cookies.length > 0 && cookies.every(c => c.httpOnly && c.sameSite === "Lax"), `${cookies.length} cookie(s)`);
+const before = await activeSessions(); check("server session active after sign-in", before >= 1, `active=${before}`);
+
+await Promise.all([page.waitForURL(/\/sign-in/, { timeout: 20000 }).catch(() => {}), page.getByRole("button", { name: "Sign out" }).click()]);
+check("sign-out returns to /sign-in", path(page) === "/sign-in", path(page));
+check("auth cookies cleared", (await ctx.cookies()).filter(c => c.name.startsWith("sb-")).length === 0);
+const after = await activeSessions(); check("server sessions revoked after sign-out", after === 0, `active=${after}`);
+await page.goto(base + "/workspace"); await page.waitForURL(/\/sign-in/, { timeout: 20000 }).catch(() => {});
+check("/workspace locked again after sign-out", path(page) === "/sign-in", path(page));
+
+await page.fill("#email", env.MYFARM_TEST_EMAIL); await page.fill("#password", "definitely-wrong-password");
+await page.click("button[type=submit]"); await page.waitForTimeout(4000);
+check("wrong password rejected with generic message", path(page) === "/sign-in" && (await page.locator("[role=alert]").allInnerTexts()).join(" ").includes("Sign-in failed"));
+check("no browser errors", errors.length === 0, errors.join(" | "));
+await browser.close();
+const left = await activeSessions(); console.log(`summary: ${results.filter(Boolean).length}/${results.length} PASS; active sessions left for test account: ${left}`);

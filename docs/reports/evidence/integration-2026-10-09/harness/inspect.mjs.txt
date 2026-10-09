@@ -1,0 +1,29 @@
+// Read-only inspection of hosted dev auth/provisioning state. Prints booleans/counts only.
+import { createRequire } from "node:module"; import fs from "node:fs";
+const require = createRequire("D:/Myfarm/.claude/worktrees/phase-02/package.json");
+const { Client } = require("pg");
+import { env } from "./env.mjs";
+const u = new URL(env.DIRECT_URL); for (const k of ["ssl","sslmode","sslcert","sslkey","sslrootcert","uselibpqcompat"]) u.searchParams.delete(k);
+const c = new Client({ connectionString: u.toString(), ssl: { rejectUnauthorized: true, ca: fs.readFileSync(env.DATABASE_CA_CERT_PATH,"utf8") } });
+await c.connect(); await c.query("BEGIN READ ONLY");
+const email = env.MYFARM_TEST_EMAIL.toLowerCase();
+const q = async (s,p=[]) => (await c.query(s,p)).rows;
+const out = {};
+out.authUsersTotal = (await q(`select count(*)::int n from auth.users`))[0].n;
+const au = await q(`select id, email_confirmed_at is not null confirmed, banned_until > now() as banned, deleted_at is not null deleted, encrypted_password is not null and encrypted_password<>'' has_password, last_sign_in_at, is_sso_user, is_anonymous from auth.users where lower(email)=$1`,[email]);
+out.testAuthUserExists = au.length===1;
+if (au.length) { const a=au[0]; Object.assign(out,{confirmed:a.confirmed,banned:!!a.banned,deleted:a.deleted,hasPassword:a.has_password,lastSignIn:a.last_sign_in_at,sso:a.is_sso_user,anonymous:a.is_anonymous});
+  out.identities = (await q(`select provider from auth.identities where user_id=$1`,[a.id])).map(r=>r.provider);
+  out.activeSessions = (await q(`select count(*)::int n from auth.sessions where user_id=$1 and (not_after is null or not_after>now())`,[a.id]))[0].n;
+  const pu = await q(`select id,status from public."User" where "authSubject"=$1`,[a.id]);
+  out.appUserRow = pu.length ? {exists:true,status:pu[0].status} : {exists:false};
+  if (pu.length) out.memberships = await q(`select m.role,m.status,o.kind from public."Membership" m join public."Organization" o on o.id=m."organizationId" where m."userId"=$1`,[pu[0].id]);
+}
+out.appUsersTotal=(await q(`select count(*)::int n from public."User"`))[0].n;
+out.appUsersWithAuthMatch=(await q(`select count(*)::int n from public."User" u join auth.users a on a.id=u."authSubject"`))[0].n;
+out.authUsersWithoutAppRow=(await q(`select count(*)::int n from auth.users a where not exists (select 1 from public."User" u where u."authSubject"=a.id)`))[0].n;
+out.sessionFn = (await q(`select has_function_privilege('myfarm_runtime','myfarm_private.myfarm_session_is_active(uuid,uuid)','EXECUTE') ok`))[0].ok;
+out.runtimeCanLogin = (await q(`select rolcanlogin from pg_roles where rolname='myfarm_runtime'`))[0]?.rolcanlogin;
+out.migrations = (await q(`select migration_name, finished_at is not null done, rolled_back_at is not null rb from _prisma_migrations order by started_at`));
+await c.query("ROLLBACK"); await c.end();
+console.log(JSON.stringify(out,null,1));

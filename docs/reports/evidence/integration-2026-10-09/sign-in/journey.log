@@ -1,0 +1,40 @@
+# Sign-in investigation, 2026-10-09 (transcribed verbatim from this session's console output; not re-run,
+# because sign-out revokes every session of the account, including the owner's browser).
+
+## Before the fix — hosted dev Supabase Auth (read-only queries and API GETs; no identities printed)
+authUsersTotal: 0; testAuthUserExists: false; appUsersTotal: 0; sessionFn: true; runtimeCanLogin: true; migrations 3/3 applied
+settings: {"email":true,"disable_signup":false,"mailer_autoconfirm":false,"phone":false}
+admin users HTTP 200 count: 0
+password grant HTTP 400 error_code: invalid_credentials
+App (local production build of main d85a773, headless Chromium): POST /sign-in -> 200, alert "Sign-in failed. Check your details and try again.", no sb- cookie, no console errors.
+
+## Owner actions (Supabase dashboard): created the MYFARM_TEST_EMAIL Auth user (auto-confirmed), then inserted its public."User" row.
+After the Auth user only: signing in landed on /forbidden ("Access unavailable"), as expected for an account with no User row.
+
+## After the fix — signinout.mjs against http://localhost:3000 (owner's dev server, branch codex/phase-01-closeout e4ea43b)
+PASS anonymous /workspace redirects to sign-in /sign-in
+PASS sign-in lands on /workspace /workspace
+PASS workspace shows welcome
+PASS session cookie HttpOnly + SameSite=Lax 1 cookie(s)
+PASS server session active after sign-in active=1
+PASS sign-out returns to /sign-in /sign-in
+PASS auth cookies cleared
+PASS server sessions revoked after sign-out active=0
+PASS /workspace locked again after sign-out /sign-in
+PASS wrong password rejected with generic message
+PASS no browser errors
+summary: 11/11 PASS; active sessions left for test account: 0
+
+## After the fix — signinout.mjs against http://localhost:3100 (local production build of main d85a773)
+PASS anonymous /workspace redirects to sign-in /sign-in
+PASS sign-in lands on /workspace /workspace
+PASS workspace shows welcome
+PASS session cookie HttpOnly + SameSite=Lax 1 cookie(s)
+PASS server session active after sign-in active=1
+PASS sign-out returns to /sign-in /sign-in
+PASS auth cookies cleared
+PASS server sessions revoked after sign-out active=0
+PASS /workspace locked again after sign-out /sign-in
+PASS wrong password rejected with generic message
+PASS no browser errors
+summary: 11/11 PASS; active sessions left for test account: 0

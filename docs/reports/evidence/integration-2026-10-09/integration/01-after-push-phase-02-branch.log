@@ -1,0 +1,11 @@
+# Deploy watch: ~2 minutes after the push, GitHub API (deployments, statuses, check suites/runs). Captured 2026-10-09.
+--- check suites d85a773
+coderabbitai	queued	-	0
+vercel	queued	-	0
+render	queued	-	0
+github-actions	completed	failure	1
+--- statuses
+--- deployments (all)
+--- check runs
+github-actions	verify	completed	failure
+

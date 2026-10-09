@@ -222,6 +222,8 @@ The 48 live checks cover:
 | P2-C7 | Revoked-but-unexpired JWT receives an in-stream redirect (no content); non-browser clients see 200 for that case (Phase 1 C5 residual) | Engineering | Phase 24 hardening, or earlier if API clients rely on page status |
 | P2-C8 | `anon`/`authenticated` hold table privileges on `_prisma_migrations` in hosted dev (RLS deny-all; pre-existing) | Engineering | Revoke before production |
 
+**Status update 2026-10-09 (integration):** P2-C2 resolved locally and P2-C8 fix ready (hosted dev still pending); see the [integration report](phase-01-02-integration-2026-10-09.md#7-conditions). The rest of this closeout is historical.
+
 **Limitations:**
 
 - The interface is English only; the preferred language is stored but no translation is implied.

@@ -3,7 +3,7 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase02 implementation and closeout session.
+- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase1+2 integration and provisioning-hardening session.
 - Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
 - Remaining work/blockers: Maintain alignment with the Phase02 closeout; historical sections stay historical; Phase3 not authorized.
@@ -13,6 +13,8 @@
 Status date: 2026-10-08. Grouped explicit capabilities map to unique requirements/tasks/acceptance tests below. Phase0 is COMPLETED100% by owner acceptance, without empirical research verification. Phase1 is BLOCKED30.77% (4/13 verified tasks); Phases2–24 remain NOT STARTED0%. Proposed safeguards/schema are identified in phase F and [decisions](DECISION-LOG.md). Paragraph locators refer to [complete normalized source](reports/source-extract.md), not guessed page numbers.
 
 **Status update 2026-10-09 (supersedes the phase percentages in the line above):** Phase1 COMPLETED 100% (PASS WITH CONDITIONS, 2026-10-08); Phase2 COMPLETED 100% (13/13, PASS WITH CONDITIONS — LOCAL VERIFICATION, [closeout](reports/phase-02-closeout-2026-10-09.md)); Phases3–24 NOT STARTED 0%. MYF-P02-R004 covers every operation implemented in Phase2; export/search do not exist yet and must be re-tested when introduced.
+
+**Integration update 2026-10-09:** Phase1 and Phase2 are on `main` (`d85a773`); provisioning hardening for MYF-P02-R004 (database least privilege) is verified locally on branch `phase-02-provisioning-hardening` and pending approval ([integration report](reports/phase-01-02-integration-2026-10-09.md)). Phase3 requirements MYF-P03-R001–R004 are authorized, with Q07/Q08 resolved by owner decision ([D-P03-002](DECISION-LOG.md#d-p03-002--q07-seasons-and-crop-cycles), [D-P03-003](DECISION-LOG.md#d-p03-003--q08-units-and-enterprise-types)); 0% implemented.
 
 ## Phase 00 Product Discovery and Scope Definition
 

@@ -1,0 +1,14 @@
+// Builds and starts the worktree app (main @ d85a773) with D:/Myfarm/.env.local injected via process env.
+// Usage: node serve.mjs build | start
+import { spawn } from "node:child_process";
+import fs from "node:fs";
+import { env } from "./env.mjs";
+const cwd = "D:/Myfarm/.claude/worktrees/phase-02";
+const mode = process.argv[2];
+const childEnv = { ...process.env, ...env, NODE_ENV: "production", PORT: "3100" };
+delete childEnv.VERCEL_OIDC_TOKEN;
+const args = mode === "build" ? ["next", "build"] : ["next", "start", "-p", "3100"];
+const log = fs.createWriteStream(new URL(`./server-${mode}.log`, import.meta.url));
+const child = spawn("npx", args, { cwd, env: childEnv, shell: true });
+child.stdout.pipe(log); child.stderr.pipe(log);
+child.on("exit", code => { log.end(`\n[exit ${code}]\n`); process.exitCode = code ?? 1; });

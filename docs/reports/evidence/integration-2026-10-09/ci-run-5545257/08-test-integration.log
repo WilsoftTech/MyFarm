@@ -1,0 +1,14 @@
+$ npm run test:integration
+
+> myfarm@0.1.0 test:integration
+> vitest run --project integration
+
+
+ RUN  v5.0.3 C:/Users/willi/AppData/Local/Temp/claude/D--Myfarm/055940f1-d2e2-419b-99cb-7dde526619dd/scratchpad/stepb/clone
+
+
+ Test Files  4 passed (4)
+      Tests  42 passed (42)
+   Start at  23:33:25
+   Duration  12.07s (tests 91%, import 7%, transform 2%)
+
