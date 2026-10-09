@@ -14,6 +14,12 @@ expect(response.headers()["cache-control"]).toContain("no-store");
 expect(["", "/sign-in?reason=session-required"]).toContain(await response.text()); // redirect target only, never page content
 }
 });
+test("header account link leads anonymous visitors to sign-in", async ({ page }) => {
+await page.goto("/");
+await page.getByRole("navigation", { name: "Main navigation" }).getByRole("link", { name: "My account" }).click();
+await expect(page).toHaveURL(/\/sign-in\?reason=session-required/);
+await expect(page.getByRole("heading", { name: "Sign in to MyFarm" })).toBeVisible();
+});
 test("anonymous registry APIs fail closed with no caching or detail", async ({ request }) => {
 for (const path of ["/api/v1/farmer", "/api/v1/farms", "/api/v1/farms/" + farm, "/api/v1/farms/not-a-uuid"]) {
 const response = await request.get(path); expect(response.status()).toBe(401); expect(response.headers()["cache-control"]).toContain("no-store");
