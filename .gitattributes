@@ -1,0 +1,2 @@
+# Prisma records the raw byte checksum of each applied migration; keep one line-ending form on every OS.
+prisma/migrations/**/*.sql text eol=lf
