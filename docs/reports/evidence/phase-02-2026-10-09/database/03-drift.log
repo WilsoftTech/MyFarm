@@ -1,0 +1,7 @@
+$ npx prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code
+No difference detected.
+
+Loaded Prisma config from prisma.config.ts.
+
+
+exit=0

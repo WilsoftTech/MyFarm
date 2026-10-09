@@ -1,0 +1,20 @@
+$ C:/Program Files/Docker/Docker/resources/bin/docker.exe exec myfarm-phase02-localci psql -U myfarm -d myfarm_phase02_replay -v ON_ERROR_STOP=1 -c SELECT c.relname, c.relrowsecurity, i.indexrelid::regclass AS index FROM pg_class c LEFT JOIN pg_index i ON i.indrelid = c.oid WHERE c.relname IN ('Farmer','FarmerProfile','Farm','Plot','FarmMember') AND c.relkind = 'r' ORDER BY 1, 3
+    relname    | relrowsecurity |                  index                  
+---------------+----------------+-----------------------------------------
+ Farm          | t              | "Farm_pkey"
+ Farm          | t              | "Farm_tenantId_createdAt_id_idx"
+ Farm          | t              | "Farm_id_tenantId_key"
+ FarmMember    | t              | "FarmMember_pkey"
+ FarmMember    | t              | "FarmMember_userId_status_idx"
+ Farmer        | t              | "Farmer_pkey"
+ Farmer        | t              | "Farmer_userId_key"
+ Farmer        | t              | "Farmer_tenantId_key"
+ Farmer        | t              | "Farmer_id_tenantId_key"
+ FarmerProfile | t              | "FarmerProfile_pkey"
+ Plot          | t              | "Plot_pkey"
+ Plot          | t              | "Plot_tenantId_farmId_createdAt_id_idx"
+ Plot          | t              | "Plot_farmId_name_key"
+(13 rows)
+
+
+exit=0

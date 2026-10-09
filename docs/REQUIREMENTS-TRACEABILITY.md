@@ -1,16 +1,18 @@
 # Requirements traceability
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — current Phase01 implementation/evidence/status review; no completion inferred from review.
+- Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-08 (Africa/Nairobi), live provider and hosted closeout session.
-- Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced.
+- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase02 implementation and closeout session.
+- Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
-- Remaining work/blockers: Maintain alignment after Phase01 live verification; historical results stay historical and source body remains immutable.
-- Evidence/report links: [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md).
+- Remaining work/blockers: Maintain alignment with the Phase02 closeout; historical sections stay historical; Phase3 not authorized.
+- Evidence/report links: [Phase02 closeout](reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
 Status date: 2026-10-08. Grouped explicit capabilities map to unique requirements/tasks/acceptance tests below. Phase0 is COMPLETED100% by owner acceptance, without empirical research verification. Phase1 is BLOCKED30.77% (4/13 verified tasks); Phases2–24 remain NOT STARTED0%. Proposed safeguards/schema are identified in phase F and [decisions](DECISION-LOG.md). Paragraph locators refer to [complete normalized source](reports/source-extract.md), not guessed page numbers.
+
+**Status update 2026-10-09 (supersedes the phase percentages in the line above):** Phase1 COMPLETED 100% (PASS WITH CONDITIONS, 2026-10-08); Phase2 COMPLETED 100% (13/13, PASS WITH CONDITIONS — LOCAL VERIFICATION, [closeout](reports/phase-02-closeout-2026-10-09.md)); Phases3–24 NOT STARTED 0%. MYF-P02-R004 covers every operation implemented in Phase2; export/search do not exist yet and must be re-tested when introduced.
 
 ## Phase 00 Product Discovery and Scope Definition
 
@@ -33,10 +35,10 @@ Status date: 2026-10-08. Grouped explicit capabilities map to unique requirement
 
 | ID | Source | Requirement | Phase/task | Acceptance | Test expectation | Status |
 |---|---|---|---|---|---|---|
-| MYF-P02-R001 | P0169–P0179 | Model User, Organization, Farmer, FarmerProfile, Farm, Plot, FarmMember, Address, Contact and Document. | [Phase 2](phases/phase-02-farmer-registry.md) / MYF-P02-T001, MYF-P02-T002, MYF-P02-T003 | MYF-P02-AC001: Farmer/farm ownership bound to authenticated actor; foreign-tenant plot link rejected. | Cross-tenant relationship and orphan creation tests. | PARTIALLY COMPLETE — implemented; AC verified at service/DB/component level; authenticated browser acceptance pending live auth ([closeout](reports/phase-02-closeout-2026-10-08.md)) |
-| MYF-P02-R002 | P0186–P0197 | Capture name, phone/alternative phone, district/subcounty/village, preferred language, ownership and main activities; minimize data. | [Phase 2](phases/phase-02-farmer-registry.md) / MYF-P02-T004, MYF-P02-T005, MYF-P02-T006 | MYF-P02-AC002: Optionality approved; extra sensitive data requires purpose before collection. | Phone/location validation and minimization review. | PARTIALLY COMPLETE — implemented; AC verified at service/DB/component level; authenticated browser acceptance pending live auth ([closeout](reports/phase-02-closeout-2026-10-08.md)) |
-| MYF-P02-R003 | P0198–P0204 | Capture farm name/location, approximate acreage, ownership, activity and optional GPS. | [Phase 2](phases/phase-02-farmer-registry.md) / MYF-P02-T007, MYF-P02-T008, MYF-P02-T009 | MYF-P02-AC003: Nonnegative acreage; valid complete coordinate pair when supplied. | Absent GPS, out-of-range coordinates and negative area tests. | PARTIALLY COMPLETE — implemented; AC verified at service/DB/component level; authenticated browser acceptance pending live auth ([closeout](reports/phase-02-closeout-2026-10-08.md)) |
-| MYF-P02-R004 | P0205–P0216 | Authorize every query; isolate farms, transactions, harvests, financial records and documents. | [Phase 2](phases/phase-02-farmer-registry.md) / MYF-P02-T010, MYF-P02-T011, MYF-P02-T012 | MYF-P02-AC004: Two farmers cannot list/read/edit/delete/export each other’s data or obtain file grants. | IDOR suite across search/export/signed file URLs. | PARTIALLY COMPLETE — implemented; AC verified at service/DB/component level; authenticated browser acceptance pending live auth ([closeout](reports/phase-02-closeout-2026-10-08.md)) |
+| MYF-P02-R001 | P0169–P0179 | Model User, Organization, Farmer, FarmerProfile, Farm, Plot, FarmMember, Address, Contact and Document. | [Phase 2](phases/phase-02-farmer-registry.md) / MYF-P02-T001, MYF-P02-T002, MYF-P02-T003 | MYF-P02-AC001: Farmer/farm ownership bound to authenticated actor; foreign-tenant plot link rejected. | Cross-tenant relationship and orphan creation tests. | COMPLETED — 100% (3/3 linked tasks verified); AC001 PASS ([closeout §5](reports/phase-02-closeout-2026-10-09.md#5-acceptance-criteria-and-exit-gate)) |
+| MYF-P02-R002 | P0186–P0197 | Capture name, phone/alternative phone, district/subcounty/village, preferred language, ownership and main activities; minimize data. | [Phase 2](phases/phase-02-farmer-registry.md) / MYF-P02-T004, MYF-P02-T005, MYF-P02-T006 | MYF-P02-AC002: Optionality approved; extra sensitive data requires purpose before collection. | Phone/location validation and minimization review. | COMPLETED — 100% (3/3 linked tasks verified); AC002 PASS ([closeout §5](reports/phase-02-closeout-2026-10-09.md#5-acceptance-criteria-and-exit-gate)) |
+| MYF-P02-R003 | P0198–P0204 | Capture farm name/location, approximate acreage, ownership, activity and optional GPS. | [Phase 2](phases/phase-02-farmer-registry.md) / MYF-P02-T007, MYF-P02-T008, MYF-P02-T009 | MYF-P02-AC003: Nonnegative acreage; valid complete coordinate pair when supplied. | Absent GPS, out-of-range coordinates and negative area tests. | COMPLETED — 100% (3/3 linked tasks verified); AC003 PASS ([closeout §5](reports/phase-02-closeout-2026-10-09.md#5-acceptance-criteria-and-exit-gate)) |
+| MYF-P02-R004 | P0205–P0216 | Authorize every query; isolate farms, transactions, harvests, financial records and documents. | [Phase 2](phases/phase-02-farmer-registry.md) / MYF-P02-T010, MYF-P02-T011, MYF-P02-T012 | MYF-P02-AC004: Two farmers cannot list/read/edit/delete/export each other’s data or obtain file grants. | IDOR suite across search/export/signed file URLs. | COMPLETED — 100% (3/3 linked tasks verified); AC004 PASS ([closeout §5](reports/phase-02-closeout-2026-10-09.md#5-acceptance-criteria-and-exit-gate)) |
 
 ## Phase 03 Enterprises Crops Livestock and Seasons
 

@@ -1,0 +1,73 @@
+// Phase 2 database verification on the isolated local CI container (127.0.0.1:55431).
+// Usage: node p2-database.mjs <checkoutDir> <logDir>
+import { spawnSync } from "node:child_process"; import { mkdirSync, writeFileSync } from "node:fs"; import path from "node:path"; import pg from "pg";
+const [checkout, logDir] = process.argv.slice(2); mkdirSync(logDir, { recursive: true });
+const docker = "C:/Program Files/Docker/Docker/resources/bin/docker.exe", container = "myfarm-phase02-localci";
+const base = "postgresql://myfarm:isolated-ci-password@127.0.0.1:55431/";
+const urlFor = db => base + db;
+const results = [];
+function step(name, command, args, { cwd = checkout, env = {}, shell = true, expect = 0 } = {}) {
+  const r = spawnSync(shell ? process.env.ComSpec : command, shell ? ["/d", "/s", "/c", command] : args, { cwd, env: { ...process.env, ...env }, encoding: "utf8", maxBuffer: 64 * 1024 * 1024, windowsHide: true });
+  const out = (r.stdout ?? "") + (r.stderr ?? "");
+  writeFileSync(path.join(logDir, name + ".log"), "$ " + (shell ? command : command + " " + args.join(" ")) + "\n" + out + "\nexit=" + r.status + "\n");
+  results.push({ step: name, exitCode: r.status, result: r.status === expect ? "PASS" : "FAIL" }); console.log(name, r.status);
+  return out;
+}
+const dbEnv = db => ({ DATABASE_URL: urlFor(db), DIRECT_URL: urlFor(db), TEST_DATABASE_URL: urlFor(db) });
+const psql = (name, db, sql) => step(name, docker, ["exec", container, "psql", "-U", "myfarm", "-d", db, "-v", "ON_ERROR_STOP=1", "-c", sql], { shell: false });
+
+step("01-replay", "npx prisma migrate deploy", null, { env: dbEnv("myfarm_phase01_test") });
+step("02-status", "npx prisma migrate status", null, { env: dbEnv("myfarm_phase01_test") });
+step("03-drift", "npx prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code", null, { env: dbEnv("myfarm_phase01_test") });
+psql("04-create-second-db", "myfarm_phase01_test", "CREATE DATABASE myfarm_phase02_replay");
+step("05-fresh-second-db", "npx prisma migrate deploy", null, { env: dbEnv("myfarm_phase02_replay") });
+step("06-fresh-drift", "npx prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code", null, { env: dbEnv("myfarm_phase02_replay") });
+// Integration tests add test-only roles/policies to the first DB; compare the migration-defined schema only.
+const dump = db => spawnSync(docker, ["exec", container, "pg_dump", "-U", "myfarm", "-d", db, "--schema-only", "--no-owner", "--no-privileges", "--exclude-table=_prisma_migrations"], { encoding: "utf8" }).stdout.replace(/^.(un)?restrict .*$/mg, "").replace(/^--.*$/mg, "").replace(/CREATE POLICY[sS]*?;
+/g, "").replace(/
+{2,}/g, "
+").trim();
+const same = dump("myfarm_phase01_test") === dump("myfarm_phase02_replay");
+writeFileSync(path.join(logDir, "07-schema-compare.log"), "$ pg_dump --schema-only (policies/comments excluded) for both databases\n" + (same ? "IDENTICAL" : "DIFFERENT") + "\n");
+results.push({ step: "07-schema-compare", result: same ? "PASS" : "FAIL" });
+psql("08-catalog-constraints", "myfarm_phase02_replay", `SELECT conrelid::regclass AS table, conname, pg_get_constraintdef(oid) AS definition FROM pg_constraint WHERE conrelid::regclass::text IN ('"Farmer"','"FarmerProfile"','"Farm"','"Plot"','"FarmMember"') ORDER BY 1, 2`);
+psql("09-catalog-indexes-rls", "myfarm_phase02_replay", `SELECT c.relname, c.relrowsecurity, i.indexrelid::regclass AS index FROM pg_class c LEFT JOIN pg_index i ON i.indrelid = c.oid WHERE c.relname IN ('Farmer','FarmerProfile','Farm','Plot','FarmMember') AND c.relkind = 'r' ORDER BY 1, 3`);
+
+// Restore rehearsal with synthetic registry data spanning every Phase 2 table.
+const src = new pg.Client({ connectionString: urlFor("myfarm_phase02_replay") }); await src.connect();
+const ids = { user: crypto.randomUUID(), tenant: crypto.randomUUID(), farmer: crypto.randomUUID(), farm: crypto.randomUUID(), plot: crypto.randomUUID() };
+const counts = `SELECT (SELECT count(*) FROM "Farmer")::int farmers, (SELECT count(*) FROM "FarmerProfile")::int profiles, (SELECT count(*) FROM "Farm")::int farms, (SELECT count(*) FROM "FarmMember")::int farm_members, (SELECT count(*) FROM "Plot")::int plots, (SELECT count(*) FROM "Organization")::int orgs`;
+let restore = { verdict: "FAIL" };
+try {
+  await src.query("BEGIN");
+  await src.query('INSERT INTO "User"(id,"authSubject") VALUES ($1,$2)', [ids.user, crypto.randomUUID()]);
+  await src.query(`INSERT INTO "Organization"(id,name,kind) VALUES ($1,'Restore synthetic','PERSONAL')`, [ids.tenant]);
+  await src.query(`INSERT INTO "Membership"("userId","organizationId",role) VALUES ($1,$2,'FARMER')`, [ids.user, ids.tenant]);
+  await src.query('INSERT INTO "Farmer"(id,"userId","tenantId") VALUES ($1,$2,$3)', [ids.farmer, ids.user, ids.tenant]);
+  await src.query(`INSERT INTO "FarmerProfile"("farmerId",name,phone,district,"preferredLanguage","ownershipType","mainActivities","updatedBy") VALUES ($1,'Synthetic','+256772000000','Rukungiri','en','OWNED','{CROPS}',$2)`, [ids.farmer, ids.user]);
+  await src.query(`INSERT INTO "Farm"(id,"tenantId","ownerFarmerId",name,district,"approximateAcreage","ownershipType","primaryActivity",latitude,longitude,"createdBy","updatedAt") VALUES ($1,$2,$3,'Synthetic farm','Rukungiri',2.5,'OWNED','CROPS',-0.790123,29.926745,$4,now())`, [ids.farm, ids.tenant, ids.farmer, ids.user]);
+  await src.query(`INSERT INTO "FarmMember"("farmId","userId","tenantId",role) VALUES ($1,$2,$3,'OWNER')`, [ids.farm, ids.user, ids.tenant]);
+  await src.query(`INSERT INTO "Plot"(id,"tenantId","farmId",name,area,"areaUnit","createdBy","updatedAt") VALUES ($1,$2,$3,'Synthetic plot',0.75,'ACRE',$4,now())`, [ids.plot, ids.tenant, ids.farm, ids.user]);
+  await src.query("COMMIT");
+  const before = (await src.query(counts)).rows[0];
+  const ex = args => { const r = spawnSync(docker, ["exec", container, ...args], { encoding: "utf8" }); if (r.status !== 0) throw Error(args[0] + ": " + r.stderr); };
+  ex(["pg_dump", "-U", "myfarm", "-d", "myfarm_phase02_replay", "--format=custom", "--file=/tmp/myfarm-phase02.dump"]);
+  ex(["createdb", "-U", "myfarm", "myfarm_phase02_restore"]);
+  ex(["pg_restore", "-U", "myfarm", "-d", "myfarm_phase02_restore", "--no-owner", "/tmp/myfarm-phase02.dump"]);
+  const dst = new pg.Client({ connectionString: urlFor("myfarm_phase02_restore") }); await dst.connect();
+  const after = (await dst.query(counts)).rows[0];
+  const plot = (await dst.query('SELECT area::text, "areaUnit"::text, "tenantId" FROM "Plot" WHERE id=$1', [ids.plot])).rows[0];
+  const farm = (await dst.query('SELECT latitude::text, longitude::text, "approximateAcreage"::text FROM "Farm" WHERE id=$1', [ids.farm])).rows[0];
+  const rls = (await dst.query(`SELECT bool_and(relrowsecurity) ok FROM pg_class WHERE relname IN ('Farmer','FarmerProfile','Farm','Plot','FarmMember')`)).rows[0].ok;
+  let crossTenantRejected = false;
+  try { await dst.query(`INSERT INTO "Plot"(id,"tenantId","farmId",name,"createdBy","updatedAt") VALUES ($1,$2,$3,'Forged',$4,now())`, [crypto.randomUUID(), crypto.randomUUID(), ids.farm, ids.user]); } catch { crossTenantRejected = true; }
+  let negativeRejected = false;
+  try { await dst.query(`UPDATE "Farm" SET "approximateAcreage" = -1 WHERE id=$1`, [ids.farm]); } catch { negativeRejected = true; }
+  await dst.end();
+  const ok = JSON.stringify(before) === JSON.stringify(after) && plot?.area === "0.750000" && plot.areaUnit === "ACRE" && plot.tenantId === ids.tenant && farm?.latitude === "-0.790123" && farm.approximateAcreage === "2.5000" && rls && crossTenantRejected && negativeRejected;
+  restore = { verdict: ok ? "PASS" : "FAIL", before, after, decimalsExact: { plot, farm }, rlsRestored: rls, compositeTenantFkRestored: crossTenantRejected, checkConstraintRestored: negativeRejected };
+} catch (e) { restore.error = e.message; } finally { await src.end(); }
+writeFileSync(path.join(logDir, "10-restore.log"), "$ synthetic registry rows → pg_dump custom → pg_restore into myfarm_phase02_restore\n" + JSON.stringify(restore, null, 2) + "\n");
+results.push({ step: "10-restore", result: restore.verdict });
+writeFileSync(path.join(logDir, "database.json"), JSON.stringify(results, null, 2));
+console.log(JSON.stringify(restore)); if (results.some(r => r.result !== "PASS")) process.exitCode = 1;

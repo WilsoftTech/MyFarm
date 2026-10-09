@@ -1,0 +1,61 @@
+$ npm run build
+
+> myfarm@0.1.0 build
+> prisma generate && next build
+
+
+✔ Generated Prisma Client (7.10.0) to .\src\generated\prisma in 119ms
+
+▲ Next.js 16.4.0 (Turbopack)
+✓ Running next.config.ts took 65ms
+⚠ No build cache found. Please configure build caching for faster rebuilds. Read more: https://nextjs.org/docs/messages/no-cache
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 5.5s
+  Running TypeScript ...
+  Finished TypeScript in 5.4s ...
+  Collecting page data using 5 workers ...
+  Generating static pages using 5 workers (0/7) ...
+  Generating static pages using 5 workers (1/7) 
+  Generating static pages using 5 workers (3/7) 
+  Generating static pages using 5 workers (5/7) 
+✓ Generating static pages using 5 workers (7/7) in 247ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /admin
+├ ƒ /agent
+├ ƒ /api/health
+├ ƒ /api/v1/farmer
+├ ƒ /api/v1/farms
+├ ƒ /api/v1/farms/[farmId]
+├ ƒ /api/v1/farms/[farmId]/plots
+├ ƒ /api/v1/health
+├ ƒ /api/v1/scopes/[scopeId]
+├ ƒ /api/v1/scopes/[scopeId]/files/[objectId]
+├ ƒ /api/v1/session
+├ ƒ /farmer
+├ ƒ /farmer/edit
+├ ƒ /farms
+├ ƒ /farms/[farmId]
+├ ƒ /farms/new
+├ ○ /forbidden
+├ ○ /icon.svg
+├ ○ /manifest.webmanifest
+├ ƒ /sign-in
+└ ƒ /workspace
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.
+⚠ Warning: Next.js ignored bun.lock in C:\Users\willi because it is outside the current Git repository (C:\Users\willi\AppData\Local\Temp\claude\D--Myfarm\ad782f50-9810-4f82-8399-5ae467869610\scratchpad\ci-clone).
+ To use this directory, set `turbopack.root` in your Next.js config.
+

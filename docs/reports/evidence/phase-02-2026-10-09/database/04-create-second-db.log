@@ -1,0 +1,4 @@
+$ C:/Program Files/Docker/Docker/resources/bin/docker.exe exec myfarm-phase02-localci psql -U myfarm -d myfarm_phase01_test -v ON_ERROR_STOP=1 -c CREATE DATABASE myfarm_phase02_replay
+CREATE DATABASE
+
+exit=0

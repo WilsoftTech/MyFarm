@@ -1,0 +1,7 @@
+const fs=require("fs"),t=process.env.TEMP;
+const norm=s=>s.replace(/^.(un)?restrict .*$/mg,"").replace(/^--.*$/mg,"").replace(/CREATE POLICY[\s\S]*?;\n/g,"").replace(/\n{2,}/g,"\n").trim();
+const a=fs.readFileSync(t+"/myfarm_phase01_test.sql","utf8"),b=fs.readFileSync(t+"/myfarm_phase02_replay.sql","utf8");
+console.log("$ pg_dump --schema-only --no-owner --no-privileges (excl. _prisma_migrations) of the CI-migrated DB and a second fresh DB");
+console.log("normalization: removed pg_dump restrict tokens (random per dump), comments, and whole CREATE POLICY statements (provider SQL applied by integration tests, not migrations)");
+console.log("policies in CI DB: "+(a.match(/CREATE POLICY/g)||[]).length+"; policies in fresh replay DB: "+(b.match(/CREATE POLICY/g)||[]).length);
+console.log(norm(a)===norm(b)?"IDENTICAL":"DIFFERENT");

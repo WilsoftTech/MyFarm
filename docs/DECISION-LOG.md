@@ -1,13 +1,13 @@
 # Decision log
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — current Phase01 implementation/evidence/status review; no completion inferred from review.
+- Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-08 (Africa/Nairobi), live provider and hosted closeout session.
-- Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced.
+- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase02 implementation and closeout session.
+- Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
-- Remaining work/blockers: Maintain alignment after Phase01 live verification; historical results stay historical and source body remains immutable.
-- Evidence/report links: [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md).
+- Remaining work/blockers: Maintain alignment with the Phase02 closeout; historical sections stay historical; Phase3 not authorized.
+- Evidence/report links: [Phase02 closeout](reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
 Date: 2026-10-08, Africa/Nairobi. Human owner roles below are **unassigned**, not invented personnel. No field research has been verified. Phase1 local engineering/test evidence is in the current closeout. [ADRs](architecture/architecture-decisions.md) explain tradeoffs.
@@ -168,3 +168,35 @@ Source P0186–P0204 names fields but not values. Engineering defaults, recorded
 - Composite (id, tenantId) foreign keys make cross-tenant plot/farm/member links impossible in the database, plus CHECK constraints mirroring the domain rules and RLS on all new tables.
 - Idempotency: each create/update command carries a client request ID recorded as an audit receipt (unique tenant/request/action); a replay returns the original record. Profile updates use optimistic `version`. A request ID reused with a different payload replays the original rather than returning 409 (narrower than Phase1's file-grant check); revisit with the Phase7 sync contract.
 - Plot names are unique per farm.
+
+**Update 2026-10-09 to D-P02-001:** Phase 1 closed 2026-10-08 (D-P01-LOCAL-CI-001), so the sequencing override is no longer needed. The Phase 2 commit was ported, without rewriting history, onto the closed Phase 1 head as branch `phase-02-farmer-registry` (cherry-pick of `18cc422`; the original `worktree-phase-02` branch is kept unchanged).
+
+**Update 2026-10-09 to D-P02-004:** a farmer registration retried with the **same** request ID now replays the committed registration (including the loser of a concurrent race); a new request ID for an already-registered user still returns 409. All other D-P02-004 defaults are unchanged and remain PROPOSED for owner review.
+
+## D-P02-005 — Hosted development verification for Phase 2
+
+APPROVED, owner answer 2026-10-09 (“Authorize dev changes”). Scope: the isolated Supabase **development** project `sudqhluwsaijvjjcegpv` only; never production. Authorized: apply the additive migration `202610090001_farmer_registry`; apply the Phase 2 provider grants `supabase/policies/farmer-registry-runtime.sql` to `myfarm_runtime`; create and delete disposable test users/fixtures, with cleanup verified. Outcome: applied 2026-10-09; 48/48 live checks PASS; the project returned to its empty baseline. [Closeout](reports/phase-02-closeout-2026-10-09.md).
+
+## D-P02-006 — Phase 2 local CI substitution
+
+APPROVED, owner answer 2026-10-09 (“Extend local CI to Phase 2”). GitHub Actions remains billing-locked (run [37893530528](https://github.com/WilsoftTech/MyFarm/actions/runs/37893530528), 2026-10-09: “The job was not started because your account is locked due to a billing issue.”). The rules of [D-P01-LOCAL-CI-001](#d-p01-local-ci-001--phase-1-local-ci-substitution) apply to **Phase 2 only**: every `quality.yml` step is reproduced from a clean clone against a fresh isolated `postgres:17`, and every result is recorded. GitHub-hosted CI stays **NOT VERIFIED**, is not claimed, and must pass before any production release. Phase 3 and later need a new owner decision.
+
+## D-P02-007 — Runtime role privileges for registry writes
+
+IMPLEMENTED 2026-10-09 (engineering decision within the approved D-P02-002 model; owner may review). Phase 1 deliberately gave `myfarm_runtime` no Organization/Membership mutation. Phase 2 registration must create the actor's PERSONAL organization and FARMER membership, so `supabase/policies/farmer-registry-runtime.sql` grants the narrowest form of this:
+
+- **Organization:** INSERT only with `kind = 'PERSONAL'`.
+- **Membership:** INSERT only as the first, ACTIVE, FARMER-role member of a PERSONAL organization. The role can never join an existing tenant, grant ADMIN/AGENT, update or revoke.
+- **Registry tables:** SELECT and INSERT, with RLS write checks that tie each row to the actor:
+  - a Farmer requires the user's own FARMER membership;
+  - a Farm requires its creator to be the owning farmer;
+  - a FarmMember must be the farm owner;
+  - a Plot requires an active FarmMember as creator.
+- **FarmerProfile:** column-limited UPDATE (no identifier changes) by the farmer's own user.
+- **No grants for:** DELETE; Farm/Plot UPDATE; browser roles (`anon`, `authenticated`, which are explicitly revoked).
+
+Application services remain the primary authorization layer; these policies are defense in depth. Like Phase 1's provider SQL (condition C2), the file lives outside the Prisma migration chain and must be applied when any new environment is provisioned.
+
+## D-P02-008 — Phase 1 condition C5 resolved for anonymous visitors
+
+IMPLEMENTED 2026-10-09. The proxy now returns a real `307` (relative `Location: /sign-in?reason=session-required`, `private, no-store`) for anonymous requests to `/workspace`, `/admin`, `/agent`, `/farmer` and `/farms`. Every page and API still verifies the session server-side. A signed-in user whose server session was revoked while their JWT is still unexpired still gets the in-stream redirect (no content is rendered). The shared header link changed from “Sign in” to the state-neutral “My account” (`/workspace`), and the registry pages gained a signed-in navigation with Sign out, after visual review showed signed-in farmers being offered “Sign in”.

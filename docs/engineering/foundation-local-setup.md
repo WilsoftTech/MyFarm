@@ -1,13 +1,13 @@
 # Foundation local setup and provider verification
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — current Phase01 implementation/evidence/status review; no completion inferred from review.
+- Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-08 (Africa/Nairobi), live provider and hosted closeout session.
-- Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced.
+- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase02 implementation and closeout session.
+- Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
-- Remaining work/blockers: Maintain alignment after Phase01 live verification; historical results stay historical and source body remains immutable.
-- Evidence/report links: [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md).
+- Remaining work/blockers: Maintain alignment with the Phase02 closeout; historical sections stay historical; Phase3 not authorized.
+- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
 Phase 01, 2026-10-08. The user selected Supabase PostgreSQL + Supabase Auth and will configure .env.local. No hosted resources have been created or modified.
@@ -71,3 +71,7 @@ Prisma migrations202610080001_foundation and202610080101_private_grant_rate_limi
 API change: same-origin private-file requests work with actual HTTP authority; excessive distinct grants return429 RATE_LIMITED. Offline sync, financial/stock writes, farmer registry and AI are NOT APPLICABLE to Phase1 and remain unimplemented. Restore/replay evidence from preceding isolated synthetic rehearsal remains applicable. Recovery email delivery and production operational settings are not claimed; production release must verify them. Source research remains absent despite Phase0 owner acceptance.
 
 [Current closeout](../reports/phase-01-closeout-2026-10-08.md).
+
+## Phase 2 implementation (2026-10-09)
+
+After the Phase 1 provider SQL, apply `supabase/policies/farmer-registry-runtime.sql` (re-runnable) to the isolated project. Without it, the restricted runtime role cannot register farmers. Local integration tests apply it automatically to the local test DB. Migration SQL is checked out with LF endings on every OS (`.gitattributes`) ([closeout](../reports/phase-02-closeout-2026-10-09.md)).

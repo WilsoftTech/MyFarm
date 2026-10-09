@@ -1,0 +1,5 @@
+import { spawnSync } from 'node:child_process'; import { env } from './p2-common.mjs';
+const args = process.argv.slice(2);
+const r = spawnSync(process.execPath, ['node_modules/prisma/build/index.js', ...args], { encoding: 'utf8', env: { ...process.env, DIRECT_URL: env.DIRECT_URL, DATABASE_URL: env.DIRECT_URL, NODE_EXTRA_CA_CERTS: env.DATABASE_CA_CERT_PATH } });
+const redact = s => (s ?? '').replaceAll(env.DIRECT_URL, '<direct-url>').replace(/postgres(ql)?:\/\/[^\s"']+/g, '<url>');
+process.stdout.write(redact(r.stdout) + redact(r.stderr)); process.exitCode = r.status ?? 1;

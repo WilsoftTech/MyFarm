@@ -1,0 +1,208 @@
+{"applied":"supabase/policies/farmer-registry-runtime.sql","result":"PASS"}
+{
+ "policies": [
+  {
+   "tablename": "AuditEvent",
+   "policyname": "myfarm_server_audit_append",
+   "cmd": "INSERT"
+  },
+  {
+   "tablename": "AuditEvent",
+   "policyname": "myfarm_server_audit_read",
+   "cmd": "SELECT"
+  },
+  {
+   "tablename": "Farm",
+   "policyname": "myfarm_server_farm_create",
+   "cmd": "INSERT"
+  },
+  {
+   "tablename": "Farm",
+   "policyname": "myfarm_server_farm_read",
+   "cmd": "SELECT"
+  },
+  {
+   "tablename": "FarmMember",
+   "policyname": "myfarm_server_farm_member_create",
+   "cmd": "INSERT"
+  },
+  {
+   "tablename": "FarmMember",
+   "policyname": "myfarm_server_farm_member_read",
+   "cmd": "SELECT"
+  },
+  {
+   "tablename": "Farmer",
+   "policyname": "myfarm_server_farmer_create",
+   "cmd": "INSERT"
+  },
+  {
+   "tablename": "Farmer",
+   "policyname": "myfarm_server_farmer_read",
+   "cmd": "SELECT"
+  },
+  {
+   "tablename": "FarmerProfile",
+   "policyname": "myfarm_server_profile_create",
+   "cmd": "INSERT"
+  },
+  {
+   "tablename": "FarmerProfile",
+   "policyname": "myfarm_server_profile_read",
+   "cmd": "SELECT"
+  },
+  {
+   "tablename": "FarmerProfile",
+   "policyname": "myfarm_server_profile_update",
+   "cmd": "UPDATE"
+  },
+  {
+   "tablename": "Membership",
+   "policyname": "myfarm_server_membership_read",
+   "cmd": "SELECT"
+  },
+  {
+   "tablename": "Membership",
+   "policyname": "myfarm_server_personal_membership_create",
+   "cmd": "INSERT"
+  },
+  {
+   "tablename": "Organization",
+   "policyname": "myfarm_server_organization_read",
+   "cmd": "SELECT"
+  },
+  {
+   "tablename": "Organization",
+   "policyname": "myfarm_server_personal_organization_create",
+   "cmd": "INSERT"
+  },
+  {
+   "tablename": "Plot",
+   "policyname": "myfarm_server_plot_create",
+   "cmd": "INSERT"
+  },
+  {
+   "tablename": "Plot",
+   "policyname": "myfarm_server_plot_read",
+   "cmd": "SELECT"
+  },
+  {
+   "tablename": "User",
+   "policyname": "myfarm_server_user_read",
+   "cmd": "SELECT"
+  }
+ ],
+ "grants": [
+  {
+   "table_name": "AuditEvent",
+   "grantee": "myfarm_runtime",
+   "privs": "INSERT,SELECT"
+  },
+  {
+   "table_name": "Farm",
+   "grantee": "myfarm_runtime",
+   "privs": "INSERT,SELECT"
+  },
+  {
+   "table_name": "FarmMember",
+   "grantee": "myfarm_runtime",
+   "privs": "INSERT,SELECT"
+  },
+  {
+   "table_name": "Farmer",
+   "grantee": "myfarm_runtime",
+   "privs": "INSERT,SELECT"
+  },
+  {
+   "table_name": "FarmerProfile",
+   "grantee": "myfarm_runtime",
+   "privs": "INSERT,SELECT"
+  },
+  {
+   "table_name": "Membership",
+   "grantee": "myfarm_runtime",
+   "privs": "INSERT,SELECT"
+  },
+  {
+   "table_name": "Organization",
+   "grantee": "myfarm_runtime",
+   "privs": "INSERT,SELECT"
+  },
+  {
+   "table_name": "Plot",
+   "grantee": "myfarm_runtime",
+   "privs": "INSERT,SELECT"
+  },
+  {
+   "table_name": "User",
+   "grantee": "myfarm_runtime",
+   "privs": "SELECT"
+  },
+  {
+   "table_name": "_prisma_migrations",
+   "grantee": "anon",
+   "privs": "DELETE,INSERT,REFERENCES,SELECT,TRIGGER,TRUNCATE,UPDATE"
+  },
+  {
+   "table_name": "_prisma_migrations",
+   "grantee": "authenticated",
+   "privs": "DELETE,INSERT,REFERENCES,SELECT,TRIGGER,TRUNCATE,UPDATE"
+  }
+ ],
+ "farmerProfileUpdateColumns": [
+  "alternativePhone",
+  "district",
+  "mainActivities",
+  "name",
+  "ownershipType",
+  "phone",
+  "preferredLanguage",
+  "subcounty",
+  "updatedAt",
+  "updatedBy",
+  "version",
+  "village"
+ ],
+ "rls": [
+  {
+   "relname": "AuditEvent",
+   "relrowsecurity": true
+  },
+  {
+   "relname": "Farm",
+   "relrowsecurity": true
+  },
+  {
+   "relname": "FarmMember",
+   "relrowsecurity": true
+  },
+  {
+   "relname": "Farmer",
+   "relrowsecurity": true
+  },
+  {
+   "relname": "FarmerProfile",
+   "relrowsecurity": true
+  },
+  {
+   "relname": "Membership",
+   "relrowsecurity": true
+  },
+  {
+   "relname": "Organization",
+   "relrowsecurity": true
+  },
+  {
+   "relname": "Plot",
+   "relrowsecurity": true
+  },
+  {
+   "relname": "User",
+   "relrowsecurity": true
+  },
+  {
+   "relname": "_prisma_migrations",
+   "relrowsecurity": true
+  }
+ ]
+}

@@ -1,13 +1,13 @@
 # API design standards
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — current Phase01 implementation/evidence/status review; no completion inferred from review.
-- Implementation status: Phase01 scope COMPLETED — 100% (13/13 verified Phase01 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); later-phase scope not counted.
-- Last reviewed: 2026-10-08 (Africa/Nairobi), live provider and hosted closeout session.
-- Related phase/task IDs: Phase01 foundation T001–T013 (10 verified); cross-phase requirements remain pending; Phase01 review session.
-- Verified completed work: T001–T010; live Supabase verification and local quality/security gates PASS; see current closeout.
-- Remaining work/blockers: T011–T013 hosted CI/preview/final review pending.
-- Evidence/report links: [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md).
+- Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
+- Implementation status: Phase01 scope COMPLETED — 100% (13/13 verified Phase01 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); Phase02 scope COMPLETED — 100% (13/13 verified Phase02 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); later-phase scope not counted.
+- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase02 implementation and closeout session.
+- Related phase/task IDs: Phase01 MYF-P01-T001–T013; Phase02 MYF-P02-T001–T013.
+- Verified completed work: Phase01 scope as previously verified; Phase02: farmer registry contracts/policies/migration/API/tests in this document's area verified (see the Phase 2 implementation section).
+- Remaining work/blockers: Phase02 conditions P2-C1–P2-C8 where applicable; later-phase scope pending authorization.
+- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
 **Proposed contracts until phase approval.** Online UI/server actions and sync must call the same application commands. Do not maintain a weaker offline endpoint or authorize only in page loaders.
@@ -51,3 +51,18 @@ Version schema changes add compatibility window for offline clients; reject unsu
 Phase1 health/session/scope/private-read endpoints and strict safe errors are implemented. Private-read POST requires same-origin JSON/UUID request, current membership and audit before grant. Changed retry payload returns409. No registration or financial/stock mutation endpoints.
 
 [Closeout](../reports/phase-01-closeout-2026-10-08.md); [setup](../engineering/foundation-local-setup.md).
+
+## Phase 2 implementation (2026-10-09)
+
+Endpoints, all `private, no-store`, auth before validation:
+
+- `GET/POST/PATCH /api/v1/farmer`
+- `GET/POST /api/v1/farms` (cursor pagination, limit ≤ 50)
+- `GET /api/v1/farms/{farmId}`
+- `POST /api/v1/farms/{farmId}/plots`
+
+Contract:
+
+- **Commands:** same-origin JSON with a client `requestId` (UUID). An identical retry replays the original result; a new request for an existing registration returns 409; a stale profile `expectedVersion` returns 409.
+- **Errors:** the Phase 1 envelope `{ error, requestId }` (401/403/400/409/429/503). Unknown and foreign IDs are both 403.
+- **Planned extension:** replay-with-different-payload semantics are PROPOSED (D-P02-004) and are to be aligned with the Phase 7 sync contract ([closeout](../reports/phase-02-closeout-2026-10-09.md)).

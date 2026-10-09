@@ -1,0 +1,198 @@
+// Phase 2 live verification: production next start + real Supabase Auth + restricted runtime DB role.
+import fs from 'node:fs'; import net from 'node:net'; import { spawn, spawnSync } from 'node:child_process'; import { randomUUID, randomBytes } from 'node:crypto';
+import { chromium, devices } from '@playwright/test'; import { createClient } from '@supabase/supabase-js';
+import { env, adminDb } from './p2-common.mjs';
+const evidence = 'docs/reports/evidence/phase-02-2026-10-09/hosted';
+const results = []; let stage = 'startup'; let server, browser, db; const authIds = []; const userIds = [];
+const check = (label, ok, detail) => { stage = label; if (!ok) throw Object.assign(Error(label), { detail }); results.push({ check: label, result: 'PASS' }); console.log('PASS ' + label); };
+const supa = key => createClient(env.NEXT_PUBLIC_SUPABASE_URL, key, { auth: { persistSession: false, autoRefreshToken: false } });
+const admin = supa(env.SUPABASE_SERVICE_ROLE_KEY);
+const uuid = /\/farms\/([0-9a-f-]{36})$/;
+const PHONE_A = '0772 123456', PHONE_A_E164 = '+256772123456', NAME_A = 'Phase2 Farmer ' + randomBytes(3).toString('hex');
+try {
+  db = await adminDb();
+  const baseline = (await db.query(`select (select count(*) from "User")::int u, (select count(*) from "Organization")::int o, (select count(*) from "Farm")::int f`)).rows[0];
+  check('Hosted dev project starts empty (baseline)', baseline.u === 0 && baseline.o === 0 && baseline.f === 0, baseline);
+  // Disposable identities: farmer A, farmer B, administrator C of A's tenant.
+  const creds = [];
+  for (const role of ['a', 'b', 'c']) {
+    const email = 'myfarm-phase02-' + randomUUID() + '@example.invalid', password = randomBytes(24).toString('base64url') + 'Aa1!';
+    const r = await admin.auth.admin.createUser({ email, password, email_confirm: true }); if (r.error) throw r.error;
+    authIds.push(r.data.user.id); const actorId = randomUUID(); userIds.push(actorId);
+    await db.query('INSERT INTO "User" (id, "authSubject") VALUES ($1, $2)', [actorId, r.data.user.id]); // owner-provisioned account (Phase1 model)
+    creds.push({ role, email, password, actorId, authSubject: r.data.user.id });
+  }
+  const [A, B, C] = creds;
+  check('Disposable provider users and accounts provisioned', true);
+
+  const probe = net.createServer(); await new Promise(r => probe.listen(0, '127.0.0.1', r)); const port = probe.address().port; await new Promise(r => probe.close(r));
+  const base = 'http://127.0.0.1:' + port;
+  server = spawn(process.execPath, ['node_modules/next/dist/bin/next', 'start', '--hostname', '127.0.0.1', '--port', String(port)], { env: { ...process.env, ...env }, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'] });
+  const serverLog = []; server.stdout.on('data', d => serverLog.push(String(d))); server.stderr.on('data', d => serverLog.push(String(d)));
+  for (const deadline = Date.now() + 40000; ;) { if (server.exitCode !== null) throw Error('server exited'); try { if ((await fetch(base + '/api/health')).ok) break; } catch {} if (Date.now() > deadline) throw Error('server unavailable'); await new Promise(r => setTimeout(r, 250)); }
+
+  const anon = await fetch(base + '/farms', { redirect: 'manual' });
+  check('Anonymous protected page gets real 307 with relative Location (C5)', anon.status === 307 && anon.headers.get('location') === '/sign-in?reason=session-required' && /no-store/.test(anon.headers.get('cache-control') ?? ''));
+
+  browser = await chromium.launch({ headless: true });
+  const signIn = async (context, who) => { const page = await context.newPage(); await page.goto(base + '/sign-in'); await page.getByLabel('Email address').fill(who.email); await page.getByLabel('Password', { exact: true }).fill(who.password); await page.getByRole('button', { name: 'Sign in', exact: true }).click(); await page.waitForURL('**/workspace', { timeout: 20000 }); return page; };
+  const origin = { origin: base };
+
+  // ---- Exit gate journey in a real mobile browser: register → farm → plots → view profile ----
+  const ctxA = await browser.newContext({ ...devices['Pixel 7'] });
+  const page = await signIn(ctxA, A);
+  check('Farmer A real mobile sign-in', true);
+  await page.getByRole('link', { name: 'My farmer profile and farms' }).click(); await page.waitForURL('**/farmer');
+  await page.getByRole('heading', { name: 'Register as a farmer' }).waitFor();
+  await page.getByRole('button', { name: 'Register' }).click();
+  check('Empty registration shows accessible errors and stays on page', (await page.getByRole('alert').count()) >= 3 && page.url().endsWith('/farmer'));
+  await page.locator('#name').fill(NAME_A); await page.locator('#phone').fill(PHONE_A); await page.locator('#district').fill('Rukungiri'); await page.locator('#subcounty').fill('Bugangari');
+  await page.locator('#ownershipType').selectOption('FAMILY'); await page.getByLabel('Crops').check(); await page.getByLabel('Poultry').check();
+  await page.getByRole('button', { name: 'Register' }).click(); await page.waitForURL('**/farms', { timeout: 20000 });
+  await page.getByText('No farms yet').waitFor();
+  check('Registration redirects to empty farm list', true);
+  await page.getByRole('link', { name: 'Add a farm' }).click(); await page.waitForURL('**/farms/new');
+  check('New farm form prefilled from profile location', await page.locator('#district').inputValue() === 'Rukungiri');
+  await page.locator('#name').fill('Phase2 home farm'); await page.locator('#approximateAcreage').fill('2.5'); await page.locator('#primaryActivity').selectOption('CROPS');
+  await page.getByText('GPS location (optional)').click(); await page.locator('#latitude').fill('-0.790123');
+  await page.getByRole('button', { name: 'Save farm' }).click();
+  await page.getByText('Enter both latitude and longitude, or leave both empty.').waitFor();
+  check('Half GPS pair rejected in browser before submit', page.url().endsWith('/farms/new'));
+  await page.locator('#longitude').fill('29.926745'); await page.getByRole('button', { name: 'Save farm' }).click();
+  await page.waitForURL(u => uuid.test(new URL(u).pathname), { timeout: 20000 });
+  const farmA = uuid.exec(new URL(page.url()).pathname)[1];
+  check('Farm created and detail page shown', (await page.getByRole('heading', { name: 'Phase2 home farm' }).count()) === 1);
+  await page.locator('#plotName').fill('North plot'); await page.locator('#area').fill('0.75'); await page.locator('#areaUnit').selectOption('ACRE');
+  await page.getByRole('button', { name: 'Add plot' }).click(); await page.getByRole('status').filter({ hasText: 'Plot added.' }).waitFor();
+  await page.locator('#plotName').fill('South plot'); await page.getByRole('button', { name: 'Add plot' }).click();
+  await page.getByText('South plot').waitFor();
+  check('Two plots added and listed', (await page.getByText('North plot').count()) === 1 && (await page.getByText('0.75 acres').count()) === 1);
+  await page.locator('#plotName').fill('South plot'); await page.getByRole('button', { name: 'Add plot' }).click();
+  await page.getByText('A plot with this name already exists on this farm.').waitFor();
+  check('Duplicate plot name explained, input kept', await page.locator('#plotName').inputValue() === 'South plot');
+  await page.screenshot({ path: evidence + '/farm-detail-mobile.png', fullPage: true });
+  await page.goto(base + '/farms'); await page.getByText('2 plots').waitFor();
+  check('Farm list shows owned farm with plot count', true);
+  await page.goto(base + '/farmer'); await page.getByRole('heading', { name: NAME_A }).waitFor();
+  check('Owned profile shows normalized phone', (await page.getByText(PHONE_A_E164).count()) === 1);
+  await page.getByRole('link', { name: 'Edit profile' }).click(); await page.waitForURL('**/farmer/edit');
+  await page.locator('#village').fill('Kebisoni'); await page.getByRole('button', { name: 'Save profile' }).click();
+  await page.waitForURL('**/farmer?updated=1'); await page.getByText('Your profile was saved.').waitFor();
+  check('Profile update saved and shown', (await page.getByText('Kebisoni, Bugangari, Rukungiri').count()) === 1);
+  await page.screenshot({ path: evidence + '/farmer-profile-mobile.png', fullPage: true });
+  check('Header shows state-neutral account link, registry nav present', (await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Sign in' }).count()) === 0 && (await page.getByRole('navigation', { name: 'Farm records' }).count()) === 1);
+  check('Auth cookies HttpOnly, Secure, SameSite=Lax', (await ctxA.cookies()).filter(c => c.name.startsWith('sb-')).every(c => c.httpOnly && c.secure && c.sameSite === 'Lax'));
+
+  // ---- API contract for A ----
+  const me = await ctxA.request.get(base + '/api/v1/farmer'); const meBody = await me.json();
+  check('Farmer API returns own profile, private no-store', me.status() === 200 && meBody.farmer.phone === PHONE_A_E164 && meBody.farmer.version === 2 && /private/.test(me.headers()['cache-control']));
+  const tenantA = meBody.farmer.tenantId;
+  const list = await (await ctxA.request.get(base + '/api/v1/farms')).json();
+  check('Farm list API scoped to owner', list.items.length === 1 && list.items[0].farmId === farmA && list.items[0].plotCount === 2);
+  const concurrentFarm = { requestId: randomUUID(), name: 'Concurrent farm', district: 'Rukungiri', ownershipType: 'OWNED', primaryActivity: 'POULTRY' };
+  const created = await Promise.all([0, 1, 2].map(() => ctxA.request.post(base + '/api/v1/farms', { headers: origin, data: concurrentFarm })));
+  const ids = new Set(await Promise.all(created.map(async r => (await r.json()).farmId)));
+  const dbFarms = (await db.query('select count(*)::int n from "Farm" where "tenantId"=$1 and name=$2', [tenantA, 'Concurrent farm'])).rows[0].n;
+  check('Concurrent retried farm command creates exactly one farm', created.every(r => r.status() === 201) && ids.size === 1 && dbFarms === 1);
+  check('Forged tenantId in body rejected', (await ctxA.request.post(base + '/api/v1/farms', { headers: origin, data: { ...concurrentFarm, requestId: randomUUID(), tenantId: randomUUID() } })).status() === 400);
+  check('Cross-origin command rejected', (await ctxA.request.post(base + '/api/v1/farms', { headers: { origin: 'https://untrusted.example' }, data: { ...concurrentFarm, requestId: randomUUID() } })).status() === 403);
+
+  // ---- Second farmer: isolation and IDOR ----
+  const ctxB = await browser.newContext(); const pageB = await signIn(ctxB, B);
+  const regB = { requestId: randomUUID(), name: 'Phase2 Farmer B', phone: '+256701000000', district: 'Mbarara', preferredLanguage: 'nyn', ownershipType: 'OWNED', mainActivities: ['POULTRY'] };
+  const rb1 = await ctxB.request.post(base + '/api/v1/farmer', { headers: origin, data: regB }); const rb2 = await ctxB.request.post(base + '/api/v1/farmer', { headers: origin, data: regB });
+  check('Farmer B registers via API; same-request retry replays', rb1.status() === 201 && rb2.status() === 201 && (await rb1.json()).farmer.farmerId === (await rb2.json()).farmer.farmerId);
+  check('Second registration with new request conflicts', (await ctxB.request.post(base + '/api/v1/farmer', { headers: origin, data: { ...regB, requestId: randomUUID() } })).status() === 409);
+  const tenantB = (await rb1.json()).farmer.tenantId;
+  check('B cannot read A farm by ID', (await ctxB.request.get(base + '/api/v1/farms/' + farmA)).status() === 403);
+  check('B cannot add plot to A farm', (await ctxB.request.post(base + '/api/v1/farms/' + farmA + '/plots', { headers: origin, data: { requestId: randomUUID(), name: 'Intruder' } })).status() === 403);
+  check('B list excludes A farms', (await (await ctxB.request.get(base + '/api/v1/farms')).json()).items.length === 0);
+  check('Guessed farm ID denied identically', (await ctxB.request.get(base + '/api/v1/farms/' + randomUUID())).status() === 403);
+  check('Malformed farm ID rejected', (await ctxB.request.get(base + '/api/v1/farms/not-a-uuid')).status() === 400);
+  check('B cannot open A tenant scope', (await ctxB.request.get(base + '/api/v1/scopes/' + tenantA)).status() === 403);
+  check('B cannot obtain private file grant in A tenant', (await ctxB.request.post(base + '/api/v1/scopes/' + tenantA + '/files/' + randomUUID(), { headers: origin, data: { requestId: randomUUID() } })).status() === 403);
+  await pageB.goto(base + '/farms/' + farmA); await pageB.waitForURL('**/forbidden');
+  check('B browser redirected to forbidden for A farm page', true);
+  check('A farm still has exactly two plots', (await db.query('select count(*)::int n from "Plot" where "farmId"=$1', [farmA])).rows[0].n === 2);
+
+  await pageB.goto(base + '/farms'); await pageB.getByRole('navigation', { name: 'Farm records' }).getByRole('button', { name: 'Sign out' }).click();
+  await pageB.waitForURL('**/sign-in');
+  check('Registry navigation sign-out ends the session', (await ctxB.request.get(base + '/api/v1/farmer')).status() === 401);
+  // ---- Tenant administrator has no automatic farm-data access ----
+  await db.query('INSERT INTO "Membership" ("userId","organizationId",role) VALUES ($1,$2,\'ADMIN\')', [C.actorId, tenantA]);
+  const ctxC = await browser.newContext(); const pageC = await signIn(ctxC, C);
+  const cMe = await ctxC.request.get(base + '/api/v1/farmer');
+  check('Administrator of A tenant has no farmer profile', cMe.status() === 200 && (await cMe.json()).farmer === null);
+  check('Administrator cannot read A farm', (await ctxC.request.get(base + '/api/v1/farms/' + farmA)).status() === 403);
+  check('Administrator cannot list farms', (await ctxC.request.get(base + '/api/v1/farms')).status() === 403);
+  await pageC.goto(base + '/farms/' + farmA); await pageC.waitForURL('**/forbidden');
+  check('Administrator browser redirected to forbidden', true);
+
+  // ---- Revocation takes effect on the next request ----
+  await db.query('UPDATE "FarmMember" SET status=\'REVOKED\' WHERE "farmId"=$1 AND "userId"=$2', [farmA, A.actorId]);
+  check('Revoked farm membership denies farm', (await ctxA.request.get(base + '/api/v1/farms/' + farmA)).status() === 403);
+  await db.query('UPDATE "FarmMember" SET status=\'ACTIVE\' WHERE "farmId"=$1 AND "userId"=$2', [farmA, A.actorId]);
+  await db.query('UPDATE "Membership" SET status=\'REVOKED\' WHERE "userId"=$1 AND "organizationId"=$2', [A.actorId, tenantA]);
+  check('Revoked tenant membership denies registry', (await ctxA.request.get(base + '/api/v1/farms')).status() === 403);
+  await db.query('UPDATE "Membership" SET status=\'ACTIVE\' WHERE "userId"=$1 AND "organizationId"=$2', [A.actorId, tenantA]);
+  check('Restored membership regains access', (await ctxA.request.get(base + '/api/v1/farms/' + farmA)).status() === 200);
+
+  // ---- Persisted integrity ----
+  const integrity = (await db.query(`select
+    (select count(*) from "Farmer" where "userId"=$1)::int farmers,
+    (select kind from "Organization" where id=$2) kind,
+    (select count(*) from "Membership" where "organizationId"=$2)::int members,
+    (select count(*) from "FarmMember" where "farmId"=$3 and role='OWNER' and "userId"=$1)::int owners,
+    (select json_object_agg(action, n) from (select action, count(*)::int n from "AuditEvent" where "actorId"=$1 group by action) x) audits,
+    (select "tenantId" from "Farm" where id=$3) = $2 farm_tenant,
+    (select count(*) from "Plot" where "farmId"=$3 and "tenantId"=$2)::int plots`, [A.actorId, tenantA, farmA])).rows[0];
+  check('One farmer, PERSONAL tenant, owner membership, tenant-consistent plots', integrity.farmers === 1 && integrity.kind === 'PERSONAL' && integrity.members === 2 && integrity.owners === 1 && integrity.farm_tenant && integrity.plots === 2, integrity);
+  const want = { FARMER_REGISTERED: 1, FARM_CREATED: 2, PLOT_CREATED: 2, FARMER_PROFILE_UPDATED: 1 };
+  check('Each write audited exactly once (failed duplicate plot left no receipt)', Object.keys(integrity.audits).length === 4 && Object.entries(want).every(([k, v]) => integrity.audits[k] === v), integrity.audits);
+  check('Tenants distinct per farmer', tenantA !== tenantB);
+
+  // ---- Session revocation ----
+  const owner = supa(env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY); const login = await owner.auth.signInWithPassword({ email: A.email, password: A.password });
+  check('Second provider session for A', !login.error);
+  check('Provider global sign-out', !(await owner.auth.signOut({ scope: 'global' })).error);
+  check('Revoked session API denied', (await ctxA.request.get(base + '/api/v1/farmer')).status() === 401);
+  await page.goto(base + '/farms'); await page.waitForURL('**/sign-in*');
+  check('Revoked browser session redirected to sign-in', true);
+
+  // ---- Log hygiene ----
+  const logText = serverLog.join('');
+  check('Server logs contain no farmer name, phone or coordinates', ![NAME_A, PHONE_A_E164, '772123456', '29.926745', 'Kebisoni'].some(s => logText.includes(s)));
+  await Promise.all([ctxA.close(), ctxB.close(), ctxC.close()]);
+} catch (e) {
+  results.push({ check: stage, result: 'FAIL', error: e.code ?? e.name, detail: e.detail ?? null }); console.log(JSON.stringify({ failedCheck: stage, error: e.message, detail: e.detail ?? null })); process.exitCode = 1;
+} finally {
+  if (browser) await browser.close().catch(() => {});
+  if (server && server.exitCode === null) { if (process.platform === 'win32') spawnSync('taskkill', ['/PID', String(server.pid), '/T', '/F'], { windowsHide: true, stdio: 'ignore' }); else server.kill(); }
+  const cleanup = {};
+  try {
+    if (db && userIds.length) {
+      await db.query('BEGIN');
+      const tenants = (await db.query('select distinct "organizationId" id from "Membership" where "userId" = any($1::uuid[]) union select "tenantId" from "Farmer" where "userId" = any($1::uuid[])', [userIds])).rows.map(r => r.id);
+      const del = async (sql, p) => (await db.query(sql, p)).rowCount;
+      cleanup.audits = await del('delete from "AuditEvent" where "actorId" = any($1::uuid[])', [userIds]);
+      cleanup.plots = await del('delete from "Plot" where "tenantId" = any($1::uuid[])', [tenants]);
+      cleanup.farmMembers = await del('delete from "FarmMember" where "tenantId" = any($1::uuid[])', [tenants]);
+      cleanup.farms = await del('delete from "Farm" where "tenantId" = any($1::uuid[])', [tenants]);
+      cleanup.profiles = await del('delete from "FarmerProfile" where "farmerId" in (select id from "Farmer" where "userId" = any($1::uuid[]))', [userIds]);
+      cleanup.farmers = await del('delete from "Farmer" where "userId" = any($1::uuid[])', [userIds]);
+      cleanup.memberships = await del('delete from "Membership" where "userId" = any($1::uuid[])', [userIds]);
+      cleanup.organizations = await del('delete from "Organization" where id = any($1::uuid[]) and kind = \'PERSONAL\'', [tenants]);
+      cleanup.users = await del('delete from "User" where id = any($1::uuid[])', [userIds]);
+      await db.query('COMMIT');
+    }
+  } catch (e) { await db.query('ROLLBACK').catch(() => {}); cleanup.error = e.code ?? e.message; process.exitCode = 1; }
+  for (const id of authIds) { const r = await admin.auth.admin.deleteUser(id); if (r.error) { cleanup.authError = r.error.message; process.exitCode = 1; } }
+  cleanup.authUsersDeleted = authIds.length;
+  if (db) {
+    cleanup.after = (await db.query(`select (select count(*) from "User")::int users, (select count(*) from "Organization")::int orgs, (select count(*) from "Membership")::int memberships, (select count(*) from "AuditEvent")::int audits, (select count(*) from "Farmer")::int farmers, (select count(*) from "FarmerProfile")::int profiles, (select count(*) from "Farm")::int farms, (select count(*) from "FarmMember")::int farm_members, (select count(*) from "Plot")::int plots, (select count(*) from auth.users where email like 'myfarm-phase02-%')::int temp_auth_users`)).rows[0];
+    if (Object.values(cleanup.after).some(n => n !== 0)) process.exitCode = 1;
+    await db.end();
+  }
+  console.log(JSON.stringify({ cleanup }));
+  fs.writeFileSync(evidence + '/live-results.json', JSON.stringify({ result: process.exitCode ? 'FAIL' : 'PASS', passed: results.filter(r => r.result === 'PASS').length, results, cleanup }, null, 2));
+}

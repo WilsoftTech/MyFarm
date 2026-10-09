@@ -1,13 +1,13 @@
 # Testing strategy
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — current Phase01 implementation/evidence/status review; no completion inferred from review.
-- Implementation status: Phase01 scope COMPLETED — 100% (13/13 verified Phase01 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); later-phase scope not counted.
-- Last reviewed: 2026-10-08 (Africa/Nairobi), live provider and hosted closeout session.
-- Related phase/task IDs: Phase01 foundation T001–T013 (10 verified); cross-phase requirements remain pending; Phase01 review session.
-- Verified completed work: T001–T010; live Supabase verification and local quality/security gates PASS; see current closeout.
-- Remaining work/blockers: T011–T013 hosted CI/preview/final review pending.
-- Evidence/report links: [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md).
+- Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
+- Implementation status: Phase01 scope COMPLETED — 100% (13/13 verified Phase01 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); Phase02 scope COMPLETED — 100% (13/13 verified Phase02 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); later-phase scope not counted.
+- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase02 implementation and closeout session.
+- Related phase/task IDs: Phase01 MYF-P01-T001–T013; Phase02 MYF-P02-T001–T013.
+- Verified completed work: Phase01 scope as previously verified; Phase02: farmer registry contracts/policies/migration/API/tests in this document's area verified (see the Phase 2 implementation section).
+- Remaining work/blockers: Phase02 conditions P2-C1–P2-C8 where applicable; later-phase scope pending authorization.
+- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
 Testing is phase-specific evidence, not a successful build alone. Source Vitest/React Testing Library/Playwright baseline is preserved. No tests have been run: application does not exist.
@@ -37,3 +37,14 @@ Every phase H/K binds test oracle. Run tests, audit, remediate and retest releva
 Phase1 has40 unit/component,10 real PostgreSQL integration and14 desktop/mobile E2E passing tests. Lint/typecheck/build/migration/restore pass locally. Hosted CI/provider checks pending. Offline/financial/stock/load checks are N/A for current implemented scope.
 
 [Closeout](../reports/phase-01-closeout-2026-10-08.md); [setup](../engineering/foundation-local-setup.md).
+
+## Phase 2 implementation (2026-10-09)
+
+New verification patterns ([closeout §4](../reports/phase-02-closeout-2026-10-09.md#4-tests-and-quality-evidence)):
+
+- **Restricted-role integration:** an integration suite runs application services through a connection bound to `myfarm_runtime`, with the provider SQL applied verbatim. A policy mutation proves the suite detects regressions.
+- **Live harness:** production `next start`, real Supabase Auth, disposable users, verified cleanup.
+- **Database checks:** migration replay/drift/second-DB/restore.
+- **Anonymous probes:** production probe suite.
+
+Totals: 117 unit/component, 33 integration and 24 E2E tests. Hosted CI remains unverified (P2-C1).

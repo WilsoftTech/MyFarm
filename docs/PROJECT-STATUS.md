@@ -1,25 +1,25 @@
 # Project status
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — current Phase01 implementation/evidence/status review; no completion inferred from review.
+- Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-08 (Africa/Nairobi), Phase01 local verification closeout session.
-- Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced.
+- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase02 implementation and closeout session.
+- Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
-- Remaining work/blockers: Maintain alignment after Phase01 live verification; historical results stay historical and source body remains immutable.
-- Evidence/report links: [Phase01 local verification closeout](reports/phase-01-local-verification.md); [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md).
+- Remaining work/blockers: Maintain alignment with the Phase02 closeout; historical sections stay historical; Phase3 not authorized.
+- Evidence/report links: [Phase02 closeout](reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](reports/phase-02-document-review-2026-10-09.md); [Phase01 local verification closeout](reports/phase-01-local-verification.md); [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
 Last inspected: 2026-10-08, Africa/Nairobi. Phase1 application, Prisma migration, tests and CI configuration now exist. Git main and remote WilsoftTech/MyFarm are present; hosted auth/storage/CI/deployment evidence is still absent. Root user instructions/design files are preserved.
 
-Current phase: **Phase1 — COMPLETED — 100% (13/13), verdict PASS WITH CONDITIONS — LOCAL VERIFICATION** ([report](reports/phase-01-local-verification.md); GitHub-hosted CI not verified, owner exception [D-P01-LOCAL-CI-001](DECISION-LOG.md#d-p01-local-ci-001--phase-1-local-ci-substitution)). Phase0 completed by owner acceptance; empirical farmer evidence absent. Phase2 not started in this checkout.
+Current phase: **Phase1 — COMPLETED — 100% (13/13), verdict PASS WITH CONDITIONS — LOCAL VERIFICATION** ([report](reports/phase-01-local-verification.md); GitHub-hosted CI not verified, owner exception [D-P01-LOCAL-CI-001](DECISION-LOG.md#d-p01-local-ci-001--phase-1-local-ci-substitution)). Phase0 completed by owner acceptance; empirical farmer evidence absent. **Superseded 2026-10-09:** current phase is **Phase2 — COMPLETED — 100% (13/13), verdict PASS WITH CONDITIONS — LOCAL VERIFICATION** ([closeout](reports/phase-02-closeout-2026-10-09.md)); see the current session section below.
 
 
 | Phase | Specification | Status | Completed | Pending | Test evidence |
 |---|---|---|---|---|---|
 | 0 | [Product Discovery and Scope Definition](phases/phase-00-product-discovery.md) | COMPLETED — 100% (owner acceptance) | T001–T010 administratively accepted; 0/10 original research-task evidence verified | Empirical field validation remains a risk/follow-up | [Owner approval](reports/phase-00-owner-approval-2026-10-08.md) |
-| 1 | [Engineering Foundation](phases/phase-01-engineering-foundation.md) | COMPLETED — 100% (PASS WITH CONDITIONS — LOCAL VERIFICATION) | T001–T013 verified | Conditions C1–C5 (hosted CI unverified, provider SQL outside migrations, Phase2 migration order, production auth settings, streamed redirect) | [Local verification](reports/phase-01-local-verification.md) |
-| 2 | [Farmer Identity and Farm Registry](phases/phase-02-farmer-registry.md) | NOT STARTED — 0% | None | All H tasks | None |
+| 1 | [Engineering Foundation](phases/phase-01-engineering-foundation.md) | COMPLETED — 100% (PASS WITH CONDITIONS — LOCAL VERIFICATION) | T001–T013 verified | Conditions C1, C2, C4 open; C3 resolved and C5 resolved for anonymous visitors in Phase2 (2026-10-09) | [Local verification](reports/phase-01-local-verification.md) |
+| 2 | [Farmer Identity and Farm Registry](phases/phase-02-farmer-registry.md) | COMPLETED — 100% (PASS WITH CONDITIONS — LOCAL VERIFICATION) | T001–T013 verified | Conditions P2-C1–P2-C8 (hosted CI, provider SQL, checksums, proposed defaults, retention policy, advisors, JWT redirect residual, migrations-table grants) | [Closeout](reports/phase-02-closeout-2026-10-09.md) |
 | 3 | [Enterprises Crops Livestock and Seasons](phases/phase-03-enterprises-seasons.md) | NOT STARTED — 0% | None | All H tasks | None |
 | 4 | [Farm Accounting Engine](phases/phase-04-farm-accounting.md) | NOT STARTED — 0% | None | All H tasks | None |
 | 5 | [Harvest Production and Inventory](phases/phase-05-harvest-inventory.md) | NOT STARTED — 0% | None | All H tasks | None |
@@ -108,3 +108,17 @@ GitHub Actions cannot start (account billing lock; run 37743343360 executed zero
 Defect fixed: double-encoded UTF-8 (mojibake) in home page, footer/title template, loading status and sign-in button; component test had asserted the corrupted label. Regression guard added. **GitHub-hosted CI remains unverified and is not claimed.** Conditions C1–C5 with owners/deadlines: [report §11](reports/phase-01-local-verification.md#11-conditions-nonblocking-owner-tracked).
 
 Next action: owner review of this closure; then rebase/merge Phase 2 onto the closed Phase 1 head after renaming its migration after `202610080101` (C3) and re-run verification. Restore hosted CI before any production release (C1).
+
+## Current session status — Phase 2 closeout (2026-10-09)
+
+Phase 02 **COMPLETED — 100% (13/13 verified task IDs)**, verdict **PASS WITH CONDITIONS — LOCAL VERIFICATION** (2026-10-09). The farmer registry is implemented, with live verification against real Supabase Auth and the restricted runtime DB role in the isolated dev project ([D-P02-005](DECISION-LOG.md#d-p02-005--hosted-development-verification-for-phase-2)):
+
+- **Journey:** register → farm → plots → profile verified in a real mobile browser.
+- **Local CI reproduction** under [D-P02-006](DECISION-LOG.md#d-p02-006--phase-2-local-ci-substitution): lint 0 warnings, typecheck, 117 unit/component, 33 PostgreSQL integration, build and 24 E2E tests PASS.
+- **Database:** 10/10 checks incl. restore.
+- **Live and probes:** 48/48 live and 49/49 anonymous production probes PASS.
+- **Hygiene:** npm audit 0; no secrets found.
+
+Phase 1 conditions C3 (migration order) and C5 (anonymous streamed redirect) are resolved. **GitHub-hosted CI remains NOT VERIFIED.** Conditions P2-C1–P2-C8 are listed in the [closeout](reports/phase-02-closeout-2026-10-09.md#6-conditions-nonblocking-owner-tracked-limitations-and-deferred-work). Phase 3 is NOT STARTED and not authorized.
+
+Next action: owner review of the Phase 2 closeout; push/merge branch `phase-02-farmer-registry` only when authorized; restore hosted CI (P1-C1/P2-C1). Do not start Phase 3 without explicit authorization.

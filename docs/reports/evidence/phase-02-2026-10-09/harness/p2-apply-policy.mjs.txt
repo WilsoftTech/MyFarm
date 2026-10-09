@@ -1,0 +1,11 @@
+import fs from 'node:fs'; import { adminDb } from './p2-common.mjs';
+const sql = fs.readFileSync('supabase/policies/farmer-registry-runtime.sql', 'utf8');
+const db = await adminDb();
+try { await db.query('BEGIN'); await db.query(sql); await db.query('COMMIT'); console.log(JSON.stringify({ applied: 'supabase/policies/farmer-registry-runtime.sql', result: 'PASS' })); }
+catch (e) { await db.query('ROLLBACK'); console.log(JSON.stringify({ result: 'FAIL', code: e.code, message: e.message })); process.exitCode = 1; }
+const rows = (await db.query(`select tablename, policyname, cmd from pg_policies where schemaname='public' and roles::text like '%myfarm_runtime%' order by 1,2`)).rows;
+const grants = (await db.query(`select table_name, grantee, string_agg(privilege_type, ',' order by privilege_type) privs from information_schema.role_table_grants where table_schema='public' and grantee in ('myfarm_runtime','anon','authenticated') group by 1,2 order by 1,2`)).rows;
+const columnUpdates = (await db.query(`select column_name from information_schema.column_privileges where table_schema='public' and table_name='FarmerProfile' and grantee='myfarm_runtime' and privilege_type='UPDATE' order by 1`)).rows.map(r => r.column_name);
+const rls = (await db.query(`select relname, relrowsecurity from pg_class where relnamespace='public'::regnamespace and relkind='r' order by 1`)).rows;
+console.log(JSON.stringify({ policies: rows, grants, farmerProfileUpdateColumns: columnUpdates, rls }, null, 1));
+await db.end();

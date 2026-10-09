@@ -1,0 +1,49 @@
+PASS Hosted dev project starts empty (baseline)
+PASS Disposable provider users and accounts provisioned
+PASS Anonymous protected page gets real 307 with relative Location (C5)
+PASS Farmer A real mobile sign-in
+PASS Empty registration shows accessible errors and stays on page
+PASS Registration redirects to empty farm list
+PASS New farm form prefilled from profile location
+PASS Half GPS pair rejected in browser before submit
+PASS Farm created and detail page shown
+PASS Two plots added and listed
+PASS Duplicate plot name explained, input kept
+PASS Farm list shows owned farm with plot count
+PASS Owned profile shows normalized phone
+PASS Profile update saved and shown
+PASS Header shows state-neutral account link, registry nav present
+PASS Auth cookies HttpOnly, Secure, SameSite=Lax
+PASS Farmer API returns own profile, private no-store
+PASS Farm list API scoped to owner
+PASS Concurrent retried farm command creates exactly one farm
+PASS Forged tenantId in body rejected
+PASS Cross-origin command rejected
+PASS Farmer B registers via API; same-request retry replays
+PASS Second registration with new request conflicts
+PASS B cannot read A farm by ID
+PASS B cannot add plot to A farm
+PASS B list excludes A farms
+PASS Guessed farm ID denied identically
+PASS Malformed farm ID rejected
+PASS B cannot open A tenant scope
+PASS B cannot obtain private file grant in A tenant
+PASS B browser redirected to forbidden for A farm page
+PASS A farm still has exactly two plots
+PASS Registry navigation sign-out ends the session
+PASS Administrator of A tenant has no farmer profile
+PASS Administrator cannot read A farm
+PASS Administrator cannot list farms
+PASS Administrator browser redirected to forbidden
+PASS Revoked farm membership denies farm
+PASS Revoked tenant membership denies registry
+PASS Restored membership regains access
+PASS One farmer, PERSONAL tenant, owner membership, tenant-consistent plots
+PASS Each write audited exactly once (failed duplicate plot left no receipt)
+PASS Tenants distinct per farmer
+PASS Second provider session for A
+PASS Provider global sign-out
+PASS Revoked session API denied
+PASS Revoked browser session redirected to sign-in
+PASS Server logs contain no farmer name, phone or coordinates
+{"cleanup":{"audits":7,"plots":2,"farmMembers":2,"farms":2,"profiles":2,"farmers":2,"memberships":3,"organizations":2,"users":3,"authUsersDeleted":3,"after":{"users":0,"orgs":0,"memberships":0,"audits":0,"farmers":0,"profiles":0,"farms":0,"farm_members":0,"plots":0,"temp_auth_users":0}}}

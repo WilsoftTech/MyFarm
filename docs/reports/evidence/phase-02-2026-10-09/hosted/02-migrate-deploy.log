@@ -1,0 +1,16 @@
+Datasource "db": PostgreSQL database "postgres", schema "public" at "aws-1-eu-central-1.pooler.supabase.com:5432"
+
+3 migrations found in prisma/migrations
+
+Applying migration `202610090001_farmer_registry`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 202610090001_farmer_registry/
+    └─ migration.sql
+
+All migrations have been successfully applied.
+Loaded Prisma config from prisma.config.ts.
+
+Prisma schema loaded from prisma\schema.prisma.

@@ -1,16 +1,16 @@
 # Phase 02 Farmer Identity and Farm Registry
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — current Phase01 implementation/evidence/status review; no completion inferred from review.
-- Implementation status: NOT STARTED — 0% (0/13 verified tasks).
-- Last reviewed: 2026-10-08 (Africa/Nairobi), live provider and hosted closeout session.
-- Related phase/task IDs: Phase 02; MYF-P02-T001 through MYF-P02-T013; review session Phase01.
-- Verified completed work: No tasks implemented or verified in this phase; status/provider applicability reviewed only.
-- Remaining work/blockers: All 13 tasks and their acceptance/exit gates pending; Phase01 completion and future phase authorization required.
-- Evidence/report links: [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md).
+- Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
+- Implementation status: COMPLETED — 100% (13/13 verified tasks; verdict PASS WITH CONDITIONS — LOCAL VERIFICATION).
+- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase02 implementation and closeout session.
+- Related phase/task IDs: Phase 02; MYF-P02-T001–T013; MYF-P02-AC001–AC004; D-P02-001–D-P02-008.
+- Verified completed work: MYF-P02-T001–T013 verified: registry module, migration 202610090001, runtime grants, API v1, mobile UI; AC001–AC004 and L gate PASS (local CI, database, live Supabase, probes).
+- Remaining work/blockers: No blocker. Nonblocking conditions P2-C1–P2-C8 (hosted CI, provider SQL, checksums, proposed defaults, retention policy, advisors, JWT redirect residual, migrations-table grants).
+- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [evidence](../reports/evidence/phase-02-2026-10-09/)
 <!-- MYFARM-STATUS-END -->
 
-Status: **NOT STARTED**. Date: 2026-10-08. This is a specification, not implementation approval. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **COMPLETED — 100% (13/13 verified task IDs)**, verdict PASS WITH CONDITIONS — LOCAL VERIFICATION, 2026-10-09 ([closeout](../reports/phase-02-closeout-2026-10-09.md)). Specification originally dated 2026-10-08; implementation was authorized by the owner ([D-P02-001–006](../DECISION-LOG.md#d-p02-001--phase2-started-before-the-phase1-exit-gate)). Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
@@ -71,6 +71,8 @@ Offline: see [sync](../architecture/offline-sync-architecture.md); Phases 1–6 
 
 **Proposal until implementation approval. No migrations created now.**
 
+> **Implemented 2026-10-09:** the approved subset is migration `202610090001_farmer_registry`: Farmer, FarmerProfile, Farm, Plot and FarmMember, with composite tenant FKs, CHECK constraints and RLS. User/Organization are reused. Address/Contact are held as profile/farm columns and Document is deferred ([D-P02-003](../DECISION-LOG.md#d-p02-003--q06-data-minimization)). Runtime grants are in `supabase/policies/farmer-registry-runtime.sql` ([D-P02-007](../DECISION-LOG.md#d-p02-007--runtime-role-privileges-for-registry-writes)). The proposal text below is retained as the original specification.
+
 Farmer(id UUID,userId UUID,tenantId UUID); FarmerProfile(farmerId UUID unique,name text,phone text,alternativePhone text?,district text,subcounty text,village text,preferredLanguage text,ownershipType enum,mainActivities text[]); Farm(id UUID,tenantId UUID,ownerFarmerId UUID,name text,acreage numeric?,ownershipType enum,primaryActivity text,latitude numeric?,longitude numeric?); Plot(id UUID,tenantId UUID,farmId UUID,name text,area numeric?,areaUnit text); FarmMember(farmId UUID,userId UUID,role enum,status enum); Address/Contact(id UUID,farmerId UUID,type enum,value text); Document(id UUID,tenantId UUID,farmId UUID,objectKey text,mediaType text). Reuse User/Organization.
 
 Shared tenant-owned fields: id UUID, tenantId UUID, relevant farmId UUID, createdAt/updatedAt timestamptz, version integer >=1, createdBy UUID. Global catalogs, append histories and research evidence declare distinct ownership. Quantity uses numeric(18,6) plus unit; money numeric(20,4) plus currency pending precision approval. JSON evidence/contracts versioned and validated.
@@ -89,7 +91,7 @@ Loading announced; recoverable errors retain input and safe retry. Empty states 
 
 ## H. Implementation Tasks
 
-Execute these small stages sequentially after authorization. Field/model/provider policies remain proposals until affected decisions are resolved. Each capability separates contract/domain work, authorized service/evidence work, and user-visible acceptance. All task IDs remain pending.
+Execute these small stages sequentially after authorization. Field/model/provider policies remain proposals until affected decisions are resolved. Each capability separates contract/domain work, authorized service/evidence work, and user-visible acceptance. **2026-10-09: all 13 task IDs verified** ([closeout §5](../reports/phase-02-closeout-2026-10-09.md#5-acceptance-criteria-and-exit-gate)).
 
 ### MYF-P02-T001 — Specify and implement domain contract for MYF-P02-R001
 
@@ -241,20 +243,20 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 
 ## O. Completion Checklist
 
-- [ ] MYF-P02-T001 complete with evidence.
-- [ ] MYF-P02-T002 complete with evidence.
-- [ ] MYF-P02-T003 complete with evidence.
-- [ ] MYF-P02-T004 complete with evidence.
-- [ ] MYF-P02-T005 complete with evidence.
-- [ ] MYF-P02-T006 complete with evidence.
-- [ ] MYF-P02-T007 complete with evidence.
-- [ ] MYF-P02-T008 complete with evidence.
-- [ ] MYF-P02-T009 complete with evidence.
-- [ ] MYF-P02-T010 complete with evidence.
-- [ ] MYF-P02-T011 complete with evidence.
-- [ ] MYF-P02-T012 complete with evidence.
-- [ ] MYF-P02-T013 complete with evidence.
-- [ ] Every K criterion verified.
-- [ ] Security/integrity audit, remediation and retest complete.
-- [ ] Applicable quality/E2E/integration/migration evidence recorded.
-- [ ] L gate approved; closeout/status updated from evidence.
+- [x] MYF-P02-T001 complete with evidence ([closeout §5](../reports/phase-02-closeout-2026-10-09.md#5-acceptance-criteria-and-exit-gate)).
+- [x] MYF-P02-T002 complete with evidence ([closeout §5](../reports/phase-02-closeout-2026-10-09.md#5-acceptance-criteria-and-exit-gate)).
+- [x] MYF-P02-T003 complete with evidence ([closeout §5](../reports/phase-02-closeout-2026-10-09.md#5-acceptance-criteria-and-exit-gate)).
+- [x] MYF-P02-T004 complete with evidence ([closeout §5](../reports/phase-02-closeout-2026-10-09.md#5-acceptance-criteria-and-exit-gate)).
+- [x] MYF-P02-T005 complete with evidence ([closeout §5](../reports/phase-02-closeout-2026-10-09.md#5-acceptance-criteria-and-exit-gate)).
+- [x] MYF-P02-T006 complete with evidence ([closeout §5](../reports/phase-02-closeout-2026-10-09.md#5-acceptance-criteria-and-exit-gate)).
+- [x] MYF-P02-T007 complete with evidence ([closeout §5](../reports/phase-02-closeout-2026-10-09.md#5-acceptance-criteria-and-exit-gate)).
+- [x] MYF-P02-T008 complete with evidence ([closeout §5](../reports/phase-02-closeout-2026-10-09.md#5-acceptance-criteria-and-exit-gate)).
+- [x] MYF-P02-T009 complete with evidence ([closeout §5](../reports/phase-02-closeout-2026-10-09.md#5-acceptance-criteria-and-exit-gate)).
+- [x] MYF-P02-T010 complete with evidence ([closeout §5](../reports/phase-02-closeout-2026-10-09.md#5-acceptance-criteria-and-exit-gate)).
+- [x] MYF-P02-T011 complete with evidence ([closeout §5](../reports/phase-02-closeout-2026-10-09.md#5-acceptance-criteria-and-exit-gate)).
+- [x] MYF-P02-T012 complete with evidence ([closeout §5](../reports/phase-02-closeout-2026-10-09.md#5-acceptance-criteria-and-exit-gate)).
+- [x] MYF-P02-T013 complete with evidence ([closeout §5](../reports/phase-02-closeout-2026-10-09.md#5-acceptance-criteria-and-exit-gate)).
+- [x] Every K criterion verified (AC001–AC004 PASS; AC004 export/search not implemented in Phase 2).
+- [x] Security/integrity audit, remediation and retest complete (closeout §1, §3).
+- [x] Applicable quality/E2E/integration/migration evidence recorded (local CI under D-P02-006; hosted CI NOT VERIFIED, P2-C1).
+- [x] L gate satisfied with evidence; closeout/status updated. Owner review of the PASS WITH CONDITIONS verdict pending.

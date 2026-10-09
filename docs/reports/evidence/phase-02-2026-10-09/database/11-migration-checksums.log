@@ -1,0 +1,15 @@
+$ sha256 of committed (LF) migration files vs checksums recorded in _prisma_migrations
+migration                              LF (git blob)   hosted dev (sudqhluwsaijvjjcegpv)   local CI DB (Windows clone)
+202610080001_foundation                3c887dc3653c…   17974af16198… (CRLF)                17974af16198… (CRLF)
+202610080101_private_grant_rate_limit  f9db2788363f…   f9db2788363f… (LF)                  a8eda50cb371… (CRLF)
+202610090001_farmer_registry           9288d81ef03e…   d55575db4a2e… (CRLF)                d55575db4a2e… (CRLF)
+
+Finding: Prisma stores the raw byte checksum. With core.autocrlf=true and no .gitattributes, Windows checkouts
+produce CRLF and Linux checkouts LF, so recorded history mixes forms (Phase 1 already mixed; Phase 2 deploy was CRLF).
+
+$ LF checkout (core.autocrlf=false) against the CRLF-recorded local CI DB
+npx prisma migrate status  -> "Database schema is up to date!" (exit 0)
+npx prisma migrate deploy  -> "No pending migrations to apply."
+Impact: deploy/status unaffected; `migrate dev` and checksum audits would report modified migrations.
+Fix: .gitattributes pins prisma/migrations/**/*.sql to LF on every OS. Recorded hosted checksums are not rewritten
+(owner decision; condition C2-P2 in the Phase 2 closeout).

@@ -1,0 +1,222 @@
+{
+  "result": "PASS",
+  "passed": 48,
+  "results": [
+    {
+      "check": "Hosted dev project starts empty (baseline)",
+      "result": "PASS"
+    },
+    {
+      "check": "Disposable provider users and accounts provisioned",
+      "result": "PASS"
+    },
+    {
+      "check": "Anonymous protected page gets real 307 with relative Location (C5)",
+      "result": "PASS"
+    },
+    {
+      "check": "Farmer A real mobile sign-in",
+      "result": "PASS"
+    },
+    {
+      "check": "Empty registration shows accessible errors and stays on page",
+      "result": "PASS"
+    },
+    {
+      "check": "Registration redirects to empty farm list",
+      "result": "PASS"
+    },
+    {
+      "check": "New farm form prefilled from profile location",
+      "result": "PASS"
+    },
+    {
+      "check": "Half GPS pair rejected in browser before submit",
+      "result": "PASS"
+    },
+    {
+      "check": "Farm created and detail page shown",
+      "result": "PASS"
+    },
+    {
+      "check": "Two plots added and listed",
+      "result": "PASS"
+    },
+    {
+      "check": "Duplicate plot name explained, input kept",
+      "result": "PASS"
+    },
+    {
+      "check": "Farm list shows owned farm with plot count",
+      "result": "PASS"
+    },
+    {
+      "check": "Owned profile shows normalized phone",
+      "result": "PASS"
+    },
+    {
+      "check": "Profile update saved and shown",
+      "result": "PASS"
+    },
+    {
+      "check": "Header shows state-neutral account link, registry nav present",
+      "result": "PASS"
+    },
+    {
+      "check": "Auth cookies HttpOnly, Secure, SameSite=Lax",
+      "result": "PASS"
+    },
+    {
+      "check": "Farmer API returns own profile, private no-store",
+      "result": "PASS"
+    },
+    {
+      "check": "Farm list API scoped to owner",
+      "result": "PASS"
+    },
+    {
+      "check": "Concurrent retried farm command creates exactly one farm",
+      "result": "PASS"
+    },
+    {
+      "check": "Forged tenantId in body rejected",
+      "result": "PASS"
+    },
+    {
+      "check": "Cross-origin command rejected",
+      "result": "PASS"
+    },
+    {
+      "check": "Farmer B registers via API; same-request retry replays",
+      "result": "PASS"
+    },
+    {
+      "check": "Second registration with new request conflicts",
+      "result": "PASS"
+    },
+    {
+      "check": "B cannot read A farm by ID",
+      "result": "PASS"
+    },
+    {
+      "check": "B cannot add plot to A farm",
+      "result": "PASS"
+    },
+    {
+      "check": "B list excludes A farms",
+      "result": "PASS"
+    },
+    {
+      "check": "Guessed farm ID denied identically",
+      "result": "PASS"
+    },
+    {
+      "check": "Malformed farm ID rejected",
+      "result": "PASS"
+    },
+    {
+      "check": "B cannot open A tenant scope",
+      "result": "PASS"
+    },
+    {
+      "check": "B cannot obtain private file grant in A tenant",
+      "result": "PASS"
+    },
+    {
+      "check": "B browser redirected to forbidden for A farm page",
+      "result": "PASS"
+    },
+    {
+      "check": "A farm still has exactly two plots",
+      "result": "PASS"
+    },
+    {
+      "check": "Registry navigation sign-out ends the session",
+      "result": "PASS"
+    },
+    {
+      "check": "Administrator of A tenant has no farmer profile",
+      "result": "PASS"
+    },
+    {
+      "check": "Administrator cannot read A farm",
+      "result": "PASS"
+    },
+    {
+      "check": "Administrator cannot list farms",
+      "result": "PASS"
+    },
+    {
+      "check": "Administrator browser redirected to forbidden",
+      "result": "PASS"
+    },
+    {
+      "check": "Revoked farm membership denies farm",
+      "result": "PASS"
+    },
+    {
+      "check": "Revoked tenant membership denies registry",
+      "result": "PASS"
+    },
+    {
+      "check": "Restored membership regains access",
+      "result": "PASS"
+    },
+    {
+      "check": "One farmer, PERSONAL tenant, owner membership, tenant-consistent plots",
+      "result": "PASS"
+    },
+    {
+      "check": "Each write audited exactly once (failed duplicate plot left no receipt)",
+      "result": "PASS"
+    },
+    {
+      "check": "Tenants distinct per farmer",
+      "result": "PASS"
+    },
+    {
+      "check": "Second provider session for A",
+      "result": "PASS"
+    },
+    {
+      "check": "Provider global sign-out",
+      "result": "PASS"
+    },
+    {
+      "check": "Revoked session API denied",
+      "result": "PASS"
+    },
+    {
+      "check": "Revoked browser session redirected to sign-in",
+      "result": "PASS"
+    },
+    {
+      "check": "Server logs contain no farmer name, phone or coordinates",
+      "result": "PASS"
+    }
+  ],
+  "cleanup": {
+    "audits": 7,
+    "plots": 2,
+    "farmMembers": 2,
+    "farms": 2,
+    "profiles": 2,
+    "farmers": 2,
+    "memberships": 3,
+    "organizations": 2,
+    "users": 3,
+    "authUsersDeleted": 3,
+    "after": {
+      "users": 0,
+      "orgs": 0,
+      "memberships": 0,
+      "audits": 0,
+      "farmers": 0,
+      "profiles": 0,
+      "farms": 0,
+      "farm_members": 0,
+      "plots": 0,
+      "temp_auth_users": 0
+    }
+  }
+}

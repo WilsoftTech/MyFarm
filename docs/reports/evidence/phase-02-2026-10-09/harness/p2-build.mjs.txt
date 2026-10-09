@@ -1,0 +1,4 @@
+import { spawnSync } from 'node:child_process'; import { env } from './p2-common.mjs';
+const r = spawnSync(process.env.ComSpec, ['/d', '/s', '/c', 'npm run build'], { encoding: 'utf8', env: { ...process.env, ...env, NEXT_TELEMETRY_DISABLED: '1' } });
+let out = (r.stdout ?? '') + (r.stderr ?? ''); for (const v of Object.values(env)) if (v && v.length > 8) out = out.replaceAll(v, '<redacted>');
+process.stdout.write(out); process.exitCode = r.status ?? 1;

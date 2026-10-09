@@ -1,0 +1,35 @@
+$ synthetic registry rows → pg_dump custom → pg_restore into myfarm_phase02_restore
+{
+  "verdict": "PASS",
+  "before": {
+    "farmers": 1,
+    "profiles": 1,
+    "farms": 1,
+    "farm_members": 1,
+    "plots": 1,
+    "orgs": 1
+  },
+  "after": {
+    "farmers": 1,
+    "profiles": 1,
+    "farms": 1,
+    "farm_members": 1,
+    "plots": 1,
+    "orgs": 1
+  },
+  "decimalsExact": {
+    "plot": {
+      "area": "0.750000",
+      "areaUnit": "ACRE",
+      "tenantId": "76effa61-0852-49f1-8d66-433503754bdb"
+    },
+    "farm": {
+      "latitude": "-0.790123",
+      "longitude": "29.926745",
+      "approximateAcreage": "2.5000"
+    }
+  },
+  "rlsRestored": true,
+  "compositeTenantFkRestored": true,
+  "checkConstraintRestored": true
+}

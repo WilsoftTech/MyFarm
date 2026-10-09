@@ -1,13 +1,13 @@
 # Reports and evidence
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — current Phase01 implementation/evidence/status review; no completion inferred from review.
+- Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-08 (Africa/Nairobi), live provider and hosted closeout session.
-- Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced.
+- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase02 implementation and closeout session.
+- Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
-- Remaining work/blockers: Maintain alignment after Phase01 live verification; historical results stay historical and source body remains immutable.
-- Evidence/report links: [Phase01 closeout](phase-01-closeout-2026-10-08.md); [every-document review](phase-01-document-review-2026-10-08.md); [latest provider/security report](phase-01-provider-verification-2026-10-08.md).
+- Remaining work/blockers: Maintain alignment with the Phase02 closeout; historical sections stay historical; Phase3 not authorized.
+- Evidence/report links: [Phase02 closeout](phase-02-closeout-2026-10-09.md); [Phase02 every-document review](phase-02-document-review-2026-10-09.md); [Phase01 closeout](phase-01-closeout-2026-10-08.md); [every-document review](phase-01-document-review-2026-10-08.md); [latest provider/security report](phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
 Current reports: [source extract](source-extract.md), [source analysis](source-analysis.md) and [documentation audit](documentation-audit.md). These establish documentation evidence only, not implemented product capabilities.
@@ -45,3 +45,17 @@ Prisma migrations202610080001_foundation and202610080101_private_grant_rate_limi
 API change: same-origin private-file requests work with actual HTTP authority; excessive distinct grants return429 RATE_LIMITED. Offline sync, financial/stock writes, farmer registry and AI are NOT APPLICABLE to Phase1 and remain unimplemented. Restore/replay evidence from preceding isolated synthetic rehearsal remains applicable. Recovery email delivery and production operational settings are not claimed; production release must verify them. Source research remains absent despite Phase0 owner acceptance.
 
 [Current closeout](phase-01-closeout-2026-10-08.md).
+
+## Current Phase2 evidence (2026-10-09)
+
+Phase 02 **COMPLETED — 100% (13/13 verified task IDs)**, verdict **PASS WITH CONDITIONS — LOCAL VERIFICATION** (2026-10-09). The farmer registry is implemented, with live verification against real Supabase Auth and the restricted runtime DB role in the isolated dev project ([D-P02-005](../DECISION-LOG.md#d-p02-005--hosted-development-verification-for-phase-2)):
+
+- **Journey:** register → farm → plots → profile verified in a real mobile browser.
+- **Local CI reproduction** under [D-P02-006](../DECISION-LOG.md#d-p02-006--phase-2-local-ci-substitution): lint 0 warnings, typecheck, 117 unit/component, 33 PostgreSQL integration, build and 24 E2E tests PASS.
+- **Database:** 10/10 checks incl. restore.
+- **Live and probes:** 48/48 live and 49/49 anonymous production probes PASS.
+- **Hygiene:** npm audit 0; no secrets found.
+
+Phase 1 conditions C3 (migration order) and C5 (anonymous streamed redirect) are resolved. **GitHub-hosted CI remains NOT VERIFIED.** Conditions P2-C1–P2-C8 are listed in the [closeout](../reports/phase-02-closeout-2026-10-09.md#6-conditions-nonblocking-owner-tracked-limitations-and-deferred-work). Phase 3 is NOT STARTED and not authorized.
+
+[Phase2 closeout](phase-02-closeout-2026-10-09.md), [every-document review](phase-02-document-review-2026-10-09.md), [evidence folder](evidence/phase-02-2026-10-09/) (ci-run-e065e7a, ci-run-final, database, hosted, security, harness). The [interim 2026-10-08 Phase2 closeout](phase-02-closeout-2026-10-08.md) (BLOCKED 15.38%, FAIL) is historical and superseded.

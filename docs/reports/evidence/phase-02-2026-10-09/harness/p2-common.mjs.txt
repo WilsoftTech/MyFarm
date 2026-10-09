@@ -1,0 +1,8 @@
+import fs from 'node:fs'; import dotenv from 'dotenv'; import pg from 'pg';
+export const env = dotenv.parse(fs.readFileSync('D:/Myfarm/.env.local'));
+export const adminEnv = dotenv.parse(fs.readFileSync('D:/Myfarm/.cache/phase01-provider-admin.env'));
+if (new URL(env.NEXT_PUBLIC_SUPABASE_URL).hostname !== 'sudqhluwsaijvjjcegpv.supabase.co') throw Error('Unexpected project');
+const ca = fs.readFileSync(env.DATABASE_CA_CERT_PATH, 'utf8');
+export async function connect(url) { const c = new pg.Client({ connectionString: url, ssl: { rejectUnauthorized: true, ca }, connectionTimeoutMillis: 10000 }); await c.connect(); return c; }
+export const adminDb = () => connect(adminEnv.DATABASE_URL);
+export const runtimeDb = () => connect(env.DATABASE_URL);

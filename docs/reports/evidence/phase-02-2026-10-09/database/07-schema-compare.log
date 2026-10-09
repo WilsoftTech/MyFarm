@@ -1,0 +1,4 @@
+$ pg_dump --schema-only --no-owner --no-privileges (excl. _prisma_migrations) of the CI-migrated DB and a second fresh DB
+normalization: removed pg_dump restrict tokens (random per dump), comments, and whole CREATE POLICY statements (provider SQL applied by integration tests, not migrations)
+policies in CI DB: 18; policies in fresh replay DB: 0
+IDENTICAL

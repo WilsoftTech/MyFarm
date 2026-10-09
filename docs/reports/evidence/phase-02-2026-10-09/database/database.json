@@ -1,0 +1,50 @@
+[
+  {
+    "step": "01-replay",
+    "exitCode": 0,
+    "result": "PASS"
+  },
+  {
+    "step": "02-status",
+    "exitCode": 0,
+    "result": "PASS"
+  },
+  {
+    "step": "03-drift",
+    "exitCode": 0,
+    "result": "PASS"
+  },
+  {
+    "step": "04-create-second-db",
+    "exitCode": 0,
+    "result": "PASS"
+  },
+  {
+    "step": "05-fresh-second-db",
+    "exitCode": 0,
+    "result": "PASS"
+  },
+  {
+    "step": "06-fresh-drift",
+    "exitCode": 0,
+    "result": "PASS"
+  },
+  {
+    "step": "07-schema-compare",
+    "result": "PASS"
+  },
+  {
+    "step": "08-catalog-constraints",
+    "exitCode": 0,
+    "result": "PASS"
+  },
+  {
+    "step": "09-catalog-indexes-rls",
+    "exitCode": 0,
+    "result": "PASS"
+  },
+  {
+    "step": "10-restore",
+    "result": "PASS"
+  }
+]

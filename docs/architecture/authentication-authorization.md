@@ -1,13 +1,13 @@
 # Authentication and authorization
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — current Phase01 implementation/evidence/status review; no completion inferred from review.
-- Implementation status: Phase01 scope COMPLETED — 100% (13/13 verified Phase01 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); later-phase scope not counted.
-- Last reviewed: 2026-10-08 (Africa/Nairobi), live provider and hosted closeout session.
-- Related phase/task IDs: Phase01 foundation T001–T013 (10 verified); cross-phase requirements remain pending; Phase01 review session.
-- Verified completed work: T001–T010; live Supabase verification and local quality/security gates PASS; see current closeout.
-- Remaining work/blockers: T011–T013 hosted CI/preview/final review pending.
-- Evidence/report links: [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md).
+- Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
+- Implementation status: Phase01 scope COMPLETED — 100% (13/13 verified Phase01 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); Phase02 scope COMPLETED — 100% (13/13 verified Phase02 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); later-phase scope not counted.
+- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase02 implementation and closeout session.
+- Related phase/task IDs: Phase01 MYF-P01-T001–T013; Phase02 MYF-P02-T001–T013.
+- Verified completed work: Phase01 scope as previously verified; Phase02: farmer registry contracts/policies/migration/API/tests in this document's area verified (see the Phase 2 implementation section).
+- Remaining work/blockers: Phase02 conditions P2-C1–P2-C8 where applicable; later-phase scope pending authorization.
+- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
 Authentication provider is Supabase Auth (approved by user); existing-account email/password foundation implemented. Recovery and final credential/shared-device policy remain Q03. Investigate farmer phone availability, shared devices and language; do not assume email-only accounts. Session security needs secure/HttpOnly cookies, appropriate SameSite, expiry/rotation/revocation and CSRF/origin protections for cookie-authenticated mutations.
@@ -55,3 +55,13 @@ Prisma migrations202610080001_foundation and202610080101_private_grant_rate_limi
 API change: same-origin private-file requests work with actual HTTP authority; excessive distinct grants return429 RATE_LIMITED. Offline sync, financial/stock writes, farmer registry and AI are NOT APPLICABLE to Phase1 and remain unimplemented. Restore/replay evidence from preceding isolated synthetic rehearsal remains applicable. Recovery email delivery and production operational settings are not claimed; production release must verify them. Source research remains absent despite Phase0 owner acceptance.
 
 [Current closeout](../reports/phase-01-closeout-2026-10-08.md).
+
+## Phase 2 implementation (2026-10-09)
+
+Implemented and verified ([closeout](../reports/phase-02-closeout-2026-10-09.md)):
+
+- **FarmAccessPolicy:** farm data requires an ACTIVE `FarmMember` row **and** an ACTIVE FARMER membership of the farm's tenant, re-checked on every request. Unknown and foreign farm IDs both return 403.
+- **No role bypass:** organization ADMIN/AGENT roles grant no farm-data access (verified live).
+- **Server-derived scope:** registration derives the actor from the verified session. Tenant, farmer and farm are always server-derived; strict schemas reject client scope claims.
+- **Early redirect:** the proxy now returns a real 307 for anonymous requests to protected pages ([D-P02-008](../DECISION-LOG.md#d-p02-008--phase-1-condition-c5-resolved-for-anonymous-visitors)). Pages and APIs still verify the session server-side.
+- **Database layer:** the restricted `myfarm_runtime` role gains only the registry grants in [D-P02-007](../DECISION-LOG.md#d-p02-007--runtime-role-privileges-for-registry-writes), with RLS write checks as defense in depth.

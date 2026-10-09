@@ -1,0 +1,15 @@
+import { adminDb, runtimeDb } from './p2-common.mjs';
+const db = await adminDb();
+const q = async (sql, p) => (await db.query(sql, p)).rows;
+const out = {
+  adminRole: (await q('select current_user'))[0].current_user,
+  tls: db.connection.stream.encrypted && db.connection.stream.authorized,
+  migrations: await q('select migration_name, finished_at is not null as finished, rolled_back_at is not null as rolled_back from _prisma_migrations order by migration_name'),
+  phase2Tables: await q(`select relname, relrowsecurity from pg_class where relnamespace='public'::regnamespace and relname in ('Farmer','FarmerProfile','Farm','Plot','FarmMember') order by 1`),
+  runtimeRole: await q(`select rolname, rolsuper, rolbypassrls, rolcanlogin, rolcreaterole from pg_roles where rolname='myfarm_runtime'`),
+  policies: await q(`select tablename, policyname, cmd, roles::text from pg_policies where schemaname='public' order by 1,2`),
+  rowCounts: await q(`select (select count(*) from "User")::int users, (select count(*) from "Organization")::int orgs, (select count(*) from "Membership")::int memberships, (select count(*) from "AuditEvent")::int audits`),
+};
+await db.end();
+const rt = await runtimeDb(); out.runtimeUser = (await rt.query('select current_user')).rows[0].current_user; await rt.end();
+console.log(JSON.stringify(out, null, 1));

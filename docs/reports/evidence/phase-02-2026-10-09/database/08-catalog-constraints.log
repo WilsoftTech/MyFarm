@@ -1,0 +1,31 @@
+$ C:/Program Files/Docker/Docker/resources/bin/docker.exe exec myfarm-phase02-localci psql -U myfarm -d myfarm_phase02_replay -v ON_ERROR_STOP=1 -c SELECT conrelid::regclass AS table, conname, pg_get_constraintdef(oid) AS definition FROM pg_constraint WHERE conrelid::regclass::text IN ('"Farmer"','"FarmerProfile"','"Farm"','"Plot"','"FarmMember"') ORDER BY 1, 2
+      table      |               conname                |                                                                                                       definition                                                                                                       
+-----------------+--------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ "Farmer"        | Farmer_pkey                          | PRIMARY KEY (id)
+ "Farmer"        | Farmer_tenantId_fkey                 | FOREIGN KEY ("tenantId") REFERENCES "Organization"(id) ON UPDATE CASCADE ON DELETE RESTRICT
+ "Farmer"        | Farmer_userId_fkey                   | FOREIGN KEY ("userId") REFERENCES "User"(id) ON UPDATE CASCADE ON DELETE RESTRICT
+ "FarmerProfile" | FarmerProfile_alternativePhone_check | CHECK ((("alternativePhone" IS NULL) OR (("alternativePhone")::text <> (phone)::text)))
+ "FarmerProfile" | FarmerProfile_farmerId_fkey          | FOREIGN KEY ("farmerId") REFERENCES "Farmer"(id) ON UPDATE CASCADE ON DELETE RESTRICT
+ "FarmerProfile" | FarmerProfile_mainActivities_check   | CHECK ((cardinality("mainActivities") >= 1))
+ "FarmerProfile" | FarmerProfile_pkey                   | PRIMARY KEY ("farmerId")
+ "FarmerProfile" | FarmerProfile_version_check          | CHECK ((version >= 1))
+ "Farm"          | Farm_approximateAcreage_check        | CHECK ((("approximateAcreage" IS NULL) OR ("approximateAcreage" >= (0)::numeric)))
+ "Farm"          | Farm_coordinates_pair_check          | CHECK (((latitude IS NULL) = (longitude IS NULL)))
+ "Farm"          | Farm_coordinates_range_check         | CHECK ((((latitude IS NULL) OR ((latitude >= ('-90'::integer)::numeric) AND (latitude <= (90)::numeric))) AND ((longitude IS NULL) OR ((longitude >= ('-180'::integer)::numeric) AND (longitude <= (180)::numeric)))))
+ "Farm"          | Farm_ownerFarmerId_tenantId_fkey     | FOREIGN KEY ("ownerFarmerId", "tenantId") REFERENCES "Farmer"(id, "tenantId") ON UPDATE CASCADE ON DELETE RESTRICT
+ "Farm"          | Farm_pkey                            | PRIMARY KEY (id)
+ "Farm"          | Farm_tenantId_fkey                   | FOREIGN KEY ("tenantId") REFERENCES "Organization"(id) ON UPDATE CASCADE ON DELETE RESTRICT
+ "Farm"          | Farm_version_check                   | CHECK ((version >= 1))
+ "Plot"          | Plot_area_check                      | CHECK (((area IS NULL) OR (area >= (0)::numeric)))
+ "Plot"          | Plot_area_pair_check                 | CHECK (((area IS NULL) = ("areaUnit" IS NULL)))
+ "Plot"          | Plot_farmId_tenantId_fkey            | FOREIGN KEY ("farmId", "tenantId") REFERENCES "Farm"(id, "tenantId") ON UPDATE CASCADE ON DELETE RESTRICT
+ "Plot"          | Plot_pkey                            | PRIMARY KEY (id)
+ "Plot"          | Plot_tenantId_fkey                   | FOREIGN KEY ("tenantId") REFERENCES "Organization"(id) ON UPDATE CASCADE ON DELETE RESTRICT
+ "Plot"          | Plot_version_check                   | CHECK ((version >= 1))
+ "FarmMember"    | FarmMember_farmId_tenantId_fkey      | FOREIGN KEY ("farmId", "tenantId") REFERENCES "Farm"(id, "tenantId") ON UPDATE CASCADE ON DELETE RESTRICT
+ "FarmMember"    | FarmMember_pkey                      | PRIMARY KEY ("farmId", "userId")
+ "FarmMember"    | FarmMember_userId_fkey               | FOREIGN KEY ("userId") REFERENCES "User"(id) ON UPDATE CASCADE ON DELETE RESTRICT
+(24 rows)
+
+
+exit=0
