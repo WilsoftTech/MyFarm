@@ -32,8 +32,21 @@ async register(input: unknown) {
 const account = await this.authorization.account();
 const { requestId, ...profile } = parse(registerFarmerSchema, input);
 // Q05: one farmer per user. Repository uniqueness enforces this under concurrency too.
-if (await this.repository.farmerForUser(account.id)) throw new FoundationError("CONFLICT");
-return this.repository.registerFarmer({ userId: account.id, requestId, profile });
+const existing = await this.repository.farmerForUser(account.id);
+if (existing) return this.replayRegistration(account.id, existing, requestId);
+try { return await this.repository.registerFarmer({ userId: account.id, requestId, profile }); }
+catch (error) {
+// A concurrent attempt committed first: replay it if it was this same request, otherwise conflict.
+const winner = error instanceof FoundationError && error.code === "CONFLICT" ? await this.repository.farmerForUser(account.id) : null;
+if (!winner) throw error;
+return this.replayRegistration(account.id, winner, requestId);
+}
+}
+
+private async replayRegistration(userId: string, farmer: FarmerView, requestId: string) {
+if (!await this.repository.registeredByRequest({ userId, tenantId: farmer.tenantId, requestId })) throw new FoundationError("CONFLICT");
+await this.authorization.scope(farmer.tenantId, FARMER_ROLES);
+return farmer;
 }
 
 async updateProfile(input: unknown) {

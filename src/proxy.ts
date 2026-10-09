@@ -13,11 +13,27 @@ for (const { name, value, options } of values) response.cookies.set(name, value,
 response.headers.set("Cache-Control", "private, no-store");
 },
 } });
+let claims;
 try {
-await client.auth.getClaims(); // Refresh only; protected routes additionally call auth.getUser().
+claims = (await client.auth.getClaims()).data?.claims; // Refresh; protected routes additionally call auth.getUser().
 } catch {
 return NextResponse.json({ error: "UNAVAILABLE" }, { status: 503, headers: { "Cache-Control": "no-store" } });
 }
+// Early, non-streamed redirect for pages that need a session. A present claim is not trusted here:
+// every page and API still verifies the session and membership server-side on each request.
+if (!claims && isProtectedPage(request.nextUrl.pathname)) {
+// Same-origin target: Next.js sends it as a relative Location, so its internal localhost authority never leaks.
+const target = request.nextUrl.clone();
+target.pathname = "/sign-in"; target.search = "?reason=session-required";
+const redirect = NextResponse.redirect(target, 307);
+redirect.headers.set("Cache-Control", "private, no-store");
+for (const cookie of response.cookies.getAll()) redirect.cookies.set(cookie);
+return redirect;
+}
 return response;
+}
+const PROTECTED_PAGES = ["/workspace", "/admin", "/agent", "/farmer", "/farms"];
+function isProtectedPage(pathname: string) {
+return PROTECTED_PAGES.some(prefix => pathname === prefix || pathname.startsWith(prefix + "/"));
 }
 export const config = { matcher: ["/((?!_next/static|_next/image|favicon.ico|manifest.webmanifest|icon.svg|api/health).*)"] };

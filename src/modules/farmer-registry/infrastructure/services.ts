@@ -11,6 +11,7 @@ const repository = () => registryRepository(database());
 const lazy: RegistryRepository = {
 farmerForUser: userId => repository().farmerForUser(userId),
 registerFarmer: input => repository().registerFarmer(input),
+registeredByRequest: input => repository().registeredByRequest(input),
 updateProfile: input => repository().updateProfile(input),
 farmsForMember: input => repository().farmsForMember(input),
 farmForMember: input => repository().farmForMember(input),

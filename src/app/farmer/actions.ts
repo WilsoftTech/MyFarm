@@ -5,12 +5,14 @@ import { FoundationError } from "@/modules/engineering-foundation/domain/errors"
 import { logSafe } from "@/modules/engineering-foundation/infrastructure/logging";
 
 export type CommandFailure = { ok: false; message: string };
-const messages = {
+// Exhaustive over FoundationError codes so a new code cannot reach users as "undefined".
+const messages: Record<FoundationError["code"], string> = {
 UNAUTHENTICATED: "Your session has ended. Sign in again, then retry.",
 FORBIDDEN: "You do not have access to this record.",
 INVALID_INPUT: "Check the details you entered and try again.",
 CONFLICT: "This was changed elsewhere. Reload the page to see the latest details.",
 UNAVAILABLE: "MyFarm is unavailable right now. Your details are still here. Try again.",
+RATE_LIMITED: "Too many attempts. Wait a minute, then try again. Your details are still here.",
 };
 
 async function run(work: () => Promise<string>, conflict?: string | (() => never)): Promise<CommandFailure> {

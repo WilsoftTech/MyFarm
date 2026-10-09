@@ -5,6 +5,15 @@ for (const path of ["/farmer", "/farmer/edit", "/farms", "/farms/new", "/farms/"
 await page.goto(path); await expect(page).toHaveURL(/\/sign-in\?reason=session-required/);
 }
 });
+test("anonymous protected pages get a real redirect, not a streamed page", async ({ request }) => {
+for (const path of ["/workspace", "/admin", "/agent", "/farmer", "/farmer/edit", "/farms", "/farms/new", "/farms/" + farm]) {
+const response = await request.get(path, { maxRedirects: 0 });
+expect(response.status(), path).toBe(307);
+expect(response.headers()["location"]).toBe("/sign-in?reason=session-required");
+expect(response.headers()["cache-control"]).toContain("no-store");
+expect(["", "/sign-in?reason=session-required"]).toContain(await response.text()); // redirect target only, never page content
+}
+});
 test("anonymous registry APIs fail closed with no caching or detail", async ({ request }) => {
 for (const path of ["/api/v1/farmer", "/api/v1/farms", "/api/v1/farms/" + farm, "/api/v1/farms/not-a-uuid"]) {
 const response = await request.get(path); expect(response.status()).toBe(401); expect(response.headers()["cache-control"]).toContain("no-store");

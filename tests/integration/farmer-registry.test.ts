@@ -67,6 +67,28 @@ expect(results.find(r => r.status === "rejected")).toMatchObject({ reason: { cod
 expect(await db.farmer.count({ where: { userId: users.racer } })).toBe(1);
 expect(await db.membership.count({ where: { userId: users.racer } })).toBe(1);
 });
+it("a registration retried with the same request ID replays, even concurrently", async () => {
+const replayUser = crypto.randomUUID(), replaySubject = crypto.randomUUID();
+await db.user.create({ data: { id: replayUser, authSubject: replaySubject } });
+const service = () => new FarmerRegistryService(new AuthorizationService({ currentIdentity: async () => ({ authSubject: replaySubject }) }, identityRepository(db)), registryRepository(db));
+try {
+const input = profile("Replay");
+const results = await Promise.all([service().register(input), service().register(input), service().register(input)]);
+expect(new Set(results.map(r => r.farmerId)).size).toBe(1);
+expect(await service().register(input)).toEqual(results[0]);
+await expect(service().register(profile("Replay"))).rejects.toMatchObject({ code: "CONFLICT" });
+expect(await db.membership.count({ where: { userId: replayUser } })).toBe(1);
+expect(await db.auditEvent.count({ where: { actorId: replayUser, action: "FARMER_REGISTERED" } })).toBe(1);
+} finally {
+const tenants = (await db.membership.findMany({ where: { userId: replayUser } })).map(m => m.organizationId);
+await db.auditEvent.deleteMany({ where: { actorId: replayUser } });
+await db.farmerProfile.deleteMany({ where: { farmer: { userId: replayUser } } });
+await db.farmer.deleteMany({ where: { userId: replayUser } });
+await db.membership.deleteMany({ where: { userId: replayUser } });
+await db.organization.deleteMany({ where: { id: { in: tenants } } });
+await db.user.delete({ where: { id: replayUser } });
+}
+});
 it("database rejects foreign-tenant and orphan plots and farms", async () => {
 const base = { name: "Forged", createdBy: users.b };
 await expect(db.plot.create({ data: { ...base, id: crypto.randomUUID(), tenantId: tenantB, farmId: farmA } })).rejects.toThrow();

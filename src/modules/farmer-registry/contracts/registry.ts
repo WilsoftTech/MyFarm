@@ -97,6 +97,8 @@ export interface FarmPage { items: FarmSummary[]; nextCursor: string | null }
 export interface RegistryRepository {
 farmerForUser(userId: string): Promise<FarmerView | null>;
 registerFarmer(input: { userId: string; requestId: string; profile: FarmerProfileData }): Promise<FarmerView>;
+/** True when this user's farmer registration was committed under this request ID (idempotent retry). */
+registeredByRequest(input: { userId: string; tenantId: string; requestId: string }): Promise<boolean>;
 updateProfile(input: { farmerId: string; tenantId: string; actorId: string; requestId: string; expectedVersion: number; profile: FarmerProfileData }): Promise<FarmerView>;
 farmsForMember(input: { userId: string; tenantId: string; cursor?: string; limit: number }): Promise<FarmPage>;
 farmForMember(input: { userId: string; farmId: string }): Promise<FarmView | null>;

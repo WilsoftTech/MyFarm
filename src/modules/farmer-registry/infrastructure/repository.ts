@@ -65,7 +65,12 @@ if (!farmer) throw new FoundationError("UNAVAILABLE");
 return farmer;
 })),
 
-updateProfile: ({ farmerId, tenantId, actorId, requestId, expectedVersion, profile }) => db.$transaction(async tx => {
+async registeredByRequest({ userId, tenantId, requestId }) {
+const receipt = await db.auditEvent.findUnique({ where: { tenantId_requestId_action: { tenantId, requestId, action: "FARMER_REGISTERED" } }, select: { actorId: true } });
+return receipt?.actorId === userId;
+},
+
+updateProfile:({ farmerId, tenantId, actorId, requestId, expectedVersion, profile }) => db.$transaction(async tx => {
 const replayed = await claimReceipt(tx, { actorId, tenantId, action: "FARMER_PROFILE_UPDATED", targetId: farmerId, requestId });
 if (replayed === null) {
 const { count } = await tx.farmerProfile.updateMany({ where: { farmerId, version: expectedVersion, farmer: { tenantId } }, data: { ...profileColumns(profile), updatedBy: actorId, version: { increment: 1 } } });

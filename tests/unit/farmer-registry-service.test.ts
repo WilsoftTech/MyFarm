@@ -8,7 +8,7 @@ const farmer: FarmerView = { farmerId: crypto.randomUUID(), tenantId, version: 1
 const farm: FarmView = { farmId, tenantId, name: "Home", district: "Rukungiri", subcounty: null, village: null, approximateAcreage: null, ownershipType: "OWNED", primaryActivity: "CROPS", latitude: null, longitude: null, version: 1, plots: [], plotsTruncated: false };
 const plot = { requestId: crypto.randomUUID(), name: "Plot A" };
 
-function setup(options: { anonymous?: boolean; farmer?: FarmerView | null; farm?: FarmView | null; scopeDenied?: boolean } = {}) {
+function setup(options: { anonymous?: boolean; farmer?: FarmerView | null; farm?: FarmView | null; scopeDenied?: boolean; receipt?: boolean } = {}) {
 const authorization: RegistryAuthorization = {
 account: vi.fn(async () => { if (options.anonymous) throw new FoundationError("UNAUTHENTICATED"); return { id: accountId, authSubject: crypto.randomUUID(), status: "ACTIVE" as const }; }),
 scope: vi.fn(async (organizationId: unknown) => { if (options.scopeDenied) throw new FoundationError("FORBIDDEN"); return { actorId: accountId, organizationId: String(organizationId), role: "FARMER" as const }; }),
@@ -16,6 +16,7 @@ scope: vi.fn(async (organizationId: unknown) => { if (options.scopeDenied) throw
 const repository: RegistryRepository = {
 farmerForUser: vi.fn(async () => options.farmer === undefined ? farmer : options.farmer),
 registerFarmer: vi.fn(async () => farmer),
+registeredByRequest: vi.fn(async () => options.receipt ?? false),
 updateProfile: vi.fn(async () => farmer),
 farmsForMember: vi.fn(async () => ({ items: [], nextCursor: null })),
 farmForMember: vi.fn(async () => options.farm === undefined ? farm : options.farm),
@@ -32,10 +33,28 @@ await expect(service.register({ junk: true })).rejects.toMatchObject({ code: "UN
 await expect(service.createPlot("not-an-id", {})).rejects.toMatchObject({ code: "UNAUTHENTICATED" });
 expect(repository.registerFarmer).not.toHaveBeenCalled();
 });
+const registration = () => ({ requestId: crypto.randomUUID(), name: "A", phone: "0772123456", district: "R", preferredLanguage: "en", ownershipType: "OWNED", mainActivities: ["CROPS"] });
 it("allows only one farmer per user", async () => {
 const { service, repository } = setup();
-await expect(service.register({ requestId: crypto.randomUUID(), name: "A", phone: "0772123456", district: "R", preferredLanguage: "en", ownershipType: "OWNED", mainActivities: ["CROPS"] })).rejects.toMatchObject({ code: "CONFLICT" });
+await expect(service.register(registration())).rejects.toMatchObject({ code: "CONFLICT" });
 expect(repository.registerFarmer).not.toHaveBeenCalled();
+});
+it("replays a registration retried with the same request ID", async () => {
+const { service, repository, authorization } = setup({ receipt: true });
+const input = registration();
+await expect(service.register(input)).resolves.toEqual(farmer);
+expect(repository.registeredByRequest).toHaveBeenCalledWith({ userId: accountId, tenantId, requestId: input.requestId });
+expect(authorization.scope).toHaveBeenCalledWith(tenantId, ["FARMER"]);
+expect(repository.registerFarmer).not.toHaveBeenCalled();
+});
+it("replays the winner of a concurrent registration only for the same request", async () => {
+for (const receipt of [true, false]) {
+const { service, repository } = setup({ farmer: null, receipt });
+vi.mocked(repository.registerFarmer).mockRejectedValueOnce(new FoundationError("CONFLICT"));
+vi.mocked(repository.farmerForUser).mockResolvedValueOnce(null).mockResolvedValueOnce(farmer);
+const attempt = service.register(registration());
+if (receipt) await expect(attempt).resolves.toEqual(farmer); else await expect(attempt).rejects.toMatchObject({ code: "CONFLICT" });
+}
 });
 it("treats unknown or foreign farms as forbidden without writing", async () => {
 const { service, repository } = setup({ farm: null });
