@@ -1,0 +1,16 @@
+# Sign-in/sign-out journey after the hosted provider-file application, 2026-10-10.
+# signinout.mjs (harness/signinout.mjs.txt) against a local production build on http://localhost:3100.
+# Build is main's application code: d85a773 and 756f3c4 differ only in supabase/, tests/, .gitattributes and docs/.
+# Signing out revokes every server session of the dedicated test account (expected, owner-approved).
+PASS anonymous /workspace redirects to sign-in /sign-in
+PASS sign-in lands on /workspace /workspace
+PASS workspace shows welcome 
+PASS session cookie HttpOnly + SameSite=Lax 1 cookie(s)
+PASS server session active after sign-in active=1
+PASS sign-out returns to /sign-in /sign-in
+PASS auth cookies cleared 
+PASS server sessions revoked after sign-out active=0
+PASS /workspace locked again after sign-out /sign-in
+PASS wrong password rejected with generic message 
+PASS no browser errors 
+summary: 11/11 PASS; active sessions left for test account: 0

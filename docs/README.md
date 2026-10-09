@@ -3,10 +3,10 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase02 implementation and closeout session.
+- Last reviewed: 2026-10-10 (Africa/Nairobi), hosted provisioning application and Phase 2 completion check.
 - Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
-- Remaining work/blockers: Maintain alignment with the Phase02 closeout; historical sections stay historical; Phase3 not authorized.
+- Remaining work/blockers: Maintain alignment with the Phase02 closeout; historical sections stay historical; Phase3 authorized (D-P03-001), NOT STARTED.
 - Evidence/report links: [Phase02 closeout](reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
@@ -84,5 +84,7 @@ Phase 02 **COMPLETED — 100% (13/13 verified task IDs)**, verdict **PASS WITH C
 - **Hygiene:** npm audit 0; no secrets found.
 
 Phase 1 conditions C3 (migration order) and C5 (anonymous streamed redirect) are resolved. **GitHub-hosted CI remains NOT VERIFIED.** Conditions P2-C1–P2-C8 are listed in the [closeout](reports/phase-02-closeout-2026-10-09.md#6-conditions-nonblocking-owner-tracked-limitations-and-deferred-work). Phase 3 is NOT STARTED and not authorized.
+
+**Update 2026-10-10:** Phase 2 completion reconfirmed after the provisioning hardening was merged to `main` (`756f3c4`) and applied to hosted dev; P2-C2, P2-C6 and P2-C8 are resolved ([integration report §9](reports/phase-01-02-integration-2026-10-09.md#9-hosted-application--2026-10-10)). Phase 3 is authorized ([D-P03-001](DECISION-LOG.md#d-p03-001--phase-3-authorization-and-sequencing)) but **NOT STARTED — 0%**.
 
 Navigation: [Phase2 closeout](reports/phase-02-closeout-2026-10-09.md), [every-document review](reports/phase-02-document-review-2026-10-09.md), [evidence](reports/evidence/phase-02-2026-10-09/), [Phase2 specification](phases/phase-02-farmer-registry.md). Current inventory: 83 Markdown documents.

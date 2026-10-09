@@ -1,0 +1,61 @@
+{
+ "project": "sudqhluwsaijvjjcegpv",
+ "startedAt": "2026-10-09T21:31:34.678Z",
+ "steps": [],
+ "checks": [
+  {
+   "name": "connected as postgres, not superuser",
+   "result": "PASS",
+   "detail": {
+    "u": "postgres",
+    "superuser": false
+   }
+  },
+  {
+   "name": "no anon/authenticated/PUBLIC privilege on any public relation (incl. _prisma_migrations)",
+   "result": "PASS",
+   "detail": []
+  },
+  {
+   "name": "anon cannot touch _prisma_migrations",
+   "result": "PASS"
+  },
+  {
+   "name": "authenticated cannot touch _prisma_migrations",
+   "result": "PASS"
+  },
+  {
+   "name": "postgres default privileges do not grant browser roles",
+   "result": "PASS",
+   "detail": []
+  },
+  {
+   "name": "only residual: supabase_admin default privileges",
+   "result": "PASS",
+   "detail": [
+    "supabase_admin"
+   ]
+  },
+  {
+   "name": "no browser EXECUTE on public functions",
+   "result": "PASS",
+   "detail": []
+  },
+  {
+   "name": "policies present: 18 runtime + 1 storage",
+   "result": "PASS",
+   "detail": 19
+  },
+  {
+   "name": "private bucket private",
+   "result": "PASS"
+  }
+ ],
+ "appRows": {
+  "users": 1,
+  "farmers": 0,
+  "farms": 0
+ },
+ "finishedAt": "2026-10-09T21:31:39.950Z",
+ "summary": "9/9 PASS"
+}

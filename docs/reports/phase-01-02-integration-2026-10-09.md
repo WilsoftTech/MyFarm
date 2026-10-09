@@ -1,16 +1,18 @@
 # Phase 1 and Phase 2 integration — 2026-10-09
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — created this session from verified evidence.
+- Documentation review: REVIEWED — created 2026-10-09 from verified evidence; updated 2026-10-10 with the hosted application (§9).
 - Implementation status: REFERENCE ONLY — N/A (integration, provisioning-hardening and verification record).
-- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase1+2 integration and provisioning-hardening session.
-- Related phase/task IDs: Phase01 (MYF-P01-T001–T013); Phase02 (MYF-P02-T001–T013); conditions P2-C1–P2-C8; decisions D-INT-001, D-INT-002, D-P03-001–D-P03-004.
-- Verified completed work: main fast-forwarded to the verified Phase 2 head d85a773; provisioning hardening implemented and verified locally on branch phase-02-provisioning-hardening (5545257); sign-in restored for the dedicated test account.
-- Remaining work/blockers: push/merge of the provisioning-hardening branch and its application to hosted dev need separate owner approval; GitHub-hosted CI remains NOT VERIFIED.
-- Evidence/report links: [Evidence folder](evidence/integration-2026-10-09/); [Phase02 closeout](phase-02-closeout-2026-10-09.md); [decision log](../DECISION-LOG.md#d-int-001--phase-1-and-phase-2-integration-into-main).
+- Last reviewed: 2026-10-10 (Africa/Nairobi), hosted provisioning application and Phase 2 completion check.
+- Related phase/task IDs: Phase01 (MYF-P01-T001–T013); Phase02 (MYF-P02-T001–T013); conditions P2-C1–P2-C8, INT-C1–INT-C7; decisions D-INT-001–D-INT-003, D-P03-001–D-P03-004.
+- Verified completed work: main fast-forwarded to d85a773, then to 756f3c4 (Step B); provisioning hardening verified locally (5545257) and applied to hosted dev (9/9 read-only checks); public sign-up disabled; sign-in/sign-out 11/11 after the change; Supabase advisors run.
+- Remaining work/blockers: No Phase 2 blocker. Open conditions: P2-C1, P2-C3–P2-C5, P2-C7, INT-C3–INT-C7. GitHub-hosted CI remains NOT VERIFIED. Phase 3 not started.
+- Evidence/report links: [Evidence folder](evidence/integration-2026-10-09/); [hosted application](evidence/integration-2026-10-09/hosted-apply/); [Phase02 closeout](phase-02-closeout-2026-10-09.md); [decision log](../DECISION-LOG.md#d-int-001--phase-1-and-phase-2-integration-into-main).
 <!-- MYFARM-STATUS-END -->
 
 **Outcome.** Phase 1 and Phase 2 are on `main` at **`d85a773`**, integrated by fast-forward with no deployment triggered. The database provisioning hardening the owner required before Phase 3 is implemented on branch **`phase-02-provisioning-hardening` (`5545257`)** and verified locally: the clean-clone CI reproduction passes 11/11 steps. It is **not pushed, not merged and not applied to any hosted database**. GitHub-hosted CI remains **NOT VERIFIED** (billing lock), under a one-time owner exception for this integration.
+
+**Update 2026-10-10.** Step B is on `main` (`756f3c4`, fast-forward, no deployment) and its provider files are **applied to hosted dev**: read-only verification 9/9 PASS, public sign-up off, sign-in/sign-out 11/11 PASS, Supabase advisors 0 ERROR. P2-C2, P2-C6, P2-C8, INT-C1 and INT-C2 are resolved. See [§9](#9-hosted-application--2026-10-10). The paragraph above is historical.
 
 ## 1. Authorizations
 
@@ -126,29 +128,75 @@ Environment: Windows 11, Node 24.13.0, Docker 28.4.0. Harness copies are in [har
 
 ## 7. Conditions
 
-| ID | Status after this session |
+Status as of 2026-10-10 (§9); the 2026-10-09 wording is kept where nothing changed.
+
+| ID | Status |
 |---|---|
 | P2-C1 Hosted CI | **Open.** Still billing-locked; NOT VERIFIED |
-| P2-C2 Provider SQL outside the Prisma chain | **Resolved locally:** provisioning order recorded once, files transactional and re-runnable, tested as written on fresh, rerun and upgraded databases. Hosted application of the updated files is pending owner authorization (INT-C1) |
+| P2-C2 Provider SQL outside the Prisma chain | **Resolved 2026-10-10.** Provisioning order recorded once, files transactional and re-runnable, tested as written on fresh, rerun and upgraded databases, and the updated files are applied to hosted dev (§9) |
 | P2-C3 Mixed CRLF/LF checksums in hosted dev | Open, unchanged (checksums deliberately untouched); provider SQL now also pinned to LF |
 | P2-C4 Proposed engineering defaults | Open, unchanged |
 | P2-C5 Retention policy | Open, unchanged |
-| P2-C6 Supabase advisors | Open: the Supabase MCP server still needs authorization |
+| P2-C6 Supabase advisors | **Resolved 2026-10-10.** Security and performance advisors run: 0 ERROR, 1 WARN (INT-C6), 4 INFO (one is INT-C7) |
 | P2-C7 Revoked-but-unexpired JWT redirect | Open, unchanged |
-| P2-C8 Browser roles on `_prisma_migrations` | **Fix ready and verified locally** (fresh, upgrade and Supabase-image runs). **Hosted dev still exposed** until `browser-role-lockdown.sql` is applied there (INT-C1). Not declared resolved |
+| P2-C8 Browser roles on `_prisma_migrations` | **Resolved 2026-10-10.** `anon` and `authenticated` hold no privilege on it in hosted dev (§9) |
 
 New conditions:
 
 | ID | Condition | Owner | Deadline |
 |---|---|---|---|
-| INT-C1 | Apply the updated provider files (or at least `browser-role-lockdown.sql`) to hosted dev, as `postgres`, after the branch is approved | Project owner (authorization) / engineering | Before Phase 3 applies its first migration to hosted dev |
-| INT-C2 | Supabase Auth allows public sign-up (`disable_signup: false`) although MyFarm accounts are owner-provisioned; strangers can create Auth users (they reach `/forbidden`) | Project owner | Before any real user data; recommended now |
+| INT-C1 | Apply the updated provider files (or at least `browser-role-lockdown.sql`) to hosted dev, as `postgres`, after the branch is approved | Project owner (authorization) / engineering | **Resolved 2026-10-10** (§9) |
+| INT-C2 | Supabase Auth allows public sign-up (`disable_signup: false`) although MyFarm accounts are owner-provisioned; strangers can create Auth users (they reach `/forbidden`) | Project owner | **Resolved 2026-10-10:** the owner disabled sign-up; `disable_signup: true` confirmed |
 | INT-C3 | `supabase_admin` default privileges in `public` still grant browser roles; not changeable by `postgres` | Engineering | Monitored by the lockdown on every run; raise with Supabase if `supabase_admin` ever creates objects in `public` |
 | INT-C4 | Public repository with an unprotected `main` | Project owner | Before collaborators or production releases |
 | INT-C5 | The owner's working tree `D:/Myfarm` is still on `codex/phase-01-closeout` (Phase 1 code) and holds an uncommitted one-line edit to `docs/reports/phase-01-local-verification.md` not made in this session | Project owner | Before using Phase 2 features locally |
+| INT-C6 | Supabase advisor WARN: leaked-password protection (HaveIBeenPwned check) is disabled in Supabase Auth. It may depend on the Supabase plan | Project owner | Before any real user accounts |
+| INT-C7 | Advisor INFO: the composite foreign keys `Farm(ownerFarmerId, tenantId)`, `FarmMember(farmId, tenantId)` and `Plot(farmId, tenantId)` have no index in key-column order | Engineering | Review in a future additive migration, before production; no applied migration is edited |
 
 ## 8. Phase 3 readiness
 
 Phase 3 is **authorized** ([D-P03-001](../DECISION-LOG.md#d-p03-001--phase-3-authorization-and-sequencing)), and its blocking questions Q07 and Q08 are resolved by owner decision. Local CI is extended to Phase 3. Phase 3 is **NOT STARTED — 0%**: it begins from `phase-02-provisioning-hardening`. New Phase 3 tables are covered by the lockdown when the provisioning list is rerun after its migration.
 
 **Next actions needing the owner:** approve pushing `phase-02-provisioning-hardening` and fast-forwarding `main` to it; authorize applying the updated provider files to hosted dev (INT-C1); disable public sign-up (INT-C2); restore GitHub Actions billing (P2-C1).
+
+**Update 2026-10-10:** the first three are done (§9). Phase 3 remains **NOT STARTED — 0%**; per the owner's instruction of 2026-10-10 it was not started in this session. It now starts from `main` (`756f3c4` or later), with task MYF-P03-T001, when the owner says so.
+
+## 9. Hosted application — 2026-10-10
+
+**Push (2026-10-09).** `phase-02-provisioning-hardening` pushed and `main` fast-forwarded `d85a773 → 756f3c4` (no force). The ~2-minute GitHub watches show no deployments or commit statuses; Vercel/Render suites stayed `queued` with 0 runs, and Actions failed on the billing lock ([04](evidence/integration-2026-10-09/integration/04-after-push-provisioning-branch.log), [05](evidence/integration-2026-10-09/integration/05-after-ff-main-to-756f3c4.log)).
+
+**Application (INT-C1, [D-INT-003](../DECISION-LOG.md#d-int-003--hosted-application-of-the-provisioning-files)).** The five provider files were run verbatim, in manifest order, against hosted dev `sudqhluwsaijvjjcegpv` as `postgres`. They were sent through the Supabase MCP server, whose OAuth grant is scoped to that project. The preflight confirmed the project, the role and 3/3 applied migrations, and no migration was touched. Every file returned success. The first `runtime-role.sql` call timed out without a response, so it was rerun (the file is re-runnable) and then succeeded ([apply.log](evidence/integration-2026-10-09/hosted-apply/apply.log)).
+
+**Sign-up (INT-C2).** The owner turned off “Allow new users to sign up”; the public Auth settings now report `disable_signup: true`.
+
+**Read-only verification** (`hosted-verify.mjs`, `BEGIN READ ONLY … ROLLBACK`; [harness](evidence/integration-2026-10-09/harness/hosted-verify.mjs.txt)): **9/9 PASS**, against 4/9 before.
+
+| Check | Before | After |
+|---|---|---|
+| Connected as `postgres`, not superuser | PASS | PASS |
+| No `anon`/`authenticated`/PUBLIC privilege on any `public` relation | FAIL (`_prisma_migrations`) | PASS |
+| `anon` / `authenticated` cannot touch `_prisma_migrations` | FAIL / FAIL | PASS / PASS |
+| `postgres` default privileges grant browser roles nothing | FAIL (tables, sequences, functions) | PASS |
+| Only residual default-privilege grantor is `supabase_admin` (INT-C3) | FAIL (`postgres`, `supabase_admin`) | PASS |
+| No browser EXECUTE on `public` functions | PASS | PASS |
+| 18 runtime policies + 1 storage policy | PASS | PASS |
+| `myfarm-private` bucket private | PASS | PASS |
+
+Evidence: [verify-before](evidence/integration-2026-10-09/hosted-apply/verify-before.json), [verify-after](evidence/integration-2026-10-09/hosted-apply/verify-after.json).
+
+**Nothing else changed** ([catalog-diff.log](evidence/integration-2026-10-09/hosted-apply/catalog-diff.log)):
+- **Expected removals:** 16 `_prisma_migrations` grants to `anon`/`authenticated` were removed, and `postgres` default privileges in `public` now list only `postgres` and `service_role`.
+- **Unchanged:** policies, column grants, bucket and application row counts.
+- **Runtime role:** every `myfarm_runtime` grant, policy and function privilege is identical.
+- **One checksum change:** the `myfarm_can_read_storage` body checksum changed only because hosted dev previously held a CRLF copy of the same text. It now holds the repository's LF copy; the logic is identical.
+
+**Sign-in/sign-out after the change:** **11/11 PASS** against a local production build of `main`'s application code. `d85a773` and `756f3c4` differ only in SQL, tests and docs. Signing out revoked the test account's sessions, and 0 were left ([journey-after-apply.log](evidence/integration-2026-10-09/sign-in/journey-after-apply.log)).
+
+**Supabase advisors (P2-C6):**
+- **Security:** 1 WARN, leaked-password protection disabled (INT-C6), and 1 INFO, the intentional deny-all RLS on `_prisma_migrations`.
+- **Performance:** 3 INFO for unindexed composite foreign keys (INT-C7) and 1 INFO for an unused index on a near-empty database.
+- **Errors:** none ([advisors](evidence/integration-2026-10-09/hosted-apply/advisors-2026-10-10.json)).
+
+**Permission note:** the auto-mode classifier blocked the first two write attempts; the files then ran under per-call owner approval.
+
+**Phase 2 completion confirmed.** Phase 2 stays **COMPLETED — 100% (13/13)**, verdict **PASS WITH CONDITIONS — LOCAL VERIFICATION**. Its hosted provisioning conditions are now closed in hosted dev. The remaining conditions are nonblocking and owner-tracked: P2-C1, P2-C3, P2-C4, P2-C5, P2-C7 and INT-C3–INT-C7. GitHub-hosted CI is still **NOT VERIFIED**.

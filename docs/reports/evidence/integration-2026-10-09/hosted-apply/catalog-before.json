@@ -1,0 +1,1898 @@
+{
+ "role": {
+  "u": "postgres",
+  "superuser": false
+ },
+ "policies": [
+  {
+   "schemaname": "public",
+   "tablename": "AuditEvent",
+   "policyname": "myfarm_server_audit_append",
+   "cmd": "INSERT",
+   "roles": "{myfarm_runtime}",
+   "qual": null,
+   "with_check": "true"
+  },
+  {
+   "schemaname": "public",
+   "tablename": "AuditEvent",
+   "policyname": "myfarm_server_audit_read",
+   "cmd": "SELECT",
+   "roles": "{myfarm_runtime}",
+   "qual": "true",
+   "with_check": null
+  },
+  {
+   "schemaname": "public",
+   "tablename": "Farm",
+   "policyname": "myfarm_server_farm_create",
+   "cmd": "INSERT",
+   "roles": "{myfarm_runtime}",
+   "qual": null,
+   "with_check": "(EXISTS ( SELECT 1\n   FROM (\"Farmer\" f\n     JOIN \"Membership\" m ON (((m.\"userId\" = f.\"userId\") AND (m.\"organizationId\" = f.\"tenantId\"))))\n  WHERE ((f.id = \"Farm\".\"ownerFarmerId\") AND (f.\"tenantId\" = \"Farm\".\"tenantId\") AND (f.\"userId\" = \"Farm\".\"createdBy\") AND (m.role = 'FARMER'::\"MembershipRole\") AND (m.status = 'ACTIVE'::\"MembershipStatus\"))))"
+  },
+  {
+   "schemaname": "public",
+   "tablename": "Farm",
+   "policyname": "myfarm_server_farm_read",
+   "cmd": "SELECT",
+   "roles": "{myfarm_runtime}",
+   "qual": "true",
+   "with_check": null
+  },
+  {
+   "schemaname": "public",
+   "tablename": "FarmMember",
+   "policyname": "myfarm_server_farm_member_create",
+   "cmd": "INSERT",
+   "roles": "{myfarm_runtime}",
+   "qual": null,
+   "with_check": "((role = 'OWNER'::\"FarmMemberRole\") AND (status = 'ACTIVE'::\"MembershipStatus\") AND (EXISTS ( SELECT 1\n   FROM (\"Farm\" fa\n     JOIN \"Farmer\" f ON ((f.id = fa.\"ownerFarmerId\")))\n  WHERE ((fa.id = \"FarmMember\".\"farmId\") AND (fa.\"tenantId\" = \"FarmMember\".\"tenantId\") AND (f.\"userId\" = \"FarmMember\".\"userId\")))))"
+  },
+  {
+   "schemaname": "public",
+   "tablename": "FarmMember",
+   "policyname": "myfarm_server_farm_member_read",
+   "cmd": "SELECT",
+   "roles": "{myfarm_runtime}",
+   "qual": "true",
+   "with_check": null
+  },
+  {
+   "schemaname": "public",
+   "tablename": "Farmer",
+   "policyname": "myfarm_server_farmer_create",
+   "cmd": "INSERT",
+   "roles": "{myfarm_runtime}",
+   "qual": null,
+   "with_check": "(EXISTS ( SELECT 1\n   FROM \"Membership\" m\n  WHERE ((m.\"userId\" = \"Farmer\".\"userId\") AND (m.\"organizationId\" = \"Farmer\".\"tenantId\") AND (m.role = 'FARMER'::\"MembershipRole\") AND (m.status = 'ACTIVE'::\"MembershipStatus\"))))"
+  },
+  {
+   "schemaname": "public",
+   "tablename": "Farmer",
+   "policyname": "myfarm_server_farmer_read",
+   "cmd": "SELECT",
+   "roles": "{myfarm_runtime}",
+   "qual": "true",
+   "with_check": null
+  },
+  {
+   "schemaname": "public",
+   "tablename": "FarmerProfile",
+   "policyname": "myfarm_server_profile_create",
+   "cmd": "INSERT",
+   "roles": "{myfarm_runtime}",
+   "qual": null,
+   "with_check": "(EXISTS ( SELECT 1\n   FROM \"Farmer\" f\n  WHERE ((f.id = \"FarmerProfile\".\"farmerId\") AND (f.\"userId\" = \"FarmerProfile\".\"updatedBy\"))))"
+  },
+  {
+   "schemaname": "public",
+   "tablename": "FarmerProfile",
+   "policyname": "myfarm_server_profile_read",
+   "cmd": "SELECT",
+   "roles": "{myfarm_runtime}",
+   "qual": "true",
+   "with_check": null
+  },
+  {
+   "schemaname": "public",
+   "tablename": "FarmerProfile",
+   "policyname": "myfarm_server_profile_update",
+   "cmd": "UPDATE",
+   "roles": "{myfarm_runtime}",
+   "qual": "true",
+   "with_check": "(EXISTS ( SELECT 1\n   FROM \"Farmer\" f\n  WHERE ((f.id = \"FarmerProfile\".\"farmerId\") AND (f.\"userId\" = \"FarmerProfile\".\"updatedBy\"))))"
+  },
+  {
+   "schemaname": "public",
+   "tablename": "Membership",
+   "policyname": "myfarm_server_membership_read",
+   "cmd": "SELECT",
+   "roles": "{myfarm_runtime}",
+   "qual": "true",
+   "with_check": null
+  },
+  {
+   "schemaname": "public",
+   "tablename": "Membership",
+   "policyname": "myfarm_server_personal_membership_create",
+   "cmd": "INSERT",
+   "roles": "{myfarm_runtime}",
+   "qual": null,
+   "with_check": "((role = 'FARMER'::\"MembershipRole\") AND (status = 'ACTIVE'::\"MembershipStatus\") AND (EXISTS ( SELECT 1\n   FROM \"Organization\" o\n  WHERE ((o.id = \"Membership\".\"organizationId\") AND (o.kind = 'PERSONAL'::\"OrganizationKind\")))) AND (NOT (EXISTS ( SELECT 1\n   FROM \"Membership\" m\n  WHERE (m.\"organizationId\" = \"Membership\".\"organizationId\")))))"
+  },
+  {
+   "schemaname": "public",
+   "tablename": "Organization",
+   "policyname": "myfarm_server_organization_read",
+   "cmd": "SELECT",
+   "roles": "{myfarm_runtime}",
+   "qual": "true",
+   "with_check": null
+  },
+  {
+   "schemaname": "public",
+   "tablename": "Organization",
+   "policyname": "myfarm_server_personal_organization_create",
+   "cmd": "INSERT",
+   "roles": "{myfarm_runtime}",
+   "qual": null,
+   "with_check": "(kind = 'PERSONAL'::\"OrganizationKind\")"
+  },
+  {
+   "schemaname": "public",
+   "tablename": "Plot",
+   "policyname": "myfarm_server_plot_create",
+   "cmd": "INSERT",
+   "roles": "{myfarm_runtime}",
+   "qual": null,
+   "with_check": "(EXISTS ( SELECT 1\n   FROM \"FarmMember\" fm\n  WHERE ((fm.\"farmId\" = \"Plot\".\"farmId\") AND (fm.\"tenantId\" = \"Plot\".\"tenantId\") AND (fm.\"userId\" = \"Plot\".\"createdBy\") AND (fm.status = 'ACTIVE'::\"MembershipStatus\"))))"
+  },
+  {
+   "schemaname": "public",
+   "tablename": "Plot",
+   "policyname": "myfarm_server_plot_read",
+   "cmd": "SELECT",
+   "roles": "{myfarm_runtime}",
+   "qual": "true",
+   "with_check": null
+  },
+  {
+   "schemaname": "public",
+   "tablename": "User",
+   "policyname": "myfarm_server_user_read",
+   "cmd": "SELECT",
+   "roles": "{myfarm_runtime}",
+   "qual": "true",
+   "with_check": null
+  },
+  {
+   "schemaname": "storage",
+   "tablename": "objects",
+   "policyname": "myfarm_scoped_private_read",
+   "cmd": "SELECT",
+   "roles": "{authenticated}",
+   "qual": "((bucket_id = 'myfarm-private'::text) AND myfarm_private.myfarm_can_read_storage(name))",
+   "with_check": null
+  }
+ ],
+ "relationAcl": [
+  {
+   "nspname": "public",
+   "relname": "AuditEvent",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "myfarm_runtime",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "AuditEvent",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "myfarm_runtime",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "AuditEvent",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "DELETE"
+  },
+  {
+   "nspname": "public",
+   "relname": "AuditEvent",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "AuditEvent",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "MAINTAIN"
+  },
+  {
+   "nspname": "public",
+   "relname": "AuditEvent",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "nspname": "public",
+   "relname": "AuditEvent",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "AuditEvent",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "TRIGGER"
+  },
+  {
+   "nspname": "public",
+   "relname": "AuditEvent",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "AuditEvent",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "AuditEvent",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "DELETE"
+  },
+  {
+   "nspname": "public",
+   "relname": "AuditEvent",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "AuditEvent",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "MAINTAIN"
+  },
+  {
+   "nspname": "public",
+   "relname": "AuditEvent",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "nspname": "public",
+   "relname": "AuditEvent",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "AuditEvent",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "TRIGGER"
+  },
+  {
+   "nspname": "public",
+   "relname": "AuditEvent",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "AuditEvent",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farm",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "myfarm_runtime",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farm",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "myfarm_runtime",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farm",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "DELETE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farm",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farm",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "MAINTAIN"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farm",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farm",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farm",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "TRIGGER"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farm",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farm",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farm",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "DELETE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farm",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farm",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "MAINTAIN"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farm",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farm",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farm",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "TRIGGER"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farm",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farm",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmMember",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "myfarm_runtime",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmMember",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "myfarm_runtime",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmMember",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "DELETE"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmMember",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmMember",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "MAINTAIN"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmMember",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmMember",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmMember",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "TRIGGER"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmMember",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmMember",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmMember",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "DELETE"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmMember",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmMember",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "MAINTAIN"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmMember",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmMember",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmMember",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "TRIGGER"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmMember",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmMember",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farmer",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "myfarm_runtime",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farmer",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "myfarm_runtime",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farmer",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "DELETE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farmer",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farmer",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "MAINTAIN"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farmer",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farmer",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farmer",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "TRIGGER"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farmer",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farmer",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farmer",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "DELETE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farmer",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farmer",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "MAINTAIN"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farmer",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farmer",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farmer",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "TRIGGER"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farmer",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Farmer",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmerProfile",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "myfarm_runtime",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmerProfile",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "myfarm_runtime",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmerProfile",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "DELETE"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmerProfile",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmerProfile",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "MAINTAIN"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmerProfile",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmerProfile",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmerProfile",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "TRIGGER"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmerProfile",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmerProfile",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmerProfile",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "DELETE"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmerProfile",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmerProfile",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "MAINTAIN"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmerProfile",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmerProfile",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmerProfile",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "TRIGGER"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmerProfile",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "FarmerProfile",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Membership",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "myfarm_runtime",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Membership",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "myfarm_runtime",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Membership",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "DELETE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Membership",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Membership",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "MAINTAIN"
+  },
+  {
+   "nspname": "public",
+   "relname": "Membership",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "nspname": "public",
+   "relname": "Membership",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Membership",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "TRIGGER"
+  },
+  {
+   "nspname": "public",
+   "relname": "Membership",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Membership",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Membership",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "DELETE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Membership",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Membership",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "MAINTAIN"
+  },
+  {
+   "nspname": "public",
+   "relname": "Membership",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "nspname": "public",
+   "relname": "Membership",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Membership",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "TRIGGER"
+  },
+  {
+   "nspname": "public",
+   "relname": "Membership",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Membership",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Organization",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "myfarm_runtime",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Organization",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "myfarm_runtime",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Organization",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "DELETE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Organization",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Organization",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "MAINTAIN"
+  },
+  {
+   "nspname": "public",
+   "relname": "Organization",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "nspname": "public",
+   "relname": "Organization",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Organization",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "TRIGGER"
+  },
+  {
+   "nspname": "public",
+   "relname": "Organization",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Organization",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Organization",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "DELETE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Organization",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Organization",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "MAINTAIN"
+  },
+  {
+   "nspname": "public",
+   "relname": "Organization",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "nspname": "public",
+   "relname": "Organization",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Organization",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "TRIGGER"
+  },
+  {
+   "nspname": "public",
+   "relname": "Organization",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Organization",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Plot",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "myfarm_runtime",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Plot",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "myfarm_runtime",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Plot",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "DELETE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Plot",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Plot",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "MAINTAIN"
+  },
+  {
+   "nspname": "public",
+   "relname": "Plot",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "nspname": "public",
+   "relname": "Plot",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Plot",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "TRIGGER"
+  },
+  {
+   "nspname": "public",
+   "relname": "Plot",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Plot",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Plot",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "DELETE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Plot",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Plot",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "MAINTAIN"
+  },
+  {
+   "nspname": "public",
+   "relname": "Plot",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "nspname": "public",
+   "relname": "Plot",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "Plot",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "TRIGGER"
+  },
+  {
+   "nspname": "public",
+   "relname": "Plot",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "Plot",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "User",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "myfarm_runtime",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "User",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "DELETE"
+  },
+  {
+   "nspname": "public",
+   "relname": "User",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "User",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "MAINTAIN"
+  },
+  {
+   "nspname": "public",
+   "relname": "User",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "nspname": "public",
+   "relname": "User",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "User",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "TRIGGER"
+  },
+  {
+   "nspname": "public",
+   "relname": "User",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "User",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "User",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "DELETE"
+  },
+  {
+   "nspname": "public",
+   "relname": "User",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "User",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "MAINTAIN"
+  },
+  {
+   "nspname": "public",
+   "relname": "User",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "nspname": "public",
+   "relname": "User",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "User",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "TRIGGER"
+  },
+  {
+   "nspname": "public",
+   "relname": "User",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "User",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "anon",
+   "privilege_type": "DELETE"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "anon",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "anon",
+   "privilege_type": "MAINTAIN"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "anon",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "anon",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "anon",
+   "privilege_type": "TRIGGER"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "anon",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "anon",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "authenticated",
+   "privilege_type": "DELETE"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "authenticated",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "authenticated",
+   "privilege_type": "MAINTAIN"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "authenticated",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "authenticated",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "authenticated",
+   "privilege_type": "TRIGGER"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "authenticated",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "authenticated",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "DELETE"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "MAINTAIN"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "TRIGGER"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "postgres",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "DELETE"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "INSERT"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "MAINTAIN"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "REFERENCES"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "SELECT"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "TRIGGER"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "TRUNCATE"
+  },
+  {
+   "nspname": "public",
+   "relname": "_prisma_migrations",
+   "relkind": "r",
+   "relrowsecurity": true,
+   "grantee": "service_role",
+   "privilege_type": "UPDATE"
+  }
+ ],
+ "columnAcl": [
+  {
+   "relname": "FarmerProfile",
+   "attname": "alternativePhone",
+   "rolname": "myfarm_runtime",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "relname": "FarmerProfile",
+   "attname": "district",
+   "rolname": "myfarm_runtime",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "relname": "FarmerProfile",
+   "attname": "mainActivities",
+   "rolname": "myfarm_runtime",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "relname": "FarmerProfile",
+   "attname": "name",
+   "rolname": "myfarm_runtime",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "relname": "FarmerProfile",
+   "attname": "ownershipType",
+   "rolname": "myfarm_runtime",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "relname": "FarmerProfile",
+   "attname": "phone",
+   "rolname": "myfarm_runtime",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "relname": "FarmerProfile",
+   "attname": "preferredLanguage",
+   "rolname": "myfarm_runtime",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "relname": "FarmerProfile",
+   "attname": "subcounty",
+   "rolname": "myfarm_runtime",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "relname": "FarmerProfile",
+   "attname": "updatedAt",
+   "rolname": "myfarm_runtime",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "relname": "FarmerProfile",
+   "attname": "updatedBy",
+   "rolname": "myfarm_runtime",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "relname": "FarmerProfile",
+   "attname": "version",
+   "rolname": "myfarm_runtime",
+   "privilege_type": "UPDATE"
+  },
+  {
+   "relname": "FarmerProfile",
+   "attname": "village",
+   "rolname": "myfarm_runtime",
+   "privilege_type": "UPDATE"
+  }
+ ],
+ "functions": [
+  {
+   "nspname": "myfarm_private",
+   "signature": "myfarm_private.myfarm_can_read_storage(text)",
+   "prosecdef": true,
+   "body": "52a3abc064ae27c709c59974da234be6",
+   "grantee": "authenticated",
+   "privilege_type": "EXECUTE"
+  },
+  {
+   "nspname": "myfarm_private",
+   "signature": "myfarm_private.myfarm_can_read_storage(text)",
+   "prosecdef": true,
+   "body": "52a3abc064ae27c709c59974da234be6",
+   "grantee": "postgres",
+   "privilege_type": "EXECUTE"
+  },
+  {
+   "nspname": "myfarm_private",
+   "signature": "myfarm_private.myfarm_session_is_active(uuid,uuid)",
+   "prosecdef": true,
+   "body": "7a7e83fe15c9a3ed845f28dd301b8131",
+   "grantee": "myfarm_runtime",
+   "privilege_type": "EXECUTE"
+  },
+  {
+   "nspname": "myfarm_private",
+   "signature": "myfarm_private.myfarm_session_is_active(uuid,uuid)",
+   "prosecdef": true,
+   "body": "7a7e83fe15c9a3ed845f28dd301b8131",
+   "grantee": "postgres",
+   "privilege_type": "EXECUTE"
+  },
+  {
+   "nspname": "public",
+   "signature": "rls_auto_enable()",
+   "prosecdef": true,
+   "body": "99be20677b456ea8d3be47bdd44fb369",
+   "grantee": "postgres",
+   "privilege_type": "EXECUTE"
+  },
+  {
+   "nspname": "public",
+   "signature": "rls_auto_enable()",
+   "prosecdef": true,
+   "body": "99be20677b456ea8d3be47bdd44fb369",
+   "grantee": "service_role",
+   "privilege_type": "EXECUTE"
+  }
+ ],
+ "defaultAcl": [
+  {
+   "creator": "postgres",
+   "schema": "public",
+   "type": "f",
+   "acl": "{postgres=X/postgres,anon=X/postgres,authenticated=X/postgres,service_role=X/postgres}"
+  },
+  {
+   "creator": "postgres",
+   "schema": "public",
+   "type": "r",
+   "acl": "{postgres=arwdDxtm/postgres,anon=arwdDxtm/postgres,authenticated=arwdDxtm/postgres,service_role=arwdDxtm/postgres}"
+  },
+  {
+   "creator": "postgres",
+   "schema": "public",
+   "type": "S",
+   "acl": "{postgres=rwU/postgres,anon=rwU/postgres,authenticated=rwU/postgres,service_role=rwU/postgres}"
+  },
+  {
+   "creator": "supabase_admin",
+   "schema": "public",
+   "type": "f",
+   "acl": "{postgres=X/supabase_admin,anon=X/supabase_admin,authenticated=X/supabase_admin,service_role=X/supabase_admin}"
+  },
+  {
+   "creator": "supabase_admin",
+   "schema": "public",
+   "type": "r",
+   "acl": "{postgres=arwdDxtm/supabase_admin,anon=arwdDxtm/supabase_admin,authenticated=arwdDxtm/supabase_admin,service_role=arwdDxtm/supabase_admin}"
+  },
+  {
+   "creator": "supabase_admin",
+   "schema": "public",
+   "type": "S",
+   "acl": "{postgres=rwU/supabase_admin,anon=rwU/supabase_admin,authenticated=rwU/supabase_admin,service_role=rwU/supabase_admin}"
+  }
+ ],
+ "buckets": [
+  {
+   "id": "myfarm-private",
+   "public": false
+  }
+ ],
+ "appRows": {
+  "users": 1,
+  "farmers": 0,
+  "farms": 0
+ }
+}

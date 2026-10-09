@@ -1,0 +1,10 @@
+# Deploy watch: ~2 minutes after the push, GitHub API. Captured 2026-10-09.
+--- deployments
+--- statuses
+--- suites
+coderabbitai	phase-02-provisioning-hardening	queued	-	0
+vercel	phase-02-provisioning-hardening	queued	-	0
+render	phase-02-provisioning-hardening	queued	-	0
+github-actions	phase-02-provisioning-hardening	completed	failure	1
+github-actions	main	completed	failure	1
+

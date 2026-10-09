@@ -3,10 +3,10 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase1+2 integration and provisioning-hardening session.
+- Last reviewed: 2026-10-10 (Africa/Nairobi), hosted provisioning application and Phase 2 completion check.
 - Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
-- Remaining work/blockers: Phase3 authorized (D-P03-001) to start after the provisioning-hardening branch; Step B not yet merged to main or applied to hosted dev; historical sections stay historical.
+- Remaining work/blockers: Phase3 authorized (D-P03-001), NOT STARTED; Step B is on main (756f3c4) and applied to hosted dev (D-INT-003); historical sections stay historical.
 - Evidence/report links: [Phase1+2 integration report](reports/phase-01-02-integration-2026-10-09.md); [Phase02 closeout](reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
@@ -217,6 +217,12 @@ APPROVED and EXECUTED 2026-10-09 (owner instructions “controlled integration o
 APPROVED by the owner 2026-10-09 in an isolated local worktree and test databases; IMPLEMENTED on branch `phase-02-provisioning-hardening`. Constraints set by the owner: provider SQL transactional and re-runnable; tests execute the real files on fresh and previously provisioned databases; default privileges verified for every object-creating role; browser-role grants reviewed before revoking, keeping intended Supabase API and Auth behavior; emulation is supplementary evidence only; no hosted database change; no edit to applied migrations or their checksums; no push/merge to `main` without separate approval.
 
 Outcome: `supabase/provisioning.json` is the single provisioning order; every provider file is one transaction and re-runnable; new `browser-role-lockdown.sql` removes browser-role access to public objects (including `_prisma_migrations`, P2-C8) and to objects created later. **Not applied to hosted dev**; that needs a separate owner authorization. [Integration report](reports/phase-01-02-integration-2026-10-09.md#4-step-b--database-provisioning-hardening).
+
+Update: pushed and `main` fast-forwarded to `756f3c4` on 2026-10-09; applied to hosted dev on 2026-10-10 under [D-INT-003](#d-int-003--hosted-application-of-the-provisioning-files).
+
+## D-INT-003 — Hosted application of the provisioning files
+
+APPROVED by the owner and EXECUTED 2026-10-10 (“approved. use mcp”). The five provider files in `supabase/provisioning.json` were applied verbatim to hosted dev `sudqhluwsaijvjjcegpv` as `postgres` through the project-scoped Supabase MCP server. Every call needed the owner's approval. No migration was applied or edited. The owner disabled public sign-up in the Supabase dashboard (INT-C2). Read-only verification passes 9/9 (4/9 before); the runtime role and its policies are unchanged; sign-in/sign-out passes 11/11. Resolves INT-C1, INT-C2, P2-C2 and P2-C8 in hosted dev; the advisor run resolves P2-C6. Phase 3 was not started. [Integration report §9](reports/phase-01-02-integration-2026-10-09.md#9-hosted-application--2026-10-10).
 
 ## D-P03-001 — Phase 3 authorization and sequencing
 

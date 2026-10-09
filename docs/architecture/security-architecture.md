@@ -3,7 +3,7 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: Phase01 scope COMPLETED — 100% (13/13 verified Phase01 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); Phase02 scope COMPLETED — 100% (13/13 verified Phase02 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); later-phase scope not counted.
-- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase1+2 integration and provisioning-hardening session.
+- Last reviewed: 2026-10-10 (Africa/Nairobi), hosted provisioning application and Phase 2 completion check.
 - Related phase/task IDs: Phase01 MYF-P01-T001–T013; Phase02 MYF-P02-T001–T013.
 - Verified completed work: Phase01 scope as previously verified; Phase02: farmer registry contracts/policies/migration/API/tests in this document's area verified (see the Phase 2 implementation section).
 - Remaining work/blockers: Phase02 conditions P2-C1–P2-C8 where applicable; later-phase scope pending authorization.
@@ -47,6 +47,8 @@ Phase 2 security controls ([closeout §3](../reports/phase-02-closeout-2026-10-0
 - **Probes:** 49/49 anonymous production probes and 48/48 live checks PASS.
 
 Open: Supabase advisors not run this session (P2-C6); `_prisma_migrations` browser-role grants (P2-C8).
+
+**Update 2026-10-10:** both resolved. Browser roles hold no privilege on any `public` object in hosted dev, including `_prisma_migrations`, and get no default privileges from `postgres`. The `supabase_admin` residual is INT-C3. The advisors show 0 ERROR and 1 WARN, leaked-password protection off (INT-C6). [Integration report §9](../reports/phase-01-02-integration-2026-10-09.md#9-hosted-application--2026-10-10).
 
 ## Where tenant isolation is enforced (2026-10-09)
 

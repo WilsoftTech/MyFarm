@@ -1,0 +1,31 @@
+# Hosted dev provider-file application, 2026-10-10 (Africa/Nairobi). Transcribed from this session's tool output.
+# Owner authorization: "approved. use mcp" (INT-C1). Executed through the Supabase MCP server (execute_sql),
+# OAuth-scoped to project_ref=sudqhluwsaijvjjcegpv. No Prisma migration was applied or edited.
+
+## Preflight (read-only)
+project URL: https://sudqhluwsaijvjjcegpv.supabase.co
+current_user=postgres session_user=postgres database=postgres
+_prisma_migrations finished: 3 (202610080001_foundation, 202610080101_private_grant_rate_limit, 202610090001_farmer_registry)
+
+## Provider files, in supabase/provisioning.json order (file text sent verbatim from branch at 756f3c4)
+1 foundation-hardening.sql     -> success (empty result set)
+2 private-storage.sql          -> success
+3 runtime-role.sql             -> first call: "The operation timed out" (no response; outcome unknown).
+                                  Read-only check found no other active sessions. Reran the file (re-runnable by design):
+                                  one retry returned "Invalid or expired requestState" before execution; next call -> success
+4 farmer-registry-runtime.sql  -> success
+5 browser-role-lockdown.sql    -> success. Its postcondition block would have raised on any leftover browser access.
+                                  The MCP result does not relay NOTICE/WARNING messages; the supabase_admin residual WARNING
+                                  is confirmed by the catalog instead (verify-after.json, INT-C3).
+
+## Spot check right after (read-only)
+anon/authenticated SELECT on _prisma_migrations: false/false
+browser grants on public relations: 0
+default-ACL grantors still granting browser roles in public: supabase_admin (S, f, r) only
+
+## Auth setting (owner, Supabase dashboard): "Allow new users to sign up" switched off (INT-C2)
+GET /auth/v1/settings (publishable key, read-only):
+settings: {"email":true,"disable_signup":true,"mailer_autoconfirm":false,"phone":false}
+
+## Read-only verification: node hosted-verify.mjs after  (BEGIN READ ONLY ... ROLLBACK)
+summary: 9/9 PASS (before: 4/9). See verify-after.json, catalog-after.json, catalog-diff.log.

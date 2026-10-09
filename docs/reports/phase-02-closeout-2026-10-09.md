@@ -6,7 +6,7 @@
 - Last reviewed: 2026-10-09 (Africa/Nairobi), Phase02 implementation and closeout session.
 - Related phase/task IDs: MYF-P02-T001–T013; MYF-P02-AC001–AC004; decisions D-P02-001–D-P02-008.
 - Verified completed work: 13/13 Phase02 tasks verified; local CI reproduction, database, live Supabase, anonymous production and security checks PASS.
-- Remaining work/blockers: No blocker. Nonblocking conditions P2-C1–P2-C8 (§6) with owner and deadline.
+- Remaining work/blockers: No blocker. As of 2026-10-10, P2-C2, P2-C6 and P2-C8 are resolved; P2-C1, P2-C3–P2-C5 and P2-C7 remain open (§6), nonblocking, with owner and deadline.
 - Evidence/report links: [Evidence folder](evidence/phase-02-2026-10-09/); [every-document review](phase-02-document-review-2026-10-09.md); [Phase 2 specification](../phases/phase-02-farmer-registry.md); [superseded interim closeout](phase-02-closeout-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
@@ -223,6 +223,8 @@ The 48 live checks cover:
 | P2-C8 | `anon`/`authenticated` hold table privileges on `_prisma_migrations` in hosted dev (RLS deny-all; pre-existing) | Engineering | Revoke before production |
 
 **Status update 2026-10-09 (integration):** P2-C2 resolved locally and P2-C8 fix ready (hosted dev still pending); see the [integration report](phase-01-02-integration-2026-10-09.md#7-conditions). The rest of this closeout is historical.
+
+**Status update 2026-10-10 (hosted application):** the provider files are applied to hosted dev and the Supabase advisors were run, so **P2-C2, P2-C6 and P2-C8 are resolved**. P2-C1, P2-C3, P2-C4, P2-C5 and P2-C7 stay open. Phase 2 completion is reconfirmed: COMPLETED — 100% (13/13), PASS WITH CONDITIONS — LOCAL VERIFICATION. See the [integration report §9](phase-01-02-integration-2026-10-09.md#9-hosted-application--2026-10-10).
 
 **Limitations:**
 

@@ -1,0 +1,59 @@
+// READ-ONLY verification of hosted dev provisioning state (BEGIN READ ONLY ... ROLLBACK). Usage: node hosted-verify.mjs <label>
+// Writes catalog-<label>.json and verify-<label>.json to the evidence folder. Prints no secrets.
+import { createRequire } from "node:module"; import fs from "node:fs"; import { spawnSync } from "node:child_process";
+const repo = "D:/Myfarm/.claude/worktrees/step-b";
+const out = repo + "/docs/reports/evidence/integration-2026-10-09/hosted-apply";
+const { env } = await import("file:///C:/Users/willi/AppData/Local/Temp/claude/d--Myfarm/055940f1-d2e2-419b-99cb-7dde526619dd/scratchpad/auth/env.mjs");
+const require = createRequire(repo + "/package.json"); const { Client } = require("pg");
+if (new URL(env.NEXT_PUBLIC_SUPABASE_URL).hostname !== "sudqhluwsaijvjjcegpv.supabase.co") throw new Error("Unexpected project");
+fs.mkdirSync(out, { recursive: true });
+const ca = fs.readFileSync(env.DATABASE_CA_CERT_PATH, "utf8");
+const clean = url => { const u = new URL(url); for (const k of ["ssl","sslmode","sslcert","sslkey","sslrootcert","uselibpqcompat"]) u.searchParams.delete(k); return u.toString(); };
+const connect = async url => { const c = new Client({ connectionString: clean(url), ssl: { rejectUnauthorized: true, ca }, connectionTimeoutMillis: 10000 }); await c.connect(); return c; };
+const admin = await connect(env.DIRECT_URL);
+const notices = []; admin.on("notice", n => notices.push(`${n.severity}: ${n.message}`));
+const q = async (sql, p = []) => (await admin.query(sql, p)).rows;
+const result = { project: "sudqhluwsaijvjjcegpv", startedAt: new Date().toISOString(), steps: [], checks: [] };
+const check = (name, ok, detail) => { result.checks.push({ name, result: ok ? "PASS" : "FAIL", detail }); console.log(ok ? "PASS" : "FAIL", name, detail === undefined ? "" : JSON.stringify(detail)); };
+const snapshot = async () => ({
+  role: (await q(`SELECT current_user AS u, (SELECT rolsuper FROM pg_roles WHERE rolname = current_user) AS superuser`))[0],
+  policies: await q(`SELECT schemaname, tablename, policyname, cmd, roles::text, qual, with_check FROM pg_policies WHERE schemaname IN ('public','storage') ORDER BY 1,2,3`),
+  relationAcl: await q(`SELECT n.nspname, c.relname, c.relkind, c.relrowsecurity, CASE WHEN a.grantee = 0 THEN 'PUBLIC' ELSE r.rolname END AS grantee, a.privilege_type
+    FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace LEFT JOIN LATERAL aclexplode(c.relacl) a ON true LEFT JOIN pg_roles r ON r.oid = a.grantee
+    WHERE n.nspname IN ('public','myfarm_private') AND c.relkind IN ('r','p','v','m','f','S') ORDER BY 1,2,5,6`),
+  columnAcl: await q(`SELECT c.relname, at.attname, r.rolname, a.privilege_type FROM pg_attribute at JOIN pg_class c ON c.oid = at.attrelid
+    CROSS JOIN LATERAL aclexplode(at.attacl) a JOIN pg_roles r ON r.oid = a.grantee WHERE c.relnamespace = 'public'::regnamespace ORDER BY 1,2,3,4`),
+  functions: await q(`SELECT n.nspname, p.oid::regprocedure::text AS signature, p.prosecdef, md5(p.prosrc) AS body, CASE WHEN a.grantee = 0 THEN 'PUBLIC' ELSE r.rolname END AS grantee, a.privilege_type
+    FROM pg_proc p JOIN pg_namespace n ON n.oid = p.pronamespace LEFT JOIN LATERAL aclexplode(coalesce(p.proacl, acldefault('f', p.proowner))) a ON true LEFT JOIN pg_roles r ON r.oid = a.grantee
+    WHERE n.nspname IN ('public','myfarm_private') ORDER BY 1,2,5,6`),
+  defaultAcl: await q(`SELECT pg_get_userbyid(d.defaclrole) AS creator, coalesce(n.nspname,'<global>') AS schema, d.defaclobjtype::text AS type, d.defaclacl::text AS acl
+    FROM pg_default_acl d LEFT JOIN pg_namespace n ON n.oid = d.defaclnamespace WHERE d.defaclnamespace IN (0, 'public'::regnamespace) ORDER BY 1,2,3`),
+  buckets: await q(`SELECT id, public FROM storage.buckets WHERE id = 'myfarm-private'`),
+  appRows: (await q(`SELECT (SELECT count(*) FROM "User")::int AS users, (SELECT count(*) FROM "Farmer")::int AS farmers, (SELECT count(*) FROM "Farm")::int AS farms`))[0],
+});
+const label = process.argv[2] ?? "check";
+await admin.query("BEGIN READ ONLY");
+try {
+  const s = await snapshot();
+  fs.writeFileSync(`${out}/catalog-${label}.json`, JSON.stringify(s, null, 1));
+  check("connected as postgres, not superuser", s.role.u === "postgres" && s.role.superuser === false, s.role);
+  const browser = s.relationAcl.filter(r => ["anon", "authenticated", "PUBLIC"].includes(r.grantee) && r.nspname === "public");
+  check("no anon/authenticated/PUBLIC privilege on any public relation (incl. _prisma_migrations)", browser.length === 0, browser.map(b => `${b.relname}:${b.grantee}:${b.privilege_type}`).slice(0, 6));
+  for (const role of ["anon", "authenticated"]) check(`${role} cannot touch _prisma_migrations`, !(await q(`SELECT has_table_privilege($1, 'public._prisma_migrations', 'SELECT,INSERT,UPDATE,DELETE,TRUNCATE') AS ok`, [role]))[0].ok);
+  const pgDefaults = s.defaultAcl.filter(d => d.creator === "postgres" && /(^|[{,])(anon|authenticated)=/.test(d.acl));
+  check("postgres default privileges do not grant browser roles", pgDefaults.length === 0, pgDefaults.map(d => `${d.schema}:${d.type}`));
+  const residual = [...new Set(s.defaultAcl.filter(d => /(^|[{,])(anon|authenticated)=/.test(d.acl)).map(d => d.creator))];
+  check("only residual: supabase_admin default privileges", JSON.stringify(residual) === '["supabase_admin"]', residual);
+  const fnBrowser = s.functions.filter(f => f.nspname === "public" && ["anon", "authenticated", "PUBLIC"].includes(f.grantee));
+  check("no browser EXECUTE on public functions", fnBrowser.length === 0, fnBrowser.map(f => f.signature));
+  check("policies present: 18 runtime + 1 storage", s.policies.filter(p => p.roles.includes("myfarm_runtime")).length === 18 && s.policies.some(p => p.policyname === "myfarm_scoped_private_read"), s.policies.length);
+  check("private bucket private", JSON.stringify(s.buckets) === JSON.stringify([{ id: "myfarm-private", public: false }]));
+  result.appRows = s.appRows;
+} finally {
+  await admin.query("ROLLBACK");
+  result.finishedAt = new Date().toISOString();
+  result.summary = `${result.checks.filter(c => c.result === "PASS").length}/${result.checks.length} PASS`;
+  fs.writeFileSync(`${out}/verify-${label}.json`, JSON.stringify(result, null, 1));
+  console.log("summary:", result.summary);
+  await admin.end();
+}

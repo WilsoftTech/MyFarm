@@ -3,10 +3,10 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase1+2 integration and provisioning-hardening session.
+- Last reviewed: 2026-10-10 (Africa/Nairobi), hosted provisioning application and Phase 2 completion check.
 - Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
-- Remaining work/blockers: Maintain alignment with the Phase02 closeout; historical sections stay historical; Phase3 not authorized.
+- Remaining work/blockers: Maintain alignment with the Phase02 closeout; historical sections stay historical; Phase3 authorized, NOT STARTED.
 - Evidence/report links: [Phase1+2 integration](phase-01-02-integration-2026-10-09.md); [Phase02 closeout](phase-02-closeout-2026-10-09.md); [Phase02 every-document review](phase-02-document-review-2026-10-09.md); [Phase01 closeout](phase-01-closeout-2026-10-08.md); [every-document review](phase-01-document-review-2026-10-08.md); [latest provider/security report](phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
@@ -63,3 +63,5 @@ Phase 1 conditions C3 (migration order) and C5 (anonymous streamed redirect) are
 ## Phase 1+2 integration and provisioning hardening (2026-10-09)
 
 [Integration report](phase-01-02-integration-2026-10-09.md), [evidence folder](evidence/integration-2026-10-09/): integration refs and deploy watches, read-only hosted browser-role review, clean-clone CI run on `5545257`, provisioning mutation checks, Supabase-image run, sign-in journey, npm audit and secret scan. GitHub-hosted CI remains NOT VERIFIED.
+
+2026-10-10 addendum ([§9](phase-01-02-integration-2026-10-09.md#9-hosted-application--2026-10-10)): hosted provider-file application (`hosted-apply/`: apply log, before/after catalog and 9/9 verification, catalog diff, Supabase advisors), sign-in journey after the change, and the `hosted-verify` harness.

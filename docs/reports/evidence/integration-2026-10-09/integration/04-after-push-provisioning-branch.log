@@ -1,0 +1,11 @@
+# Deploy watch: ~2 minutes after the push, GitHub API. Captured 2026-10-09.
+--- deployments
+--- statuses 756f3c4
+--- suites 756f3c4
+coderabbitai	phase-02-provisioning-hardening	queued	-	0
+vercel	phase-02-provisioning-hardening	queued	-	0
+render	phase-02-provisioning-hardening	queued	-	0
+github-actions	phase-02-provisioning-hardening	completed	failure	1
+--- actions annotation
+The job was not started because your account is locked due to a billing issue.
+

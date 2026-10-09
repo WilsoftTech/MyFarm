@@ -3,11 +3,11 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: COMPLETED — 100% (13/13 verified tasks; verdict PASS WITH CONDITIONS — LOCAL VERIFICATION).
-- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase02 implementation and closeout session.
+- Last reviewed: 2026-10-10 (Africa/Nairobi), hosted provisioning application and Phase 2 completion check.
 - Related phase/task IDs: Phase 02; MYF-P02-T001–T013; MYF-P02-AC001–AC004; D-P02-001–D-P02-008.
 - Verified completed work: MYF-P02-T001–T013 verified: registry module, migration 202610090001, runtime grants, API v1, mobile UI; AC001–AC004 and L gate PASS (local CI, database, live Supabase, probes).
-- Remaining work/blockers: No blocker. Nonblocking conditions P2-C1–P2-C8 (hosted CI, provider SQL, checksums, proposed defaults, retention policy, advisors, JWT redirect residual, migrations-table grants).
-- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [evidence](../reports/evidence/phase-02-2026-10-09/)
+- Remaining work/blockers: No blocker. Open nonblocking conditions P2-C1 (hosted CI), P2-C3 (checksums), P2-C4 (proposed defaults), P2-C5 (retention policy), P2-C7 (JWT redirect residual); P2-C2, P2-C6 and P2-C8 resolved 2026-10-10 after the provider files were applied to hosted dev.
+- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [hosted application 2026-10-10](../reports/phase-01-02-integration-2026-10-09.md#9-hosted-application--2026-10-10); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [evidence](../reports/evidence/phase-02-2026-10-09/)
 <!-- MYFARM-STATUS-END -->
 
 Status: **COMPLETED — 100% (13/13 verified task IDs)**, verdict PASS WITH CONDITIONS — LOCAL VERIFICATION, 2026-10-09 ([closeout](../reports/phase-02-closeout-2026-10-09.md)). Specification originally dated 2026-10-08; implementation was authorized by the owner ([D-P02-001–006](../DECISION-LOG.md#d-p02-001--phase2-started-before-the-phase1-exit-gate)). Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).

@@ -1,0 +1,12 @@
+{
+ "source": "Supabase MCP get_advisors, project sudqhluwsaijvjjcegpv, fetched 2026-10-10 after the provider files were applied. observed_at is the advisor's own timestamp.",
+ "security": [
+  {"name": "rls_enabled_no_policy", "level": "INFO", "finding": "Table public._prisma_migrations has RLS enabled, but no policies exist", "observed_at": "2026-10-09T21:34:00.322Z", "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0008_rls_enabled_no_policy", "disposition": "Intentional deny-all; browser roles now hold no privilege on the table either"},
+  {"name": "auth_leaked_password_protection", "level": "WARN", "finding": "Leaked password protection is currently disabled (HaveIBeenPwned check)", "remediation": "https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection", "disposition": "Supabase Auth setting; owner decision (INT-C6)"}
+ ],
+ "performance": [
+  {"name": "unindexed_foreign_keys", "level": "INFO", "findings": ["Farm_ownerFarmerId_tenantId_fkey on public.Farm", "FarmMember_farmId_tenantId_fkey on public.FarmMember", "Plot_farmId_tenantId_fkey on public.Plot"], "observed_at": "2026-10-09T21:33:59.761Z", "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0001_unindexed_foreign_keys", "disposition": "No covering index in FK column order; review in a future additive migration (INT-C7)"},
+  {"name": "unused_index", "level": "INFO", "findings": ["AuditEvent_tenantId_occurredAt_id_idx on public.AuditEvent"], "observed_at": "2026-10-09T21:33:59.761Z", "remediation": "https://supabase.com/docs/guides/database/database-linter?lint=0005_unused_index", "disposition": "Expected on a near-empty development database; already noted in Phase 1"}
+ ],
+ "summary": "0 ERROR; 1 WARN (Auth setting); 4 INFO"
+}
