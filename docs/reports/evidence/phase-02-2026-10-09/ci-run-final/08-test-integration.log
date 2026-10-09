@@ -1,0 +1,14 @@
+$ npm run test:integration
+
+> myfarm@0.1.0 test:integration
+> vitest run --project integration
+
+
+ RUN  v5.0.3 C:/Users/willi/AppData/Local/Temp/claude/D--Myfarm/ad782f50-9810-4f82-8399-5ae467869610/scratchpad/ci-final
+
+
+ Test Files  3 passed (3)
+      Tests  33 passed (33)
+   Start at  10:12:23
+   Duration  4.63s (tests 82%, import 13%, transform 5%)
+

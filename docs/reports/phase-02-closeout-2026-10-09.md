@@ -138,7 +138,7 @@ Residual risks:
 | 10 | `npx playwright install chromium` | PASS | [log](evidence/phase-02-2026-10-09/ci-run-e065e7a/10-playwright-install.log) |
 | 11 | `npm run test:e2e` (production `next start`) | **PASS, 24/24** (12 desktop Chrome + 12 Pixel 7) | [log](evidence/phase-02-2026-10-09/ci-run-e065e7a/11-test-e2e.log) |
 
-Steps per [steps.json](evidence/phase-02-2026-10-09/ci-run-e065e7a/steps.json). A final re-run on the documentation head is recorded in §7.
+Steps per [steps.json](evidence/phase-02-2026-10-09/ci-run-e065e7a/steps.json). A final re-run on the documentation head `9c99aa1` also passed 11/11 (§7).
 
 | Suite | Environment | Result | Evidence |
 |---|---|---|---|
@@ -250,4 +250,4 @@ The 48 live checks cover:
   - the affected architecture and engineering specifications;
   - the [interim 2026-10-08 closeout](phase-02-closeout-2026-10-08.md), now marked superseded.
 - **Source extract:** body untouched; metadata only.
-- **Final local CI re-run on the documentation head:** see [ci-run-final/steps.json](evidence/phase-02-2026-10-09/ci-run-final/steps.json).
+- **Final local CI re-run on the documentation head `9c99aa1`:** fresh clone and a new `postgres:17` container. All 11 `quality.yml` steps PASS: lint 0 warnings, typecheck, boundaries, 117/117 unit/component, 3/3 migrations, 33/33 integration, build, 24/24 E2E ([steps.json](evidence/phase-02-2026-10-09/ci-run-final/steps.json), [logs](evidence/phase-02-2026-10-09/ci-run-final/)). The fresh Windows clone checked out every migration with LF endings, confirming the `.gitattributes` fix. This evidence-only commit follows it.
