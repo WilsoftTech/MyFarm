@@ -199,4 +199,6 @@ Evidence: [verify-before](evidence/integration-2026-10-09/hosted-apply/verify-be
 
 **Permission note:** the auto-mode classifier blocked the first two write attempts; the files then ran under per-call owner approval.
 
+**Push of this record (2026-10-10, owner-approved).** `main` and `phase-02-provisioning-hardening` were fast-forwarded `756f3c4 → 47acdfb` with no force. The ~2-minute watch showed no deployments or commit statuses; Vercel/Render/CodeRabbit suites stayed `queued` with 0 runs, and Actions failed on the billing lock with no step run ([06](evidence/integration-2026-10-09/integration/06-after-ff-main-to-47acdfb.log)). GitHub also announced that `ubuntu-latest` moves to Ubuntu 26 from 2026-10-19, which matters once hosted CI is restored (P2-C1).
+
 **Phase 2 completion confirmed.** Phase 2 stays **COMPLETED — 100% (13/13)**, verdict **PASS WITH CONDITIONS — LOCAL VERIFICATION**. Its hosted provisioning conditions are now closed in hosted dev. The remaining conditions are nonblocking and owner-tracked: P2-C1, P2-C3, P2-C4, P2-C5, P2-C7 and INT-C3–INT-C7. GitHub-hosted CI is still **NOT VERIFIED**.

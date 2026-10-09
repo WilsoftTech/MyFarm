@@ -1,0 +1,20 @@
+# Push and deploy watch, 2026-10-10. Commands and GitHub API output transcribed from this session.
+$ git push origin phase-02-provisioning-hardening
+   756f3c4..47acdfb  phase-02-provisioning-hardening -> phase-02-provisioning-hardening
+$ git push origin 47acdfb:refs/heads/main
+   756f3c4..47acdfb  47acdfb -> main
+$ git ls-remote origin refs/heads/main refs/heads/phase-02-provisioning-hardening
+47acdfbc3b163d9b2cf79ef733d502e3fcb402e8	refs/heads/main
+47acdfbc3b163d9b2cf79ef733d502e3fcb402e8	refs/heads/phase-02-provisioning-hardening
+# ~2 minutes after the push, GitHub API:
+--- deployments
+--- statuses 47acdfb
+--- suites 47acdfb
+coderabbitai	phase-02-provisioning-hardening	queued	-	0
+vercel	phase-02-provisioning-hardening	queued	-	0
+render	phase-02-provisioning-hardening	queued	-	0
+github-actions	phase-02-provisioning-hardening	completed	failure	1
+github-actions	main	completed	failure	1
+--- check-run annotations (both "verify" runs)
+The job was not started because your account is locked due to a billing issue.
+"The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026. For more information, see https://github.com/actions/runner-images/issues/14748"
