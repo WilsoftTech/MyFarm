@@ -3,7 +3,7 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase02 implementation and closeout session.
+- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase1+2 integration and provisioning-hardening session.
 - Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
 - Remaining work/blockers: Maintain alignment with the Phase02 closeout; historical sections stay historical; Phase3 not authorized.
@@ -74,4 +74,4 @@ API change: same-origin private-file requests work with actual HTTP authority; e
 
 ## Phase 2 implementation (2026-10-09)
 
-After the Phase 1 provider SQL, apply `supabase/policies/farmer-registry-runtime.sql` (re-runnable) to the isolated project. Without it, the restricted runtime role cannot register farmers. Local integration tests apply it automatically to the local test DB. Migration SQL is checked out with LF endings on every OS (`.gitattributes`) ([closeout](../reports/phase-02-closeout-2026-10-09.md)).
+Provision an isolated project in the order of [`supabase/provisioning.json`](../../supabase/provisioning.json) (updated 2026-10-09; [how to run it](../architecture/deployment-infrastructure.md#provisioning-updated-2026-10-09-provisioning-hardening)). Historically: after the Phase 1 provider SQL, apply `supabase/policies/farmer-registry-runtime.sql` (re-runnable) to the isolated project. Without it, the restricted runtime role cannot register farmers. Local integration tests apply it automatically to the local test DB. Migration SQL is checked out with LF endings on every OS (`.gitattributes`) ([closeout](../reports/phase-02-closeout-2026-10-09.md)).

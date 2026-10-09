@@ -1,5 +1,7 @@
 -- Reviewed development-project setup, NOT automatically executed by Prisma.
 -- Run only after confirming the intended isolated Supabase project.
+-- One transaction and re-runnable: a failure leaves no partial bucket, grant or policy behind.
+BEGIN;
 INSERT INTO storage.buckets (id, name, public, file_size_limit)
 VALUES ('myfarm-private', 'myfarm-private', false, 10485760)
 ON CONFLICT (id) DO NOTHING;
@@ -28,6 +30,8 @@ AND object_name ~ '^[0-9a-f-]{36}/[0-9a-f-]{36}$'
 $$;
 REVOKE ALL ON FUNCTION myfarm_private.myfarm_can_read_storage(text) FROM PUBLIC, anon;
 GRANT EXECUTE ON FUNCTION myfarm_private.myfarm_can_read_storage(text) TO authenticated;
+DROP POLICY IF EXISTS myfarm_scoped_private_read ON storage.objects;
 CREATE POLICY myfarm_scoped_private_read ON storage.objects
 FOR SELECT TO authenticated USING (bucket_id = 'myfarm-private' AND myfarm_private.myfarm_can_read_storage(name));
 -- No browser upload/update/delete grant in Phase 1. Provision synthetic files using project administration only.
+COMMIT;

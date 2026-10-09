@@ -3,7 +3,7 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: Phase01 scope COMPLETED — 100% (13/13 verified Phase01 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); Phase02 scope COMPLETED — 100% (13/13 verified Phase02 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); later-phase scope not counted.
-- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase02 implementation and closeout session.
+- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase1+2 integration and provisioning-hardening session.
 - Related phase/task IDs: Phase01 MYF-P01-T001–T013; Phase02 MYF-P02-T001–T013.
 - Verified completed work: Phase01 scope as previously verified; Phase02: farmer registry contracts/policies/migration/API/tests in this document's area verified (see the Phase 2 implementation section).
 - Remaining work/blockers: Phase02 conditions P2-C1–P2-C8 where applicable; later-phase scope pending authorization.
@@ -49,10 +49,27 @@ API change: same-origin private-file requests work with actual HTTP authority; e
 
 Isolated dev project `sudqhluwsaijvjjcegpv`: `prisma migrate deploy` applied `202610090001_farmer_registry`, then `supabase/policies/farmer-registry-runtime.sql` was applied in one transaction ([D-P02-005](../DECISION-LOG.md#d-p02-005--hosted-development-verification-for-phase-2)).
 
-Provisioning order for any new environment:
-
-1. Prisma migrations.
-2. `foundation-hardening.sql`, `private-storage.sql`, `runtime-role.sql`.
-3. `farmer-registry-runtime.sql`.
+Provisioning order for any new environment: superseded on 2026-10-09 by [`supabase/provisioning.json`](../../supabase/provisioning.json); see the next section.
 
 No push, preview redeploy or production change was made in Phase 2 ([closeout](../reports/phase-02-closeout-2026-10-09.md)).
+
+## Provisioning (updated 2026-10-09, provisioning hardening)
+
+[`supabase/provisioning.json`](../../supabase/provisioning.json) is the single provisioning order, and the integration test `tests/integration/provisioning.test.ts` executes exactly that list:
+
+1. `prisma migrate deploy`
+2. `supabase/policies/foundation-hardening.sql`
+3. `supabase/policies/private-storage.sql`
+4. `supabase/policies/runtime-role.sql`
+5. `supabase/policies/farmer-registry-runtime.sql`
+6. `supabase/policies/browser-role-lockdown.sql`
+
+How to run it:
+
+- Run every step as the role that runs migrations: `postgres` on hosted Supabase.
+- Each SQL file is **one transaction** (`BEGIN; … COMMIT;`): a failure leaves nothing behind. In `psql`, use `psql "$DIRECT_URL" -v ON_ERROR_STOP=1 -f <file>`; in the Supabase SQL editor, run the whole file at once.
+- Every file is **re-runnable** and converges to the same end state. Rerun the whole list after every new migration, so new tables are locked down too.
+- `browser-role-lockdown.sql` gives `anon` and `authenticated` no privilege on objects in `public`, now or later. It keeps schema `USAGE`, `service_role` privileges and the Supabase-managed `auth`, `storage`, `graphql` and `realtime` schemas. It aborts if any browser access in `public` remains that it cannot remove.
+- **Known residual on hosted Supabase:** `supabase_admin` also has default privileges in `public` that grant browser roles access, and `postgres` cannot change them. `supabase_admin` owns nothing in `public` today; the lockdown reports it as a WARNING and fails if it ever owns an object there with browser access.
+
+Status: verified locally only (fresh database, rerun, upgrade from today's hosted state, and a supplementary run on the official Supabase Postgres image). **Not applied to hosted dev**; applying it needs a separate owner authorization ([D-INT-002](../DECISION-LOG.md#d-int-002--database-provisioning-hardening-step-b)).

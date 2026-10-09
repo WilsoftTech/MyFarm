@@ -1,4 +1,6 @@
 -- Provider-only server role. NOLOGIN until an operator configures an isolated credential.
+-- One transaction and re-runnable: a failure leaves no partial grant or policy behind.
+BEGIN;
 DO $$ BEGIN
 IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname='myfarm_runtime') THEN
 CREATE ROLE myfarm_runtime NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOBYPASSRLS;
@@ -12,10 +14,15 @@ GRANT myfarm_runtime TO postgres;
 GRANT USAGE ON SCHEMA public, myfarm_private TO myfarm_runtime;
 GRANT SELECT ON TABLE public."User", public."Organization", public."Membership", public."AuditEvent" TO myfarm_runtime;
 GRANT INSERT ON TABLE public."AuditEvent" TO myfarm_runtime;
+DROP POLICY IF EXISTS myfarm_server_user_read ON public."User";
 CREATE POLICY myfarm_server_user_read ON public."User" FOR SELECT TO myfarm_runtime USING (true);
+DROP POLICY IF EXISTS myfarm_server_organization_read ON public."Organization";
 CREATE POLICY myfarm_server_organization_read ON public."Organization" FOR SELECT TO myfarm_runtime USING (true);
+DROP POLICY IF EXISTS myfarm_server_membership_read ON public."Membership";
 CREATE POLICY myfarm_server_membership_read ON public."Membership" FOR SELECT TO myfarm_runtime USING (true);
+DROP POLICY IF EXISTS myfarm_server_audit_read ON public."AuditEvent";
 CREATE POLICY myfarm_server_audit_read ON public."AuditEvent" FOR SELECT TO myfarm_runtime USING (true);
+DROP POLICY IF EXISTS myfarm_server_audit_append ON public."AuditEvent";
 CREATE POLICY myfarm_server_audit_append ON public."AuditEvent" FOR INSERT TO myfarm_runtime WITH CHECK (true);
 
 -- Session rows remain inaccessible to the runtime/browser roles.
@@ -31,3 +38,4 @@ REVOKE ALL ON FUNCTION myfarm_private.myfarm_session_is_active(uuid,uuid) FROM P
 GRANT EXECUTE ON FUNCTION myfarm_private.myfarm_session_is_active(uuid,uuid) TO myfarm_runtime;
 -- Scope and account authorization still run in application services on every request.
 -- No account/membership mutation, schema administration or audit update/delete grant.
+COMMIT;

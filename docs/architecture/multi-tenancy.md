@@ -3,7 +3,7 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: Phase01 scope COMPLETED — 100% (13/13 verified Phase01 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); Phase02 scope COMPLETED — 100% (13/13 verified Phase02 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); later-phase scope not counted.
-- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase02 implementation and closeout session.
+- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase1+2 integration and provisioning-hardening session.
 - Related phase/task IDs: Phase01 MYF-P01-T001–T013; Phase02 MYF-P02-T001–T013.
 - Verified completed work: Phase01 scope as previously verified; Phase02: farmer registry contracts/policies/migration/API/tests in this document's area verified (see the Phase 2 implementation section).
 - Remaining work/blockers: Phase02 conditions P2-C1–P2-C8 where applicable; later-phase scope pending authorization.
@@ -34,3 +34,17 @@ Phase1 organization membership scopes are implemented/current-server-checked. Te
 Each registered farmer receives a PERSONAL organization as their tenant, created atomically with the FARMER membership. Every registry row carries `tenantId`, guarded by composite foreign keys. Services derive tenant/farm from the authorized farmer or farm record, never from the client. Tenant ADMIN membership does not imply farm-data access.
 
 Isolation is verified by integration, runtime-role and live two-farmer/administrator suites ([closeout](../reports/phase-02-closeout-2026-10-09.md)).
+
+## Where tenant isolation is enforced (2026-10-09)
+
+Two layers protect tenant data. They are not equal, and neither replaces the other.
+
+| Layer | Enforces | Does not enforce |
+|---|---|---|
+| **Application (primary)** | On every request: the session is verified (`getUser`, then the server-side session check); tenant and farm are derived on the server from ACTIVE memberships (`FarmAccessPolicy`); strict schemas reject client-supplied `tenantId`/`farmerId`/`ownerFarmerId`; every query is scoped. | — |
+| **Database (defense in depth)** | `myfarm_runtime` has no DELETE, only column-limited profile UPDATE, and cannot join or escalate memberships. Composite `(id, tenantId)` foreign keys make cross-tenant parent/child rows impossible; CHECK constraints guard values. RLS write policies reject rows whose actor/owner columns contradict existing farmer, farm and membership rows. Browser roles (`anon`, `authenticated`) have no access to any object in `public`. | **Reads:** the runtime role's SELECT policies are `USING (true)`, so read isolation between tenants is enforced only by the application. **Who the caller is:** one shared database role serves every user, and the server supplies `createdBy`/`updatedBy`. A compromised or buggy server that sets those columns consistently could read any tenant or write as any farmer. |
+
+Consequences:
+
+- Treat the application authorization tests (IDOR, revocation, administrator denial) as the primary isolation evidence; the runtime-role suite proves the database backstop.
+- Database-enforced caller identity would need a per-request actor context (for example `SET LOCAL` of the verified user and policies that read it). That is a design decision for a later phase, not implemented.

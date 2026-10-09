@@ -3,7 +3,7 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: Phase01 scope COMPLETED — 100% (13/13 verified Phase01 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); Phase02 scope COMPLETED — 100% (13/13 verified Phase02 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); later-phase scope not counted.
-- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase02 implementation and closeout session.
+- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase1+2 integration and provisioning-hardening session.
 - Related phase/task IDs: Phase01 MYF-P01-T001–T013; Phase02 MYF-P02-T001–T013.
 - Verified completed work: Phase01 scope as previously verified; Phase02: farmer registry contracts/policies/migration/API/tests in this document's area verified (see the Phase 2 implementation section).
 - Remaining work/blockers: Phase02 conditions P2-C1–P2-C8 where applicable; later-phase scope pending authorization.
@@ -47,3 +47,7 @@ Phase 2 security controls ([closeout §3](../reports/phase-02-closeout-2026-10-0
 - **Probes:** 49/49 anonymous production probes and 48/48 live checks PASS.
 
 Open: Supabase advisors not run this session (P2-C6); `_prisma_migrations` browser-role grants (P2-C8).
+
+## Where tenant isolation is enforced (2026-10-09)
+
+The application is the primary isolation layer; the database is defense in depth. Read isolation between tenants and the caller's identity are enforced only by the application, because one shared runtime role serves every user and its SELECT policies are `USING (true)`. Browser roles have no access to any object in `public` ([browser-role lockdown](deployment-infrastructure.md#provisioning-updated-2026-10-09-provisioning-hardening)). Full breakdown: [multi-tenancy](multi-tenancy.md#where-tenant-isolation-is-enforced-2026-10-09).

@@ -3,11 +3,11 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase02 implementation and closeout session.
+- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase1+2 integration and provisioning-hardening session.
 - Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
-- Remaining work/blockers: Maintain alignment with the Phase02 closeout; historical sections stay historical; Phase3 not authorized.
-- Evidence/report links: [Phase02 closeout](reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md).
+- Remaining work/blockers: Phase3 authorized (D-P03-001) to start after the provisioning-hardening branch; Step B not yet merged to main or applied to hosted dev; historical sections stay historical.
+- Evidence/report links: [Phase1+2 integration report](reports/phase-01-02-integration-2026-10-09.md); [Phase02 closeout](reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
 Date: 2026-10-08, Africa/Nairobi. Human owner roles below are **unassigned**, not invented personnel. No field research has been verified. Phase1 local engineering/test evidence is in the current closeout. [ADRs](architecture/architecture-decisions.md) explain tradeoffs.
@@ -45,8 +45,8 @@ Q01 is **PARTIALLY RESOLVED**: user selected Rukungiri. Remaining components and
 | Q04 | PARTIALLY RESOLVED: stack pinned, Supabase PG selected/private-storage adapter prepared; region/plan/cost/hosted validation pending | Engineering/operations owner | 1 | Current official docs plus compatibility/latency/private-media test |
 | Q05 | RESOLVED for Phase2 by owner 2026-10-08 ([D-P02-002](#d-p02-002--q05-identity-model)): one farmer per user in a PERSONAL organization; many farms; no ownership transfer; free-text location. Agent-assisted onboarding and location catalogs remain open | Product/domain/security owner | 2 | Approved entity/policy mapping and isolation tests |
 | Q06 | PARTIALLY RESOLVED by owner 2026-10-08 ([D-P02-003](#d-p02-003--q06-data-minimization)): minimal contact/location fields, optional GPS, no identity numbers, documents deferred. Retention, erasure/export and backup policy remain open | Product/privacy owner | 2 | Reviewed data inventory/retention policy; no compliance claim assumed |
-| Q07 | Overlapping seasons, perennial crops, multi-plot enterprise, close/reopen rules | Agricultural/product owner | 3 | Domain examples for crop/poultry lifecycle validated with farmers |
-| Q08 | Unit catalog/conversions and unsupported enterprise type UX | Agricultural/domain owner | 3–5 | Approved unit definitions, rounding and catalog extensibility |
+| Q07 | RESOLVED for Phase3 by owner 2026-10-09 ([D-P03-002](#d-p03-002--q07-seasons-and-crop-cycles)): seasons are farm-level labels and may overlap; one plot and one season per crop cycle; intercropping up to plot area (excess needs a reason); perennials have no expected end; closing is final, reopening deferred | Agricultural/product owner | 3 | Owner decision recorded; field validation still pending (Phase 9) |
+| Q08 | RESOLVED for Phase3 by owner 2026-10-09 ([D-P03-003](#d-p03-003--q08-units-and-enterprise-types)): planted area reuses the Phase2 AreaUnit (no conversions in Phase3); whole-number bird counts; six recordable enterprise types, workflows for CROP/POULTRY only; crops from a data catalog | Agricultural/domain owner | 3–5 | Owner decision recorded; unit conversions and rounding revisit in Phase4/5 |
 | Q09 | Cash/accrual recognition, monetary precision/currency, allocation, tax and correction policy | Accounting/product owner | 4 | Approved numeric fixtures; no authoritative basis-dependent report before decision |
 | Q10 | Phase/treatment of overhead, depreciation and finance costs for net farm income | Accounting/product owner | 4/8 | Explicitly defer or approve treatment; gross margin never mislabeled net profit |
 | Q11 | Sale/income/purchase/expense recognition and partial-payment double-count prevention | Accounting/domain owner | 4 | Approved source-link/allocation invariants and cash/accrual examples |
@@ -200,3 +200,47 @@ Application services remain the primary authorization layer; these policies are 
 ## D-P02-008 — Phase 1 condition C5 resolved for anonymous visitors
 
 IMPLEMENTED 2026-10-09. The proxy now returns a real `307` (relative `Location: /sign-in?reason=session-required`, `private, no-store`) for anonymous requests to `/workspace`, `/admin`, `/agent`, `/farmer` and `/farms`. Every page and API still verifies the session server-side. A signed-in user whose server session was revoked while their JWT is still unexpired still gets the in-stream redirect (no content is rendered). The shared header link changed from “Sign in” to the state-neutral “My account” (`/workspace`), and the registry pages gained a signed-in navigation with Sign out, after visual review showed signed-in farmers being offered “Sign in”.
+
+## D-INT-001 — Phase 1 and Phase 2 integration into main
+
+APPROVED and EXECUTED 2026-10-09 (owner instructions “controlled integration of Phase 1 and Phase 2” and “push the Phase 2 branch, then fast-forward main”).
+
+- **One-time CI exception:** GitHub Actions is billing-locked, so the verified local quality gates (D-P01-LOCAL-CI-001, D-P02-006) stand in for hosted CI for this integration only. Hosted CI stays **NOT VERIFIED**.
+- **Method:** fast-forward only, no force, no squash or rebase: `main` moved `f159631 → e4ea43b` (Phase 1) `→ d85a773` (Phase 2); `phase-02-farmer-registry` pushed to origin. The stale branch `worktree-phase-02` (`18cc422`) was never merged.
+- **Deployment safety:** the owner confirmed the Vercel and Render dashboards (no project connected to the repository) before the push; after each push, GitHub showed no deployments, no commit statuses and no Vercel/Render check runs.
+- **Published test fixtures:** the owner accepted the synthetic screenshot fixtures (option 1). The coordinates resolve to a public road in Rukungiri town; the placeholder phone numbers could not be confirmed unallocated.
+
+[Integration report](reports/phase-01-02-integration-2026-10-09.md).
+
+## D-INT-002 — Database provisioning hardening (Step B)
+
+APPROVED by the owner 2026-10-09 in an isolated local worktree and test databases; IMPLEMENTED on branch `phase-02-provisioning-hardening`. Constraints set by the owner: provider SQL transactional and re-runnable; tests execute the real files on fresh and previously provisioned databases; default privileges verified for every object-creating role; browser-role grants reviewed before revoking, keeping intended Supabase API and Auth behavior; emulation is supplementary evidence only; no hosted database change; no edit to applied migrations or their checksums; no push/merge to `main` without separate approval.
+
+Outcome: `supabase/provisioning.json` is the single provisioning order; every provider file is one transaction and re-runnable; new `browser-role-lockdown.sql` removes browser-role access to public objects (including `_prisma_migrations`, P2-C8) and to objects created later. **Not applied to hosted dev**; that needs a separate owner authorization. [Integration report](reports/phase-01-02-integration-2026-10-09.md#4-step-b--database-provisioning-hardening).
+
+## D-P03-001 — Phase 3 authorization and sequencing
+
+APPROVED, owner 2026-10-09 (“check for phase completeness and move to next phase”; sequencing answer “Step B first”). Phase 3 (enterprises, crops, livestock and seasons) is authorized. It starts from the provisioning-hardening branch once Step B is complete; pushing that branch to `main` still needs separate approval.
+
+## D-P03-002 — Q07 seasons and crop cycles
+
+APPROVED, owner 2026-10-09 (accepted the proposed rules):
+
+- A season is a farm-level label (for example “2026 Season A”); seasons on one farm may overlap.
+- A crop cycle belongs to exactly one plot and one season. An enterprise (for example “Maize”) spans plots through several cycles.
+- Several cycles may run on one plot at the same time (intercropping) while their total planted area is at most the plot area; exceeding it requires an explicit, recorded reason.
+- A perennial crop (for example coffee) is a cycle with no expected end.
+- Closing a cycle or season is final in Phase 3; reopening is deferred.
+
+## D-P03-003 — Q08 units and enterprise types
+
+APPROVED, owner 2026-10-09 (accepted the proposed rules):
+
+- Planted area reuses the Phase 2 `AreaUnit` (ACRE, HECTARE, SQUARE_METRE); no unit conversions in Phase 3.
+- Bird counts are whole numbers.
+- All six enterprise types (CROP, POULTRY, DAIRY, LIVESTOCK, FISH, OTHER) can be recorded; only CROP and POULTRY have workflows, and the others show that their workflow is not yet available.
+- Crops come from a data catalog, not code.
+
+## D-P03-004 — Phase 3 local CI substitution
+
+APPROVED, owner 2026-10-09 (“Yes, extend to Phase 3”). The D-P01-LOCAL-CI-001 rules apply to Phase 3: every `quality.yml` step reproduced from a clean clone against a fresh isolated `postgres:17`. GitHub-hosted CI stays **NOT VERIFIED** and must pass before any production release. Later phases need a new decision.

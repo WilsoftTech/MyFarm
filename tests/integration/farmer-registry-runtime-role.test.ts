@@ -1,5 +1,5 @@
 import { beforeAll, afterAll, describe, it, expect } from "vitest";
-import { readFileSync } from "node:fs";
+import { Client } from "pg";
 import { config } from "dotenv";
 import { PrismaClient } from "@/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
@@ -7,6 +7,7 @@ import { identityRepository } from "@/modules/engineering-foundation/infrastruct
 import { AuthorizationService } from "@/modules/engineering-foundation/application/authorization";
 import { FarmerRegistryService } from "@/modules/farmer-registry/application/registry";
 import { registryRepository } from "@/modules/farmer-registry/infrastructure/repository";
+import { applyProviderSql, runSqlFile, supabaseEmulation } from "../support/provisioning";
 config({ path: ".env.test.local", quiet: true });
 const url = process.env.TEST_DATABASE_URL;
 if (!url || !/^postgresql:\/\/[^@]+@(127\.0\.0\.1|localhost):\d+\/myfarm_phase01_test(?:\?|$)/.test(url)) throw new Error("Integration requires isolated local myfarm_phase01_test database.");
@@ -23,24 +24,13 @@ const denied = /permission denied|row-level security/i;
 let tenantA: string, farmerA: string, farmA: string, tenantB: string;
 
 beforeAll(async () => {
-await owner.$executeRawUnsafe(`DO $$ BEGIN
-IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'anon') THEN CREATE ROLE anon NOLOGIN; END IF;
-IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'authenticated') THEN CREATE ROLE authenticated NOLOGIN; END IF;
-IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'myfarm_runtime') THEN CREATE ROLE myfarm_runtime NOLOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOBYPASSRLS; END IF;
-END $$`);
-// Foundation subset of supabase/policies/runtime-role.sql (its session-check function needs Supabase's auth schema).
-for (const statement of [
-"GRANT USAGE ON SCHEMA public TO myfarm_runtime",
-'GRANT SELECT ON TABLE "User", "Organization", "Membership", "AuditEvent" TO myfarm_runtime',
-'GRANT INSERT ON TABLE "AuditEvent" TO myfarm_runtime',
-'DROP POLICY IF EXISTS myfarm_server_user_read ON "User"', 'CREATE POLICY myfarm_server_user_read ON "User" FOR SELECT TO myfarm_runtime USING (true)',
-'DROP POLICY IF EXISTS myfarm_server_organization_read ON "Organization"', 'CREATE POLICY myfarm_server_organization_read ON "Organization" FOR SELECT TO myfarm_runtime USING (true)',
-'DROP POLICY IF EXISTS myfarm_server_membership_read ON "Membership"', 'CREATE POLICY myfarm_server_membership_read ON "Membership" FOR SELECT TO myfarm_runtime USING (true)',
-'DROP POLICY IF EXISTS myfarm_server_audit_read ON "AuditEvent"', 'CREATE POLICY myfarm_server_audit_read ON "AuditEvent" FOR SELECT TO myfarm_runtime USING (true)',
-'DROP POLICY IF EXISTS myfarm_server_audit_append ON "AuditEvent"', 'CREATE POLICY myfarm_server_audit_append ON "AuditEvent" FOR INSERT TO myfarm_runtime WITH CHECK (true)',
-]) await owner.$executeRawUnsafe(statement);
-// The Phase2 provider file is applied verbatim, exactly as on the hosted project.
-await owner.$executeRawUnsafe(readFileSync("supabase/policies/farmer-registry-runtime.sql", "utf8"));
+// The actual provider files, in the documented order, on top of a test-only Supabase stand-in.
+const provider = new Client({ connectionString: url });
+await provider.connect();
+try {
+await runSqlFile(provider, supabaseEmulation);
+await applyProviderSql(provider);
+} finally { await provider.end(); }
 await owner.user.createMany({ data: [{ id: users.a, authSubject: subjects.a }, { id: users.b, authSubject: subjects.b }] });
 });
 afterAll(async () => {

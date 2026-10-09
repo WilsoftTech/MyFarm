@@ -1,6 +1,8 @@
 -- Phase2 provider-only grants, after migration 202610090001_farmer_registry and runtime-role.sql.
--- Re-runnable. Application services still authorize every request; these policies are defense in depth
--- so a server bug cannot write registry rows outside the actor's own farmer/farm scope.
+-- One transaction and re-runnable. Application services authorize every request; these policies are defense
+-- in depth that reject rows whose actor/owner columns contradict existing farmer, farm and membership rows.
+-- The server supplies the actor (createdBy/updatedBy), so they check consistency, not who the caller is.
+BEGIN;
 
 -- Browser Supabase roles never read or write registry tables (Supabase default privileges grant them).
 REVOKE ALL ON TABLE public."Farmer", public."FarmerProfile", public."Farm", public."Plot", public."FarmMember"
@@ -63,3 +65,4 @@ CREATE POLICY myfarm_server_plot_read ON public."Plot" FOR SELECT TO myfarm_runt
 DROP POLICY IF EXISTS myfarm_server_plot_create ON public."Plot";
 CREATE POLICY myfarm_server_plot_create ON public."Plot" FOR INSERT TO myfarm_runtime
 WITH CHECK (EXISTS (SELECT 1 FROM public."FarmMember" fm WHERE fm."farmId" = "Plot"."farmId" AND fm."tenantId" = "Plot"."tenantId" AND fm."userId" = "createdBy" AND fm.status = 'ACTIVE'));
+COMMIT;

@@ -1,0 +1,11 @@
+{
+  "description": "Provisioning order for a MyFarm Supabase project. Run each step as the role that runs migrations (postgres on hosted Supabase). Every SQL file is one transaction and re-runnable; rerun the whole list after every migration. tests/integration/provisioning.test.ts executes exactly this list.",
+  "steps": [
+    "prisma migrate deploy",
+    "supabase/policies/foundation-hardening.sql",
+    "supabase/policies/private-storage.sql",
+    "supabase/policies/runtime-role.sql",
+    "supabase/policies/farmer-registry-runtime.sql",
+    "supabase/policies/browser-role-lockdown.sql"
+  ]
+}

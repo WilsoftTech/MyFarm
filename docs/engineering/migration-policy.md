@@ -3,7 +3,7 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase02 implementation and closeout session.
+- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase1+2 integration and provisioning-hardening session.
 - Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
 - Remaining work/blockers: Maintain alignment with the Phase02 closeout; historical sections stay historical; Phase3 not authorized.
@@ -27,3 +27,11 @@ Deployment separates schema change from app rollout; forward fixes usually safer
 - **Naming:** new migration directories must sort after the latest applied migration. Phase 2's migration was renamed to `202610090001_farmer_registry` for this reason.
 - **Checksums:** Prisma records raw byte checksums, so migration SQL is pinned to LF via `.gitattributes`. Existing hosted dev history mixes CRLF/LF checksums (condition P2-C3).
 - **Out-of-chain SQL:** provider-specific SQL outside the Prisma chain must be listed in the deployment provisioning order ([closeout](../reports/phase-02-closeout-2026-10-09.md)).
+
+## Provider SQL rules (2026-10-09, provisioning hardening)
+
+- **Listed once:** every provider SQL file appears in [`supabase/provisioning.json`](../../supabase/provisioning.json), in run order.
+- **Transactional:** each file is a single `BEGIN; … COMMIT;` block, so a failure leaves nothing behind.
+- **Re-runnable:** `CREATE POLICY` is always preceded by `DROP POLICY IF EXISTS`; roles, schemas and rows are created only when missing; functions use `CREATE OR REPLACE`. Rerunning the whole list must leave an identical catalog.
+- **Tested as written:** tests execute the real files (never a copied subset) on a fresh database, on rerun, and on a database provisioned before the latest file. A test-only Supabase stand-in (`tests/support/supabase-emulation.sql`) supplies the platform objects plain PostgreSQL lacks; it is supplementary evidence, not proof of hosted behavior.
+- **Never** edit an applied Prisma migration or its checksum; add a new migration instead.
