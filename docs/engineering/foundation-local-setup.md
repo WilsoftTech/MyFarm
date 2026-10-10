@@ -14,6 +14,8 @@ Phase 01, 2026-10-08. The user selected Supabase PostgreSQL + Supabase Auth and 
 
 ## Application
 
+`npm run dev` regenerates the Prisma client from the current schema before starting Next.js. After pulling schema changes, restart the development server with this command so both the generated client and the in-memory database client use the current models. A stale Phase 1 client lacks the farmer registry models and causes `/farmer` to fail with `UNAVAILABLE` even when database access works. Client generation does not apply database migrations.
+
 Node 24 is the verified local runtime. Install the lockfile with npm ci. Copy .env.example to .env.local only if no file already exists. Configure the isolated Supabase project URL and publishable key; DATABASE_URL uses a Supabase session pooler, DIRECT_URL uses direct/session pooling for migrations. Hosted connection URLs require SSL. Never use transaction pooling for migration DDL or silently disable certificate verification.
 
 Run npm run dev. The public shell is at http://localhost:3000. /workspace, /agent and /admin are protected. Server actions validate credentials with Zod and Supabase handles passwords; the application never stores them. Self-registration/farm onboarding belongs to Phase 2.
