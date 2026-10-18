@@ -37,8 +37,9 @@ export interface CropCycleView extends FarmScope, ProductionRecord, Omit<CropCyc
 }
 
 /**
- * T005 port only; no DB implementation, runtime grants, service or endpoint in T004.
- * All reads constrain tenant AND farm, including nested IDs and pagination anchors.
+ * Implemented in T005; application authorization precedes all calls.
+ * Farm-record reads constrain tenant AND farm, including nested IDs and pagination anchors.
+ * Catalog entries are global reference data; the service authorizes farm access before lookup.
  * startCropCycle must authenticate/recheck current membership, resolve all parents and an
  * active catalog crop, and serialize capacity checks per plot inside the write transaction.
  * Load ALL active allocations on that plot across enterprises/seasons (not a paginated list).
@@ -49,6 +50,7 @@ export interface CropCycleView extends FarmScope, ProductionRecord, Omit<CropCyc
  * Closure/reopening, catalog administration and durable offline sync are separate scope.
  */
 export interface CropCycleRepository {
+  crops(scope: FarmScope, page: ProductionPageInput): Promise<ProductionPage<{ cropId: string; name: string }>>;
   cropCycle(scope: FarmScope, cycleId: string): Promise<CropCycleView | null>;
   cropCycles(scope: FarmScope, page: ProductionPageInput): Promise<ProductionPage<CropCycleView>>;
   startCropCycle(scope: ProductionWriteScope, command: StartCropCycle): Promise<CropCycleView>;

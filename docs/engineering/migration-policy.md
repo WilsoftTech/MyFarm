@@ -35,3 +35,7 @@ Deployment separates schema change from app rollout; forward fixes usually safer
 - **Re-runnable:** `CREATE POLICY` is always preceded by `DROP POLICY IF EXISTS`; roles, schemas and rows are created only when missing; functions use `CREATE OR REPLACE`. Rerunning the whole list must leave an identical catalog.
 - **Tested as written:** tests execute the real files (never a copied subset) on a fresh database, on rerun, and on a database provisioned before the latest file. A test-only Supabase stand-in (`tests/support/supabase-emulation.sql`) supplies the platform objects plain PostgreSQL lacks; it is supplementary evidence, not proof of hosted behavior.
 - **Never** edit an applied Prisma migration or its checksum; add a new migration instead.
+
+## Phase 3 T005 rehearsal (2026-10-18)
+
+Additive migration `202610180002_crop_cycles` and the new manifest-listed runtime file passed fresh installation, upgrade preservation, transaction-failure rollback, provider rerun, Prisma drift comparison and synthetic dump/restore on isolated PostgreSQL 17. Composite parent indexes require a lock/size review before shared rollout. Existing app code can run with the additive schema; roll back code while retaining recorded histories rather than dropping tables. Hosted application and production backup/reconciliation require separate authorization. [Task evidence](../reports/phase-03-t005-2026-10-18.md).

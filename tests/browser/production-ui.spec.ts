@@ -24,7 +24,7 @@ async function enterprise(page: Page, name: string, type = "CROP", farm = fixtur
 }
 test.beforeEach(async ({ context }) => {
   fixtures = readProductionBrowserFixtures();
-  for (const table of ["Enterprise", "Season"]) await query(`DELETE FROM "${table}" WHERE "tenantId" = ANY($1::uuid[])`, [Object.values(fixtures.tenants)]);
+  for (const table of ["CropCycle", "Enterprise", "Season"]) await query(`DELETE FROM "${table}" WHERE "tenantId" = ANY($1::uuid[])`, [Object.values(fixtures.tenants)]);
   await query('UPDATE auth.sessions SET not_after = NULL WHERE id = ANY($1::uuid[])', [Object.values(fixtures.sessions)]);
   await query('UPDATE "FarmMember" SET status = \'ACTIVE\' WHERE "userId" = $1', [fixtures.users.a]);
   await identity(context, "a");

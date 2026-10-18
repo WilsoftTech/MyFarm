@@ -58,3 +58,7 @@ The production build must use the same loopback public Auth URL as the suite bec
 ## Phase 3 T004 domain evidence (2026-10-18)
 
 The crop-cycle suite adds 65 command/relationship/date/precision/capacity cases; the full unit/component suite passes 269/269. Lint, typecheck, boundaries and production build pass. Exact intercropping tests include 0.1 + 0.2 = 0.3, one-millionth excess and large areas beyond floating-point precision. Runtime auth, transaction locking, retries, rollback and database constraints are T005 obligations, not proved by pure tests. No integration/browser or migration suite was rerun for this contract-only task. [Evidence](../reports/phase-03-t004-2026-10-18.md).
+
+## Phase 3 T005 evidence (2026-10-18)
+
+Final local results: 279 unit/component, 83 integration, 36 anonymous browser and 24 signed-in browser checks PASS. New database cases cover same-plot competing starts, concurrent duplicates, exact decimal round trips, all allocations beyond one list page, receipt/plot wait revocation, rollback, IDOR, runtime privileges, migration failure and upgrade preservation. The actual provisioning manifest (including new grants) passes fresh/rerun/failure tests. `tests/support/crop-cycle-recovery.mjs` rehearse dump/restore with an explicit loopback test URL and disposable T005 container; cycle, audit and grant boundaries reconcile. Full crop UI acceptance is T006; local Auth fixtures are not hosted Supabase verification. [Evidence](../reports/phase-03-t005-2026-10-18.md).

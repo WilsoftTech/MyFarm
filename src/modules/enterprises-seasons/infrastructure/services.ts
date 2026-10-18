@@ -5,6 +5,9 @@ import { registryRepository } from "@/modules/farmer-registry/infrastructure/rep
 import { ProductionService } from "../application/production";
 import type { ProductionRepository } from "../contracts/production";
 import { productionRepository } from "./repository";
+import { CropCycleService } from "../application/crop-cycle";
+import type { CropCycleRepository } from "../contracts/crop-cycle";
+import { cropCycleRepository } from "./crop-cycle-repository";
 
 export function productionService() {
   // Anonymous requests must fail before constructing a database client.
@@ -19,6 +22,19 @@ export function productionService() {
     createSeason: (scope, input) => repository().createSeason(scope, input),
   };
   return new ProductionService(authorizationService(), {
+    farmScopeForMember: input => registryRepository(database()).farmScopeForMember(input),
+  }, lazy);
+}
+
+export function cropCycleService() {
+  const repository = () => cropCycleRepository(database());
+  const lazy: CropCycleRepository = {
+    crops: (scope, page) => repository().crops(scope, page),
+    cropCycle: (scope, id) => repository().cropCycle(scope, id),
+    cropCycles: (scope, page) => repository().cropCycles(scope, page),
+    startCropCycle: (scope, command) => repository().startCropCycle(scope, command),
+  };
+  return new CropCycleService(authorizationService(), {
     farmScopeForMember: input => registryRepository(database()).farmScopeForMember(input),
   }, lazy);
 }

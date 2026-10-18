@@ -3,10 +3,10 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: Phase01 scope COMPLETED — 100% (13/13 verified Phase01 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); Phase02 scope COMPLETED — 100% (13/13 verified Phase02 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); later-phase scope not counted.
-- Last reviewed: 2026-10-18 (Africa/Nairobi), Phase03 T002 runtime grants and repository verification.
+- Last reviewed: 2026-10-18 (Africa/Nairobi), Phase03 T005 persistence/grants verification.
 - Related phase/task IDs: Phase01 MYF-P01-T001–T013; Phase02 MYF-P02-T001–T013.
 - Verified completed work: Phase01 scope as previously verified; Phase02: farmer registry contracts/policies/migration/API/tests in this document's area verified (see the Phase 2 implementation section).
-- Remaining work/blockers: Phase02 conditions where still applicable; Phase03 T001 schema and T002 runtime grants/services verified locally; T003–T013 and hosted application remain pending. [T002 evidence](../reports/phase-03-t002-2026-10-18.md).
+- Remaining work/blockers: Phase02 conditions where still applicable; Phase03 T001-T005 verified at their stages locally; T006-T013 and hosted application remain pending. [T005 evidence](../reports/phase-03-t005-2026-10-18.md).
 - Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
@@ -60,3 +60,9 @@ Migration `202610090001_farmer_registry` (additive):
 Provider SQL `supabase/policies/farmer-registry-runtime.sql` sits outside the Prisma chain (condition P2-C2). `.gitattributes` pins migration SQL to LF because Prisma stores raw byte checksums (P2-C3).
 
 Verification: fresh/replay/drift/second-DB/restore rehearsal PASS. Applied to the isolated dev project 2026-10-09 ([closeout](../reports/phase-02-closeout-2026-10-09.md)).
+
+## Phase 3 T005 persistence (2026-10-18)
+
+Migration `202610180002_crop_cycles` adds CropCatalog and CropCycle, approved Maize/Coffee reference seeds, composite parent keys and matching FK/query indexes. CHECK constraints enforce positive finite area, ordered supported dates, versions and text bounds. Existing rows and migration files are preserved. The new `crop-cycle-runtime.sql` sits before browser lockdown in the manifest: catalog SELECT, cycle SELECT/INSERT, active creator/parent/catalog consistency checks, no browser grants or UPDATE/DELETE.
+
+Starts use the existing audit receipt and a transaction-level advisory lock keyed by `myfarm:crop-plot:<UUID>`; Read Committed capacity reads after acquiring it observe prior committed starts. All active plot allocations across enterprise/season are checked by the exact T004 domain rule; receipt replay returns before capacity allocation. No Plot UPDATE privilege is added. Future allocation writers/closures/plot-area edits must coordinate with the same lock. Raw shared-role SQL is not covered by this application lock protocol. [Evidence, migration/recovery and limitations](../reports/phase-03-t005-2026-10-18.md).

@@ -2,7 +2,8 @@ import "server-only";
 import type { Enterprise, Season, Prisma, PrismaClient } from "@/generated/prisma/client";
 import { FoundationError } from "@/modules/engineering-foundation/domain/errors";
 import { claimCommandReceipt } from "@/modules/engineering-foundation/infrastructure/command-receipts";
-import type { EnterpriseView, ProductionRepository, ProductionWriteScope, SeasonView } from "../contracts/production";
+import type { EnterpriseView, ProductionRepository, SeasonView } from "../contracts/production";
+import { requireProductionWriteAccess as requireWriteAccess, productionAfter as after } from "./production-access";
 
 type Reader = PrismaClient | Prisma.TransactionClient;
 const enterpriseView = (row: Enterprise): EnterpriseView => ({
@@ -18,22 +19,6 @@ const seasonView = (row: Season): SeasonView => ({
 });
 const enterprise = (db: Reader, scope: { tenantId: string; farmId: string }, id: string) => db.enterprise.findFirst({ where: { ...scope, id } });
 const season = (db: Reader, scope: { tenantId: string; farmId: string }, id: string) => db.season.findFirst({ where: { ...scope, id } });
-
-/** Recheck in the write transaction, including after a receipt wait. Types are not authorization. */
-async function requireWriteAccess(tx: Prisma.TransactionClient, scope: ProductionWriteScope) {
-  const actor = await tx.user.findFirst({ where: {
-    id: scope.actorId, status: "ACTIVE",
-    memberships: { some: { organizationId: scope.tenantId, role: "FARMER", status: "ACTIVE" } },
-    farmMemberships: { some: { farmId: scope.farmId, tenantId: scope.tenantId, status: "ACTIVE" } },
-  }, select: { id: true } });
-  if (!actor) throw new FoundationError("FORBIDDEN");
-}
-
-// A cursor must belong to the authorized farm. Unknown and foreign cursors fail identically.
-function after(anchor: { id: string; createdAt: Date } | null) {
-  if (!anchor) throw new FoundationError("INVALID_INPUT");
-  return { OR: [{ createdAt: { lt: anchor.createdAt } }, { createdAt: anchor.createdAt, id: { lt: anchor.id } }] };
-}
 
 export function productionRepository(db: PrismaClient): ProductionRepository {
   return {

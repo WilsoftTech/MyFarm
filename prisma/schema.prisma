@@ -66,6 +66,7 @@ model User {
   farmMemberships FarmMember[]
   enterprises Enterprise[]
   seasons Season[]
+  cropCycles CropCycle[]
 }
 model Organization {
   id String @id @default(uuid()) @db.Uuid
@@ -147,6 +148,8 @@ model Plot {
   createdBy String @db.Uuid
   tenant Organization @relation(fields: [tenantId], references: [id], onDelete: Restrict)
   farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  cropCycles CropCycle[]
+  @@unique([id, farmId, tenantId])
   @@unique([farmId, name])
   @@index([tenantId, farmId, createdAt, id])
 }
@@ -201,6 +204,8 @@ model Enterprise {
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
   farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
   creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  cropCycles CropCycle[]
+  @@unique([id, farmId, tenantId])
   @@index([tenantId, farmId, createdAt, id])
   @@index([farmId, tenantId])
   @@index([createdBy])
@@ -220,7 +225,53 @@ model Season {
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
   farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
   creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  cropCycles CropCycle[]
+  @@unique([id, farmId, tenantId])
   @@index([tenantId, farmId, createdAt, id])
   @@index([farmId, tenantId])
+  @@index([createdBy])
+}
+
+// Global reference data, with no farm ownership or runtime administration grants.
+model CropCatalog {
+  id String @id @db.Uuid
+  name String @unique @db.VarChar(120)
+  active Boolean @default(true)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  cycles CropCycle[]
+  @@index([active, createdAt, id])
+}
+
+model CropCycle {
+  id String @id @default(uuid()) @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  enterpriseId String @db.Uuid
+  seasonId String @db.Uuid
+  plotId String @db.Uuid
+  cropId String @db.Uuid
+  // Creation snapshot: catalog renaming does not rewrite historical labels or retry results.
+  cropName String @db.VarChar(120)
+  variety String? @db.VarChar(120)
+  areaPlanted Decimal @db.Decimal(18, 6)
+  areaUnit AreaUnit
+  plantingDate DateTime @db.Date
+  expectedHarvest DateTime? @db.Date
+  areaExceptionReason String? @db.VarChar(500)
+  status ProductionStatus @default(ACTIVE)
+  version Int @default(1)
+  createdBy String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  enterprise Enterprise @relation(fields: [enterpriseId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  season Season @relation(fields: [seasonId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  plot Plot @relation(fields: [plotId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  crop CropCatalog @relation(fields: [cropId], references: [id], onDelete: Restrict)
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  @@index([tenantId, farmId, createdAt, id])
+  @@index([plotId, farmId, tenantId, status])
+  @@index([enterpriseId, farmId, tenantId])
+  @@index([seasonId, farmId, tenantId])
+  @@index([cropId])
   @@index([createdBy])
 }

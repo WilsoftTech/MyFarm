@@ -2,29 +2,14 @@ import { idSchema } from "@/modules/engineering-foundation/contracts/identity";
 import { FoundationError } from "@/modules/engineering-foundation/domain/errors";
 import type { RegistryAuthorization } from "@/modules/farmer-registry/application/registry";
 import { createEnterpriseSchema, createSeasonSchema, productionPageSchema, type ProductionRepository } from "../contracts/production";
-import type { FarmScope } from "../domain/production";
-
-// The existing registry repository implements this port; no second farm access policy is introduced.
-export interface ProductionFarmAccess {
-  farmScopeForMember(input: { userId: string; farmId: string }): Promise<(FarmScope & { name: string }) | null>;
-}
-function parse<T>(schema: { safeParse(input: unknown): { success: true; data: T } | { success: false } }, input: unknown): T {
-  const result = schema.safeParse(input);
-  if (!result.success) throw new FoundationError("INVALID_INPUT");
-  return result.data;
-}
+import { authorizeProductionFarm, parseProductionInput as parse, type ProductionFarmAccess } from "./farm-access";
+export type { ProductionFarmAccess } from "./farm-access";
 
 export class ProductionService {
   constructor(private readonly authorization: RegistryAuthorization, private readonly farms: ProductionFarmAccess, private readonly repository: ProductionRepository) {}
 
   private async farmAccess(farmId: unknown) {
-    const account = await this.authorization.account();
-    const id = parse(idSchema, farmId);
-    const farm = await this.farms.farmScopeForMember({ userId: account.id, farmId: id });
-    if (!farm) throw new FoundationError("FORBIDDEN");
-    const scope = await this.authorization.scope(farm.tenantId, ["FARMER"]);
-    if (scope.actorId !== account.id) throw new FoundationError("FORBIDDEN");
-    return { scope: { tenantId: farm.tenantId, farmId: farm.farmId, actorId: scope.actorId }, farm: { farmId: farm.farmId, name: farm.name } };
+    return authorizeProductionFarm(this.authorization, this.farms, farmId);
   }
 
   async farmContext(farmId: unknown) { return (await this.farmAccess(farmId)).farm; }

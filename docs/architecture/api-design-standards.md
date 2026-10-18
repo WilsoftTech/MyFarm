@@ -75,3 +75,7 @@ Contract:
 - **Commands:** same-origin JSON with a client `requestId` (UUID). An identical retry replays the original result; a new request for an existing registration returns 409; a stale profile `expectedVersion` returns 409.
 - **Errors:** the Phase 1 envelope `{ error, requestId }` (401/403/400/409/429/503). Unknown and foreign IDs are both 403.
 - **Planned extension:** replay-with-different-payload semantics are PROPOSED (D-P02-004) and are to be aligned with the Phase 7 sync contract ([closeout](../reports/phase-02-closeout-2026-10-09.md)).
+
+## Phase 3 T005 crop endpoints (2026-10-18)
+
+Under `/api/v1/farms/{farmId}`, `GET /crops` returns the authorized active reference catalog, `GET/POST /crop-cycles` list/start cycles, and `GET /crop-cycles/{cycleId}` reads a scoped cycle. All use current farm authorization before field/pagination validation; POST requires same-origin JSON and the strict T004 command. Identical normalized retries return 201 with the same cycle; changed creation fields or farm conflict. Unknown/foreign nested IDs both deny with 403; scoped pagination anchors and safe errors reuse existing contracts. No crop UI, update/delete, closure or catalog-write API is added. [Contract and verification](../reports/phase-03-t005-2026-10-18.md).
