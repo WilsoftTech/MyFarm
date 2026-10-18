@@ -2,13 +2,17 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
-- Implementation status: PARTIALLY COMPLETE — Phase02 registry entity scope 100% verified (13/13 Phase02 tasks); later-phase entity scope 0%; no whole-document percentage claimed.
-- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase02 implementation and closeout session.
+- Implementation status: PARTIALLY COMPLETE — Phase02 registry scope verified; Phase03 T001 Enterprise/Season foundation schema verified locally; no whole-document percentage claimed.
+- Last reviewed: 2026-10-18 (Africa/Nairobi), Phase03 T001.
 - Related phase/task IDs: Phase02 MYF-P02-T001–T013; later phases per roadmap.
 - Verified completed work: Farmer, FarmerProfile, Farm, Plot, FarmMember implemented; User/Organization reused; Address/Contact as columns; Document deferred (D-P02-003).
-- Remaining work/blockers: Enterprises/seasons (Phase3) onward NOT STARTED; Document entity awaits retention policy (P2-C5).
+- Remaining work/blockers: Phase03 service/repository/UI, crop cycle/batch detail and later entities remain pending; Document awaits retention policy (P2-C5). [Phase03 evidence](../reports/phase-03-start-2026-10-18.md).
 - Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md)
 <!-- MYFARM-STATUS-END -->
+
+## Phase 3 foundation subset — 2026-10-18
+
+T001 adds Enterprise and Season to the existing farm scope, with actor/version metadata and composite farm/tenant foreign keys. Contracts describe crop/poultry parent relationships and reject mixed farm scopes. The additive migration is verified only on isolated PostgreSQL; no production repository, service or UI is implemented yet. CropCycle/LivestockBatch tables, movements and current-flock calculations remain pending. [Evidence and next task](../reports/phase-03-start-2026-10-18.md).
 
 **Proposed relationships and bounded domains.** Source entities/fields are preserved in the relevant phase F; support rows such as receipts, assignments and consent grants are recommendations.
 

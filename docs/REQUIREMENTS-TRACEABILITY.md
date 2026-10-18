@@ -3,10 +3,10 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-10 (Africa/Nairobi), hosted provisioning application and Phase 2 completion check.
+- Last reviewed: 2026-10-18 (Africa/Nairobi), Phase 3 T001 contract-stage verification.
 - Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
-- Remaining work/blockers: Maintain alignment with the Phase02 closeout; historical sections stay historical; Phase3 authorized (D-P03-001), NOT STARTED.
+- Remaining work/blockers: MYF-P03-R001 T001 contracts/domain rules and additive foundation schema verified; T002/T003 and full AC001 remain pending. R002–R004 remain NOT STARTED. [Start report](reports/phase-03-start-2026-10-18.md). Historical sections stay historical.
 - Evidence/report links: [Phase02 closeout](reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
@@ -46,7 +46,7 @@ Status date: 2026-10-08. Grouped explicit capabilities map to unique requirement
 
 | ID | Source | Requirement | Phase/task | Acceptance | Test expectation | Status |
 |---|---|---|---|---|---|---|
-| MYF-P03-R001 | P0220–P0237 | Model farm/plot/enterprise/cycle or season, including maize, coffee and poultry batches. | [Phase 3](phases/phase-03-enterprises-seasons.md) / MYF-P03-T001, MYF-P03-T002, MYF-P03-T003 | MYF-P03-AC001: Two farms and multiple cycles maintain separate histories/totals. | Wrong-farm/cycle links and multi-enterprise journey. | NOT STARTED |
+| MYF-P03-R001 | P0220–P0237 | Model farm/plot/enterprise/cycle or season, including maize, coffee and poultry batches. | [Phase 3](phases/phase-03-enterprises-seasons.md) / MYF-P03-T001, MYF-P03-T002, MYF-P03-T003 | MYF-P03-AC001: Two farms and multiple cycles maintain separate histories/totals. | Wrong-farm/cycle links and multi-enterprise journey. | PARTIALLY COMPLETE — T001 contracts and foundation schema verified; T002/T003 and full AC001 pending ([report](reports/phase-03-start-2026-10-18.md)) |
 | MYF-P03-R002 | P0238–P0247 | Record crop, variety, plot, planted area, planting/expected harvest dates, season/status. | [Phase 3](phases/phase-03-enterprises-seasons.md) / MYF-P03-T004, MYF-P03-T005, MYF-P03-T006 | MYF-P03-AC002: Dates and units explicit; excess plot area requires approved exception. | Date ordering, missing optional variety and area boundaries. | NOT STARTED |
 | MYF-P03-R003 | P0248–P0256 | Record animal type/breed, starting/current quantity, batch, acquisition and purpose. | [Phase 3](phases/phase-03-enterprises-seasons.md) / MYF-P03-T007, MYF-P03-T008, MYF-P03-T009 | MYF-P03-AC003: Starting quantity nonnegative integer; current quantity provenance shown. | Fractional/negative birds and batch identity tests. | NOT STARTED |
 | MYF-P03-R004 | P0257–P0270 | Keep extensible enterprise types and avoid hard-coding maize. | [Phase 3](phases/phase-03-enterprises-seasons.md) / MYF-P03-T010, MYF-P03-T011, MYF-P03-T012 | MYF-P03-AC004: New catalog crop needs no maize-specific code; unsupported enterprise workflow clearly unavailable. | Catalog crop and unsupported type tests. | NOT STARTED |

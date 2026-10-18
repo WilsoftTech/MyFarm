@@ -43,6 +43,18 @@ enum AreaUnit {
 enum FarmMemberRole {
   OWNER
 }
+enum EnterpriseType {
+  CROP
+  POULTRY
+  DAIRY
+  LIVESTOCK
+  FISH
+  OTHER
+}
+enum ProductionStatus {
+  ACTIVE
+  CLOSED
+}
 model User {
   id String @id @default(uuid()) @db.Uuid
   authSubject String @unique @db.Uuid
@@ -52,6 +64,8 @@ model User {
   audits AuditEvent[]
   farmer Farmer?
   farmMemberships FarmMember[]
+  enterprises Enterprise[]
+  seasons Season[]
 }
 model Organization {
   id String @id @default(uuid()) @db.Uuid
@@ -115,6 +129,8 @@ model Farm {
   owner Farmer @relation(fields: [ownerFarmerId, tenantId], references: [id, tenantId], onDelete: Restrict)
   plots Plot[]
   members FarmMember[]
+  enterprises Enterprise[]
+  seasons Season[]
   @@unique([id, tenantId])
   @@index([tenantId, createdAt, id])
 }
@@ -169,4 +185,42 @@ model AuditEvent {
   @@unique([tenantId, requestId, action])
   @@index([tenantId, occurredAt, id])
   @@index([actorId, occurredAt])
+}
+
+// Phase3 T001 foundation subset. CropCycle/LivestockBatch detail is added by its own task.
+model Enterprise {
+  id String @id @default(uuid()) @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  type EnterpriseType
+  name String @db.VarChar(120)
+  status ProductionStatus @default(ACTIVE)
+  version Int @default(1)
+  createdBy String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  @@index([tenantId, farmId, createdAt, id])
+  @@index([farmId, tenantId])
+  @@index([createdBy])
+}
+
+model Season {
+  id String @id @default(uuid()) @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  label String @db.VarChar(120)
+  startDate DateTime @db.Date
+  endDate DateTime? @db.Date
+  status ProductionStatus @default(ACTIVE)
+  version Int @default(1)
+  createdBy String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  @@index([tenantId, farmId, createdAt, id])
+  @@index([farmId, tenantId])
+  @@index([createdBy])
 }

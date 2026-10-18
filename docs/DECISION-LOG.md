@@ -3,10 +3,10 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-10 (Africa/Nairobi), hosted provisioning application and Phase 2 completion check.
+- Last reviewed: 2026-10-18 (Africa/Nairobi), Phase 3 start and T001 verification.
 - Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
-- Remaining work/blockers: Phase3 authorized (D-P03-001), NOT STARTED; Step B is on main (756f3c4) and applied to hosted dev (D-INT-003); historical sections stay historical.
+- Remaining work/blockers: Phase3 started, T001 verified; T002–T013 and full acceptance remain. [Start report](reports/phase-03-start-2026-10-18.md). Historical sections stay historical.
 - Evidence/report links: [Phase1+2 integration report](reports/phase-01-02-integration-2026-10-09.md); [Phase02 closeout](reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
@@ -250,3 +250,7 @@ APPROVED, owner 2026-10-09 (accepted the proposed rules):
 ## D-P03-004 — Phase 3 local CI substitution
 
 APPROVED, owner 2026-10-09 (“Yes, extend to Phase 3”). The D-P01-LOCAL-CI-001 rules apply to Phase 3: every `quality.yml` step reproduced from a clean clone against a fresh isolated `postgres:17`. GitHub-hosted CI stays **NOT VERIFIED** and must pass before any production release. Later phases need a new decision.
+
+## D-P03-005 — Phase 3 implementation started
+
+APPROVED, direct user instruction 2026-10-18: “begin Phase 3”. This activates the existing authorization from local `main` at `35cacdf`. T001 implements the necessary Enterprise/Season foundation subset of phase F, domain contracts and relationship rules under the approved Q07/Q08 decisions. The migration adds tables/constraints and deny-all RLS; it does not grant runtime access or add user-facing workflows. Crop-cycle and batch detail remain in their dependent tasks. This records local implementation authorization, not permission to push, deploy or change hosted databases. [T001 verification and remaining work](reports/phase-03-start-2026-10-18.md).

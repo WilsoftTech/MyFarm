@@ -3,12 +3,16 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: Phase01 scope COMPLETED — 100% (13/13 verified Phase01 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); Phase02 scope COMPLETED — 100% (13/13 verified Phase02 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); later-phase scope not counted.
-- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase02 implementation and closeout session.
+- Last reviewed: 2026-10-18 (Africa/Nairobi), Phase03 T001 foundation subset.
 - Related phase/task IDs: Phase01 MYF-P01-T001–T013; Phase02 MYF-P02-T001–T013.
 - Verified completed work: Phase01 scope as previously verified; Phase02: farmer registry contracts/policies/migration/API/tests in this document's area verified (see the Phase 2 implementation section).
-- Remaining work/blockers: Phase02 conditions P2-C1–P2-C8 where applicable; later-phase scope pending authorization.
+- Remaining work/blockers: Phase02 conditions where still applicable; Phase03 T001 foundation schema verified locally, but service/runtime grants and T002–T013 remain pending. [Phase03 evidence](../reports/phase-03-start-2026-10-18.md).
 - Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
+
+## Phase 3 foundation subset — 2026-10-18
+
+Migration `202610180001_enterprises_seasons` adds Enterprise and Season without modifying prior migrations or rows. It enforces farm/tenant composite keys, creator references, positive versions, nonempty labels and bounded, ordered calendar dates. FK indexes support parent checks; scoped list indexes match the repository port's tenant/farm pagination. Both tables have RLS and no policies; runtime grants are deferred to T002. Fresh provisioning, upgrade preservation, migration failure rollback and schema comparison passed on isolated PostgreSQL 17. No hosted application or full Phase 3 completion is claimed. [Report](../reports/phase-03-start-2026-10-18.md).
 
 **Proposed logical/physical schema, not an approved migration.** PostgreSQL is authoritative; Prisma repositories expose domain-specific operations. All tenant-owned records carry explicit tenant scope and relevant farm scope. A farmer personal workspace and organization workspace share isolation abstractions without implementing billing in MVP.
 
