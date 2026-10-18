@@ -1,16 +1,16 @@
 # Phase 03 Enterprises Crops Livestock and Seasons
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED - MYF-P03-T006 crop-cycle UI and AC002 evidence.
-- Implementation status: PARTIALLY COMPLETE — 46.15% (6/13 verified tasks; T001-T006 complete at their stages).
-- Last reviewed: 2026-10-19 (Africa/Nairobi), T006 verification.
+- Documentation review: REVIEWED - MYF-P03-T007 poultry batch domain contract and evidence.
+- Implementation status: PARTIALLY COMPLETE — 53.85% (7/13 verified tasks; T001-T007 complete at their stages).
+- Last reviewed: 2026-10-19 (Africa/Nairobi), T007 verification.
 - Related phase/task IDs: Phase 03; MYF-P03-T001 through MYF-P03-T013; review session Phase01; Phase02 review session (MYF-P02-T001–T013).
-- Verified completed work: T001-T005 plus T006 crop-cycle list/start/detail UI; MYF-P03-AC002 verified locally. [T006 evidence](../reports/phase-03-t006-2026-10-19.md).
-- Remaining work/blockers: T007-T013 and full acceptance/exit gates pending. Poultry workflows and hosted Phase3 provisioning remain pending. Next: T007.
+- Verified completed work: T001-T006 (crop cycles end to end; MYF-P03-AC002 verified locally) plus T007 poultry batch contract under D-P03-010. [T007 evidence](../reports/phase-03-t007-2026-10-19.md).
+- Remaining work/blockers: T008-T013 and full acceptance/exit gates pending. Poultry persistence/UI and hosted Phase3 provisioning remain pending. Next: T008.
 - Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **PARTIALLY COMPLETE — 46.15% (6/13), T001-T006 verified locally at their stages**. [Crop UI evidence](../reports/phase-03-t006-2026-10-19.md); [Foundation evidence](../reports/phase-03-start-2026-10-18.md); [backend evidence](../reports/phase-03-t002-2026-10-18.md). [UI evidence](../reports/phase-03-t003-2026-10-18.md). Full MYF-P03-AC001 and phase exit are not yet verified. Authorization: [D-P03-001](../DECISION-LOG.md#d-p03-001--phase-3-authorization-and-sequencing); Q07/Q08 resolved by [D-P03-002](../DECISION-LOG.md#d-p03-002--q07-seasons-and-crop-cycles) and [D-P03-003](../DECISION-LOG.md#d-p03-003--q08-units-and-enterprise-types). Specification date: 2026-10-08. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **PARTIALLY COMPLETE — 53.85% (7/13), T001-T007 verified locally at their stages**. [Poultry contract evidence](../reports/phase-03-t007-2026-10-19.md); [Crop UI evidence](../reports/phase-03-t006-2026-10-19.md); [Foundation evidence](../reports/phase-03-start-2026-10-18.md); [backend evidence](../reports/phase-03-t002-2026-10-18.md). [UI evidence](../reports/phase-03-t003-2026-10-18.md). Full MYF-P03-AC001 and phase exit are not yet verified. Authorization: [D-P03-001](../DECISION-LOG.md#d-p03-001--phase-3-authorization-and-sequencing); Q07/Q08 resolved by [D-P03-002](../DECISION-LOG.md#d-p03-002--q07-seasons-and-crop-cycles) and [D-P03-003](../DECISION-LOG.md#d-p03-003--q08-units-and-enterprise-types). Specification date: 2026-10-08. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
@@ -69,7 +69,7 @@ Offline: see [sync](../architecture/offline-sync-architecture.md); Phases 1–6 
 
 ## F. Database Design
 
-**Full-phase design proposal.** The T001 subset (Enterprise and Season identity/lifecycle fields) is implemented in the additive `202610180001_enterprises_seasons` migration. T002's runtime grants are now verified locally ([report](../reports/phase-03-t002-2026-10-18.md)). T005 adds CropCycle/CropCatalog persistence, seed data and runtime grants verified locally ([report](../reports/phase-03-t005-2026-10-18.md)). T006 adds the crop-cycle UI with no schema change ([report](../reports/phase-03-t006-2026-10-19.md)). LivestockBatch detail and hosted application remain pending; the full proposal below is not an implementation claim.
+**Full-phase design proposal.** The T001 subset (Enterprise and Season identity/lifecycle fields) is implemented in the additive `202610180001_enterprises_seasons` migration. T002's runtime grants are now verified locally ([report](../reports/phase-03-t002-2026-10-18.md)). T005 adds CropCycle/CropCatalog persistence, seed data and runtime grants verified locally ([report](../reports/phase-03-t005-2026-10-18.md)). T006 adds the crop-cycle UI with no schema change ([report](../reports/phase-03-t006-2026-10-19.md)). T007 defines the poultry batch contract with no schema change; poultry field choices are recorded in D-P03-010 ([report](../reports/phase-03-t007-2026-10-19.md)). LivestockBatch persistence and hosted application remain pending; the full proposal below is not an implementation claim.
 
 Enterprise(id UUID,tenantId UUID,farmId UUID,type enum,name text,status enum); Season(id UUID,tenantId UUID,farmId UUID,label text,startDate date,endDate date?,status enum); CropCycle(id UUID,enterpriseId UUID,plotId UUID,seasonId UUID,crop text,variety text?,areaPlanted numeric,areaUnit text,plantingDate date,expectedHarvest date?,status enum); LivestockBatch(id UUID,enterpriseId UUID,animalType text,breed text?,startingQuantity integer,acquisitionDate date,purpose text,status enum). Current flock becomes movement-derived in Phase 5.
 
@@ -89,7 +89,7 @@ Loading announced; recoverable errors retain input and safe retry. Empty states 
 
 ## H. Implementation Tasks
 
-Execute these small stages sequentially after authorization. Field/model/provider policies remain proposals until affected decisions are resolved. Each capability separates contract/domain work, authorized service/evidence work, and user-visible acceptance. T001 foundation, T002 backend, T003 enterprise/season UI, T004 crop-cycle domain contract, T005 crop backend and T006 crop UI are verified; T007-T013 remain pending. D-P03-007 adjusts T003 acceptance sequencing; the full phase acceptance gate remains required. Commit each completed task per the owner's 2026-10-18 instruction.
+Execute these small stages sequentially after authorization. Field/model/provider policies remain proposals until affected decisions are resolved. Each capability separates contract/domain work, authorized service/evidence work, and user-visible acceptance. T001 foundation, T002 backend, T003 enterprise/season UI, T004 crop-cycle domain contract, T005 crop backend, T006 crop UI and T007 poultry contract are verified; T008-T013 remain pending. D-P03-007 adjusts T003 acceptance sequencing; the full phase acceptance gate remains required. Commit each completed task per the owner's 2026-10-18 instruction.
 
 ### MYF-P03-T001 — Specify and implement domain contract for MYF-P03-R001
 
@@ -253,7 +253,7 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 - [x] MYF-P03-T004 domain/contract stage complete with [evidence](../reports/phase-03-t004-2026-10-18.md); full AC002 pending T005/T006.
 - [x] MYF-P03-T005 backend stage complete with [evidence](../reports/phase-03-t005-2026-10-18.md); full AC002 pending T006.
 - [x] MYF-P03-T006 crop-cycle UI complete with [evidence](../reports/phase-03-t006-2026-10-19.md); MYF-P03-AC002 verified locally.
-- [ ] MYF-P03-T007 complete with evidence.
+- [x] MYF-P03-T007 poultry domain/contract stage complete with [evidence](../reports/phase-03-t007-2026-10-19.md); full AC003 pending T008/T009.
 - [ ] MYF-P03-T008 complete with evidence.
 - [ ] MYF-P03-T009 complete with evidence.
 - [ ] MYF-P03-T010 complete with evidence.

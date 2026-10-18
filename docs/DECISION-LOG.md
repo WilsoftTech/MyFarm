@@ -270,3 +270,14 @@ IMPLEMENTED 2026-10-18 within the direct user instruction to proceed with T004, 
 ## D-P03-009 — T005 crop persistence and initial catalog
 
 APPROVED local implementation by direct user instruction to proceed with T005 (2026-10-18). When asked about initial reference data, the owner selected "Include maize and coffee from the project examples". The additive migration includes stable Maize/Coffee catalog rows and crop-cycle storage within the T004 contract/Q07/Q08 rules. The runtime has catalog read access and cycle SELECT/INSERT only; catalog administration remains T010-T012. Starts use existing atomic receipts and a transaction-level plot advisory lock, with active membership rechecks and exact aggregate area validation. This is local implementation authorization, not a hosted migration/seed/grants, push or deployment approval. T006 and full AC002 remain pending. [Evidence](reports/phase-03-t005-2026-10-18.md).
+
+## D-P03-010 — T007 poultry batch fields
+
+APPROVED, owner 2026-10-19, after the instruction "push all commits and proceed to T007". The owner chose the recommended option for each open R003 field:
+
+- **Animal type:** a global data catalog like crops, seeded with Chicken, Duck, Turkey and Guinea fowl. No names are hard-coded; breed is optional free text.
+- **Production purpose:** fixed list — Eggs (layers), Meat (broilers), Dual purpose, Breeding.
+- **Batch identity:** a farmer-entered label (for example "Batch #004"), unique per farm across open and closed batches, ignoring case and whitespace differences.
+- **Acquisition:** acquisition date only; purchase cost belongs to Phase 4 accounting.
+
+Engineering details within these rules: starting quantity is a whole number from 0 to 2,147,483,647 (AC003 says nonnegative, so 0 is allowed). The current count equals the starting count, labelled as such, until Phase 5 flock movements exist. No future-date limit is imposed on acquisition, matching crop planting dates. T007 adds contracts and rules only; catalog storage, seeds and the uniqueness constraint are T008 scope. This is local implementation authorization, not a hosted change or deployment approval. [Evidence](reports/phase-03-t007-2026-10-19.md).
