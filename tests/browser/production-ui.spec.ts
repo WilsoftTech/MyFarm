@@ -42,7 +42,7 @@ test("farm → empty production lists → enterprise and overlapping seasons →
   const maize = await enterprise(page, "Maize");
   await enterprise(page, "Coffee");
   await enterprise(page, "Layers", "POULTRY");
-  await expect(page.getByText("Poultry batch records are not available yet.", { exact: false })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Add poultry batch" })).toHaveAttribute("href", /\/poultry-batches\/new\?enterpriseId=/);
   for (const label of ["2026 Season A", "2026 Season B"]) {
     await page.goto(`/farms/${fixtures.farms.a}/seasons/new`);
     await page.getByLabel("Season name").fill(label); await page.getByLabel("Start date", { exact: true }).fill("2026-03-01");

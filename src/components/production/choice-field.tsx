@@ -4,9 +4,10 @@ import type { UseFormRegisterReturn } from "react-hook-form";
 import { Field } from "@/components/farmer-registry/field";
 import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import type { CropChoice, CropChoiceKind, CropChoiceLoad, CropChoicePage } from "./crop-choice-types";
+import type { Choice, ChoiceLoad, ChoicePage } from "./choice-types";
 
-export function CropChoiceField({ id, label, kind, initial, control, error, online, load, onSelect }: { id: string; label: string; kind: CropChoiceKind; initial: CropChoicePage; control: UseFormRegisterReturn; error?: string; online: boolean; load: CropChoiceLoad; onSelect?: (choice: CropChoice | undefined) => void }) {
+/** A paged server-backed select; later pages append without losing the current draft or selection. */
+export function ChoiceField<K extends string>({ id, label, kind, initial, control, error, online, load, onSelect }: { id: string; label: string; kind: K; initial: ChoicePage; control: UseFormRegisterReturn; error?: string; online: boolean; load: ChoiceLoad<K>; onSelect?: (choice: Choice | undefined) => void }) {
   const [page, setPage] = useState(initial), [pending, setPending] = useState(false), [message, setMessage] = useState("");
   async function more() {
     if (!page.nextCursor || pending || !online) return;

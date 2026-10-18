@@ -1,9 +1,9 @@
 import { beforeEach, expect, it, vi } from "vitest";
 import { FoundationError } from "@/modules/engineering-foundation/domain/errors";
-const mocks = vi.hoisted(() => ({ createEnterprise: vi.fn(), createSeason: vi.fn(), start: vi.fn(), listEnterprises: vi.fn(), redirect: vi.fn((path: string): never => { throw new Error("REDIRECT:" + path); }) }));
-vi.mock("@/modules/enterprises-seasons/infrastructure/services", () => ({ productionService: () => mocks, cropCycleService: () => mocks }));
+const mocks = vi.hoisted(() => ({ createEnterprise: vi.fn(), createSeason: vi.fn(), start: vi.fn(), listEnterprises: vi.fn(), animalTypes: vi.fn(), redirect: vi.fn((path: string): never => { throw new Error("REDIRECT:" + path); }) }));
+vi.mock("@/modules/enterprises-seasons/infrastructure/services", () => ({ productionService: () => mocks, cropCycleService: () => mocks, poultryBatchService: () => mocks }));
 vi.mock("next/navigation", () => ({ redirect: mocks.redirect }));
-import { createEnterpriseAction, createSeasonAction, startCropCycleAction, moreCropChoicesAction } from "@/app/farms/[farmId]/production-actions";
+import { createEnterpriseAction, createSeasonAction, startCropCycleAction, moreCropChoicesAction, startPoultryBatchAction, morePoultryChoicesAction } from "@/app/farms/[farmId]/production-actions";
 import { runServerCommand } from "@/modules/engineering-foundation/infrastructure/server-command";
 beforeEach(() => vi.clearAllMocks());
 it("pages selector choices through the authorized service and sanitizes failed reloads", async () => {
@@ -12,6 +12,26 @@ it("pages selector choices through the authorized service and sanitizes failed r
   expect(mocks.listEnterprises).toHaveBeenCalledWith("farm-a", { cursor: "cursor" });
   mocks.listEnterprises.mockRejectedValueOnce(new Error("private-provider-detail"));
   expect(await moreCropChoicesAction("farm-a", "enterprises", "cursor")).toEqual({ ok: false, message: expect.stringContaining("Your details are still here") });
+});
+it("pages poultry choices, disabling non-poultry and closed enterprises, and sanitizes failures", async () => {
+  mocks.listEnterprises.mockResolvedValueOnce({ items: [{ enterpriseId: "bird", name: "Layers", type: "POULTRY", status: "ACTIVE" }, { enterpriseId: "crop", name: "Maize", type: "CROP", status: "ACTIVE" }, { enterpriseId: "old", name: "Old flock", type: "POULTRY", status: "CLOSED" }], nextCursor: null });
+  expect(await morePoultryChoicesAction("farm-a", "enterprises", "cursor")).toEqual({ ok: true, page: { items: [{ id: "bird", label: "Layers", disabled: false }, { id: "crop", label: "Maize — not a poultry enterprise", disabled: true }, { id: "old", label: "Old flock — closed", disabled: true }], nextCursor: null } });
+  mocks.animalTypes.mockResolvedValueOnce({ items: [{ animalTypeId: "duck", name: "Duck" }], nextCursor: "next" });
+  expect(await morePoultryChoicesAction("farm-a", "animal-types", "cursor")).toEqual({ ok: true, page: { items: [{ id: "duck", label: "Duck" }], nextCursor: "next" } });
+  expect(mocks.animalTypes).toHaveBeenCalledWith("farm-a", { cursor: "cursor" });
+  mocks.animalTypes.mockRejectedValueOnce(new Error("private-provider-detail"));
+  const failed = await morePoultryChoicesAction("farm-a", "animal-types", "cursor");
+  expect(failed).toEqual({ ok: false, message: expect.stringContaining("Your details are still here") }); expect(JSON.stringify(failed)).not.toContain("private-provider-detail");
+});
+it("redirects a poultry batch only after commit and explains duplicate-name and count failures", async () => {
+  mocks.start.mockResolvedValueOnce({ farmId: "farm-a", batchId: "batch-a" });
+  await expect(startPoultryBatchAction("untrusted-farm", {})).rejects.toThrow("REDIRECT:/farms/farm-a/poultry-batches/batch-a?saved=1");
+  mocks.start.mockRejectedValueOnce(new FoundationError("CONFLICT"));
+  expect(await startPoultryBatchAction("farm-a", {})).toEqual({ ok: false, message: expect.stringContaining("already use this name") });
+  mocks.start.mockRejectedValueOnce(new FoundationError("INVALID_INPUT"));
+  expect(await startPoultryBatchAction("farm-a", {})).toEqual({ ok: false, message: expect.stringContaining("whole number of birds") });
+  mocks.start.mockRejectedValueOnce(new FoundationError("FORBIDDEN"));
+  expect(await startPoultryBatchAction("farm-a", {})).toEqual({ ok: false, message: expect.not.stringContaining("already use this name") });
 });
 it("redirects a crop only after commit and provides safe area guidance on validation failure", async () => {
   mocks.start.mockResolvedValueOnce({ farmId: "farm-a", cycleId: "cycle-a" });

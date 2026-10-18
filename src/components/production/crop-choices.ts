@@ -1,9 +1,9 @@
 import "server-only";
 import { cropCycleService, productionService } from "@/modules/enterprises-seasons/infrastructure/services";
 import { areaUnitLabels } from "@/components/farmer-registry/labels";
-import type { CropChoiceKind, CropChoicePage } from "./crop-choice-types";
+import type { ChoicePage, CropChoiceKind } from "./choice-types";
 
-export async function loadCropChoices(farmId: string, kind: CropChoiceKind, cursor?: string): Promise<CropChoicePage> {
+export async function loadCropChoices(farmId: string, kind: CropChoiceKind, cursor?: string): Promise<ChoicePage> {
   const page = { cursor };
   if (kind === "enterprises") {
     const result = await productionService().listEnterprises(farmId, page);

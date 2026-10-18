@@ -2,7 +2,7 @@ import { act, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { CropCycleForm } from "@/components/production/crop-cycle-form";
-import type { CropChoiceLoad, CropChoicePages } from "@/components/production/crop-choice-types";
+import type { CropChoiceLoad, CropChoicePages } from "@/components/production/choice-types";
 import { startCropCycleSchema } from "@/modules/enterprises-seasons/contracts/crop-cycle";
 import type { CommandSubmit } from "@/modules/engineering-foundation/contracts/command-result";
 import { renderToString } from "react-dom/server";

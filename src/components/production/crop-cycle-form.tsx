@@ -10,8 +10,8 @@ import { Field, focusFirstInvalid } from "@/components/farmer-registry/field";
 import { areaUnitLabels } from "@/components/farmer-registry/labels";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { CropChoiceField } from "./crop-choice-field";
-import type { CropChoiceLoad, CropChoicePages } from "./crop-choice-types";
+import { ChoiceField } from "./choice-field";
+import type { CropChoiceLoad, CropChoicePages } from "./choice-types";
 import { useProductionSubmit } from "./use-production-submit";
 import { ProductionFormFeedback } from "./form-feedback";
 
@@ -29,10 +29,10 @@ export function CropCycleForm({ farmId, choices, enterpriseId, submit, load }: {
   return <form ref={form} noValidate aria-busy={isSubmitting || !state.ready} onSubmit={handleSubmit(state.save, () => focusFirstInvalid(form.current))}>
     {!state.ready && <p role="status">Loading form…</p>}
     <fieldset disabled={!state.ready} className="min-w-0 space-y-5"><legend className="sr-only">Crop cycle details</legend>
-    <CropChoiceField id="cycleEnterprise" label="Enterprise" kind="enterprises" initial={choices.enterprises} control={register("enterpriseId")} error={errors.enterpriseId ? "Choose an active crop enterprise." : undefined} online={state.online} load={load} />
-    <CropChoiceField id="cycleSeason" label="Season" kind="seasons" initial={choices.seasons} control={register("seasonId")} error={errors.seasonId ? "Choose an active season." : undefined} online={state.online} load={load} />
-    <CropChoiceField id="cyclePlot" label="Plot" kind="plots" initial={choices.plots} control={register("plotId")} error={errors.plotId ? "Choose a plot with its area recorded." : undefined} online={state.online} load={load} onSelect={choice => { if (choice?.areaUnit) setValue("areaUnit", choice.areaUnit, { shouldValidate: true }); }} />
-    <CropChoiceField id="cycleCrop" label="Crop" kind="crops" initial={choices.crops} control={register("cropId")} error={errors.cropId ? "Choose a crop." : undefined} online={state.online} load={load} />
+    <ChoiceField id="cycleEnterprise" label="Enterprise" kind="enterprises" initial={choices.enterprises} control={register("enterpriseId")} error={errors.enterpriseId ? "Choose an active crop enterprise." : undefined} online={state.online} load={load} />
+    <ChoiceField id="cycleSeason" label="Season" kind="seasons" initial={choices.seasons} control={register("seasonId")} error={errors.seasonId ? "Choose an active season." : undefined} online={state.online} load={load} />
+    <ChoiceField id="cyclePlot" label="Plot" kind="plots" initial={choices.plots} control={register("plotId")} error={errors.plotId ? "Choose a plot with its area recorded." : undefined} online={state.online} load={load} onSelect={choice => { if (choice?.areaUnit) setValue("areaUnit", choice.areaUnit, { shouldValidate: true }); }} />
+    <ChoiceField id="cycleCrop" label="Crop" kind="crops" initial={choices.crops} control={register("cropId")} error={errors.cropId ? "Choose a crop." : undefined} online={state.online} load={load} />
     <Field id="cycleVariety" label="Variety" optional error={errors.variety?.message}>{aria => <Input {...aria} maxLength={120} {...register("variety")} />}</Field>
     <div className="grid gap-4 sm:grid-cols-2">
       <Field id="cycleArea" label="Area planted" hint="Use the same unit as the plot. All active crops on the plot count toward its area." error={errors.areaPlanted?.message}>{aria => <Input {...aria} inputMode="decimal" {...register("areaPlanted")} />}</Field>

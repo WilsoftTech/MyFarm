@@ -1,8 +1,9 @@
 "use server";
-import { cropCycleService, productionService } from "@/modules/enterprises-seasons/infrastructure/services";
+import { cropCycleService, poultryBatchService, productionService } from "@/modules/enterprises-seasons/infrastructure/services";
 import { runServerCommand } from "@/modules/engineering-foundation/infrastructure/server-command";
 import { loadCropChoices } from "@/components/production/crop-choices";
-import type { CropChoiceKind, CropChoiceLoad } from "@/components/production/crop-choice-types";
+import { loadPoultryChoices } from "@/components/production/poultry-choices";
+import type { CropChoiceKind, CropChoiceLoad, PoultryChoiceKind, PoultryChoiceLoad } from "@/components/production/choice-types";
 
 export async function createEnterpriseAction(farmId: string, input: unknown) {
   return runServerCommand(async () => {
@@ -24,6 +25,22 @@ export async function moreCropChoicesAction(farmId: string, kind: CropChoiceKind
       return { ok: false, message: "Choose a valid list." };
     }
     return { ok: true, page: await loadCropChoices(farmId, kind, cursor) };
+  }
+  catch { return { ok: false, message: "Could not load more choices. Check your access and connection, then try again. Your details are still here." }; }
+}
+export async function startPoultryBatchAction(farmId: string, input: unknown) {
+  return runServerCommand(async () => {
+    const row = await poultryBatchService().start(farmId, input);
+    return "/farms/" + row.farmId + "/poultry-batches/" + row.batchId + "?saved=1";
+  }, "This batch was not saved. Another batch on this farm may already use this name, so choose a different name. Also check that the enterprise and animal type are still active.", "Check the batch details. Enter a whole number of birds, 0 or more, and a valid acquisition date.");
+}
+export async function morePoultryChoicesAction(farmId: string, kind: PoultryChoiceKind, cursor: string): ReturnType<PoultryChoiceLoad> {
+  try {
+    if (!["enterprises", "animal-types"].includes(kind)) {
+      await productionService().farmContext(farmId);
+      return { ok: false, message: "Choose a valid list." };
+    }
+    return { ok: true, page: await loadPoultryChoices(farmId, kind, cursor) };
   }
   catch { return { ok: false, message: "Could not load more choices. Check your access and connection, then try again. Your details are still here." }; }
 }

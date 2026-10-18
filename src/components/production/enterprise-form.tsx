@@ -19,7 +19,7 @@ export function EnterpriseForm({ submit }: { submit: CommandSubmit }) {
   return <form ref={form} noValidate aria-busy={isSubmitting} className="space-y-5" onSubmit={handleSubmit(state.save, () => focusFirstInvalid(form.current))}>
     <Field id="enterpriseName" label="Enterprise name" hint="For example “Maize”, “Coffee” or “Layers”." error={errors.name?.message}>{aria => <Input {...aria} maxLength={120} {...register("name")} />}</Field>
     <Field id="enterpriseType" label="Enterprise type" error={errors.type?.message}>{aria => <Select {...aria} {...register("type")}><option value="">Choose one</option>{ENTERPRISE_TYPES.map(value => <option key={value} value={value}>{enterpriseTypeLabels[value]}</option>)}</Select>}</Field>
-    <p className="text-sm leading-6 text-foreground/75">Save a separate enterprise for each part of the farm you want to track. Detailed crop and animal records will be available later.</p>
+    <p className="text-sm leading-6 text-foreground/75">Save a separate enterprise for each part of the farm you want to track. Crop cycles and poultry batches are recorded under their enterprise; records for other types will be available later.</p>
     <ProductionFormFeedback online={state.online} saving={isSubmitting} message={state.message} />
     <Button type="submit" disabled={isSubmitting || !state.online} className="w-full sm:w-auto">{isSubmitting ? "Saving…" : "Save enterprise"}</Button>
   </form>;
