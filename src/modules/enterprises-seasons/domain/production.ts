@@ -13,8 +13,26 @@ export interface PlotReference extends FarmScope { plotId: string }
 export interface CropCycleLinks { enterpriseId: string; seasonId: string; plotId: string }
 export interface PoultryBatchLinks { enterpriseId: string }
 
+export const PRODUCTION_WORKFLOWS = ["CROP_CYCLE", "POULTRY_BATCH"] as const;
+export type ProductionWorkflow = typeof PRODUCTION_WORKFLOWS[number];
+/** The single enterprise-type → workflow map (D-P03-003). Other types are recorded without a production workflow. */
+export const ENTERPRISE_WORKFLOWS: Readonly<Record<EnterpriseType, ProductionWorkflow | null>> = Object.freeze({
+  CROP: "CROP_CYCLE", POULTRY: "POULTRY_BATCH", DAIRY: null, LIVESTOCK: null, FISH: null, OTHER: null,
+});
+/** Unknown runtime values (including prototype keys) have no workflow rather than throwing. */
+export function enterpriseWorkflow(type: EnterpriseType): ProductionWorkflow | null {
+  return Object.hasOwn(ENTERPRISE_WORKFLOWS, type) ? ENTERPRISE_WORKFLOWS[type] : null;
+}
 export function hasProductionWorkflow(type: EnterpriseType): boolean {
-  return type === "CROP" || type === "POULTRY";
+  return enterpriseWorkflow(type) !== null;
+}
+/** Display form for farmer/catalog text: NFC, trimmed, internal whitespace collapsed. */
+export function displayText(value: string): string {
+  return value.normalize("NFC").trim().replace(/\s+/g, " ");
+}
+/** Identity key that ignores case and whitespace differences. */
+export function textKey(value: string): string {
+  return displayText(value).toLowerCase();
 }
 
 /** Calendar dates have no time zone. Reject impossible dates rather than normalizing them. */
@@ -44,13 +62,13 @@ export function assertCropCycleParents(
   if (parents.enterprise.enterpriseId !== links.enterpriseId || parents.season.seasonId !== links.seasonId || parents.plot.plotId !== links.plotId) {
     throw new FoundationError("FORBIDDEN");
   }
-  if (parents.enterprise.type !== "CROP") throw new FoundationError("INVALID_INPUT");
+  if (enterpriseWorkflow(parents.enterprise.type) !== "CROP_CYCLE") throw new FoundationError("INVALID_INPUT");
   if (parents.enterprise.status !== "ACTIVE" || parents.season.status !== "ACTIVE") throw new FoundationError("CONFLICT");
 }
 
 export function assertPoultryBatchParent(scope: FarmScope, links: PoultryBatchLinks, enterprise: EnterpriseReference): void {
   assertSameFarm(scope, [enterprise]);
   if (enterprise.enterpriseId !== links.enterpriseId) throw new FoundationError("FORBIDDEN");
-  if (enterprise.type !== "POULTRY") throw new FoundationError("INVALID_INPUT");
+  if (enterpriseWorkflow(enterprise.type) !== "POULTRY_BATCH") throw new FoundationError("INVALID_INPUT");
   if (enterprise.status !== "ACTIVE") throw new FoundationError("CONFLICT");
 }

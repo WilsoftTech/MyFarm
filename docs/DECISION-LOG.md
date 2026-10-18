@@ -285,3 +285,12 @@ Engineering details within these rules: starting quantity is a whole number from
 ## D-P03-011 — T008 poultry persistence
 
 APPROVED local implementation by direct user instruction "proceed to T008" (2026-10-19), within D-P03-010. Additive migration `202610190001_poultry_batches` adds the approved animal-type catalog seeds (Chicken, Duck, Turkey, Guinea fowl), a fixed purpose enum and batch storage. Farm-wide label uniqueness across all statuses is a database unique index on an application-normalized key. The runtime has catalog read access and batch SELECT/INSERT only; catalog administration, batch closure and flock movements remain later scope. This is local implementation authorization, not a hosted migration/seed/grants, push or deployment approval. T009 and full AC003 remain pending. [Evidence](reports/phase-03-t008-2026-10-19.md).
+
+## D-P03-012 — R004 catalog changes by reviewed data release
+
+APPROVED, owner 2026-10-19, after the instruction "proceed to T010". Two questions were asked, and the owner chose the recommended option for both:
+
+- **Catalog changes:** crops and animal types change only through small, reviewed, audited data releases (migrations), never through code. Releases add entries with new stable IDs and names that are unique ignoring case and whitespace, including inactive entries. Entries are deactivated, never deleted or reused. No in-app catalog editor or platform-operator role is added in Phase 3, and runtime roles keep read-only catalog access. This supersedes the expectation in D-P03-009 that catalog administration would land in T010–T012; an editor is deferred until a platform-operator role is approved.
+- **Initial crop list:** the first release adds Beans, Bananas (matooke), Cassava, Sweet potatoes, Irish potatoes, Groundnuts, Sorghum, Millet, Sunflower, Tea, Tomatoes and Cabbage beside Maize and Coffee. It doubles as the R004 proof that a new catalog crop needs no crop-specific code.
+
+T010 adds the single enterprise-type → workflow registry, the release rule and their tests; T011 ships the crop release as data. Local implementation authorization only, not a hosted change or deployment approval. [Evidence](reports/phase-03-t010-2026-10-19.md).

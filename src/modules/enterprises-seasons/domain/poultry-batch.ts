@@ -1,5 +1,5 @@
 import { FoundationError } from "@/modules/engineering-foundation/domain/errors";
-import { assertPoultryBatchParent, isCalendarDate, type EnterpriseReference, type FarmScope, type PoultryBatchLinks } from "./production";
+import { assertPoultryBatchParent, displayText, isCalendarDate, textKey, type EnterpriseReference, type FarmScope, type PoultryBatchLinks } from "./production";
 
 export const POULTRY_PURPOSES = ["EGGS", "MEAT", "DUAL_PURPOSE", "BREEDING"] as const;
 export type PoultryPurpose = typeof POULTRY_PURPOSES[number];
@@ -27,11 +27,11 @@ export function normalizeBirdCount(value: unknown): number | null {
 }
 /** Display label: trimmed, internal whitespace collapsed; the farmer's capitalization is kept. */
 export function normalizeBatchLabel(value: string): string {
-  return value.normalize("NFC").trim().replace(/\s+/g, " ");
+  return displayText(value);
 }
 /** Farm-wide identity key: "Batch  #004" and "batch #004" are the same batch label. */
 export function batchLabelKey(value: string): string {
-  return normalizeBatchLabel(value).toLowerCase();
+  return textKey(value);
 }
 export function currentQuantity(startingQuantity: number): { currentQuantity: number; currentQuantitySource: CurrentQuantitySource } {
   return { currentQuantity: startingQuantity, currentQuantitySource: "STARTING_COUNT" };
