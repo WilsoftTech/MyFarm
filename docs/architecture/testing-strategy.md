@@ -62,3 +62,7 @@ The crop-cycle suite adds 65 command/relationship/date/precision/capacity cases;
 ## Phase 3 T005 evidence (2026-10-18)
 
 Final local results: 279 unit/component, 83 integration, 36 anonymous browser and 24 signed-in browser checks PASS. New database cases cover same-plot competing starts, concurrent duplicates, exact decimal round trips, all allocations beyond one list page, receipt/plot wait revocation, rollback, IDOR, runtime privileges, migration failure and upgrade preservation. The actual provisioning manifest (including new grants) passes fresh/rerun/failure tests. `tests/support/crop-cycle-recovery.mjs` rehearse dump/restore with an explicit loopback test URL and disposable T005 container; cycle, audit and grant boundaries reconcile. Full crop UI acceptance is T006; local Auth fixtures are not hosted Supabase verification. [Evidence](../reports/phase-03-t005-2026-10-18.md).
+
+## Phase 3 T007–T008 evidence (2026-10-19)
+
+T007 adds 81 poultry contract cases. Final T008 local results: 388 unit/component, 103 integration, 36 anonymous and 46 signed-in browser checks PASS. New database cases cover competing requests for one batch label, concurrent duplicates, 0/maximum counts, label case/spacing and closed-batch conflicts, replay snapshots, revocation during a receipt wait, constraints and forged runtime inserts. A dump/restore rehearsal also passes. [T008 evidence](../reports/phase-03-t008-2026-10-19.md).

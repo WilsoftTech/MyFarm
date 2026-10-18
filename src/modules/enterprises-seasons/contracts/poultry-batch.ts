@@ -32,7 +32,7 @@ export interface PoultryBatchView extends FarmScope, ProductionRecord, Omit<Poul
 }
 
 /**
- * Port for T008; application authorization precedes all calls.
+ * Implemented in T008; application authorization precedes all calls.
  * Farm-record reads constrain tenant AND farm, including nested IDs and pagination anchors.
  * Animal types are global data-catalog entries (D-P03-010); the service authorizes farm access before lookup.
  * startPoultryBatch must recheck current membership, resolve the POULTRY enterprise and an active

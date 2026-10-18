@@ -59,3 +59,7 @@ Implemented Phase 2 subset ([closeout](../reports/phase-02-closeout-2026-10-09.m
 ## T005 stored crop model
 
 CropCycle uses same-farm/tenant composite links to enterprise, plot and season; creator and global CropCatalog references; a creation-time crop label snapshot; optional variety/harvest; exact area and unit; recorded excess-area reason; ACTIVE/version 1 and actor/timestamps. Maize/Coffee are initial reference rows explicitly approved by the owner, with no runtime catalog write grant. Later catalog administration and livestock storage remain pending. [Evidence](../reports/phase-03-t005-2026-10-18.md).
+
+## T007–T008 poultry batch model
+
+A poultry batch belongs to one ACTIVE POULTRY enterprise on the farm (no plot or season link). It references a global animal-type catalog entry, stores an optional breed, a farmer label unique per farm ignoring case and spacing, a whole starting count from 0 up, an acquisition date and one of EGGS/MEAT/DUAL_PURPOSE/BREEDING (D-P03-010). The current count is reported as the starting count with source STARTING_COUNT until Phase 5 flock movements exist. [T007](../reports/phase-03-t007-2026-10-19.md), [T008](../reports/phase-03-t008-2026-10-19.md).

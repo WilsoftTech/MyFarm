@@ -8,6 +8,9 @@ import { productionRepository } from "./repository";
 import { CropCycleService } from "../application/crop-cycle";
 import type { CropCycleRepository } from "../contracts/crop-cycle";
 import { cropCycleRepository } from "./crop-cycle-repository";
+import { PoultryBatchService } from "../application/poultry-batch";
+import type { PoultryBatchRepository } from "../contracts/poultry-batch";
+import { poultryBatchRepository } from "./poultry-batch-repository";
 
 export function productionService() {
   // Anonymous requests must fail before constructing a database client.
@@ -37,6 +40,19 @@ export function cropCycleService() {
     startCropCycle: (scope, command) => repository().startCropCycle(scope, command),
   };
   return new CropCycleService(authorizationService(), {
+    farmScopeForMember: input => registryRepository(database()).farmScopeForMember(input),
+  }, lazy);
+}
+
+export function poultryBatchService() {
+  const repository = () => poultryBatchRepository(database());
+  const lazy: PoultryBatchRepository = {
+    animalTypes: (scope, page) => repository().animalTypes(scope, page),
+    poultryBatch: (scope, id) => repository().poultryBatch(scope, id),
+    poultryBatches: (scope, page) => repository().poultryBatches(scope, page),
+    startPoultryBatch: (scope, command) => repository().startPoultryBatch(scope, command),
+  };
+  return new PoultryBatchService(authorizationService(), {
     farmScopeForMember: input => registryRepository(database()).farmScopeForMember(input),
   }, lazy);
 }

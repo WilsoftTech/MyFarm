@@ -55,6 +55,12 @@ enum ProductionStatus {
   ACTIVE
   CLOSED
 }
+enum PoultryPurpose {
+  EGGS
+  MEAT
+  DUAL_PURPOSE
+  BREEDING
+}
 model User {
   id String @id @default(uuid()) @db.Uuid
   authSubject String @unique @db.Uuid
@@ -67,6 +73,7 @@ model User {
   enterprises Enterprise[]
   seasons Season[]
   cropCycles CropCycle[]
+  poultryBatches PoultryBatch[]
 }
 model Organization {
   id String @id @default(uuid()) @db.Uuid
@@ -205,6 +212,7 @@ model Enterprise {
   farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
   creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
   cropCycles CropCycle[]
+  poultryBatches PoultryBatch[]
   @@unique([id, farmId, tenantId])
   @@index([tenantId, farmId, createdAt, id])
   @@index([farmId, tenantId])
@@ -273,5 +281,42 @@ model CropCycle {
   @@index([enterpriseId, farmId, tenantId])
   @@index([seasonId, farmId, tenantId])
   @@index([cropId])
+  @@index([createdBy])
+}
+model AnimalTypeCatalog {
+  id String @id @db.Uuid
+  name String @unique @db.VarChar(120)
+  active Boolean @default(true)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  batches PoultryBatch[]
+  @@index([active, createdAt, id])
+}
+model PoultryBatch {
+  id String @id @default(uuid()) @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  enterpriseId String @db.Uuid
+  animalTypeId String @db.Uuid
+  // Creation snapshot: catalog renaming does not rewrite historical labels or retry results.
+  animalTypeName String @db.VarChar(120)
+  breed String? @db.VarChar(120)
+  batchLabel String @db.VarChar(120)
+  // Farm-wide identity (D-P03-010): application-normalized, case/whitespace-insensitive label.
+  batchLabelKey String
+  startingQuantity Int
+  acquisitionDate DateTime @db.Date
+  purpose PoultryPurpose
+  status ProductionStatus @default(ACTIVE)
+  version Int @default(1)
+  createdBy String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  enterprise Enterprise @relation(fields: [enterpriseId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  animalType AnimalTypeCatalog @relation(fields: [animalTypeId], references: [id], onDelete: Restrict)
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  @@unique([tenantId, farmId, batchLabelKey])
+  @@index([tenantId, farmId, createdAt, id])
+  @@index([enterpriseId, farmId, tenantId])
+  @@index([animalTypeId])
   @@index([createdBy])
 }

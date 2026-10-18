@@ -39,3 +39,7 @@ Deployment separates schema change from app rollout; forward fixes usually safer
 ## Phase 3 T005 rehearsal (2026-10-18)
 
 Additive migration `202610180002_crop_cycles` and the new manifest-listed runtime file passed fresh installation, upgrade preservation, transaction-failure rollback, provider rerun, Prisma drift comparison and synthetic dump/restore on isolated PostgreSQL 17. Composite parent indexes require a lock/size review before shared rollout. Existing app code can run with the additive schema; roll back code while retaining recorded histories rather than dropping tables. Hosted application and production backup/reconciliation require separate authorization. [Task evidence](../reports/phase-03-t005-2026-10-18.md).
+
+## Phase 3 T008 rehearsal (2026-10-19)
+
+Additive migration `202610190001_poultry_batches` and the new manifest-listed `poultry-batch-runtime.sql` passed fresh install, upgrade from the five prior migrations with row preservation, injected-failure rollback, provider rerun, Prisma drift comparison and a synthetic dump/restore (`tests/support/poultry-batch-recovery.mjs`) on isolated PostgreSQL 17. Roll back application code rather than dropping the tables. Not applied to hosted dev. [T008 evidence](../reports/phase-03-t008-2026-10-19.md).

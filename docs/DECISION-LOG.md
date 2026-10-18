@@ -281,3 +281,7 @@ APPROVED, owner 2026-10-19, after the instruction "push all commits and proceed 
 - **Acquisition:** acquisition date only; purchase cost belongs to Phase 4 accounting.
 
 Engineering details within these rules: starting quantity is a whole number from 0 to 2,147,483,647 (AC003 says nonnegative, so 0 is allowed). The current count equals the starting count, labelled as such, until Phase 5 flock movements exist. No future-date limit is imposed on acquisition, matching crop planting dates. T007 adds contracts and rules only; catalog storage, seeds and the uniqueness constraint are T008 scope. This is local implementation authorization, not a hosted change or deployment approval. [Evidence](reports/phase-03-t007-2026-10-19.md).
+
+## D-P03-011 — T008 poultry persistence
+
+APPROVED local implementation by direct user instruction "proceed to T008" (2026-10-19), within D-P03-010. Additive migration `202610190001_poultry_batches` adds the approved animal-type catalog seeds (Chicken, Duck, Turkey, Guinea fowl), a fixed purpose enum and batch storage. Farm-wide label uniqueness across all statuses is a database unique index on an application-normalized key. The runtime has catalog read access and batch SELECT/INSERT only; catalog administration, batch closure and flock movements remain later scope. This is local implementation authorization, not a hosted migration/seed/grants, push or deployment approval. T009 and full AC003 remain pending. [Evidence](reports/phase-03-t008-2026-10-19.md).
