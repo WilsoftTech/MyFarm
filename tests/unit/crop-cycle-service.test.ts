@@ -11,10 +11,22 @@ const row: CropCycleView = { ...input, areaUnit: "ACRE", cycleId: id(), farmId, 
 function fixture() {
   const authorization: RegistryAuthorization = { account: vi.fn(async () => ({ id: actorId, authSubject: id(), status: "ACTIVE" as const })), scope: vi.fn(async () => ({ actorId, organizationId: tenantId, role: "FARMER" as const })) };
   const farms: ProductionFarmAccess = { farmScopeForMember: vi.fn(async () => ({ farmId, tenantId, name: "Farm" })) };
-  const repository: CropCycleRepository = { startCropCycle: vi.fn(async () => row), cropCycle: vi.fn(async (): Promise<CropCycleView | null> => row), cropCycles: vi.fn(async () => ({ items: [row], nextCursor: null })), crops: vi.fn(async () => ({ items: [{ cropId: input.cropId, name: "Maize" }], nextCursor: null })) };
+  const repository: CropCycleRepository = { plots: vi.fn(async () => ({ items: [], nextCursor: null })), plot: vi.fn(async () => null), startCropCycle: vi.fn(async () => row), cropCycle: vi.fn(async (): Promise<CropCycleView | null> => row), cropCycles: vi.fn(async () => ({ items: [row], nextCursor: null })), crops: vi.fn(async () => ({ items: [{ cropId: input.cropId, name: "Maize" }], nextCursor: null })) };
   return { service: new CropCycleService(authorization, farms, repository), authorization, farms, repository };
 }
 describe("crop-cycle service", () => {
+  it("authorizes plot choices/detail and validates IDs/pagination without broad farm data", async () => {
+    const { service, repository, authorization } = fixture();
+    await service.plots(farmId);
+    expect(repository.plots).toHaveBeenCalledWith({ tenantId, farmId, actorId }, { limit: 20 });
+    await expect(service.plot(farmId, id())).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(service.plot(farmId, "bad")).rejects.toMatchObject({ code: "INVALID_INPUT" });
+    await expect(service.plots(farmId, { limit: 51 })).rejects.toMatchObject({ code: "INVALID_INPUT" });
+    vi.mocked(authorization.scope).mockRejectedValue(new FoundationError("FORBIDDEN"));
+    await expect(service.plots(farmId)).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(service.plot(farmId, id())).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(repository.plots).toHaveBeenCalledTimes(1); expect(repository.plot).toHaveBeenCalledTimes(1);
+  });
   it("normalizes commands and derives scope from current authorization", async () => {
     const { service, repository, authorization } = fixture();
     await expect(service.start(farmId, input)).resolves.toEqual(row);

@@ -28,6 +28,17 @@ function assertReplay(row: CropCycle | null, command: StartCropCycle, actorId: s
 
 export function cropCycleRepository(db: PrismaClient): CropCycleRepository {
   return {
+    async plots(scope, { cursor, limit }) {
+      const where = scoped(scope);
+      const anchor = cursor ? productionAfter(await db.plot.findFirst({ where: { ...where, id: cursor } })) : {};
+      const rows = await db.plot.findMany({ where: { ...where, ...anchor }, orderBy: [{ createdAt: "desc" }, { id: "desc" }], take: limit + 1 });
+      const items = rows.slice(0, limit).map(row => ({ ...where, plotId: row.id, name: row.name, area: row.area?.toString() ?? null, areaUnit: row.areaUnit }));
+      return { items, nextCursor: rows.length > limit ? items[items.length - 1].plotId : null };
+    },
+    async plot(scope, plotId) {
+      const row = await db.plot.findFirst({ where: { ...scoped(scope), id: plotId } });
+      return row ? { ...scoped(scope), plotId: row.id, name: row.name, area: row.area?.toString() ?? null, areaUnit: row.areaUnit } : null;
+    },
     async crops(_scope, { cursor, limit }) {
       const anchor = cursor ? productionAfter(await db.cropCatalog.findFirst({ where: { id: cursor, active: true } })) : {};
       const rows = await db.cropCatalog.findMany({ where: { active: true, ...anchor }, orderBy: [{ createdAt: "desc" }, { id: "desc" }], take: limit + 1 });

@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { idSchema } from "@/modules/engineering-foundation/contracts/identity";
 import { AREA_UNITS } from "@/modules/farmer-registry/domain/rules";
+import type { CropPlotReference } from "../domain/crop-cycle";
 import { isCalendarDate, type FarmScope, type ProductionStatus } from "../domain/production";
 import { isCropDateRange, normalizePlantedArea, type CropCycleFields } from "../domain/crop-cycle";
 import { cropCycleLinksSchema, type ProductionPage, type ProductionPageInput, type ProductionRecord, type ProductionWriteScope } from "./production";
@@ -26,6 +27,7 @@ export const startCropCycleSchema = cropCycleLinksSchema.extend({
   message: "The expected harvest must be on or after the planting date.", path: ["expectedHarvest"],
 });
 export type StartCropCycle = z.output<typeof startCropCycleSchema>;
+export interface CropPlotOption extends CropPlotReference { name: string }
 
 export interface CropCycleView extends FarmScope, ProductionRecord, Omit<CropCycleFields, "variety" | "expectedHarvest" | "areaExceptionReason"> {
   cycleId: string;
@@ -50,6 +52,8 @@ export interface CropCycleView extends FarmScope, ProductionRecord, Omit<CropCyc
  * Closure/reopening, catalog administration and durable offline sync are separate scope.
  */
 export interface CropCycleRepository {
+  plots(scope: FarmScope, page: ProductionPageInput): Promise<ProductionPage<CropPlotOption>>;
+  plot(scope: FarmScope, plotId: string): Promise<CropPlotOption | null>;
   crops(scope: FarmScope, page: ProductionPageInput): Promise<ProductionPage<{ cropId: string; name: string }>>;
   cropCycle(scope: FarmScope, cycleId: string): Promise<CropCycleView | null>;
   cropCycles(scope: FarmScope, page: ProductionPageInput): Promise<ProductionPage<CropCycleView>>;

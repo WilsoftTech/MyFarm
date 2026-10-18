@@ -8,6 +8,9 @@ function subscribe(listener: () => void) {
 }
 const onlineSnapshot = () => navigator.onLine;
 const serverSnapshot = () => true;
+const subscribeReady = () => () => {};
+const clientReady = () => true;
+const serverReady = () => false;
 
 /** The ID survives an interrupted response; editing the normalized payload starts a new intent. */
 export function useProductionSubmit(submit: CommandSubmit) {
@@ -15,6 +18,7 @@ export function useProductionSubmit(submit: CommandSubmit) {
   const [message, setMessage] = useState("");
   const last = useRef<{ payload: string; requestId: string } | null>(null);
   const online = useSyncExternalStore(subscribe, onlineSnapshot, serverSnapshot);
+  const ready = useSyncExternalStore(subscribeReady, clientReady, serverReady);
   async function save(data: { requestId: string } & Record<string, unknown>) {
     setMessage("");
     if (!navigator.onLine) return;
@@ -26,5 +30,5 @@ export function useProductionSubmit(submit: CommandSubmit) {
       if (result && !result.ok) setMessage(result.message);
     } catch { setMessage("Connection interrupted. Your details are still here. Reconnect and try again."); }
   }
-  return { initialRequestId, message, online, save };
+  return { initialRequestId, message, online, ready, save };
 }

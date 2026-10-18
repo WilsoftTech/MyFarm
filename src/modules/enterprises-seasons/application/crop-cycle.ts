@@ -25,4 +25,14 @@ export class CropCycleService {
     const { scope } = await authorizeProductionFarm(this.authorization, this.farms, farmId);
     return this.repository.crops(scope, parse(productionPageSchema, input));
   }
+  async plots(farmId: unknown, input: unknown = {}) {
+    const { scope } = await authorizeProductionFarm(this.authorization, this.farms, farmId);
+    return this.repository.plots(scope, parse(productionPageSchema, input));
+  }
+  async plot(farmId: unknown, plotId: unknown) {
+    const { scope } = await authorizeProductionFarm(this.authorization, this.farms, farmId);
+    const row = await this.repository.plot(scope, parse(idSchema, plotId));
+    if (!row) throw new FoundationError("FORBIDDEN");
+    return row;
+  }
 }

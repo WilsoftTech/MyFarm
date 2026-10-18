@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { productionService } from "@/modules/enterprises-seasons/infrastructure/services";
 import { loadPage } from "@/app/farmer/guard";
 import { ProductionShell } from "@/components/production/shell";
@@ -18,6 +19,6 @@ export default async function SeasonPage({ params, searchParams }: { params: Pro
       <div><dt className="text-sm text-foreground/70">End date</dt><dd className="mt-1 font-semibold">{row.endDate ? <time dateTime={row.endDate}>{row.endDate}</time> : "Not recorded"}</dd></div>
       <div><dt className="text-sm text-foreground/70">Status</dt><dd className="mt-1 font-semibold">{productionStatusLabels[row.status]}</dd></div>
     </dl>
-    <p className="mt-6 leading-7">This season belongs to {farm.name}. Production records and season closure are not available yet.</p>
+    <p className="mt-6 leading-7">This season belongs to {farm.name}. <Link className="underline" href={"/farms/" + farm.farmId + "/crop-cycles"}>View farm crop cycles</Link>. Season closure is not available yet.</p>
   </ProductionShell>;
 }

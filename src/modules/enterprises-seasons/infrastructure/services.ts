@@ -29,6 +29,8 @@ export function productionService() {
 export function cropCycleService() {
   const repository = () => cropCycleRepository(database());
   const lazy: CropCycleRepository = {
+    plots: (scope, page) => repository().plots(scope, page),
+    plot: (scope, id) => repository().plot(scope, id),
     crops: (scope, page) => repository().crops(scope, page),
     cropCycle: (scope, id) => repository().cropCycle(scope, id),
     cropCycles: (scope, page) => repository().cropCycles(scope, page),

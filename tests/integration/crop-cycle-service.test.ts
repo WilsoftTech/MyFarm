@@ -69,6 +69,17 @@ afterAll(async () => {
 });
 
 describe("crop persistence with real restricted runtime role", () => {
+  it("provides bounded scoped plot choices/detail and rejects foreign or missing anchors", async () => {
+    const input = await command(), other = await command(farmA2);
+    expect(await service().plot(farmA, input.plotId)).toMatchObject({ plotId: input.plotId, farmId: farmA, tenantId: tenantA, area: "1", areaUnit: "ACRE" });
+    await expect(service().plot(farmA2, input.plotId)).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(service("b").plots(farmA)).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(service("admin").plot(farmA, input.plotId)).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await command();
+    const first = await service().plots(farmA, { limit: 1 }); expect(first.items).toHaveLength(1); expect(first.nextCursor).not.toBeNull();
+    const second = await service().plots(farmA, { limit: 1, cursor: first.nextCursor }); expect(second.items[0].plotId).not.toBe(first.items[0].plotId);
+    for (const cursor of [other.plotId, id()]) await expect(service().plots(farmA, { cursor })).rejects.toMatchObject({ code: "INVALID_INPUT" });
+  });
   it("stores exact values, optional variety/open perennial, trusted metadata and atomic audit", async () => {
     const input = { ...await command(), cropId: coffee, areaPlanted: "000.100000", variety: " ", expectedHarvest: "" };
     const row = await service().start(farmA, input);

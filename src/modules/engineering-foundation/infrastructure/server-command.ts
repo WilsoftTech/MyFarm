@@ -14,14 +14,14 @@ const messages: Record<FoundationError["code"], string> = {
 };
 
 /** Redirect only after the service commits; preserve input with safe feedback on failure. */
-export async function runServerCommand(work: () => Promise<string>, conflict?: string | (() => never)): Promise<CommandFailure> {
+export async function runServerCommand(work: () => Promise<string>, conflict?: string | (() => never), invalidInput?: string): Promise<CommandFailure> {
   let destination: string;
   try { destination = await work(); }
   catch (error) {
     const code = error instanceof FoundationError ? error.code : "UNAVAILABLE";
     logSafe({ event: "request_failed", requestId: crypto.randomUUID(), code });
     if (code === "CONFLICT" && typeof conflict === "function") conflict();
-    return { ok: false, message: code === "CONFLICT" && typeof conflict === "string" ? conflict : messages[code] };
+    return { ok: false, message: code === "CONFLICT" && typeof conflict === "string" ? conflict : code === "INVALID_INPUT" && invalidInput ? invalidInput : messages[code] };
   }
   redirect(destination);
 }
