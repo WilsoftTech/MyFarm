@@ -1,5 +1,13 @@
 import { FoundationError } from "../domain/errors";
 import { logSafe } from "./logging";
+export const privateHeaders = { "Cache-Control": "private, no-store" };
+
+/** Same-origin JSON writes for all modules; forwarding headers never widen the accepted origin. */
+export async function commandBody(request: Request): Promise<unknown> {
+requireSameOrigin(request);
+if (!request.headers.get("content-type")?.startsWith("application/json")) throw new FoundationError("INVALID_INPUT");
+try { return await request.json(); } catch { throw new FoundationError("INVALID_INPUT"); }
+}
 export function requireSameOrigin(request: Request) {
 const url = new URL(request.url);
 const host = request.headers.get("host");

@@ -3,10 +3,10 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-18 (Africa/Nairobi), Phase 3 start and T001 verification.
+- Last reviewed: 2026-10-18 (Africa/Nairobi), T002 verification and task commit workflow.
 - Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
-- Remaining work/blockers: Phase3 started, T001 verified; T002–T013 and full acceptance remain. [Start report](reports/phase-03-start-2026-10-18.md). Historical sections stay historical.
+- Remaining work/blockers: Phase3 T001/T002 verified; T003–T013 and full acceptance remain. [T002 report](reports/phase-03-t002-2026-10-18.md). Historical sections stay historical.
 - Evidence/report links: [Phase1+2 integration report](reports/phase-01-02-integration-2026-10-09.md); [Phase02 closeout](reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
@@ -254,3 +254,7 @@ APPROVED, owner 2026-10-09 (“Yes, extend to Phase 3”). The D-P01-LOCAL-CI-00
 ## D-P03-005 — Phase 3 implementation started
 
 APPROVED, direct user instruction 2026-10-18: “begin Phase 3”. This activates the existing authorization from local `main` at `35cacdf`. T001 implements the necessary Enterprise/Season foundation subset of phase F, domain contracts and relationship rules under the approved Q07/Q08 decisions. The migration adds tables/constraints and deny-all RLS; it does not grant runtime access or add user-facing workflows. Crop-cycle and batch detail remain in their dependent tasks. This records local implementation authorization, not permission to push, deploy or change hosted databases. [T001 verification and remaining work](reports/phase-03-start-2026-10-18.md).
+
+## D-P03-006 — T002 and task-by-task commits
+
+APPROVED, direct user instruction 2026-10-18: “proceed to T002. commit on every finish of task”. Completed T001 was committed separately as `18605b3`; each completed task is to receive its own local commit, preserving unrelated work. This does not authorize pushes, deployment or hosted changes. T002 implements create/list/detail services for the reviewed enterprise/season subset, reusing current authorization and transactional audit receipts. Production retries bind the receipt to the original normalized creation fields and farm; changed payloads/scope conflict. This leaves Phase 2 retry semantics unchanged and does not implement the full Phase 7 sync contract. [T002 evidence](reports/phase-03-t002-2026-10-18.md).

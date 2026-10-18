@@ -3,23 +3,10 @@ import { Prisma, type PrismaClient } from "@/generated/prisma/client";
 import { FoundationError } from "@/modules/engineering-foundation/domain/errors";
 import type { FarmerProfileData, FarmerView, FarmView, RegistryRepository } from "../contracts/registry";
 import { PREFERRED_LANGUAGES, type PreferredLanguage } from "../domain/rules";
+import { claimCommandReceipt as claimReceipt } from "@/modules/engineering-foundation/infrastructure/command-receipts";
 
 type Tx = Prisma.TransactionClient;
-type RegistryAction = "FARMER_REGISTERED" | "FARMER_PROFILE_UPDATED" | "FARM_CREATED" | "PLOT_CREATED";
 const PLOT_LIMIT = 200;
-
-/**
- * Request IDs are idempotency receipts stored as audit events (unique tenant/request/action).
- * A concurrent duplicate blocks on the unique index until the first transaction finishes,
- * then observes the committed receipt and replays its target instead of writing again.
- */
-async function claimReceipt(tx: Tx, input: { actorId: string; tenantId: string; action: RegistryAction; targetId: string; requestId: string }) {
-const id = crypto.randomUUID();
-await tx.auditEvent.createMany({ data: [{ id, ...input }], skipDuplicates: true });
-const existing = await tx.auditEvent.findUnique({ where: { tenantId_requestId_action: { tenantId: input.tenantId, requestId: input.requestId, action: input.action } } });
-if (!existing || existing.actorId !== input.actorId || !existing.targetId) throw new FoundationError("CONFLICT");
-return existing.id === id ? null : existing.targetId;
-}
 
 function language(value: string): PreferredLanguage {
 const match = PREFERRED_LANGUAGES.find(code => code === value);
@@ -90,6 +77,11 @@ select: { id: true, name: true, district: true, primaryActivity: true, approxima
 });
 const items = rows.slice(0, limit).map(row => ({ farmId: row.id, name: row.name, district: row.district, primaryActivity: row.primaryActivity, approximateAcreage: decimal(row.approximateAcreage), plotCount: row._count.plots }));
 return { items, nextCursor: rows.length > limit ? items[items.length - 1].farmId : null };
+},
+
+async farmScopeForMember({ userId, farmId }) {
+const row = await db.farm.findFirst({ where: { id: farmId, members: { some: { userId, status: "ACTIVE" } } }, select: { id: true, tenantId: true } });
+return row ? { farmId: row.id, tenantId: row.tenantId } : null;
 },
 
 async farmForMember({ userId, farmId }): Promise<FarmView | null> {

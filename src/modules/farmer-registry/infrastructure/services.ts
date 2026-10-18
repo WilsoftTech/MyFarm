@@ -15,6 +15,7 @@ registeredByRequest: input => repository().registeredByRequest(input),
 updateProfile: input => repository().updateProfile(input),
 farmsForMember: input => repository().farmsForMember(input),
 farmForMember: input => repository().farmForMember(input),
+farmScopeForMember: input => repository().farmScopeForMember(input),
 createFarm: input => repository().createFarm(input),
 createPlot: input => repository().createPlot(input),
 };

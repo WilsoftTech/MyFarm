@@ -1,16 +1,16 @@
 # Phase 03 Enterprises Crops Livestock and Seasons
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — MYF-P03-T001 domain/contracts implementation and scope reviewed.
-- Implementation status: PARTIALLY COMPLETE — 7.69% (1/13 verified tasks; T001 complete).
-- Last reviewed: 2026-10-18 (Africa/Nairobi), Phase 3 start.
+- Documentation review: REVIEWED — MYF-P03-T002 backend implementation and evidence.
+- Implementation status: PARTIALLY COMPLETE — 15.38% (2/13 verified tasks; T001/T002 complete).
+- Last reviewed: 2026-10-18 (Africa/Nairobi), T002 verification.
 - Related phase/task IDs: Phase 03; MYF-P03-T001 through MYF-P03-T013; review session Phase01; Phase02 review session (MYF-P02-T001–T013).
-- Verified completed work: T001 contracts/domain rules and scoped repository port; additive Enterprise/Season schema/migration verified on isolated PostgreSQL 17, including upgrade preservation, failure rollback and deny-all RLS. [Start report](../reports/phase-03-start-2026-10-18.md).
-- Remaining work/blockers: T002–T013 and full acceptance/exit gates pending. User instructed “begin Phase 3” on 2026-10-18; Q07/Q08 remain resolved. Next: T002 authorized services, scoped persistence implementation and current membership/retry/rollback tests.
+- Verified completed work: T001 foundation and T002 authorized service/repository/API, atomic audit retries and restricted runtime grants. [T002 evidence](../reports/phase-03-t002-2026-10-18.md).
+- Remaining work/blockers: T003–T013 and full acceptance/exit gates pending. No hosted Phase3 provisioning or user-facing production screens yet. Next: T003.
 - Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **PARTIALLY COMPLETE — 7.69% (1/13), started 2026-10-18**. T001 contracts and additive foundation schema are verified: [start report](../reports/phase-03-start-2026-10-18.md). Full MYF-P03-AC001 and phase exit are not yet verified. Authorization: [D-P03-001](../DECISION-LOG.md#d-p03-001--phase-3-authorization-and-sequencing); Q07/Q08 resolved by [D-P03-002](../DECISION-LOG.md#d-p03-002--q07-seasons-and-crop-cycles) and [D-P03-003](../DECISION-LOG.md#d-p03-003--q08-units-and-enterprise-types). Specification date: 2026-10-08. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **PARTIALLY COMPLETE — 15.38% (2/13), T001/T002 verified locally**. [Foundation evidence](../reports/phase-03-start-2026-10-18.md); [backend evidence](../reports/phase-03-t002-2026-10-18.md). Full MYF-P03-AC001 and phase exit are not yet verified. Authorization: [D-P03-001](../DECISION-LOG.md#d-p03-001--phase-3-authorization-and-sequencing); Q07/Q08 resolved by [D-P03-002](../DECISION-LOG.md#d-p03-002--q07-seasons-and-crop-cycles) and [D-P03-003](../DECISION-LOG.md#d-p03-003--q08-units-and-enterprise-types). Specification date: 2026-10-08. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
@@ -69,7 +69,7 @@ Offline: see [sync](../architecture/offline-sync-architecture.md); Phases 1–6 
 
 ## F. Database Design
 
-**Full-phase design proposal.** The T001 subset (Enterprise and Season identity/lifecycle fields) is now implemented in the additive `202610180001_enterprises_seasons` migration and verified on isolated PostgreSQL only ([report](../reports/phase-03-start-2026-10-18.md)). CropCycle/LivestockBatch detail, runtime grants and hosted application remain pending; the full proposal below is not an implementation claim.
+**Full-phase design proposal.** The T001 subset (Enterprise and Season identity/lifecycle fields) is implemented in the additive `202610180001_enterprises_seasons` migration. T002's runtime grants are now verified locally ([report](../reports/phase-03-t002-2026-10-18.md)). CropCycle/LivestockBatch detail and hosted application remain pending; the full proposal below is not an implementation claim.
 
 Enterprise(id UUID,tenantId UUID,farmId UUID,type enum,name text,status enum); Season(id UUID,tenantId UUID,farmId UUID,label text,startDate date,endDate date?,status enum); CropCycle(id UUID,enterpriseId UUID,plotId UUID,seasonId UUID,crop text,variety text?,areaPlanted numeric,areaUnit text,plantingDate date,expectedHarvest date?,status enum); LivestockBatch(id UUID,enterpriseId UUID,animalType text,breed text?,startingQuantity integer,acquisitionDate date,purpose text,status enum). Current flock becomes movement-derived in Phase 5.
 
@@ -89,7 +89,7 @@ Loading announced; recoverable errors retain input and safe retry. Empty states 
 
 ## H. Implementation Tasks
 
-Execute these small stages sequentially after authorization. Field/model/provider policies remain proposals until affected decisions are resolved. Each capability separates contract/domain work, authorized service/evidence work, and user-visible acceptance. T001 contracts and the necessary Enterprise/Season foundation schema subset are verified; T002–T013 remain pending. No task scope or acceptance gate is waived.
+Execute these small stages sequentially after authorization. Field/model/provider policies remain proposals until affected decisions are resolved. Each capability separates contract/domain work, authorized service/evidence work, and user-visible acceptance. T001 foundation and T002 backend are verified; T003–T013 remain pending. No task scope or acceptance gate is waived. Commit each completed task per the owner's 2026-10-18 instruction.
 
 ### MYF-P03-T001 — Specify and implement domain contract for MYF-P03-R001
 
@@ -242,7 +242,7 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 ## O. Completion Checklist
 
 - [x] MYF-P03-T001 complete with [evidence](../reports/phase-03-start-2026-10-18.md); full AC001 remains pending T002/T003.
-- [ ] MYF-P03-T002 complete with evidence.
+- [x] MYF-P03-T002 complete with [backend evidence](../reports/phase-03-t002-2026-10-18.md); full AC001 remains pending.
 - [ ] MYF-P03-T003 complete with evidence.
 - [ ] MYF-P03-T004 complete with evidence.
 - [ ] MYF-P03-T005 complete with evidence.

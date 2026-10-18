@@ -3,12 +3,18 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: Phase01 scope COMPLETED — 100% (13/13 verified Phase01 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); Phase02 scope COMPLETED — 100% (13/13 verified Phase02 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); later-phase scope not counted.
-- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase1+2 integration and provisioning-hardening session.
+- Last reviewed: 2026-10-18 (Africa/Nairobi), Phase03 T002 scope enforcement verification.
 - Related phase/task IDs: Phase01 MYF-P01-T001–T013; Phase02 MYF-P02-T001–T013.
 - Verified completed work: Phase01 scope as previously verified; Phase02: farmer registry contracts/policies/migration/API/tests in this document's area verified (see the Phase 2 implementation section).
-- Remaining work/blockers: Phase02 conditions P2-C1–P2-C8 where applicable; later-phase scope pending authorization.
+- Remaining work/blockers: Phase02 conditions where still applicable; Phase03 T002 read/write isolation verified locally; T003–T013 and hosted provisioning remain pending. [T002 evidence](../reports/phase-03-t002-2026-10-18.md).
 - Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
+
+## Phase 3 T002 scope enforcement — 2026-10-18
+
+Production services reuse the current account/tenant authorizer and a minimal registry farm-membership lookup. Each production record and list cursor is looked up under both farm and tenant; same-tenant farms remain separate. Writes recheck active account, FARMER tenant membership and farm membership inside the domain/audit transaction, including after receipt waits. Reusing a tenant-level receipt on another farm conflicts. Tests cover nested IDOR, guessed scopes, ADMIN with a farm membership, revocation and atomic retries.
+
+The shared-role architecture described below is unchanged: runtime SELECT policies do not identify the HTTP caller, and insert policies check actor/scope consistency. No per-request database actor context was introduced. [Evidence and limits](../reports/phase-03-t002-2026-10-18.md).
 
 Source requires farm ownership from Phase 2 and foundational Organization/Membership/Role/Permission/Tenant support, with commercial billing only Phase 23. **Proposal:** one isolation workspace for an individual farmer and another for an organization, represented through a tenant/organization abstraction. Exact schema/cardinality remains ADR-02/Q05/Q24.
 

@@ -3,12 +3,21 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: Phase01 scope COMPLETED — 100% (13/13 verified Phase01 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); Phase02 scope COMPLETED — 100% (13/13 verified Phase02 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); later-phase scope not counted.
-- Last reviewed: 2026-10-09 (Africa/Nairobi), Phase02 implementation and closeout session.
+- Last reviewed: 2026-10-18 (Africa/Nairobi), Phase03 T002 API verification.
 - Related phase/task IDs: Phase01 MYF-P01-T001–T013; Phase02 MYF-P02-T001–T013.
 - Verified completed work: Phase01 scope as previously verified; Phase02: farmer registry contracts/policies/migration/API/tests in this document's area verified (see the Phase 2 implementation section).
-- Remaining work/blockers: Phase02 conditions P2-C1–P2-C8 where applicable; later-phase scope pending authorization.
+- Remaining work/blockers: Phase02 conditions where still applicable; Phase03 T002 APIs verified locally, T003–T013 and hosted provisioning remain pending. [T002 evidence](../reports/phase-03-t002-2026-10-18.md).
 - Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
+
+## Phase 3 T002 API subset — 2026-10-18
+
+- `GET/POST /api/v1/farms/{farmId}/enterprises` and `/seasons`
+- `GET /api/v1/farms/{farmId}/enterprises/{enterpriseId}` and `/seasons/{seasonId}`
+
+Creates return 201 with `{ enterprise }` or `{ season }`; detail reads use the same wrapper. Lists return `{ items, nextCursor }`, default limit 20 and maximum 50. Farm/tenant authorization precedes command/query schema validation. Origin/content-type/JSON framing is checked at the HTTP boundary before the service. Actor, tenant and farm are never accepted in command bodies. Success responses are `private, no-store`; safe error envelopes use `no-store`. Unknown and foreign detail IDs return 403; unknown and foreign cursors return 400. Duplicate/unknown query keys are rejected by the strict page schema.
+
+Identical normalized create retries replay the record; reused IDs with changed creation fields or a different farm return 409. Existing registry replay semantics are unchanged. No update, close, crop-detail, batch-detail or sync route was added. [Verification and deployment prerequisites](../reports/phase-03-t002-2026-10-18.md).
 
 **Proposed contracts until phase approval.** Online UI/server actions and sync must call the same application commands. Do not maintain a weaker offline endpoint or authorize only in page loaders.
 
