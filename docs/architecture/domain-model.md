@@ -3,16 +3,16 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: PARTIALLY COMPLETE — Phase02 registry scope verified; Phase03 T001 Enterprise/Season foundation schema verified locally; no whole-document percentage claimed.
-- Last reviewed: 2026-10-18 (Africa/Nairobi), Phase03 T002.
+- Last reviewed: 2026-10-18 (Africa/Nairobi), Phase03 T003.
 - Related phase/task IDs: Phase02 MYF-P02-T001–T013; later phases per roadmap.
 - Verified completed work: Farmer, FarmerProfile, Farm, Plot, FarmMember implemented; User/Organization reused; Address/Contact as columns; Document deferred (D-P02-003).
-- Remaining work/blockers: Phase03 UI, crop cycle/batch detail and later entities remain pending; Enterprise/Season services and repositories verified in T002. Document awaits retention policy (P2-C5). [T002 evidence](../reports/phase-03-t002-2026-10-18.md).
+- Remaining work/blockers: Phase03 crop cycle/batch detail and later entities remain pending; Enterprise/Season UI verified in T003. Document awaits retention policy (P2-C5). [T002 evidence](../reports/phase-03-t002-2026-10-18.md).
 - Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md)
 <!-- MYFARM-STATUS-END -->
 
 ## Phase 3 foundation subset — 2026-10-18
 
-T001 adds Enterprise and Season to the existing farm scope, with actor/version metadata and composite farm/tenant foreign keys. Contracts describe crop/poultry parent relationships and reject mixed farm scopes. T002 adds verified local services/repositories and create/list/detail APIs for this subset. CropCycle/LivestockBatch tables, movements, current-flock calculations and production UI remain pending. [T002 evidence and next task](../reports/phase-03-t002-2026-10-18.md).
+T001 adds Enterprise and Season to the existing farm scope, with actor/version metadata and composite farm/tenant foreign keys. Contracts describe crop/poultry parent relationships and reject mixed farm scopes. T002 adds verified local services/repositories and create/list/detail APIs for this subset. T003 adds authorized Enterprise/Season list, create and detail screens. CropCycle/LivestockBatch tables, movements and current-flock calculations remain pending. Full cycle acceptance is deferred under D-P03-007; [T003 evidence](../reports/phase-03-t003-2026-10-18.md). [T002 evidence and next task](../reports/phase-03-t002-2026-10-18.md).
 
 **Proposed relationships and bounded domains.** Source entities/fields are preserved in the relevant phase F; support rows such as receipts, assignments and consent grants are recommendations.
 

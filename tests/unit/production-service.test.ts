@@ -17,7 +17,7 @@ function fixture() {
     account: vi.fn(async () => ({ id: actorId, authSubject: id(), status: "ACTIVE" as const })),
     scope: vi.fn(async () => ({ actorId, organizationId: tenantId, role: "FARMER" as const })),
   };
-  const farms: ProductionFarmAccess = { farmScopeForMember: vi.fn(async () => ({ farmId, tenantId })) };
+  const farms: ProductionFarmAccess = { farmScopeForMember: vi.fn(async () => ({ farmId, tenantId, name: "Home farm" })) };
   const repository: ProductionRepository = {
     enterprise: vi.fn(async () => enterprise), season: vi.fn(async () => season), plot: vi.fn(async () => null),
     enterprises: vi.fn(async () => ({ items: [enterprise], nextCursor: null })),
@@ -51,6 +51,12 @@ describe("production service authorization", () => {
     expect(farms.farmScopeForMember).toHaveBeenCalledWith({ userId: actorId, farmId });
     expect(authorization.scope).toHaveBeenCalledWith(tenantId, ["FARMER"]);
     expect(repository.createEnterprise).toHaveBeenCalledWith({ actorId, tenantId, farmId }, input);
+  });
+  it("returns a farm name only after the same access checks as production records", async () => {
+    const { service, authorization } = fixture();
+    await expect(service.farmContext(farmId)).resolves.toEqual({ farmId, name: "Home farm" });
+    vi.mocked(authorization.scope).mockRejectedValue(new FoundationError("FORBIDDEN"));
+    await expect(service.farmContext(farmId)).rejects.toMatchObject({ code: "FORBIDDEN" });
   });
   it("denies a changed identity between authorization checks", async () => {
     const { service, authorization, repository } = fixture();

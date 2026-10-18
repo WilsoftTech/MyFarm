@@ -48,3 +48,9 @@ New verification patterns ([closeout §4](../reports/phase-02-closeout-2026-10-0
 - **Anonymous probes:** production probe suite.
 
 Totals: 117 unit/component, 33 integration and 24 E2E tests. Hosted CI remains unverified (P2-C1).
+
+## Phase 3 T003 browser evidence (2026-10-18)
+
+`playwright.production.config.ts` adds a separate signed-in desktop/mobile suite against a guarded, isolated loopback test database. It uses real application authorization, services, PostgreSQL transactions and `myfarm_runtime`, plus a test-only local Auth HTTP server and signed synthetic session cookies. The fake provider is not hosted Supabase verification; application source has no authentication bypass. Fixture setup applies the actual migration/provisioning chain, seeds synthetic identities and returns cleanup. The stand-in grants Auth-session ownership access to its Auth schema for FK cleanup, without changing production grants.
+
+The production build must use the same loopback public Auth URL as the suite because Next.js compiles public environment values. See the [T003 report](../reports/phase-03-t003-2026-10-18.md) for commands and limitations. Results: 204 unit/component, 61 isolated integration, 34 anonymous and 18 signed-in browser checks PASS. These are working-tree checks, not clean-clone CI substitution or a phase closeout. Cycle/batch acceptance and durable offline reload remain pending.

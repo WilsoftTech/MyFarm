@@ -4,6 +4,7 @@ import { PlotForm } from "@/components/farmer-registry/plot-form";
 import { activityLabels, areaUnitLabels, ownershipLabels } from "@/components/farmer-registry/labels";
 import { createPlotAction } from "../../farmer/actions";
 import { loadPage } from "../../farmer/guard";
+import { Button } from "@/components/ui/button";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Farm" };
 export default async function FarmPage({ params, searchParams }: { params: Promise<{ farmId: string }>; searchParams: Promise<{ plot?: string }> }) {
@@ -19,6 +20,7 @@ return <section><Link href="/farms" className="text-sm underline">Back to my far
 <div><dt className="text-sm text-foreground/70">Approximate size</dt><dd className="font-semibold">{farm.approximateAcreage ? farm.approximateAcreage + " acres" : "Not recorded"}</dd></div>
 <div><dt className="text-sm text-foreground/70">GPS location</dt><dd className="font-semibold">{farm.latitude && farm.longitude ? farm.latitude + ", " + farm.longitude : "Not recorded"}</dd></div>
 </dl>
+<section aria-labelledby="productionHeading" className="mt-8"><h2 id="productionHeading" className="text-2xl font-semibold">Production</h2><p className="mt-3 leading-7">Organise this farm into enterprises and seasons.</p><div className="mt-4 flex flex-wrap gap-3"><Button asChild variant="outline"><Link href={"/farms/" + farm.farmId + "/enterprises"}>Enterprises</Link></Button><Button asChild variant="outline"><Link href={"/farms/" + farm.farmId + "/seasons"}>Seasons</Link></Button></div></section>
 <h2 className="mt-10 text-2xl font-semibold">Plots</h2>
 {added && <p role="status" className="mt-4 rounded-xl bg-muted p-4">Plot added.</p>}
 {farm.plots.length === 0 ? <p className="mt-4 leading-7">No plots yet. Add the parts of this farm you manage separately.</p> :

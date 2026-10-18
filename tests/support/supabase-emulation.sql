@@ -14,6 +14,8 @@ END $$;
 
 -- Auth: only the objects MyFarm's provider SQL reads.
 CREATE SCHEMA IF NOT EXISTS auth;
+-- FK checks during Auth-user cleanup run as the referencing table owner, as on hosted Supabase.
+GRANT USAGE ON SCHEMA auth TO supabase_auth_admin;
 CREATE TABLE IF NOT EXISTS auth.users (id uuid PRIMARY KEY);
 CREATE TABLE IF NOT EXISTS auth.sessions (id uuid PRIMARY KEY, user_id uuid NOT NULL REFERENCES auth.users(id), not_after timestamptz);
 -- Created only when missing, so a real Supabase image keeps its own definitions.

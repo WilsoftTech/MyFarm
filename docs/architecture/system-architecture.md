@@ -45,3 +45,7 @@ Phase1 source implements UI → application → domain/contracts → scoped Pris
 ## Phase 2 implementation (2026-10-09)
 
 Added module `src/modules/farmer-registry/` (domain rules → contracts/ports → `FarmerRegistryService` → Prisma repository), API routes under `src/app/api/v1/`, and pages `/farmer`, `/farms` with a signed-in registry navigation. It follows the Phase 1 layering and boundary check; no new dependency ([closeout](../reports/phase-02-closeout-2026-10-09.md)).
+
+## Phase 3 T003 UI (2026-10-18)
+
+Enterprise/Season list, create and detail pages are server-rendered within the named farm scope. Server actions reuse the authorized production application service; shared safe command feedback redirects only after commit. Client forms reuse existing UI, React Hook Form and Zod. Request IDs survive interrupted responses while the open form retains its normalized payload; changed payloads start a new intent. Offline saving is disabled, with explicit in-memory retention limits. No durable outbox or new dependency is introduced. Full cycle acceptance remains deferred under D-P03-007. [Evidence](../reports/phase-03-t003-2026-10-18.md).

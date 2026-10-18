@@ -80,8 +80,8 @@ return { items, nextCursor: rows.length > limit ? items[items.length - 1].farmId
 },
 
 async farmScopeForMember({ userId, farmId }) {
-const row = await db.farm.findFirst({ where: { id: farmId, members: { some: { userId, status: "ACTIVE" } } }, select: { id: true, tenantId: true } });
-return row ? { farmId: row.id, tenantId: row.tenantId } : null;
+const row = await db.farm.findFirst({ where: { id: farmId, members: { some: { userId, status: "ACTIVE" } } }, select: { id: true, tenantId: true, name: true } });
+return row ? { farmId: row.id, tenantId: row.tenantId, name: row.name } : null;
 },
 
 async farmForMember({ userId, farmId }): Promise<FarmView | null> {
