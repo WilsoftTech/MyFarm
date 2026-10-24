@@ -1,5 +1,5 @@
 import type { NextConfig } from "next";
-const config: NextConfig = { poweredByHeader: false, async headers() {
+const config: NextConfig = { experimental: { agentUpgrade: "security" }, poweredByHeader: false, async headers() {
 return [{ source: "/(.*)", headers: [
 { key: "X-Content-Type-Options", value: "nosniff" },
 { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
