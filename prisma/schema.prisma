@@ -67,6 +67,7 @@ model User {
   enterprises Enterprise[]
   seasons Season[]
   cropCycles CropCycle[]
+  livestockBatches LivestockBatch[]
 }
 model Organization {
   id String @id @default(uuid()) @db.Uuid
@@ -205,6 +206,7 @@ model Enterprise {
   farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
   creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
   cropCycles CropCycle[]
+  livestockBatches LivestockBatch[]
   @@unique([id, farmId, tenantId])
   @@index([tenantId, farmId, createdAt, id])
   @@index([farmId, tenantId])
@@ -273,5 +275,29 @@ model CropCycle {
   @@index([enterpriseId, farmId, tenantId])
   @@index([seasonId, farmId, tenantId])
   @@index([cropId])
+  @@index([createdBy])
+}
+
+// Poultry batch (MYF-P03-R003). Current quantity is derived, never stored; Phase 5 adds movements.
+model LivestockBatch {
+  id String @id @default(uuid()) @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  enterpriseId String @db.Uuid
+  batchName String @db.VarChar(120)
+  animalType String @db.VarChar(120)
+  breed String? @db.VarChar(120)
+  startingQuantity Int
+  acquisitionDate DateTime @db.Date
+  purpose String @db.VarChar(120)
+  status ProductionStatus @default(ACTIVE)
+  version Int @default(1)
+  createdBy String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  enterprise Enterprise @relation(fields: [enterpriseId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  @@index([tenantId, farmId, createdAt, id])
+  @@index([enterpriseId, farmId, tenantId])
   @@index([createdBy])
 }

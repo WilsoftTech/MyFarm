@@ -6,7 +6,7 @@
 - Last reviewed: 2026-10-24 (Africa/Nairobi), Phase03 T007.
 - Related phase/task IDs: Phase02 MYF-P02-T001–T013; later phases per roadmap.
 - Verified completed work: Farmer, FarmerProfile, Farm, Plot, FarmMember implemented; User/Organization reused; Address/Contact as columns; Document deferred (D-P02-003).
-- Remaining work/blockers: Phase03 crop-cycle contract and runtime persistence/API verified in T004/T005; T007 poultry-batch domain contract verified; batch persistence/UI and later entities remain pending. Document awaits retention policy (P2-C5). [T002 evidence](../reports/phase-03-t002-2026-10-18.md).
+- Remaining work/blockers: Phase03 crop-cycle contract and runtime persistence/API verified in T004/T005; T007 poultry-batch contract and T008 LivestockBatch persistence verified; batch UI and later entities remain pending. Document awaits retention policy (P2-C5). [T002 evidence](../reports/phase-03-t002-2026-10-18.md).
 - Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md)
 <!-- MYFARM-STATUS-END -->
 
@@ -20,7 +20,7 @@ The validated command references one crop catalog entry, enterprise, plot and se
 
 ## T007 poultry-batch domain contract
 
-The validated command references one POULTRY enterprise and records batch name, animal type, optional breed, a whole nonnegative starting bird count, acquisition date and production purpose. Pure rules reject wrong, non-poultry or closed parents and fractional, negative or oversized counts without coercion. Current quantity is derived, never stored: in Phase 3 it equals the starting count with source `STARTING_QUANTITY`; Phase 5 movements add further sources. The repository port requires scoped reads and atomic authorized starts with retry replay in T008; no LivestockBatch table or runtime persistence is implemented yet. [Evidence](../reports/phase-03-t007-2026-10-24.md).
+The validated command references one POULTRY enterprise and records batch name, animal type, optional breed, a whole nonnegative starting bird count, acquisition date and production purpose. Pure rules reject wrong, non-poultry or closed parents and fractional, negative or oversized counts without coercion. Current quantity is derived, never stored: in Phase 3 it equals the starting count with source `STARTING_QUANTITY`; Phase 5 movements add further sources. The repository port requires scoped reads and atomic authorized starts with retry replay in T008; T008 adds the `LivestockBatch` table and authorized runtime persistence; current quantity remains derived. [T007 evidence](../reports/phase-03-t007-2026-10-24.md); [T008 evidence](../reports/phase-03-t008-2026-10-24.md).
 
 **Proposed relationships and bounded domains.** Source entities/fields are preserved in the relevant phase F; support rows such as receipts, assignments and consent grants are recommendations.
 

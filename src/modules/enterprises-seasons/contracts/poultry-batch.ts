@@ -32,7 +32,7 @@ export interface PoultryBatchView extends FarmScope, ProductionRecord, Omit<Poul
 }
 
 /**
- * Implemented in T008; application authorization precedes all calls.
+ * Implemented in T008 (infrastructure/poultry-batch-repository.ts); application authorization precedes all calls.
  * Reads constrain tenant AND farm, including the batch ID and pagination anchors.
  * startPoultryBatch must authenticate/recheck current membership, resolve the enterprise inside
  * the write transaction and reuse assertPoultryBatchStart. Persist the batch with an atomic

@@ -66,3 +66,7 @@ Final local results: 279 unit/component, 83 integration, 36 anonymous browser an
 ## Phase 3 T007 domain evidence (2026-10-24)
 
 The poultry-batch suite adds 66 command/relationship/count/date/provenance cases; the full unit/component suite passes 357/357. Lint, typecheck, boundaries and production build pass. Count tests reject fractional, negative, signed, exponent, separator and oversized inputs and accept the 0 and integer-maximum boundaries. Runtime auth, retries, distinct-request batch identity, rollback and database constraints are T008 obligations, not proved by pure tests. No integration/browser or migration suite was rerun for this contract-only task. [Evidence](../reports/phase-03-t007-2026-10-24.md).
+
+## Phase 3 T008 evidence (2026-10-24)
+
+Final local results: 371 unit/component, 101 integration, 36 anonymous browser and 46 signed-in browser checks PASS. New database cases run as `myfarm_runtime` and cover normalized storage, derived quantity provenance, zero/maximum counts, distinct-request identity, IDOR, wrong/closed parent types, concurrent duplicates, changed-field conflicts, replay after closure, rollback, revocation (including after a receipt-lock wait), constraints and least privilege. The disposable database was PostgreSQL 18.6 in WSL with its time zone set to UTC to match CI; under Africa/Nairobi the pre-existing Phase 1 rate-limit test fails (P3-C1). No clean-clone CI substitution run is claimed. [Evidence](../reports/phase-03-t008-2026-10-24.md).

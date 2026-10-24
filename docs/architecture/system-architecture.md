@@ -53,3 +53,7 @@ Enterprise/Season list, create and detail pages are server-rendered within the n
 ## Phase 3 T005 backend (2026-10-18)
 
 CropCycleService reuses extracted production farm authorization; its lazy repository adapter keeps anonymous requests ahead of database client creation. Crop writes claim the existing audit receipt, serialize capacity per plot inside the transaction, recheck rights and commit the validated cycle atomically. Private JSON list/detail/catalog/start routes use the established HTTP wrappers. Catalog reference data is global; farm records remain scoped and browser roles have no direct data grants. No new dependency or external service is introduced. [Evidence](../reports/phase-03-t005-2026-10-18.md).
+
+## Phase 3 T008 backend (2026-10-24)
+
+PoultryBatchService reuses the shared production farm authorization; its lazy repository adapter keeps anonymous requests ahead of database client creation. Starts claim the existing audit receipt, recheck rights before and after the claim, resolve the enterprise and commit the validated batch atomically. Private JSON list/detail/start routes use the established HTTP wrappers. No new dependency or external service is introduced. [Evidence](../reports/phase-03-t008-2026-10-24.md).

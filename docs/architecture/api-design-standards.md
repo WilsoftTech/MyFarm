@@ -79,3 +79,7 @@ Contract:
 ## Phase 3 T005 crop endpoints (2026-10-18)
 
 Under `/api/v1/farms/{farmId}`, `GET /crops` returns the authorized active reference catalog, `GET/POST /crop-cycles` list/start cycles, and `GET /crop-cycles/{cycleId}` reads a scoped cycle. All use current farm authorization before field/pagination validation; POST requires same-origin JSON and the strict T004 command. Identical normalized retries return 201 with the same cycle; changed creation fields or farm conflict. Unknown/foreign nested IDs both deny with 403; scoped pagination anchors and safe errors reuse existing contracts. No crop UI, update/delete, closure or catalog-write API is added. [Contract and verification](../reports/phase-03-t005-2026-10-18.md).
+
+## Phase 3 T008 poultry endpoints (2026-10-24)
+
+Under `/api/v1/farms/{farmId}`, `GET/POST /poultry-batches` list/start batches and `GET /poultry-batches/{batchId}` reads a scoped batch. All use current farm authorization before field/pagination validation; POST requires same-origin JSON and the strict T007 command (digit-only whole bird count). Identical normalized retries return 201 with the same batch; changed creation fields or farm return 409; distinct requests create distinct batches. Unknown/foreign nested IDs both deny with 403. Responses include `currentQuantity` with its `source`, never a stored count. No UI, update/delete, closure or movement API is added. [Contract and verification](../reports/phase-03-t008-2026-10-24.md).
