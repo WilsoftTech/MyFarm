@@ -59,6 +59,8 @@ export function cropCycleRepository(db: PrismaClient): CropCycleRepository {
       const replay = await claimCommandReceipt(tx, { actorId: scope.actorId, tenantId: scope.tenantId, requestId: command.requestId, action: "CROP_CYCLE_STARTED", targetId: id });
       await requireProductionWriteAccess(tx, scope);
       if (replay) return assertReplay(await cycle(tx, scope, replay), command, scope.actorId);
+      // Share the season lock with final closure before taking the plot lock.
+      await tx.$queryRaw`SELECT pg_advisory_xact_lock(hashtextextended(${"myfarm:production-season:" + command.seasonId}, 0))::text`;
       // Transaction-level, not session-level: safe with pooled connections and released on rollback.
       // Hash collisions merely serialize unrelated plots; they cannot permit over-allocation.
       await tx.$queryRaw`SELECT pg_advisory_xact_lock(hashtextextended(${"myfarm:crop-plot:" + command.plotId}, 0))::text`;

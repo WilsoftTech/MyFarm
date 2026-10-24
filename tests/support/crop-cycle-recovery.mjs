@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { Client } from "pg";
 const url = process.env.TEST_DATABASE_URL, container = process.env.MYFARM_TEST_CONTAINER;
-if (!url || !/^postgresql:\/\/[^@]+@(127\.0\.0\.1|localhost):\d+\/myfarm_phase01_test(?:\?|$)/.test(url) || !container || !/^myfarm-t005-\d{8}$/.test(container)) throw new Error("Recovery rehearsal requires an explicit isolated T005 loopback database/container.");
+if (!url || !/^postgresql:\/\/[^@]+@(127\.0\.0\.1|localhost):\d+\/myfarm_phase01_test(?:\?|$)/.test(url) || !container || !/^myfarm-t(?:005|013)-\d{8}$/.test(container)) throw new Error("Recovery rehearsal requires an explicit isolated T005/T013 loopback database/container.");
 const source = new Client({ connectionString: url });
 const restoreName = "myfarm_t005_restore_" + randomUUID().replaceAll("-", "");
 const dumpPath = "/tmp/" + restoreName + ".dump";
@@ -13,6 +13,10 @@ const user = randomUUID(), tenant = randomUUID(), farmer = randomUUID(), farm = 
 let created = false, connected = false;
 const docker = args => execFileSync("docker", ["exec", container, ...args], { encoding: "utf8", stdio: "pipe" });
 const snapshot = async db => (await db.query('SELECT to_jsonb(c) AS cycle, to_jsonb(a) AS audit FROM "CropCycle" c JOIN "AuditEvent" a ON a."targetId"=c.id WHERE c.id=$1 AND a."requestId"=$2', [cycle, request])).rows;
+const closureSnapshot = async db => ({
+  season: (await db.query('SELECT to_jsonb(s) AS season FROM "Season" s WHERE id=$1', [season])).rows,
+  receipts: (await db.query('SELECT to_jsonb(a) AS audit FROM "AuditEvent" a WHERE "targetId"=ANY($1::uuid[]) ORDER BY action,id', [[cycle, season]])).rows,
+});
 await source.connect();
 try {
   await source.query("BEGIN");
@@ -27,17 +31,24 @@ try {
   await source.query('INSERT INTO "Season" (id,"tenantId","farmId",label,"startDate","createdBy") VALUES ($1,$2,$3,\'Recovery season\',\'2026-03-01\',$4)', [season, tenant, farm, user]);
   await source.query('INSERT INTO "CropCycle" (id,"tenantId","farmId","plotId","enterpriseId","seasonId","cropId","cropName","areaPlanted","areaUnit","plantingDate","areaExceptionReason","createdBy") VALUES ($1,$2,$3,$4,$5,$6,\'f4030005-0000-4000-8000-000000000001\',\'Maize\',1.000001,\'ACRE\',\'2026-03-01\',\'Recorded recovery overlap\',$7)', [cycle, tenant, farm, plot, enterprise, season, user]);
   await source.query('INSERT INTO "AuditEvent" (id,"actorId","tenantId",action,"targetId","requestId") VALUES ($1,$2,$3,\'CROP_CYCLE_STARTED\',$4,$5)', [randomUUID(), user, tenant, cycle, request]);
+  await source.query('UPDATE "CropCycle" SET status=\'CLOSED\',version=2 WHERE id=$1', [cycle]);
+  await source.query('UPDATE "Season" SET status=\'CLOSED\',version=2 WHERE id=$1', [season]);
+  for (const [action, target] of [["CROP_CYCLE_CLOSED", cycle], ["SEASON_CLOSED", season]]) await source.query('INSERT INTO "AuditEvent" (id,"actorId","tenantId",action,"targetId","requestId") VALUES ($1,$2,$3,$4,$5,$6)', [randomUUID(), user, tenant, action, target, randomUUID()]);
   await source.query("COMMIT");
   const before = await snapshot(source);
+  const closures = await closureSnapshot(source);
   if (before.length !== 1) throw new Error("Recovery fixture missing");
   docker(["pg_dump", "-U", "myfarm", "-d", "myfarm_phase01_test", "-Fc", "-f", dumpPath]);
   await source.query(`CREATE DATABASE "${restoreName}"`); created = true;
   docker(["pg_restore", "-U", "myfarm", "-d", restoreName, "--exit-on-error", dumpPath]);
   await restored.connect(); connected = true;
   if (JSON.stringify(await snapshot(restored)) !== JSON.stringify(before)) throw new Error("Restored crop/audit differs");
+  if (JSON.stringify(await closureSnapshot(restored)) !== JSON.stringify(closures)) throw new Error("Restored closure history differs");
+  const lifecycle = await restored.query("SELECT has_column_privilege('myfarm_runtime','public.\"CropCycle\"','status','UPDATE') AS cycle,has_column_privilege('myfarm_runtime','public.\"Season\"','status','UPDATE') AS season,has_column_privilege('myfarm_runtime','public.\"CropCycle\"','areaPlanted','UPDATE') AS area");
+  if (!lifecycle.rows[0].cycle || !lifecycle.rows[0].season || lifecycle.rows[0].area) throw new Error("Restored lifecycle column grants differ");
   const result = await restored.query("SELECT has_table_privilege('myfarm_runtime','public.\"CropCycle\"','SELECT') AS read, has_table_privilege('myfarm_runtime','public.\"CropCycle\"','UPDATE') AS update, has_table_privilege('authenticated','public.\"CropCycle\"','SELECT') AS browser");
   if (!result.rows[0].read || result.rows[0].update || result.rows[0].browser) throw new Error("Restored grants differ");
-  console.log("PASS: dump/restore preserves exact crop area, exception reason, audit receipt and runtime/browser privilege boundaries.");
+  console.log("PASS: dump/restore preserves exact crop area, exception reason, closed cycle/season versions and receipts, narrow lifecycle column grants and runtime/browser privilege boundaries.");
 } finally {
   if (connected) await restored.end();
   if (created) await source.query(`DROP DATABASE "${restoreName}"`);

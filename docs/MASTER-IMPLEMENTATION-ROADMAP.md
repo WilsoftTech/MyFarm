@@ -1,13 +1,13 @@
 # Master implementation roadmap
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
+- Documentation review: REVIEWED — T013 task-relevant content, status and evidence.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-25 (Africa/Nairobi), Phase 3 T012 capability UI and local AC004 acceptance.
+- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
 - Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
-- Remaining work/blockers: Phase3 PARTIALLY COMPLETE - 92.31% (12/13). T001-T012 verified at their stages; AC002, AC003 and AC004 verified locally. T013 phase audit, full AC001 and exit gates remain. Next: T013. [T012 report](reports/phase-03-t012-2026-10-25.md). Prior hosted/CI conditions were not reverified.
-- Evidence/report links: [Phase02 closeout](reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md).
+- Remaining work/blockers: Phase 3 COMPLETED - 100% (13/13), PASS WITH CONDITIONS - LOCAL VERIFICATION. T013 and all four ACs pass locally; the owner accepted the closeout and approved the two-table hosted closure policy, which is applied and verified. GitHub-hosted CI remains unverified under D-P03-004; inherited production gates remain. Phase 4 is NOT STARTED and requires separate authorization. [Closeout](reports/phase-03-closeout-2026-10-25.md).
+- Evidence/report links: [Phase02 closeout](reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](reports/phase-03-closeout-2026-10-25.md).
 <!-- MYFARM-STATUS-END -->
 
 Source roadmap remains authoritative. Preserve Phase 0–24 in order; cumulative gates apply. Phase 8 closes MVP, Phase 9 validates field use. No release dates or implementation approvals are inferred.

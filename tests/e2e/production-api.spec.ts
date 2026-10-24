@@ -1,5 +1,17 @@
 import { expect, test } from "@playwright/test";
 const farm = "11111111-1111-4111-8111-111111111111", record = "22222222-2222-4222-8222-222222222222";
+test("closure commands require authentication, same-origin JSON and private failures", async ({ request }) => {
+  for (const resource of ["seasons", "crop-cycles"]) {
+    const path = `/api/v1/farms/${farm}/${resource}/${record}/close`;
+    const response = await request.post(path, { headers: { origin: "http://127.0.0.1:3101" }, data: { requestId: record, expectedVersion: 1, confirmed: true } });
+    expect(response.status()).toBe(401); expect(response.headers()["cache-control"]).toContain("no-store");
+    expect((await response.json()).error).toBe("UNAUTHENTICATED");
+    const invalidOrigins: Record<string, string>[] = [{ origin: "https://untrusted.test" }, {}];
+    for (const headers of invalidOrigins) expect((await request.post(path, { headers, data: {} })).status()).toBe(403);
+    const malformed = await request.post(path, { headers: { origin: "http://127.0.0.1:3101", "content-type": "application/json" }, data: Buffer.from("{") });
+    expect(malformed.status()).toBe(400);
+  }
+});
 test("production reads deny anonymous callers before query or ID validation", async ({ request }) => {
   for (const resource of ["enterprises", "seasons", "crop-cycles", "poultry-batches"]) {
     for (const suffix of ["", "/" + record, "/bad", "?limit=no", "?tenantId=forged"]) {

@@ -1,9 +1,20 @@
 "use server";
-import { cropCycleService, poultryBatchService, productionService } from "@/modules/enterprises-seasons/infrastructure/services";
+import { cropCycleService, poultryBatchService, productionService, productionClosureService } from "@/modules/enterprises-seasons/infrastructure/services";
 import { runServerCommand } from "@/modules/engineering-foundation/infrastructure/server-command";
 import { loadCropChoices } from "@/components/production/crop-choices";
 import { loadPoultryChoices } from "@/components/production/poultry-choices";
 import type { CropChoiceKind, CropChoiceLoad, PoultryChoiceKind, PoultryChoiceLoad } from "@/components/production/choice-types";
+import type { ClosureKind } from "@/modules/enterprises-seasons/contracts/closure";
+import { FoundationError } from "@/modules/engineering-foundation/domain/errors";
+
+export async function closeProductionAction(farmId: string, kind: ClosureKind, recordId: string, input: unknown) {
+  return runServerCommand(async () => {
+    // Bound action arguments are still untrusted: only these two workflows exist.
+    if (kind !== "SEASON" && kind !== "CROP_CYCLE") throw new FoundationError("INVALID_INPUT");
+    await productionClosureService().close(farmId, kind, recordId, input);
+    return "/farms/" + farmId + (kind === "SEASON" ? "/seasons/" : "/crop-cycles/") + recordId + "?closed=1";
+  }, kind === "SEASON" ? "Close every active crop cycle in this season first. If this season was changed elsewhere, reload and check its status." : "This crop cycle was changed elsewhere. Reload and check its status.");
+}
 
 export async function createEnterpriseAction(farmId: string, input: unknown) {
   return runServerCommand(async () => {

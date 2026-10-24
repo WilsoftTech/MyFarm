@@ -1,6 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { config } from "dotenv";
 import { Client } from "pg";
+import { ProductionClosureService } from "@/modules/enterprises-seasons/application/closure";
+import { closureRepository } from "@/modules/enterprises-seasons/infrastructure/closure-repository";
 import { PrismaClient } from "@/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { AuthorizationService } from "@/modules/engineering-foundation/application/authorization";
@@ -25,6 +27,8 @@ const auth = (who: keyof typeof users) => new AuthorizationService({ currentIden
 const registry = (who: keyof typeof users) => new FarmerRegistryService(auth(who), registryRepository(runtime));
 const production = (who: keyof typeof users) => new ProductionService(auth(who), registryRepository(runtime), productionRepository(runtime));
 const service = (who: keyof typeof users = "a") => new CropCycleService(auth(who), registryRepository(runtime), cropCycleRepository(runtime));
+const closure = (who: keyof typeof users = "a") => new ProductionClosureService(auth(who), registryRepository(runtime), closureRepository(runtime));
+const closeInput = () => ({ requestId: id(), expectedVersion: 1, confirmed: true });
 const maize = "f4030005-0000-4000-8000-000000000001", coffee = "f4030005-0000-4000-8000-000000000002";
 let tenantA: string, tenantB: string, farmA: string, farmA2: string, farmB: string;
 const catalogFixture = id();
@@ -284,11 +288,11 @@ describe("database constraints and least privilege", () => {
     const row = await service().start(farmA, await command());
     for (const expression of ['"areaPlanted" = 0', '"areaPlanted" = -1', '"areaPlanted" = \'NaN\'', 'version = 0', 'variety = \'   \'', '"areaExceptionReason" = \'   \'', '"cropName" = \'\'', '"plantingDate" = \'infinity\'', '"expectedHarvest" = \'infinity\'', '"expectedHarvest" = \'2025-01-01\'']) await expect(owner.$executeRawUnsafe('UPDATE "CropCycle" SET ' + expression + ' WHERE id = $1::uuid', row.cycleId)).rejects.toThrow();
   });
-  it("permits no runtime updates/deletes, catalog writes or browser-role access", async () => {
+  it("permits no runtime record-field updates/deletes, catalog writes or browser-role access", async () => {
     const row = await service().start(farmA, await command()), data = await owner.cropCycle.findUniqueOrThrow({ where: { id: row.cycleId } });
     const denied = /permission denied|row-level security/i;
     for (const change of [{ createdBy: users.b }, { createdBy: users.admin }, { status: "CLOSED" as const }, { version: 2 }]) await expect(runtime.cropCycle.create({ data: { ...data, id: id(), ...change } })).rejects.toThrow(denied);
-    await expect(runtime.cropCycle.updateMany({ where: { id: row.cycleId }, data: { status: "CLOSED" } })).rejects.toThrow(denied);
+    await expect(runtime.cropCycle.updateMany({ where: { id: row.cycleId }, data: { areaPlanted: "2" } })).rejects.toThrow(denied);
     await expect(runtime.cropCycle.deleteMany({ where: { id: row.cycleId } })).rejects.toThrow(denied);
     await expect(runtime.cropCatalog.create({ data: { id: id(), name: "Forbidden" } })).rejects.toThrow(denied);
     await expect(runtime.cropCatalog.updateMany({ data: { active: false } })).rejects.toThrow(denied);
@@ -296,5 +300,82 @@ describe("database constraints and least privilege", () => {
     for (const role of ["anon", "authenticated"]) for (const table of ["CropCycle", "CropCatalog"]) await expect(owner.$transaction(async tx => {
       await tx.$executeRawUnsafe("SET LOCAL ROLE " + role); await tx.$queryRawUnsafe('SELECT * FROM "' + table + '"');
     })).rejects.toThrow(denied);
+  });
+});
+
+
+describe("final crop-cycle and season closure", () => {
+  it("blocks active seasons, closes exactly once, preserves history and releases plot capacity", async () => {
+    const input = await command(), cycle = await service().start(farmA, { ...input, areaPlanted: "1" });
+    const blocked = closeInput();
+    await expect(closure().close(farmA, "SEASON", input.seasonId, blocked)).rejects.toMatchObject({ code: "CONFLICT" });
+    expect(await owner.auditEvent.count({ where: { requestId: blocked.requestId } })).toBe(0);
+    const close = closeInput(), results = await Promise.all(Array.from({ length: 6 }, () => closure().close(farmA, "CROP_CYCLE", cycle.cycleId, close)));
+    expect(results).toEqual(Array.from({ length: 6 }, () => ({ recordId: cycle.cycleId, status: "CLOSED", version: 2 })));
+    expect(await owner.auditEvent.count({ where: { requestId: close.requestId, action: "CROP_CYCLE_CLOSED" } })).toBe(1);
+    expect(await service().cycle(farmA, cycle.cycleId)).toMatchObject({ status: "CLOSED", version: 2, areaPlanted: "1", plotId: input.plotId });
+    const replacement = await service().start(farmA, { ...input, requestId: id(), areaPlanted: "1" });
+    await expect(closure().close(farmA, "SEASON", input.seasonId, blocked)).rejects.toMatchObject({ code: "CONFLICT" });
+    await closure().close(farmA, "CROP_CYCLE", replacement.cycleId, closeInput());
+    expect(await closure().close(farmA, "SEASON", input.seasonId, blocked)).toEqual({ recordId: input.seasonId, status: "CLOSED", version: 2 });
+    expect(await closure().close(farmA, "SEASON", input.seasonId, blocked)).toMatchObject({ version: 2 });
+    await expect(service().start(farmA, { ...input, requestId: id() })).rejects.toMatchObject({ code: "CONFLICT" });
+    expect((await service().list(farmA)).items.some(row => row.cycleId === cycle.cycleId)).toBe(true);
+    expect(await runtime.cropCycle.updateMany({ where: { id: cycle.cycleId }, data: { status: "ACTIVE" } })).toEqual({ count: 0 });
+    expect(await runtime.season.updateMany({ where: { id: input.seasonId }, data: { status: "ACTIVE" } })).toEqual({ count: 0 });
+  });
+  it("rejects stale versions, changed receipt targets, guessed farms, other users and ADMIN", async () => {
+    const input = await command(), row = await service().start(farmA, input), close = closeInput();
+    for (const who of ["b", "admin"] as const) await expect(closure(who).close(farmA, "CROP_CYCLE", row.cycleId, close)).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(closure().close(farmA2, "CROP_CYCLE", row.cycleId, close)).rejects.toMatchObject({ code: "FORBIDDEN" });
+    for (const change of [{ confirmed: false }, { tenantId: tenantA }]) await expect(closure().close(farmA, "CROP_CYCLE", row.cycleId, { ...close, ...change })).rejects.toMatchObject({ code: "INVALID_INPUT" });
+    await expect(closure().close(farmA, "CROP_CYCLE", row.cycleId, { ...close, expectedVersion: 2 })).rejects.toMatchObject({ code: "CONFLICT" });
+    await closure().close(farmA, "CROP_CYCLE", row.cycleId, close);
+    await expect(closure().close(farmA, "CROP_CYCLE", row.cycleId, { ...close, expectedVersion: 2 })).rejects.toMatchObject({ code: "CONFLICT" });
+    const other = await service().start(farmA, { ...input, requestId: id() });
+    await expect(closure().close(farmA, "CROP_CYCLE", other.cycleId, close)).rejects.toMatchObject({ code: "CONFLICT" });
+    expect(await service().cycle(farmA, other.cycleId)).toMatchObject({ status: "ACTIVE", version: 1 });
+  });
+  it("serializes different close requests and concurrent season-close/crop-start", async () => {
+    const input = await command(), row = await service().start(farmA, input);
+    const attempts = await Promise.allSettled(Array.from({ length: 4 }, () => closure().close(farmA, "CROP_CYCLE", row.cycleId, closeInput())));
+    expect(attempts.filter(result => result.status === "fulfilled")).toHaveLength(1);
+    for (const result of attempts) if (result.status === "rejected") expect(result.reason).toMatchObject({ code: "CONFLICT" });
+    expect(await owner.auditEvent.count({ where: { targetId: row.cycleId, action: "CROP_CYCLE_CLOSED" } })).toBe(1);
+    const empty = await command();
+    const race = await Promise.allSettled([closure().close(farmA, "SEASON", empty.seasonId, closeInput()), service().start(farmA, empty)]);
+    expect(race.filter(result => result.status === "fulfilled")).toHaveLength(1);
+    const season = await owner.season.findUniqueOrThrow({ where: { id: empty.seasonId } });
+    const active = await owner.cropCycle.count({ where: { seasonId: empty.seasonId, status: "ACTIVE" } });
+    expect({ status: season.status, active }).toEqual(race[0].status === "fulfilled" ? { status: "CLOSED", active: 0 } : { status: "ACTIVE", active: 1 });
+  });
+  it("rechecks membership after waiting for closure's season lock and rolls back the receipt", async () => {
+    const input = await command(), row = await service().start(farmA, input), close = closeInput();
+    const blocker = new Client({ connectionString: url }); await blocker.connect();
+    let attempt: Promise<unknown> | undefined;
+    try {
+      await blocker.query("BEGIN");
+      await blocker.query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))", ["myfarm:production-season:" + input.seasonId]);
+      attempt = closure().close(farmA, "CROP_CYCLE", row.cycleId, close); const observed = attempt.catch(() => {});
+      await waitForLock("%pg_advisory_xact_lock%");
+      await owner.farmMember.update({ where: { farmId_userId: { farmId: farmA, userId: users.a } }, data: { status: "REVOKED" } });
+      await blocker.query("COMMIT");
+      await expect(attempt).rejects.toMatchObject({ code: "FORBIDDEN" }); await observed;
+      expect(await owner.auditEvent.count({ where: { requestId: close.requestId } })).toBe(0);
+      expect(await owner.cropCycle.findUnique({ where: { id: row.cycleId } })).toMatchObject({ status: "ACTIVE", version: 1 });
+    } finally {
+      await blocker.query("ROLLBACK"); await attempt?.catch(() => {}); await blocker.end();
+      await owner.farmMember.update({ where: { farmId_userId: { farmId: farmA, userId: users.a } }, data: { status: "ACTIVE" } });
+    }
+  });
+  it("rolls back both receipt and status if the final update fails", async () => {
+    const input = await command(), row = await service().start(farmA, input), close = closeInput();
+    const provider = new Client({ connectionString: url }); await provider.connect();
+    try {
+      await provider.query(`CREATE FUNCTION public.closure_failure_probe() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.id = '${row.cycleId}'::uuid THEN RAISE EXCEPTION 'synthetic closure failure'; END IF; RETURN NEW; END $$; CREATE TRIGGER closure_failure_probe BEFORE UPDATE ON "CropCycle" FOR EACH ROW EXECUTE FUNCTION public.closure_failure_probe()`);
+      await expect(closure().close(farmA, "CROP_CYCLE", row.cycleId, close)).rejects.toThrow("synthetic closure failure");
+      expect(await owner.auditEvent.count({ where: { requestId: close.requestId } })).toBe(0);
+      expect(await owner.cropCycle.findUnique({ where: { id: row.cycleId } })).toMatchObject({ status: "ACTIVE", version: 1 });
+    } finally { await provider.query('DROP TRIGGER IF EXISTS closure_failure_probe ON "CropCycle"; DROP FUNCTION IF EXISTS public.closure_failure_probe()'); await provider.end(); }
   });
 });

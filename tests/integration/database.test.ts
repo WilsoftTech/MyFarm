@@ -5,10 +5,11 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { identityRepository } from "@/modules/engineering-foundation/infrastructure/repository";
 import { AuthorizationService } from "@/modules/engineering-foundation/application/authorization";
 import { auditService, unitOfWork } from "@/modules/engineering-foundation/infrastructure/audit";
+import { postgresConnectionOptions } from "@/modules/engineering-foundation/infrastructure/postgres-connection";
 config({ path: ".env.test.local", quiet: true });
 const url = process.env.TEST_DATABASE_URL;
 if (!url || !/^postgresql:\/\/[^@]+@(127\.0\.0\.1|localhost):\d+\/myfarm_phase01_test(?:\?|$)/.test(url)) throw new Error("Integration requires isolated local myfarm_phase01_test database.");
-const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: url, max: 5 }) });
+const db = new PrismaClient({ adapter: new PrismaPg({ ...postgresConnectionOptions(url), max: 5 }) });
 const actor = crypto.randomUUID(), subject = crypto.randomUUID(), tenantA = crypto.randomUUID(), tenantB = crypto.randomUUID();
 beforeAll(async () => {
 await db.$executeRawUnsafe("CREATE ROLE myfarm_phase01_browser NOLOGIN").catch(() => {});
@@ -25,6 +26,13 @@ await db.user.deleteMany({ where: { id: actor } });
 await db.$disconnect();
 });
 it("connects to real PostgreSQL", async () => { expect(await db.$queryRaw`SELECT 1 AS value`).toEqual([{ value: 1 }]); });
+it("uses UTC and keeps Prisma audit timestamps within the database-clock window", async () => {
+expect(await db.$queryRaw`SELECT current_setting('TimeZone') AS zone`).toEqual([{ zone: "UTC" }]);
+const requestId = crypto.randomUUID();
+await auditService(db).append({ actorId: actor, tenantId: tenantA, action: "PRIVATE_FILE_READ", targetId: crypto.randomUUID(), requestId });
+const rows = await db.$queryRaw<{ recent: boolean }[]>`SELECT abs(extract(epoch FROM clock_timestamp() - "occurredAt")) < 10 AS recent FROM "AuditEvent" WHERE "requestId" = ${requestId}::uuid`;
+expect(rows).toEqual([{ recent: true }]);
+});
 it("scoped repository omits other tenant and denies guessed ID", async () => {
 const auth = new AuthorizationService({ currentIdentity: async () => ({ authSubject: subject }) }, identityRepository(db));
 expect((await auth.overview()).scopes.map(s => s.organizationId)).toEqual([tenantA]);

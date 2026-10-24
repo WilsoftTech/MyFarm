@@ -3,6 +3,10 @@ import { postgresConnectionOptions } from "@/modules/engineering-foundation/infr
 import { Client } from "pg";
 
 afterEach(() => vi.unstubAllEnvs());
+it.each(["127.0.0.1", "db.example.test"])("pins UTC while preserving connection role options on %s", host => {
+const options = postgresConnectionOptions(`postgresql://test:password@${host}:5432/test?options=-c%20role%3Dmyfarm_runtime%20-c%20timezone%3DAfrica%2FNairobi`);
+expect(new URL(options.connectionString ?? "").searchParams.get("options")).toBe("-c role=myfarm_runtime -c timezone=Africa/Nairobi -c timezone=UTC");
+});
 it("uses the hosted CA value without depending on a developer machine path", () => {
 vi.stubEnv("DATABASE_URL", "postgresql://test:password@db.example.test:5432/test");
 vi.stubEnv("DATABASE_CA_CERT", "trusted-ca-pem");

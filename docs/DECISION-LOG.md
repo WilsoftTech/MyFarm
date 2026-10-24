@@ -1,13 +1,13 @@
 # Decision log
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
+- Documentation review: REVIEWED — T013 task-relevant content, status and evidence.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-18 (Africa/Nairobi), T002 verification and task commit workflow.
+- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
 - Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
 - Remaining work/blockers: Phase3 T001/T002 verified; T003–T013 and full acceptance remain. [T002 report](reports/phase-03-t002-2026-10-18.md). Historical sections stay historical.
-- Evidence/report links: [Phase1+2 integration report](reports/phase-01-02-integration-2026-10-09.md); [Phase02 closeout](reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md).
+- Evidence/report links: [Phase1+2 integration report](reports/phase-01-02-integration-2026-10-09.md); [Phase02 closeout](reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](reports/phase-03-closeout-2026-10-25.md).
 <!-- MYFARM-STATUS-END -->
 
 Date: 2026-10-08, Africa/Nairobi. Human owner roles below are **unassigned**, not invented personnel. No field research has been verified. Phase1 local engineering/test evidence is in the current closeout. [ADRs](architecture/architecture-decisions.md) explain tradeoffs.
@@ -298,3 +298,13 @@ T010 adds the single enterprise-type → workflow registry, the release rule and
 ## D-P03-013 — Merge resolution and T011 authorization
 
 APPROVED by direct owner instruction 2026-10-25 (Africa/Nairobi): preserve the local T010 implementation and approved catalog rules, integrate the incoming security update, resolve the merge, then proceed with T011. The selected production baseline is local commit `59ebbfc`, retaining D-P03-010 through D-P03-012, the animal-type catalog, fixed purposes, farm-unique normalized batch labels, T009 screens and the T010 registry. Incoming `498d18b`'s alternate free-text/non-unique poultry implementation and `202610240001_poultry_batches` migration are not selected; they must not be applied alongside the local `202610190001_poultry_batches` migration. Incoming T007/T008 reports remain historical evidence of that alternate implementation, not the current schema or task checkpoint. The incoming Next.js 16.4.3 manifest, lockfile, security-upgrade config and report are retained. No shared database reconciliation, hosted migration, push or deployment is authorized or performed by this resolution.
+
+
+## D-P03-014 - T013 final season and crop-cycle closure
+
+APPROVED owner clarification 2026-10-25 (Africa/Nairobi), during the instruction to proceed to T013: "Block season closure until its crop cycles are closed (Recommended)". This resolves the missing lifecycle behavior found by the audit, within D-P03-002 final closure/no reopening. Crop cycles retain history when closed and stop reserving active plot area. A season closes only after all its cycles are closed; no cascading closure, reopening, poultry movements or financial totals are introduced. Commands require explicit confirmation, current farm authorization, expected version and atomic audit receipts. Season-level transaction locks serialize crop starts against season closure; crop closure also takes the existing plot lock. UPDATE is limited to lifecycle status/version/updatedAt columns, with ACTIVE-to-CLOSED RLS policies. Prepared provider file `supabase/policies/production-closure-runtime.sql` is local-only pending separately authorized hosted application. [T013 audit](reports/phase-03-closeout-2026-10-25.md).
+
+
+## D-P03-015 - T013 closeout acceptance and hosted closure policy
+
+APPROVED owner 2026-10-25 (Africa/Nairobi), explicitly selecting "Approve policy and local closeout" after reviewing the concrete T013 report and exact provider file. Phase 3 is COMPLETED - 100% (13/13), PASS WITH CONDITIONS - LOCAL VERIFICATION, under D-P03-004 and the inherited production conditions in the closeout. Applied only `supabase/policies/production-closure-runtime.sql` to development project `sudqhluwsaijvjjcegpv` in one transaction, after capturing prior table/column ACLs and policies. Independent read-only checks confirm runtime UPDATE only for status/version/updatedAt on Season/CropCycle, no table-wide UPDATE, record-field update, DELETE or browser grants; RLS remains enabled. No farmer records, migration history, production settings or application deployment were changed. This does not authorize Phase 4, a push or a production release. [Closeout](reports/phase-03-closeout-2026-10-25.md).

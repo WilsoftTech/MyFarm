@@ -11,6 +11,14 @@ import { cropCycleRepository } from "./crop-cycle-repository";
 import { PoultryBatchService } from "../application/poultry-batch";
 import type { PoultryBatchRepository } from "../contracts/poultry-batch";
 import { poultryBatchRepository } from "./poultry-batch-repository";
+import { ProductionClosureService } from "../application/closure";
+import { closureRepository } from "./closure-repository";
+
+export function productionClosureService() {
+  return new ProductionClosureService(authorizationService(), {
+    farmScopeForMember: input => registryRepository(database()).farmScopeForMember(input),
+  }, { close: (...args) => closureRepository(database()).close(...args) });
+}
 
 export function productionService() {
   // Anonymous requests must fail before constructing a database client.

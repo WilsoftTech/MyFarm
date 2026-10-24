@@ -1,5 +1,15 @@
 # Next.js security upgrade — 2026-10-24
 
+<!-- MYFARM-STATUS-START -->
+- Documentation review: REVIEWED — T013 metadata/status scope and evidence-link relevance; historical and future-phase facts unchanged.
+- Implementation status: REFERENCE ONLY — N/A (review/evidence record).
+- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
+- Related phase/task IDs: MYF-P03-T013.
+- Verified completed work: Document inventory, review depth and source-preservation checks recorded.
+- Remaining work/blockers: See the current phase closeout; this review does not complete a task.
+- Evidence/report links: [T013 closeout](phase-03-closeout-2026-10-25.md).
+<!-- MYFARM-STATUS-END -->
+
 <!-- next-upgrade: security; path="." -->
 
 Upgraded the current checkout from Next.js **16.4.0 to exactly 16.4.3** using npm 11.6.2 on Node.js 24.12.0. Updated `package.json` and the existing npm lockfile, including Next.js environment/compiler packages. Set `experimental.agentUpgrade` to `"security"` in `next.config.ts`; the installed target's TypeScript declarations and configuration schema support this value. Existing security headers and other configuration are preserved. No new direct dependency or application behavior was introduced.

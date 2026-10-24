@@ -9,6 +9,8 @@ import { FarmerRegistryService } from "@/modules/farmer-registry/application/reg
 import { registryRepository } from "@/modules/farmer-registry/infrastructure/repository";
 import { ProductionService } from "@/modules/enterprises-seasons/application/production";
 import { productionRepository } from "@/modules/enterprises-seasons/infrastructure/repository";
+import { PoultryBatchService } from "@/modules/enterprises-seasons/application/poultry-batch";
+import { poultryBatchRepository } from "@/modules/enterprises-seasons/infrastructure/poultry-batch-repository";
 import { applyProviderSql, runSqlFile, supabaseEmulation } from "../support/provisioning";
 
 config({ path: ".env.test.local", quiet: true });
@@ -21,6 +23,7 @@ const users = { a: id(), b: id(), admin: id() }, subjects = { a: id(), b: id(), 
 const auth = (who: keyof typeof users) => new AuthorizationService({ currentIdentity: async () => ({ authSubject: subjects[who] }) }, identityRepository(runtime));
 const registry = (who: keyof typeof users) => new FarmerRegistryService(auth(who), registryRepository(runtime));
 const production = (who: keyof typeof users) => new ProductionService(auth(who), registryRepository(runtime), productionRepository(runtime));
+const poultry = (who: keyof typeof users) => new PoultryBatchService(auth(who), registryRepository(runtime), poultryBatchRepository(runtime));
 const scope = () => ({ tenantId: tenantA, farmId: farmA, actorId: users.a });
 const enterpriseInput = (name = "Maize") => ({ requestId: id(), name, type: "CROP" as const });
 const seasonInput = (label = "Season A") => ({ requestId: id(), label, startDate: "2026-03-01", endDate: "2026-08-01" });
@@ -62,6 +65,40 @@ afterAll(async () => {
 });
 
 describe("production under the actual runtime grants", () => {
+  it("reproduces missing Phase 3 grants and repairs page reads with the reviewed provider scripts", async () => {
+    const provider = new Client({ connectionString: url }); await provider.connect();
+    const before = await owner.auditEvent.count();
+    const repair = async () => {
+      await runSqlFile(provider, "supabase/policies/production-runtime.sql");
+      await runSqlFile(provider, "supabase/policies/crop-cycle-runtime.sql");
+      await runSqlFile(provider, "supabase/policies/poultry-batch-runtime.sql");
+    };
+    try {
+      await provider.query('REVOKE SELECT, INSERT ON "Enterprise", "Season", "CropCatalog", "CropCycle", "AnimalTypeCatalog", "PoultryBatch" FROM myfarm_runtime');
+      await expect(production("a").listEnterprises(farmA)).rejects.toThrow(denied);
+      await expect(production("a").listSeasons(farmA)).rejects.toThrow(denied);
+      await expect(poultry("a").list(farmA)).rejects.toThrow(denied);
+      await expect(poultry("a").animalTypes(farmA)).rejects.toThrow(denied);
+      await repair();
+      await expect(production("a").listEnterprises(farmA)).resolves.toEqual({ items: [], nextCursor: null });
+      await expect(production("a").listSeasons(farmA)).resolves.toEqual({ items: [], nextCursor: null });
+      await expect(poultry("a").list(farmA)).resolves.toEqual({ items: [], nextCursor: null });
+      expect((await poultry("a").animalTypes(farmA)).items).toHaveLength(4);
+      await expect(poultry("b").list(farmA)).rejects.toMatchObject({ code: "FORBIDDEN" });
+      await expect(production("b").listEnterprises(farmA)).rejects.toMatchObject({ code: "FORBIDDEN" });
+      expect((await provider.query(`SELECT
+        has_table_privilege('myfarm_runtime','"CropCatalog"','SELECT') AS catalog_read,
+        has_table_privilege('myfarm_runtime','"CropCatalog"','INSERT') AS catalog_write,
+        has_table_privilege('myfarm_runtime','"CropCycle"','INSERT') AS cycle_insert,
+        has_table_privilege('myfarm_runtime','"AnimalTypeCatalog"','INSERT') AS animal_write,
+        has_table_privilege('myfarm_runtime','"PoultryBatch"','INSERT') AS poultry_insert,
+        has_table_privilege('myfarm_runtime','"PoultryBatch"','DELETE') AS poultry_delete,
+        has_table_privilege('authenticated','"PoultryBatch"','SELECT') AS poultry_browser_read,
+        has_table_privilege('anon','"Enterprise"','SELECT') AS browser_read,
+        has_table_privilege('myfarm_runtime','"Enterprise"','DELETE') AS runtime_delete`)).rows[0]).toEqual({ catalog_read: true, catalog_write: false, cycle_insert: true, animal_write: false, poultry_insert: true, poultry_delete: false, poultry_browser_read: false, browser_read: false, runtime_delete: false });
+      expect(await owner.auditEvent.count()).toBe(before);
+    } finally { await repair(); await provider.end(); }
+  });
   it("creates and reads scoped enterprises/seasons, with server-owned version and audit metadata", async () => {
     expect(await runtime.$queryRaw`SELECT current_user AS role`).toEqual([{ role: "myfarm_runtime" }]);
     const input = enterpriseInput(); const row = await production("a").createEnterprise(farmA, input); enterpriseA = row.enterpriseId;
@@ -209,10 +246,10 @@ describe("runtime policies are a consistency backstop", () => {
     await expect(runtime.enterprise.create({ data: { ...data, createdBy: users.a, version: 2 } })).rejects.toThrow(denied);
     await expect(runtime.season.create({ data: { tenantId: tenantA, farmId: farmA, createdBy: users.b, label: "Forbidden", startDate: new Date("2026-01-01") } })).rejects.toThrow(denied);
   });
-  it("has no update/delete privileges and grants browser roles no access", async () => {
+  it("has no record-field update/delete privileges and grants browser roles no access", async () => {
     await expect(runtime.enterprise.updateMany({ where: { id: enterpriseA }, data: { farmId: farmA2 } })).rejects.toThrow(denied);
     await expect(runtime.enterprise.deleteMany({ where: { id: enterpriseA } })).rejects.toThrow(denied);
-    await expect(runtime.season.updateMany({ where: { id: seasonA }, data: { status: "CLOSED" } })).rejects.toThrow(denied);
+    await expect(runtime.season.updateMany({ where: { id: seasonA }, data: { label: "Rewritten history" } })).rejects.toThrow(denied);
     await expect(runtime.season.deleteMany({ where: { id: seasonA } })).rejects.toThrow(denied);
     for (const role of ["anon", "authenticated"]) {
       for (const table of ["Enterprise", "Season"]) {

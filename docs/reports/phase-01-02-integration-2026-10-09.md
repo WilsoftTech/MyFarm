@@ -1,13 +1,13 @@
 # Phase 1 and Phase 2 integration — 2026-10-09
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — created 2026-10-09 from verified evidence; updated 2026-10-10 with the hosted application (§9).
+- Documentation review: REVIEWED — T013 metadata/status scope and evidence-link relevance; historical and future-phase facts unchanged.
 - Implementation status: REFERENCE ONLY — N/A (integration, provisioning-hardening and verification record).
-- Last reviewed: 2026-10-10 (Africa/Nairobi), hosted provisioning application and Phase 2 completion check.
+- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
 - Related phase/task IDs: Phase01 (MYF-P01-T001–T013); Phase02 (MYF-P02-T001–T013); conditions P2-C1–P2-C8, INT-C1–INT-C7; decisions D-INT-001–D-INT-003, D-P03-001–D-P03-004.
 - Verified completed work: main fast-forwarded to d85a773, then to 756f3c4 (Step B); provisioning hardening verified locally (5545257) and applied to hosted dev (9/9 read-only checks); public sign-up disabled; sign-in/sign-out 11/11 after the change; Supabase advisors run.
 - Remaining work/blockers: No Phase 2 blocker. Open conditions: P2-C1, P2-C3–P2-C5, P2-C7, INT-C3–INT-C7. GitHub-hosted CI remains NOT VERIFIED. Phase 3 not started.
-- Evidence/report links: [Evidence folder](evidence/integration-2026-10-09/); [hosted application](evidence/integration-2026-10-09/hosted-apply/); [Phase02 closeout](phase-02-closeout-2026-10-09.md); [decision log](../DECISION-LOG.md#d-int-001--phase-1-and-phase-2-integration-into-main).
+- Evidence/report links: [Evidence folder](evidence/integration-2026-10-09/); [hosted application](evidence/integration-2026-10-09/hosted-apply/); [Phase02 closeout](phase-02-closeout-2026-10-09.md); [decision log](../DECISION-LOG.md#d-int-001--phase-1-and-phase-2-integration-into-main). [T013 audit](phase-03-closeout-2026-10-25.md).
 <!-- MYFARM-STATUS-END -->
 
 **Outcome.** Phase 1 and Phase 2 are on `main` at **`d85a773`**, integrated by fast-forward with no deployment triggered. The database provisioning hardening the owner required before Phase 3 is implemented on branch **`phase-02-provisioning-hardening` (`5545257`)** and verified locally: the clean-clone CI reproduction passes 11/11 steps. It is **not pushed, not merged and not applied to any hosted database**. GitHub-hosted CI remains **NOT VERIFIED** (billing lock), under a one-time owner exception for this integration.

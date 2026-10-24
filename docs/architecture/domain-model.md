@@ -1,13 +1,13 @@
 # Domain model
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
+- Documentation review: REVIEWED — T013 task-relevant content, status and evidence.
 - Implementation status: PARTIALLY COMPLETE — Phase02 registry scope verified; Phase03 T001 Enterprise/Season foundation schema verified locally; no whole-document percentage claimed.
-- Last reviewed: 2026-10-18 (Africa/Nairobi), Phase03 T005.
+- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
 - Related phase/task IDs: Phase02 MYF-P02-T001–T013; later phases per roadmap.
 - Verified completed work: Farmer, FarmerProfile, Farm, Plot, FarmMember implemented; User/Organization reused; Address/Contact as columns; Document deferred (D-P02-003).
 - Remaining work/blockers: Phase03 crop-cycle contract and runtime persistence/API verified in T004/T005; crop UI, batch detail and later entities remain pending. Document awaits retention policy (P2-C5). [T002 evidence](../reports/phase-03-t002-2026-10-18.md).
-- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md)
+- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md) [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
 <!-- MYFARM-STATUS-END -->
 
 ## Phase 3 foundation subset — 2026-10-18

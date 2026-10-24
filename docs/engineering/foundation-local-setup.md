@@ -1,13 +1,13 @@
 # Foundation local setup and provider verification
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
+- Documentation review: REVIEWED — T013 task-relevant content, status and evidence.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-10 (Africa/Nairobi), hosted provisioning application and Phase 2 completion check.
+- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
 - Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
 - Remaining work/blockers: Maintain alignment with the Phase02 closeout; historical sections stay historical; Phase3 authorized (D-P03-001), NOT STARTED.
-- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md).
+- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
 <!-- MYFARM-STATUS-END -->
 
 Phase 01, 2026-10-08. The user selected Supabase PostgreSQL + Supabase Auth and will configure .env.local. No hosted resources have been created or modified.
@@ -48,6 +48,12 @@ npm run test:e2e starts its own production server on 127.0.0.1:3101. The browser
 
 .github/workflows/quality.yml defines PostgreSQL17-backed checks and browser verification on CI. A workflow file alone is not an executed CI run. Git main/remote now exist, but no verified hosted CI run is recorded.
 
+## Phase 3 pages report UNAVAILABLE after a local upgrade
+
+A successful local build does not provision the hosted database used by `.env.local`. On 2026-10-25 a read-only check confirmed that hosted development had Enterprise/Season/CropCatalog/CropCycle tables but no runtime SELECT/INSERT grants for them; the enterprise list failed with PostgreSQL `42501` and the page guard safely returned `UNAVAILABLE`. The error boundary's client console event reports that same failure.
+
+The reviewed repair files are `supabase/policies/production-runtime.sql`, `supabase/policies/crop-cycle-runtime.sql` and `supabase/policies/poultry-batch-runtime.sql`, listed in `supabase/provisioning.json`. Prisma migrations alone do not apply provider grants. Run the manifest as the migration owner on an authorized target, preserving the restricted application role and RLS. On 2026-10-25 the pending additive migrations and all three runtime files were applied to hosted development; all six production/catalog table queries now pass. Browser roles already had zero public table/sequence/function access, so a broader lockdown rewrite was unnecessary. The extra empty legacy poultry table/history is preserved. Restart an existing dev process after changing credentials or generating Prisma clients, then retry the page. [Evidence and limitations](../reports/phase-03-runtime-permissions-2026-10-25.md).
+
 ## Deferred scope
 
 No service worker, offline queue, IndexedDB or synchronization is enabled in Phase1. The manifest/icon are a shell foundation; offline operation is not advertised or tested as complete. Agent/admin pages are permission-guarded scaffolds. Recovery, supported languages/devices, region/budget, hosted deployment and production operations require their documented decisions/evidence.
@@ -77,3 +83,7 @@ API change: same-origin private-file requests work with actual HTTP authority; e
 ## Phase 2 implementation (2026-10-09)
 
 Provision an isolated project in the order of [`supabase/provisioning.json`](../../supabase/provisioning.json) (updated 2026-10-09; [how to run it](../architecture/deployment-infrastructure.md#provisioning-updated-2026-10-09-provisioning-hardening)). Historically: after the Phase 1 provider SQL, apply `supabase/policies/farmer-registry-runtime.sql` (re-runnable) to the isolated project. Without it, the restricted runtime role cannot register farmers. Local integration tests apply it automatically to the local test DB. Migration SQL is checked out with LF endings on every OS (`.gitattributes`) ([closeout](../reports/phase-02-closeout-2026-10-09.md)).
+
+## Phase 3 final closure provisioning
+
+The T013 closure flow uses `supabase/policies/production-closure-runtime.sql` after the three production creation-policy files. It grants only UPDATE of status/version/updatedAt for ACTIVE to CLOSED transitions; it grants no reopening, record-field changes or DELETE. A season cannot close while any crop cycle remains active. The owner approved this exact policy on 2026-10-25; it is now applied and independently verified in hosted development, with no farmer-record changes. The server connection helper appends UTC to PostgreSQL session options while preserving the runtime role and trusted TLS configuration; a non-UTC rate-limit regression covers this behavior.
