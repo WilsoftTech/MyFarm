@@ -75,6 +75,79 @@ test("empty/setup states → planting with dates/units → perennial → separat
   await page.goto(`/farms/${farm}/crop-cycles`); await expect(page.getByRole("list", { name: "Crop cycles on this farm" }).getByRole("listitem")).toHaveCount(2);
   await page.goto(`/farms/${other.farm}/crop-cycles`); await expect(page.getByRole("list", { name: "Crop cycles on this farm" }).getByRole("listitem")).toHaveCount(1);
 });
+test("all released catalog crops can be planted through the same form without crop-specific behavior", async ({ page, context }, info) => {
+  test.setTimeout(90_000);
+  const parents = await setup(context), names = ["Beans", "Bananas (matooke)", "Cassava", "Sweet potatoes", "Irish potatoes", "Groundnuts", "Sorghum", "Millet", "Sunflower", "Tea", "Tomatoes", "Cabbage"];
+  for (const name of names) {
+    await page.goto(`/farms/${parents.farm}/enterprises/${parents.enterpriseId}`);
+    await page.getByRole("link", { name: "Start crop cycle" }).click();
+    await fill(page, parents, "0.05", name);
+    await expect(page.getByLabel("Enterprise", { exact: true })).toHaveValue(parents.enterpriseId);
+    await save(page);
+    await expect(page.getByRole("heading", { name: name + " crop cycle", exact: true })).toBeVisible();
+    await expect(page.getByText("0.05 Acres", { exact: true })).toBeVisible();
+  }
+  await page.goto(`/farms/${parents.farm}/crop-cycles`);
+  const list = page.getByRole("list", { name: "Crop cycles on this farm" });
+  await expect(list.getByRole("listitem")).toHaveCount(12);
+  for (const name of names) await expect(list.getByRole("heading", { name, exact: true })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  mkdirSync(".cache/t012-visual", { recursive: true });
+  await page.screenshot({ path: `.cache/t012-visual/released-crops-${info.project.name}.png`, fullPage: true });
+  await page.goto(`/farms/${fixtures.farms.a2}/crop-cycles`);
+  await expect(page.getByRole("heading", { name: "No crop cycles yet" })).toBeVisible();
+});
+
+test("unsupported capabilities stay unavailable on detail, list and both production selectors", async ({ page, context }, info) => {
+  test.setTimeout(60_000);
+  const parents = await setup(context), farm = parents.farm;
+  const create = async (type: string) => {
+    const response = await context.request.post(`/api/v1/farms/${farm}/enterprises`, { headers: { origin: "http://127.0.0.1:3102" }, data: { requestId: id(), name: type + " plans", type } });
+    expect(response.status()).toBe(201);
+    return z.object({ enterprise: z.object({ enterpriseId: z.uuid() }) }).parse(await response.json()).enterprise.enterpriseId;
+  };
+  await create("POULTRY");
+  const unsupported = [];
+  for (const type of ["DAIRY", "LIVESTOCK", "FISH", "OTHER"]) unsupported.push({ type, enterpriseId: await create(type) });
+  await page.goto(`/farms/${farm}/enterprises`);
+  await expect(page.getByRole("heading", { name: "Enterprises", exact: true })).toBeVisible();
+  await expect(page.getByText("Production records not available yet.", { exact: true })).toHaveCount(4);
+  await expect(page.getByText("Production records not available yet.", { exact: true }).first()).toBeVisible();
+  mkdirSync(".cache/t012-visual", { recursive: true });
+  await page.screenshot({ path: `.cache/t012-visual/enterprise-list-${info.project.name}.png`, fullPage: true });
+  for (const { type, enterpriseId } of unsupported) {
+    await page.goto(`/farms/${farm}/enterprises/${enterpriseId}`);
+    await expect(page.getByRole("heading", { name: type + " plans", exact: true })).toBeVisible();
+    await expect(page.getByText(/Production records for this enterprise type are not available yet/)).toBeVisible();
+    await expect(page.getByRole("link", { name: /Start crop cycle|Add poultry batch|View farm crop cycles|View farm poultry batches/ })).toHaveCount(0);
+    await page.goto(`/farms/${farm}/enterprises`);
+    await expect(page.getByRole("listitem").filter({ hasText: type + " plans" })).toContainText("Production records not available yet.");
+    for (const path of ["crop-cycles", "poultry-batches"]) {
+      await page.goto(`/farms/${farm}/${path}/new?enterpriseId=${enterpriseId}`);
+      const option = page.getByLabel("Enterprise", { exact: true }).locator(`option[value="${enterpriseId}"]`);
+      await expect(option).toBeDisabled(); await expect(option).toContainText("production records not available yet");
+      await expect(page.getByLabel("Enterprise", { exact: true })).toHaveValue("");
+    }
+  }
+  // Force the unsupported preset beyond page one; the fallback must use the same capability presentation.
+  for (let n = 0; n < 21; n++) await create("CROP");
+  const preset = unsupported[0];
+  for (const path of ["crop-cycles", "poultry-batches"]) {
+    await page.goto(`/farms/${farm}/${path}/new?enterpriseId=${preset.enterpriseId}`);
+    const option = page.getByLabel("Enterprise", { exact: true }).locator(`option[value="${preset.enterpriseId}"]`);
+    await expect(option).toBeDisabled(); await expect(option).toContainText("production records not available yet");
+    await expect(page.getByLabel("Enterprise", { exact: true })).toHaveValue("");
+  }
+  await page.goto(`/farms/${farm}/enterprises/${preset.enterpriseId}`);
+  await expect(page.getByRole("heading", { name: preset.type + " plans", exact: true })).toBeVisible();
+  await expect(page.getByText(/Production records for this enterprise type are not available yet/)).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  mkdirSync(".cache/t012-visual", { recursive: true });
+  await page.screenshot({ path: `.cache/t012-visual/unsupported-${info.project.name}.png`, fullPage: true });
+  await identity(context, "b");
+  await page.goto(`/farms/${farm}/enterprises/${preset.enterpriseId}`); await expect(page).toHaveURL(/\/forbidden$/);
+});
+
 test("excess area fails without an effect, retains draft, then records the explicit reason", async ({ page, context }) => {
   const parents = await setup(context), path = `/farms/${parents.farm}/crop-cycles/new`;
   await page.goto(path); await fill(page, parents, "0.8"); await save(page);
@@ -88,7 +161,7 @@ test("excess area fails without an effect, retains draft, then records the expli
 });
 test("offline open form reconnects without losing details or creating duplicate cycles", async ({ page, context }) => {
   const parents = await setup(context);
-  await page.goto(`/farms/${parents.farm}/crop-cycles/new`); await fill(page, parents);
+  await page.goto(`/farms/${parents.farm}/crop-cycles/new`); await fill(page, parents, "0.1", "Beans");
   await context.setOffline(true);
   try { await expect(page.getByRole("button", { name: "Save crop cycle" })).toBeDisabled(); await expect(page.getByText(/Keep this page open/)).toBeVisible(); await expect(page.getByLabel("Area planted", { exact: true })).toHaveValue("0.1"); }
   finally { await context.setOffline(false); }
@@ -96,7 +169,7 @@ test("offline open form reconnects without losing details or creating duplicate 
 });
 test("lost response after committing a crop retries exactly once with its original request identity", async ({ page, context }) => {
   const parents = await setup(context), path = `/farms/${parents.farm}/crop-cycles/new`;
-  await page.goto(path); await fill(page, parents);
+  await page.goto(path); await fill(page, parents, "0.1", "Cassava");
   let interrupted = false;
   await page.route("**/crop-cycles/new", async route => {
     if (route.request().method() === "POST" && !interrupted) { interrupted = true; await route.fetch(); await route.abort("failed"); }

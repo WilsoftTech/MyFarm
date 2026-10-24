@@ -1,16 +1,16 @@
 # Phase 03 Enterprises Crops Livestock and Seasons
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED - MYF-P03-T011 R004 catalog release and authorized capability evidence.
-- Implementation status: PARTIALLY COMPLETE — 84.62% (11/13 verified tasks; T001-T011 complete at their stages).
-- Last reviewed: 2026-10-25 (Africa/Nairobi), T011 verification.
+- Documentation review: REVIEWED - MYF-P03-T012 capability UI and local AC004 acceptance evidence.
+- Implementation status: PARTIALLY COMPLETE — 92.31% (12/13 verified tasks; T001-T012 complete at their stages).
+- Last reviewed: 2026-10-25 (Africa/Nairobi), T012 verification.
 - Related phase/task IDs: Phase 03; MYF-P03-T001 through MYF-P03-T013; review session Phase01; Phase02 review session (MYF-P02-T001–T013).
-- Verified completed work: T001-T006 (crop cycles end to end; MYF-P03-AC002 verified locally) plus T007-T009 poultry batches end to end (D-P03-010; MYF-P03-AC003 verified locally). [T009 evidence](../reports/phase-03-t009-2026-10-19.md); T010 workflow registry and reviewed catalog release rule under D-P03-012 ([T010 evidence](../reports/phase-03-t010-2026-10-19.md)); T011 approved crop release and authorized enterprise capabilities ([T011 evidence](../reports/phase-03-t011-2026-10-25.md)).
-- Remaining work/blockers: T012 UI/full AC004 acceptance and T013 phase audit; full AC001/exit gates and hosted Phase3 provisioning remain pending. Next: T012.
+- Verified completed work: T001-T006 (crop cycles end to end; MYF-P03-AC002 verified locally) plus T007-T009 poultry batches end to end (D-P03-010; MYF-P03-AC003 verified locally). [T009 evidence](../reports/phase-03-t009-2026-10-19.md); T010 workflow registry and reviewed catalog release rule under D-P03-012 ([T010 evidence](../reports/phase-03-t010-2026-10-19.md)); T011 approved crop release and authorized enterprise capabilities ([T011 evidence](../reports/phase-03-t011-2026-10-25.md)); T012 capability UI and full local AC004 acceptance ([T012 evidence](../reports/phase-03-t012-2026-10-25.md)).
+- Remaining work/blockers: T013 phase audit, full AC001/exit gates and hosted Phase3 provisioning remain pending. AC004 is verified locally by T012. Next: T013.
 - Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **PARTIALLY COMPLETE — 84.62% (11/13), T001-T011 verified locally at their stages**. [R004 contract evidence](../reports/phase-03-t010-2026-10-19.md); [Poultry UI evidence](../reports/phase-03-t009-2026-10-19.md); [Poultry backend evidence](../reports/phase-03-t008-2026-10-19.md); [Poultry contract evidence](../reports/phase-03-t007-2026-10-19.md); [Crop UI evidence](../reports/phase-03-t006-2026-10-19.md); [Foundation evidence](../reports/phase-03-start-2026-10-18.md); [backend evidence](../reports/phase-03-t002-2026-10-18.md). [UI evidence](../reports/phase-03-t003-2026-10-18.md). Full MYF-P03-AC001 and phase exit are not yet verified. Authorization: [D-P03-001](../DECISION-LOG.md#d-p03-001--phase-3-authorization-and-sequencing); Q07/Q08 resolved by [D-P03-002](../DECISION-LOG.md#d-p03-002--q07-seasons-and-crop-cycles) and [D-P03-003](../DECISION-LOG.md#d-p03-003--q08-units-and-enterprise-types). Specification date: 2026-10-08. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **PARTIALLY COMPLETE — 92.31% (12/13), T001-T012 verified locally at their stages**. [R004 contract evidence](../reports/phase-03-t010-2026-10-19.md); [Poultry UI evidence](../reports/phase-03-t009-2026-10-19.md); [Poultry backend evidence](../reports/phase-03-t008-2026-10-19.md); [Poultry contract evidence](../reports/phase-03-t007-2026-10-19.md); [Crop UI evidence](../reports/phase-03-t006-2026-10-19.md); [Foundation evidence](../reports/phase-03-start-2026-10-18.md); [backend evidence](../reports/phase-03-t002-2026-10-18.md). [UI evidence](../reports/phase-03-t003-2026-10-18.md). Full MYF-P03-AC001 and phase exit are not yet verified. Authorization: [D-P03-001](../DECISION-LOG.md#d-p03-001--phase-3-authorization-and-sequencing); Q07/Q08 resolved by [D-P03-002](../DECISION-LOG.md#d-p03-002--q07-seasons-and-crop-cycles) and [D-P03-003](../DECISION-LOG.md#d-p03-003--q08-units-and-enterprise-types). Specification date: 2026-10-08. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
@@ -89,7 +89,7 @@ Loading announced; recoverable errors retain input and safe retry. Empty states 
 
 ## H. Implementation Tasks
 
-Execute these small stages sequentially after authorization. Field/model/provider policies remain proposals until affected decisions are resolved. Each capability separates contract/domain work, authorized service/evidence work, and user-visible acceptance. T001 foundation, T002 backend, T003 enterprise/season UI, T004 crop-cycle domain contract, T005 crop backend, T006 crop UI, T007 poultry contract, T008 poultry backend, T009 poultry UI, T010 R004 contract and T011 catalog release/capability backend are verified; T012/T013 remain pending. D-P03-007 adjusts T003 acceptance sequencing; the full phase acceptance gate remains required. Commit each completed task per the owner's 2026-10-18 instruction.
+Execute these small stages sequentially after authorization. Field/model/provider policies remain proposals until affected decisions are resolved. Each capability separates contract/domain work, authorized service/evidence work, and user-visible acceptance. T001 foundation, T002 backend, T003 enterprise/season UI, T004 crop-cycle domain contract, T005 crop backend, T006 crop UI, T007 poultry contract, T008 poultry backend, T009 poultry UI, T010 R004 contract and T011 catalog release/capability backend and T012 capability UI/AC004 acceptance are verified; T013 remains pending. D-P03-007 adjusts T003 acceptance sequencing; the full phase acceptance gate remains required. Commit each completed task per the owner's 2026-10-18 instruction.
 
 ### MYF-P03-T001 — Specify and implement domain contract for MYF-P03-R001
 
@@ -196,7 +196,7 @@ Execute these small stages sequentially after authorization. Field/model/provide
 - Acceptance criteria: MYF-P03-AC004 for this stage; final full criterion verified by the third stage. No unauthorized effect/later scope.
 - Required tests: Real isolated DB/policy/rollback/duplicate tests and relevant adapter cases: Catalog crop and unsupported type tests.
 
-**T011 verified backend subset (2026-10-25):** The reviewed additive migration releases the 12 approved crop entries; the existing authorized enterprise service/API derives workflow capabilities on create/replay, detail and paginated list. Real PostgreSQL tests verify release rollback/collision behavior, read-only runtime catalog access, newly released crop starts/retries, unsupported types and farm isolation. Full AC004 UI acceptance remains T012. [Evidence](../reports/phase-03-t011-2026-10-25.md).
+**T011 verified backend subset (2026-10-25):** The reviewed additive migration releases the 12 approved crop entries; the existing authorized enterprise service/API derives workflow capabilities on create/replay, detail and paginated list. Real PostgreSQL tests verify release rollback/collision behavior, read-only runtime catalog access, newly released crop starts/retries, unsupported types and farm isolation. Full AC004 UI acceptance is now verified by T012 below. [Evidence](../reports/phase-03-t011-2026-10-25.md).
 
 ### MYF-P03-T012 — Connect UI and verify acceptance for MYF-P03-R004
 
@@ -206,6 +206,8 @@ Execute these small stages sequentially after authorization. Field/model/provide
 - Expected behavior: New catalog crop needs no maize-specific code; unsupported enterprise workflow clearly unavailable.
 - Acceptance criteria: MYF-P03-AC004 for this stage; final full criterion verified by the third stage. No unauthorized effect/later scope.
 - Required tests: Component/E2E plus full acceptance oracle: Catalog crop and unsupported type tests.
+
+**T012 verified UI subset (2026-10-25):** Enterprise detail/list and both production selectors consume authorized workflow capabilities, sharing presentation across paged and preset choices. Unsupported/closed presets are disabled and not preselected. The same form plants all 12 approved crop additions; all four unsupported types show clear limits. Desktop/mobile browser, component and cumulative checks verify local MYF-P03-AC004, including scope isolation, drafts/retries and failure states. [Evidence](../reports/phase-03-t012-2026-10-25.md). T013 and full phase acceptance remain pending.
 
 ### MYF-P03-T013 — Audit and close phase
 
@@ -258,9 +260,9 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 - [x] MYF-P03-T007 poultry domain/contract stage complete with [evidence](../reports/phase-03-t007-2026-10-19.md); full AC003 pending T008/T009.
 - [x] MYF-P03-T008 poultry backend stage complete with [evidence](../reports/phase-03-t008-2026-10-19.md); full AC003 pending T009.
 - [x] MYF-P03-T009 poultry UI complete with [evidence](../reports/phase-03-t009-2026-10-19.md); MYF-P03-AC003 verified locally.
-- [x] MYF-P03-T010 R004 domain/contract stage complete with [evidence](../reports/phase-03-t010-2026-10-19.md); full AC004 pending T012.
-- [x] MYF-P03-T011 catalog release and authorized capability backend complete with [evidence](../reports/phase-03-t011-2026-10-25.md); full AC004 remains T012.
-- [ ] MYF-P03-T012 complete with evidence.
+- [x] MYF-P03-T010 R004 domain/contract stage complete with [evidence](../reports/phase-03-t010-2026-10-19.md); full AC004 verified locally by T012.
+- [x] MYF-P03-T011 catalog release and authorized capability backend complete with [evidence](../reports/phase-03-t011-2026-10-25.md); full AC004 verified locally by T012.
+- [x] MYF-P03-T012 capability UI and local MYF-P03-AC004 acceptance complete with [evidence](../reports/phase-03-t012-2026-10-25.md).
 - [ ] MYF-P03-T013 complete with evidence.
 - [ ] Every K criterion verified.
 - [ ] Security/integrity audit, remediation and retest complete.

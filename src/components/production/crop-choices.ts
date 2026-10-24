@@ -2,12 +2,13 @@ import "server-only";
 import { cropCycleService, productionService } from "@/modules/enterprises-seasons/infrastructure/services";
 import { areaUnitLabels } from "@/components/farmer-registry/labels";
 import type { ChoicePage, CropChoiceKind } from "./choice-types";
+import { enterpriseChoice } from "./enterprise-choice";
 
 export async function loadCropChoices(farmId: string, kind: CropChoiceKind, cursor?: string): Promise<ChoicePage> {
   const page = { cursor };
   if (kind === "enterprises") {
     const result = await productionService().listEnterprises(farmId, page);
-    return { ...result, items: result.items.map(row => ({ id: row.enterpriseId, label: row.name + (row.type !== "CROP" ? " — not a crop enterprise" : row.status !== "ACTIVE" ? " — closed" : ""), disabled: row.type !== "CROP" || row.status !== "ACTIVE" })) };
+    return { ...result, items: result.items.map(row => enterpriseChoice(row, "CROP_CYCLE")) };
   }
   if (kind === "seasons") {
     const result = await productionService().listSeasons(farmId, page);

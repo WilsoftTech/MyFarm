@@ -6,15 +6,30 @@ vi.mock("next/navigation", () => ({ redirect: mocks.redirect }));
 import { createEnterpriseAction, createSeasonAction, startCropCycleAction, moreCropChoicesAction, startPoultryBatchAction, morePoultryChoicesAction } from "@/app/farms/[farmId]/production-actions";
 import { runServerCommand } from "@/modules/engineering-foundation/infrastructure/server-command";
 beforeEach(() => vi.clearAllMocks());
+it("uses returned capabilities for selector availability, including unsupported types", async () => {
+  mocks.listEnterprises.mockResolvedValue({ items: [
+    { enterpriseId: "unavailable", name: "Plans", type: "CROP", workflow: null, status: "ACTIVE" },
+    { enterpriseId: "supported", name: "Planting", type: "OTHER", workflow: "CROP_CYCLE", status: "ACTIVE" },
+  ], nextCursor: "next" });
+  expect(await moreCropChoicesAction("farm-a", "enterprises", "cursor")).toEqual({ ok: true, page: { items: [
+    { id: "unavailable", label: "Plans — production records not available yet", disabled: true },
+    { id: "supported", label: "Planting", disabled: false },
+  ], nextCursor: "next" } });
+  const poultry = await morePoultryChoicesAction("farm-a", "enterprises", "cursor");
+  expect(poultry).toMatchObject({ ok: true, page: { items: [
+    { id: "unavailable", disabled: true, label: "Plans — production records not available yet" },
+    { id: "supported", disabled: true, label: "Planting — not a poultry enterprise" },
+  ] } });
+});
 it("pages selector choices through the authorized service and sanitizes failed reloads", async () => {
-  mocks.listEnterprises.mockResolvedValueOnce({ items: [{ enterpriseId: "crop", name: "Coffee", type: "CROP", status: "ACTIVE" }, { enterpriseId: "bird", name: "Layers", type: "POULTRY", status: "ACTIVE" }], nextCursor: null });
+  mocks.listEnterprises.mockResolvedValueOnce({ items: [{ enterpriseId: "crop", name: "Coffee", type: "CROP", workflow: "CROP_CYCLE", status: "ACTIVE" }, { enterpriseId: "bird", name: "Layers", type: "POULTRY", workflow: "POULTRY_BATCH", status: "ACTIVE" }], nextCursor: null });
   expect(await moreCropChoicesAction("farm-a", "enterprises", "cursor")).toEqual({ ok: true, page: { items: [{ id: "crop", label: "Coffee", disabled: false }, { id: "bird", label: "Layers — not a crop enterprise", disabled: true }], nextCursor: null } });
   expect(mocks.listEnterprises).toHaveBeenCalledWith("farm-a", { cursor: "cursor" });
   mocks.listEnterprises.mockRejectedValueOnce(new Error("private-provider-detail"));
   expect(await moreCropChoicesAction("farm-a", "enterprises", "cursor")).toEqual({ ok: false, message: expect.stringContaining("Your details are still here") });
 });
 it("pages poultry choices, disabling non-poultry and closed enterprises, and sanitizes failures", async () => {
-  mocks.listEnterprises.mockResolvedValueOnce({ items: [{ enterpriseId: "bird", name: "Layers", type: "POULTRY", status: "ACTIVE" }, { enterpriseId: "crop", name: "Maize", type: "CROP", status: "ACTIVE" }, { enterpriseId: "old", name: "Old flock", type: "POULTRY", status: "CLOSED" }], nextCursor: null });
+  mocks.listEnterprises.mockResolvedValueOnce({ items: [{ enterpriseId: "bird", name: "Layers", type: "POULTRY", workflow: "POULTRY_BATCH", status: "ACTIVE" }, { enterpriseId: "crop", name: "Maize", type: "CROP", workflow: "CROP_CYCLE", status: "ACTIVE" }, { enterpriseId: "old", name: "Old flock", type: "POULTRY", workflow: "POULTRY_BATCH", status: "CLOSED" }], nextCursor: null });
   expect(await morePoultryChoicesAction("farm-a", "enterprises", "cursor")).toEqual({ ok: true, page: { items: [{ id: "bird", label: "Layers", disabled: false }, { id: "crop", label: "Maize — not a poultry enterprise", disabled: true }, { id: "old", label: "Old flock — closed", disabled: true }], nextCursor: null } });
   mocks.animalTypes.mockResolvedValueOnce({ items: [{ animalTypeId: "duck", name: "Duck" }], nextCursor: "next" });
   expect(await morePoultryChoicesAction("farm-a", "animal-types", "cursor")).toEqual({ ok: true, page: { items: [{ id: "duck", label: "Duck" }], nextCursor: "next" } });

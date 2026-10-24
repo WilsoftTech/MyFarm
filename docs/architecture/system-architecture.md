@@ -53,3 +53,7 @@ Enterprise/Season list, create and detail pages are server-rendered within the n
 ## Phase 3 T005 backend (2026-10-18)
 
 CropCycleService reuses extracted production farm authorization; its lazy repository adapter keeps anonymous requests ahead of database client creation. Crop writes claim the existing audit receipt, serialize capacity per plot inside the transaction, recheck rights and commit the validated cycle atomically. Private JSON list/detail/catalog/start routes use the established HTTP wrappers. Catalog reference data is global; farm records remain scoped and browser roles have no direct data grants. No new dependency or external service is introduced. [Evidence](../reports/phase-03-t005-2026-10-18.md).
+
+## Phase 3 T012 capability presentation (2026-10-25)
+
+Enterprise list/detail screens and both production selectors consume the authorized T011 workflow capability. `EnterpriseWorkflow` contains presentation for supported workflow IDs; it does not map enterprise types to workflows. `enterpriseChoice` shares labels and disabled states across initial, paginated and preset choices. Unsupported or closed presets are visible but not preselected for submission. Existing page guards, server actions and start-service authorization remain authoritative; form drafts, retries and feedback reuse the existing production components. No application-service, persistence, provider, dependency or schema change is required. [Implementation and acceptance evidence](../reports/phase-03-t012-2026-10-25.md).
