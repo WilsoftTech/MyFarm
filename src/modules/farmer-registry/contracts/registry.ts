@@ -102,6 +102,8 @@ registeredByRequest(input: { userId: string; tenantId: string; requestId: string
 updateProfile(input: { farmerId: string; tenantId: string; actorId: string; requestId: string; expectedVersion: number; profile: FarmerProfileData }): Promise<FarmerView>;
 farmsForMember(input: { userId: string; tenantId: string; cursor?: string; limit: number }): Promise<FarmPage>;
 farmForMember(input: { userId: string; farmId: string }): Promise<FarmView | null>;
+/** Minimal access lookup for other modules; avoids loading the farm's plot collection. */
+farmScopeForMember(input: { userId: string; farmId: string }): Promise<Pick<FarmView, "farmId" | "tenantId" | "name"> | null>;
 createFarm(input: { tenantId: string; farmerId: string; actorId: string; requestId: string; farm: FarmData }): Promise<{ farmId: string }>;
 createPlot(input: { tenantId: string; farmId: string; actorId: string; requestId: string; plot: PlotData }): Promise<{ plotId: string }>;
 }

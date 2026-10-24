@@ -20,6 +20,7 @@ registeredByRequest: vi.fn(async () => options.receipt ?? false),
 updateProfile: vi.fn(async () => farmer),
 farmsForMember: vi.fn(async () => ({ items: [], nextCursor: null })),
 farmForMember: vi.fn(async () => options.farm === undefined ? farm : options.farm),
+farmScopeForMember: vi.fn(async () => options.farm === undefined ? farm : options.farm),
 createFarm: vi.fn(async () => ({ farmId })),
 createPlot: vi.fn(async () => ({ plotId: crypto.randomUUID() })),
 };

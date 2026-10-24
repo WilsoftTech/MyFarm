@@ -48,3 +48,17 @@ New verification patterns ([closeout §4](../reports/phase-02-closeout-2026-10-0
 - **Anonymous probes:** production probe suite.
 
 Totals: 117 unit/component, 33 integration and 24 E2E tests. Hosted CI remains unverified (P2-C1).
+
+## Phase 3 T003 browser evidence (2026-10-18)
+
+`playwright.production.config.ts` adds a separate signed-in desktop/mobile suite against a guarded, isolated loopback test database. It uses real application authorization, services, PostgreSQL transactions and `myfarm_runtime`, plus a test-only local Auth HTTP server and signed synthetic session cookies. The fake provider is not hosted Supabase verification; application source has no authentication bypass. Fixture setup applies the actual migration/provisioning chain, seeds synthetic identities and returns cleanup. The stand-in grants Auth-session ownership access to its Auth schema for FK cleanup, without changing production grants.
+
+The production build must use the same loopback public Auth URL as the suite because Next.js compiles public environment values. See the [T003 report](../reports/phase-03-t003-2026-10-18.md) for commands and limitations. Results: 204 unit/component, 61 isolated integration, 34 anonymous and 18 signed-in browser checks PASS. These are working-tree checks, not clean-clone CI substitution or a phase closeout. Cycle/batch acceptance and durable offline reload remain pending.
+
+## Phase 3 T004 domain evidence (2026-10-18)
+
+The crop-cycle suite adds 65 command/relationship/date/precision/capacity cases; the full unit/component suite passes 269/269. Lint, typecheck, boundaries and production build pass. Exact intercropping tests include 0.1 + 0.2 = 0.3, one-millionth excess and large areas beyond floating-point precision. Runtime auth, transaction locking, retries, rollback and database constraints are T005 obligations, not proved by pure tests. No integration/browser or migration suite was rerun for this contract-only task. [Evidence](../reports/phase-03-t004-2026-10-18.md).
+
+## Phase 3 T005 evidence (2026-10-18)
+
+Final local results: 279 unit/component, 83 integration, 36 anonymous browser and 24 signed-in browser checks PASS. New database cases cover same-plot competing starts, concurrent duplicates, exact decimal round trips, all allocations beyond one list page, receipt/plot wait revocation, rollback, IDOR, runtime privileges, migration failure and upgrade preservation. The actual provisioning manifest (including new grants) passes fresh/rerun/failure tests. `tests/support/crop-cycle-recovery.mjs` rehearse dump/restore with an explicit loopback test URL and disposable T005 container; cycle, audit and grant boundaries reconcile. Full crop UI acceptance is T006; local Auth fixtures are not hosted Supabase verification. [Evidence](../reports/phase-03-t005-2026-10-18.md).

@@ -45,3 +45,11 @@ Phase1 source implements UI → application → domain/contracts → scoped Pris
 ## Phase 2 implementation (2026-10-09)
 
 Added module `src/modules/farmer-registry/` (domain rules → contracts/ports → `FarmerRegistryService` → Prisma repository), API routes under `src/app/api/v1/`, and pages `/farmer`, `/farms` with a signed-in registry navigation. It follows the Phase 1 layering and boundary check; no new dependency ([closeout](../reports/phase-02-closeout-2026-10-09.md)).
+
+## Phase 3 T003 UI (2026-10-18)
+
+Enterprise/Season list, create and detail pages are server-rendered within the named farm scope. Server actions reuse the authorized production application service; shared safe command feedback redirects only after commit. Client forms reuse existing UI, React Hook Form and Zod. Request IDs survive interrupted responses while the open form retains its normalized payload; changed payloads start a new intent. Offline saving is disabled, with explicit in-memory retention limits. No durable outbox or new dependency is introduced. Full cycle acceptance remains deferred under D-P03-007. [Evidence](../reports/phase-03-t003-2026-10-18.md).
+
+## Phase 3 T005 backend (2026-10-18)
+
+CropCycleService reuses extracted production farm authorization; its lazy repository adapter keeps anonymous requests ahead of database client creation. Crop writes claim the existing audit receipt, serialize capacity per plot inside the transaction, recheck rights and commit the validated cycle atomically. Private JSON list/detail/catalog/start routes use the established HTTP wrappers. Catalog reference data is global; farm records remain scoped and browser roles have no direct data grants. No new dependency or external service is introduced. [Evidence](../reports/phase-03-t005-2026-10-18.md).

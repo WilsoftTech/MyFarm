@@ -6,6 +6,8 @@
     "supabase/policies/private-storage.sql",
     "supabase/policies/runtime-role.sql",
     "supabase/policies/farmer-registry-runtime.sql",
+    "supabase/policies/production-runtime.sql",
+    "supabase/policies/crop-cycle-runtime.sql",
     "supabase/policies/browser-role-lockdown.sql"
   ]
 }

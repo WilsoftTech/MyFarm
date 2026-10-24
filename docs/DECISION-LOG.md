@@ -3,10 +3,10 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-10 (Africa/Nairobi), hosted provisioning application and Phase 2 completion check.
+- Last reviewed: 2026-10-18 (Africa/Nairobi), T002 verification and task commit workflow.
 - Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
-- Remaining work/blockers: Phase3 authorized (D-P03-001), NOT STARTED; Step B is on main (756f3c4) and applied to hosted dev (D-INT-003); historical sections stay historical.
+- Remaining work/blockers: Phase3 T001/T002 verified; T003–T013 and full acceptance remain. [T002 report](reports/phase-03-t002-2026-10-18.md). Historical sections stay historical.
 - Evidence/report links: [Phase1+2 integration report](reports/phase-01-02-integration-2026-10-09.md); [Phase02 closeout](reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 
@@ -250,3 +250,23 @@ APPROVED, owner 2026-10-09 (accepted the proposed rules):
 ## D-P03-004 — Phase 3 local CI substitution
 
 APPROVED, owner 2026-10-09 (“Yes, extend to Phase 3”). The D-P01-LOCAL-CI-001 rules apply to Phase 3: every `quality.yml` step reproduced from a clean clone against a fresh isolated `postgres:17`. GitHub-hosted CI stays **NOT VERIFIED** and must pass before any production release. Later phases need a new decision.
+
+## D-P03-005 — Phase 3 implementation started
+
+APPROVED, direct user instruction 2026-10-18: “begin Phase 3”. This activates the existing authorization from local `main` at `35cacdf`. T001 implements the necessary Enterprise/Season foundation subset of phase F, domain contracts and relationship rules under the approved Q07/Q08 decisions. The migration adds tables/constraints and deny-all RLS; it does not grant runtime access or add user-facing workflows. Crop-cycle and batch detail remain in their dependent tasks. This records local implementation authorization, not permission to push, deploy or change hosted databases. [T001 verification and remaining work](reports/phase-03-start-2026-10-18.md).
+
+## D-P03-006 — T002 and task-by-task commits
+
+APPROVED, direct user instruction 2026-10-18: “proceed to T002. commit on every finish of task”. Completed T001 was committed separately as `18605b3`; each completed task is to receive its own local commit, preserving unrelated work. This does not authorize pushes, deployment or hosted changes. T002 implements create/list/detail services for the reviewed enterprise/season subset, reusing current authorization and transactional audit receipts. Production retries bind the receipt to the original normalized creation fields and farm; changed payloads/scope conflict. This leaves Phase 2 retry semantics unchanged and does not implement the full Phase 7 sync contract. [T002 evidence](reports/phase-03-t002-2026-10-18.md).
+
+## D-P03-007 — T003 UI acceptance and deferred cycle proof
+
+APPROVED, owner 2026-10-18, following "proceed to next T003." The owner selected "Complete enterprise/season UI; defer full cycle acceptance (Recommended)" when asked whether to pull crop-cycle/poultry-batch workflows forward from T004-T009. T003 closes on the connected Enterprise/Season UI and verified mobile, empty, failure, permission, offline-open-form and retry behavior. Full MYF-P03-AC001 multi-cycle histories/totals remain required after the dependent cycle/batch tasks and before phase closure. R001 therefore remains partially complete. This adjusts task acceptance sequencing only; it authorizes no later-phase features, database architecture changes, hosted operations or deployment. [T003 evidence](reports/phase-03-t003-2026-10-18.md).
+
+## D-P03-008 — T004 domain scope and conservative validation
+
+IMPLEMENTED 2026-10-18 within the direct user instruction to proceed with T004, using approved D-P03-002/D-P03-003 policies. The domain stage adds strict crop-cycle contracts, exact six-decimal area rules and a T005 repository port. No Prisma/schema/provider/runtime change is needed for this pure stage. Engineering validation details: planted area is positive; unknown plot capacity and mismatched units fail; all ACTIVE allocations reserve plot area until explicit closure; forecast harvest never releases capacity; every excess start needs its own recorded reason. Season labels do not impose unapproved date containment. Crop selection references a data catalog UUID, with no hard-coded crop names or catalog administration implementation. These are implementation details within the approved rules, not a new owner approval or stronger runtime guarantee. T005 must implement and verify authorized, serialized, atomic persistence with the minimal additive schema/catalog lookup subset; full AC002 remains pending T005/T006. [Evidence](reports/phase-03-t004-2026-10-18.md).
+
+## D-P03-009 — T005 crop persistence and initial catalog
+
+APPROVED local implementation by direct user instruction to proceed with T005 (2026-10-18). When asked about initial reference data, the owner selected "Include maize and coffee from the project examples". The additive migration includes stable Maize/Coffee catalog rows and crop-cycle storage within the T004 contract/Q07/Q08 rules. The runtime has catalog read access and cycle SELECT/INSERT only; catalog administration remains T010-T012. Starts use existing atomic receipts and a transaction-level plot advisory lock, with active membership rechecks and exact aggregate area validation. This is local implementation authorization, not a hosted migration/seed/grants, push or deployment approval. T006 and full AC002 remain pending. [Evidence](reports/phase-03-t005-2026-10-18.md).

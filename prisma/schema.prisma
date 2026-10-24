@@ -43,6 +43,18 @@ enum AreaUnit {
 enum FarmMemberRole {
   OWNER
 }
+enum EnterpriseType {
+  CROP
+  POULTRY
+  DAIRY
+  LIVESTOCK
+  FISH
+  OTHER
+}
+enum ProductionStatus {
+  ACTIVE
+  CLOSED
+}
 model User {
   id String @id @default(uuid()) @db.Uuid
   authSubject String @unique @db.Uuid
@@ -52,6 +64,9 @@ model User {
   audits AuditEvent[]
   farmer Farmer?
   farmMemberships FarmMember[]
+  enterprises Enterprise[]
+  seasons Season[]
+  cropCycles CropCycle[]
 }
 model Organization {
   id String @id @default(uuid()) @db.Uuid
@@ -115,6 +130,8 @@ model Farm {
   owner Farmer @relation(fields: [ownerFarmerId, tenantId], references: [id, tenantId], onDelete: Restrict)
   plots Plot[]
   members FarmMember[]
+  enterprises Enterprise[]
+  seasons Season[]
   @@unique([id, tenantId])
   @@index([tenantId, createdAt, id])
 }
@@ -131,6 +148,8 @@ model Plot {
   createdBy String @db.Uuid
   tenant Organization @relation(fields: [tenantId], references: [id], onDelete: Restrict)
   farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  cropCycles CropCycle[]
+  @@unique([id, farmId, tenantId])
   @@unique([farmId, name])
   @@index([tenantId, farmId, createdAt, id])
 }
@@ -169,4 +188,90 @@ model AuditEvent {
   @@unique([tenantId, requestId, action])
   @@index([tenantId, occurredAt, id])
   @@index([actorId, occurredAt])
+}
+
+// Phase3 T001 foundation subset. CropCycle/LivestockBatch detail is added by its own task.
+model Enterprise {
+  id String @id @default(uuid()) @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  type EnterpriseType
+  name String @db.VarChar(120)
+  status ProductionStatus @default(ACTIVE)
+  version Int @default(1)
+  createdBy String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  cropCycles CropCycle[]
+  @@unique([id, farmId, tenantId])
+  @@index([tenantId, farmId, createdAt, id])
+  @@index([farmId, tenantId])
+  @@index([createdBy])
+}
+
+model Season {
+  id String @id @default(uuid()) @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  label String @db.VarChar(120)
+  startDate DateTime @db.Date
+  endDate DateTime? @db.Date
+  status ProductionStatus @default(ACTIVE)
+  version Int @default(1)
+  createdBy String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  cropCycles CropCycle[]
+  @@unique([id, farmId, tenantId])
+  @@index([tenantId, farmId, createdAt, id])
+  @@index([farmId, tenantId])
+  @@index([createdBy])
+}
+
+// Global reference data, with no farm ownership or runtime administration grants.
+model CropCatalog {
+  id String @id @db.Uuid
+  name String @unique @db.VarChar(120)
+  active Boolean @default(true)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  cycles CropCycle[]
+  @@index([active, createdAt, id])
+}
+
+model CropCycle {
+  id String @id @default(uuid()) @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  enterpriseId String @db.Uuid
+  seasonId String @db.Uuid
+  plotId String @db.Uuid
+  cropId String @db.Uuid
+  // Creation snapshot: catalog renaming does not rewrite historical labels or retry results.
+  cropName String @db.VarChar(120)
+  variety String? @db.VarChar(120)
+  areaPlanted Decimal @db.Decimal(18, 6)
+  areaUnit AreaUnit
+  plantingDate DateTime @db.Date
+  expectedHarvest DateTime? @db.Date
+  areaExceptionReason String? @db.VarChar(500)
+  status ProductionStatus @default(ACTIVE)
+  version Int @default(1)
+  createdBy String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  enterprise Enterprise @relation(fields: [enterpriseId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  season Season @relation(fields: [seasonId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  plot Plot @relation(fields: [plotId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  crop CropCatalog @relation(fields: [cropId], references: [id], onDelete: Restrict)
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  @@index([tenantId, farmId, createdAt, id])
+  @@index([plotId, farmId, tenantId, status])
+  @@index([enterpriseId, farmId, tenantId])
+  @@index([seasonId, farmId, tenantId])
+  @@index([cropId])
+  @@index([createdBy])
 }
