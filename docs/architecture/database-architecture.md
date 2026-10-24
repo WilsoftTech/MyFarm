@@ -70,3 +70,7 @@ Starts use the existing audit receipt and a transaction-level advisory lock keye
 ## Phase 3 T008 persistence (2026-10-19)
 
 Migration `202610190001_poultry_batches` adds the `PoultryPurpose` enum, `AnimalTypeCatalog` with the approved Chicken/Duck/Turkey/Guinea fowl seeds, and `PoultryBatch`. Batches use the composite `(enterpriseId, farmId, tenantId)` FK, a creation-time animal-type name snapshot, an integer starting count (CHECK >= 0) and a unique `(tenantId, farmId, batchLabelKey)` index. The key is application-normalized (NFC, whitespace collapsed, lowercase) and covers all statuses (D-P03-010). Deny-all RLS ships in the migration; `supabase/policies/poultry-batch-runtime.sql` grants runtime catalog SELECT and batch SELECT/INSERT. The current count is derived from the starting count until Phase 5 movements. [T008 evidence](../reports/phase-03-t008-2026-10-19.md).
+
+## Phase 3 T011 reference release (2026-10-25)
+
+Migration `202610250001_crop_catalog_release` adds the 12 crops approved in D-P03-012, with stable UUIDs. A transaction and catalog write lock protect the release; primary-key/exact-name conflicts and normalized-name collisions (including inactive entries) abort the entire release. Existing rows and cycle snapshots are preserved. There is no schema or runtime grant change. The alternate incoming `202610240001_poultry_batches` migration is excluded by owner decision D-P03-013; a database that applied it requires a separate reconciliation plan. [Migration, rollback and verification evidence](../reports/phase-03-t011-2026-10-25.md).

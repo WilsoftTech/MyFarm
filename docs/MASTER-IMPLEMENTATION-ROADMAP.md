@@ -3,10 +3,10 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-19 (Africa/Nairobi), Phase 3 T010 R004 extensibility contract verification.
+- Last reviewed: 2026-10-25 (Africa/Nairobi), Phase 3 T011 catalog release and capability verification.
 - Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
-- Remaining work/blockers: Phase3 PARTIALLY COMPLETE - 38.46% (5/13). T001-T005 verified at their stages; T006-T013 and full acceptance remain. Next: T006. [T005 report](reports/phase-03-t005-2026-10-18.md). Prior hosted/CI conditions were not reverified.
+- Remaining work/blockers: Phase3 PARTIALLY COMPLETE - 84.62% (11/13). T001-T011 verified at their stages; AC002 and AC003 verified locally; T012 UI/full AC004 and T013 audit remain. Next: T012. [T011 report](reports/phase-03-t011-2026-10-25.md). Prior hosted/CI conditions were not reverified.
 - Evidence/report links: [Phase02 closeout](reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md).
 <!-- MYFARM-STATUS-END -->
 

@@ -83,3 +83,7 @@ Under `/api/v1/farms/{farmId}`, `GET /crops` returns the authorized active refer
 ## Phase 3 T008 poultry endpoints (2026-10-19)
 
 Under `/api/v1/farms/{farmId}`, `GET /animal-types` returns the authorized active catalog, `GET/POST /poultry-batches` list and start batches, and `GET /poultry-batches/{batchId}` reads a scoped batch (`{ batch }`). A duplicate farm batch label or changed replay returns 409; fractional, negative or oversized bird counts return 400. Pagination, origin checks, private caching and error envelopes match the crop endpoints. [T008 evidence](../reports/phase-03-t008-2026-10-19.md).
+
+## Phase 3 T011 capabilities (2026-10-25)
+
+Enterprise create/replay (`{ enterprise }`), detail (`{ enterprise }`) and list (`{ items, nextCursor }`) responses now include an additive `workflow` field derived from the domain registry: `CROP_CYCLE`, `POULTRY_BATCH`, or `null` for unsupported types. Existing authorization, pagination, cache and strict input rules apply; a client-supplied `workflow` is rejected. Capability describes the enterprise type, while current membership and active-parent checks still authorize each production start. The crop catalog includes the 12 entries approved in D-P03-012 after its additive migration. There is no catalog-write endpoint. [T011 evidence](../reports/phase-03-t011-2026-10-25.md).

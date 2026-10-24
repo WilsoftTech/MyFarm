@@ -101,7 +101,7 @@ describe("production pagination boundary", () => {
     await service.listEnterprises(farmId, { cursor: enterpriseId, limit: 10 });
     expect(repository.enterprises).toHaveBeenCalledWith({ actorId, farmId, tenantId }, { cursor: enterpriseId, limit: 10 });
     await expect(service.season(farmId, seasonId)).resolves.toEqual(season);
-    await expect(service.enterprise(farmId, enterpriseId)).resolves.toEqual(enterprise);
+    await expect(service.enterprise(farmId, enterpriseId)).resolves.toEqual({ ...enterprise, workflow: "CROP_CYCLE" });
     await expect(service.createSeason(farmId, seasonInput())).resolves.toEqual(season);
   });
   it.each(["limit=51", "limit=no", "limit=2&limit=3", "cursor=bad", "tenantId=forged", "farmId=forged", "__proto__=forged"])("rejects malformed or unscoped query %s", async query => {
@@ -109,5 +109,27 @@ describe("production pagination boundary", () => {
     const page = productionPageInput(new Request("http://localhost/enterprises?" + query));
     await expect(service.listEnterprises(farmId, page)).rejects.toMatchObject({ code: "INVALID_INPUT" });
     expect(repository.enterprises).not.toHaveBeenCalled();
+  });
+});
+
+describe("authorized enterprise capability projection", () => {
+  it.each([
+    ["CROP", "CROP_CYCLE"], ["POULTRY", "POULTRY_BATCH"],
+    ["DAIRY", null], ["LIVESTOCK", null], ["FISH", null], ["OTHER", null],
+  ] as const)("exposes %s consistently on create, detail and paginated list", async (type, workflow) => {
+    const { service, repository } = fixture();
+    const row = { ...enterprise, type };
+    vi.mocked(repository.enterprise).mockResolvedValue(row);
+    vi.mocked(repository.createEnterprise).mockResolvedValue(row);
+    vi.mocked(repository.enterprises).mockResolvedValue({ items: [row], nextCursor: enterpriseId });
+    expect(await service.createEnterprise(farmId, { ...enterpriseInput(), type })).toEqual({ ...row, workflow });
+    expect(await service.enterprise(farmId, enterpriseId)).toEqual({ ...row, workflow });
+    expect(await service.listEnterprises(farmId)).toEqual({ items: [{ ...row, workflow }], nextCursor: enterpriseId });
+    expect(row).not.toHaveProperty("workflow");
+  });
+  it("rejects a client-supplied workflow before persistence", async () => {
+    const { service, repository } = fixture();
+    await expect(service.createEnterprise(farmId, { ...enterpriseInput(), workflow: "POULTRY_BATCH" })).rejects.toMatchObject({ code: "INVALID_INPUT" });
+    expect(repository.createEnterprise).not.toHaveBeenCalled();
   });
 });

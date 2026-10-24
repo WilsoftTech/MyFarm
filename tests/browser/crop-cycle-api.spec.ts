@@ -47,6 +47,42 @@ test("authenticated crop API creates, lists, reads and replays a committed norma
   const counts = await query('SELECT (SELECT count(*)::int FROM "CropCycle" WHERE "plotId"=$1) AS effects, (SELECT count(*)::int FROM "AuditEvent" WHERE "requestId"=$2) AS audits', [data.plotId, data.requestId]);
   expect(counts.rows[0]).toEqual({ effects: 1, audits: 1 });
 });
+
+test("released catalog data can be selected and planted through the authorized API", async ({ context }) => {
+  const farm = fixtures.farms.a, headers = { origin: "http://127.0.0.1:3102" };
+  const catalog = await context.request.get(`/api/v1/farms/${farm}/crops`);
+  expect(catalog.status()).toBe(200);
+  const crops = z.object({ items: z.array(z.object({ cropId: z.uuid(), name: z.string() })) }).parse(await catalog.json()).items;
+  expect(crops).toHaveLength(14);
+  const crop = crops.find(row => row.name === "Beans"); expect(crop).toBeDefined();
+  const data = { ...await input(context), cropId: crop?.cropId };
+  const path = `/api/v1/farms/${farm}/crop-cycles`;
+  const response = await context.request.post(path, { headers, data }); expect(response.status()).toBe(201);
+  const row = created.parse(await response.json()).cycle; expect(row.cropName).toBe("Beans");
+  const replay = await context.request.post(path, { headers, data }); expect(replay.status()).toBe(201);
+  expect(created.parse(await replay.json()).cycle).toEqual(row);
+  await identity(context, "b");
+  expect((await context.request.get(`/api/v1/farms/${farm}/crops`)).status()).toBe(403);
+  expect((await context.request.get(path + "/" + row.cycleId)).status()).toBe(403);
+});
+
+test("enterprise API derives capabilities on create, detail and list within authorized farm scope", async ({ context }) => {
+  const base = `/api/v1/farms/${fixtures.farms.a}/enterprises`, headers = { origin: "http://127.0.0.1:3102" };
+  const schema = z.object({ enterprise: z.object({ enterpriseId: z.uuid(), type: z.string(), workflow: z.string().nullable() }) });
+  for (const [type, workflow] of [["CROP", "CROP_CYCLE"], ["POULTRY", "POULTRY_BATCH"], ["DAIRY", null], ["LIVESTOCK", null], ["FISH", null], ["OTHER", null]] as const) {
+    const response = await context.request.post(base, { headers, data: { requestId: id(), name: "Capability " + id(), type } });
+    expect(response.status()).toBe(201);
+    const row = schema.parse(await response.json()).enterprise; expect(row).toMatchObject({ type, workflow });
+    const detail = await context.request.get(base + "/" + row.enterpriseId); expect(detail.status()).toBe(200);
+    expect(schema.parse(await detail.json()).enterprise).toEqual(row);
+    const list = await context.request.get(base + "?limit=50"); expect(list.status()).toBe(200);
+    expect(z.object({ items: z.array(schema.shape.enterprise) }).parse(await list.json()).items).toContainEqual(row);
+    expect((await context.request.get(`/api/v1/farms/${fixtures.farms.a2}/enterprises/${row.enterpriseId}`)).status()).toBe(403);
+  }
+  const forged = await context.request.post(base, { headers, data: { requestId: id(), name: "Forged", type: "OTHER", workflow: "CROP_CYCLE" } });
+  expect(forged.status()).toBe(400);
+  await identity(context, "b"); expect((await context.request.get(base)).status()).toBe(403);
+});
 test("crop API rejects IDOR, forged scope, CSRF and changed replay payloads", async ({ context }) => {
   const data = await input(context), farm = fixtures.farms.a, path = `/api/v1/farms/${farm}/crop-cycles`, headers = { origin: "http://127.0.0.1:3102" };
   const response = await context.request.post(path, { headers, data }); const row = created.parse(await response.json()).cycle;

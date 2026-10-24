@@ -69,6 +69,29 @@ afterAll(async () => {
 });
 
 describe("crop persistence with real restricted runtime role", () => {
+  it("selects and plants every released crop without crop-specific code, with concurrent retry safety", async () => {
+    const ids = Array.from({ length: 12 }, (_, index) => "f4030011-0000-4000-8000-" + String(index + 1).padStart(12, "0"));
+    const released = await owner.cropCatalog.findMany({ where: { id: { in: ids } } });
+    expect(released).toHaveLength(12);
+    const choices = (await service().crops(farmA)).items;
+    for (const crop of released) {
+      expect(choices).toContainEqual({ cropId: crop.id, name: crop.name });
+      const input = { ...await command(), cropId: crop.id };
+      const rows = await Promise.all([service().start(farmA, input), service().start(farmA, input)]);
+      expect(rows[0]).toEqual(rows[1]);
+      expect(rows[0]).toMatchObject({ cropId: crop.id, cropName: crop.name });
+      expect(await owner.auditEvent.count({ where: { requestId: input.requestId } })).toBe(1);
+      await expect(service("b").start(farmA, input)).rejects.toMatchObject({ code: "FORBIDDEN" });
+    }
+  });
+  it.each(["DAIRY", "LIVESTOCK", "FISH", "OTHER"])("exposes no workflow for %s and refuses crop starts without receipts", async type => {
+    const enterprise = await production("a").createEnterprise(farmA, { requestId: id(), name: "Unsupported " + id(), type });
+    expect(enterprise.workflow).toBeNull();
+    expect((await production("a").enterprise(farmA, enterprise.enterpriseId)).workflow).toBeNull();
+    const input = { ...await command(), enterpriseId: enterprise.enterpriseId };
+    await expect(service().start(farmA, input)).rejects.toMatchObject({ code: "INVALID_INPUT" });
+    expect(await owner.auditEvent.count({ where: { requestId: input.requestId } })).toBe(0);
+  });
   it("provides bounded scoped plot choices/detail and rejects foreign or missing anchors", async () => {
     const input = await command(), other = await command(farmA2);
     expect(await service().plot(farmA, input.plotId)).toMatchObject({ plotId: input.plotId, farmId: farmA, tenantId: tenantA, area: "1", areaUnit: "ACRE" });
