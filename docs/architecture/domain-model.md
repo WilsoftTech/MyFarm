@@ -3,10 +3,10 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — Phase02 closeout; content and status updated from verified evidence; no completion inferred from review alone.
 - Implementation status: PARTIALLY COMPLETE — Phase02 registry scope verified; Phase03 T001 Enterprise/Season foundation schema verified locally; no whole-document percentage claimed.
-- Last reviewed: 2026-10-18 (Africa/Nairobi), Phase03 T005.
+- Last reviewed: 2026-10-24 (Africa/Nairobi), Phase03 T007.
 - Related phase/task IDs: Phase02 MYF-P02-T001–T013; later phases per roadmap.
 - Verified completed work: Farmer, FarmerProfile, Farm, Plot, FarmMember implemented; User/Organization reused; Address/Contact as columns; Document deferred (D-P02-003).
-- Remaining work/blockers: Phase03 crop-cycle contract and runtime persistence/API verified in T004/T005; crop UI, batch detail and later entities remain pending. Document awaits retention policy (P2-C5). [T002 evidence](../reports/phase-03-t002-2026-10-18.md).
+- Remaining work/blockers: Phase03 crop-cycle contract and runtime persistence/API verified in T004/T005; T007 poultry-batch domain contract verified; batch persistence/UI and later entities remain pending. Document awaits retention policy (P2-C5). [T002 evidence](../reports/phase-03-t002-2026-10-18.md).
 - Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md)
 <!-- MYFARM-STATUS-END -->
 
@@ -17,6 +17,10 @@ T001 adds Enterprise and Season to the existing farm scope, with actor/version m
 ## T004 crop-cycle domain contract
 
 The validated command references one crop catalog entry, enterprise, plot and season, with optional variety, positive decimal-string area, explicit existing AreaUnit, planting/optional harvest dates and an optional recorded area-exception reason. Pure rules reject wrong parents, inactive catalog/production parents, unknown plot area and mixed units. Exact BigInt millionths sum all active plot allocations; only a recorded reason permits exceeding capacity. Forecast harvest does not release area. The standalone repository contract requires scoped reads and atomic authorized/serialized starts in T005; the CropCycle table and runtime repository are implemented in T005; [backend evidence](../reports/phase-03-t005-2026-10-18.md). [Evidence](../reports/phase-03-t004-2026-10-18.md).
+
+## T007 poultry-batch domain contract
+
+The validated command references one POULTRY enterprise and records batch name, animal type, optional breed, a whole nonnegative starting bird count, acquisition date and production purpose. Pure rules reject wrong, non-poultry or closed parents and fractional, negative or oversized counts without coercion. Current quantity is derived, never stored: in Phase 3 it equals the starting count with source `STARTING_QUANTITY`; Phase 5 movements add further sources. The repository port requires scoped reads and atomic authorized starts with retry replay in T008; no LivestockBatch table or runtime persistence is implemented yet. [Evidence](../reports/phase-03-t007-2026-10-24.md).
 
 **Proposed relationships and bounded domains.** Source entities/fields are preserved in the relevant phase F; support rows such as receipts, assignments and consent grants are recommendations.
 
