@@ -1,16 +1,16 @@
 # Phase 04 Farm Accounting Engine
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — T013 metadata/status scope and evidence-link relevance; historical and future-phase facts unchanged.
-- Implementation status: NOT STARTED — 0% (0/16 verified tasks).
-- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
+- Documentation review: REVIEWED — MYF-P04-T001 accounting domain contract and evidence.
+- Implementation status: PARTIALLY COMPLETE — 6.25% (1/16 verified tasks; T001 complete at its stage).
+- Last reviewed: 2026-10-25 (Africa/Nairobi), T001 verification.
 - Related phase/task IDs: Phase 04; MYF-P04-T001 through MYF-P04-T016; review session Phase01; Phase02 review session (MYF-P02-T001–T013).
-- Verified completed work: No tasks implemented or verified in this phase; status/provider applicability reviewed only.
-- Remaining work/blockers: All 16 tasks and their acceptance/exit gates pending; Phase01 completion and future phase authorization required.
+- Verified completed work: T001 accounting domain contract under D-P04-002/003. [T001 evidence](../reports/phase-04-t001-2026-10-25.md).
+- Remaining work/blockers: T002-T016 and all acceptance/exit gates pending. Accounting persistence/UI and hosted Phase 4 provisioning remain pending. Next: T002.
 - Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **NOT STARTED**. Date: 2026-10-08. This is a specification, not implementation approval. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **PARTIALLY COMPLETE — 6.25% (1/16), T001 verified locally at its stage**. [T001 evidence](../reports/phase-04-t001-2026-10-25.md). Authorization: [D-P04-001](../DECISION-LOG.md#d-p04-001--phase-4-authorization-and-local-ci); Q09 and Q11 resolved by [D-P04-002](../DECISION-LOG.md#d-p04-002--q09-basis-money-and-corrections) and [D-P04-003](../DECISION-LOG.md#d-p04-003--q11-recognition-and-double-count-prevention); Q10 deferred to Phase 8 by [D-P04-004](../DECISION-LOG.md#d-p04-004--q10-net-income-deferred). Specification date: 2026-10-08. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
@@ -22,7 +22,7 @@ Target users: Farmers, managers and authorized financial reviewers. Expected out
 
 Source: P0272–P0344 in [complete extract](../reports/source-extract.md). Examples are illustrative. Exclusions: later phase features and any application implementation during this assignment. Farm scope mandatory; optional analytical links. Activity FK arrives Phase 6. PaymentRecord records existing payment, not provider execution or wallet.
 
-Ambiguities: Q09 cash/accrual/precision/tax; Q10 overhead/depreciation/finance timing; Q11 sales vs cash-income double counting. Resolve affected policy before dependent tasks; do not invent rules.
+Ambiguities: Q09 cash/accrual/precision/tax; Q10 overhead/depreciation/finance timing; Q11 sales vs cash-income double counting. Resolve affected policy before dependent tasks; do not invent rules. Owner decisions 2026-10-25: Q09/Q11 resolved (D-P04-002/003); Q10 deferred to Phase 8 (D-P04-004).
 
 | Requirement | Source | Capability |
 |---|---|---|
@@ -274,7 +274,7 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 
 ## O. Completion Checklist
 
-- [ ] MYF-P04-T001 complete with evidence.
+- [x] MYF-P04-T001 domain/contract stage complete with [evidence](../reports/phase-04-t001-2026-10-25.md); full AC001 pending T002/T003.
 - [ ] MYF-P04-T002 complete with evidence.
 - [ ] MYF-P04-T003 complete with evidence.
 - [ ] MYF-P04-T004 complete with evidence.

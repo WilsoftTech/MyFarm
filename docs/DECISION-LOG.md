@@ -47,9 +47,9 @@ Q01 is **PARTIALLY RESOLVED**: user selected Rukungiri. Remaining components and
 | Q06 | PARTIALLY RESOLVED by owner 2026-10-08 ([D-P02-003](#d-p02-003--q06-data-minimization)): minimal contact/location fields, optional GPS, no identity numbers, documents deferred. Retention, erasure/export and backup policy remain open | Product/privacy owner | 2 | Reviewed data inventory/retention policy; no compliance claim assumed |
 | Q07 | RESOLVED for Phase3 by owner 2026-10-09 ([D-P03-002](#d-p03-002--q07-seasons-and-crop-cycles)): seasons are farm-level labels and may overlap; one plot and one season per crop cycle; intercropping up to plot area (excess needs a reason); perennials have no expected end; closing is final, reopening deferred | Agricultural/product owner | 3 | Owner decision recorded; field validation still pending (Phase 9) |
 | Q08 | RESOLVED for Phase3 by owner 2026-10-09 ([D-P03-003](#d-p03-003--q08-units-and-enterprise-types)): planted area reuses the Phase2 AreaUnit (no conversions in Phase3); whole-number bird counts; six recordable enterprise types, workflows for CROP/POULTRY only; crops from a data catalog | Agricultural/domain owner | 3–5 | Owner decision recorded; unit conversions and rounding revisit in Phase4/5 |
-| Q09 | Cash/accrual recognition, monetary precision/currency, allocation, tax and correction policy | Accounting/product owner | 4 | Approved numeric fixtures; no authoritative basis-dependent report before decision |
-| Q10 | Phase/treatment of overhead, depreciation and finance costs for net farm income | Accounting/product owner | 4/8 | Explicitly defer or approve treatment; gross margin never mislabeled net profit |
-| Q11 | Sale/income/purchase/expense recognition and partial-payment double-count prevention | Accounting/domain owner | 4 | Approved source-link/allocation invariants and cash/accrual examples |
+| Q09 | RESOLVED for Phase4 by owner 2026-10-25 ([D-P04-002](#d-p04-002--q09-basis-money-and-corrections)): accrual default with a labelled cash-basis view; any ISO 4217 currency stored with numeric(20,4), never aggregated or converted; tax out of scope; corrections append reversals. Display rounding and reporting periods remain open | Accounting/product owner | 4 | Owner decision recorded; golden fixtures in [T001](reports/phase-04-t001-2026-10-25.md) |
+| Q10 | DEFERRED by owner 2026-10-25 ([D-P04-004](#d-p04-004--q10-net-income-deferred)): overhead, depreciation and finance costs move to Phase 8; Phase 4 shows only figures labelled gross margin | Accounting/product owner | 4/8 | Treatment approved before Phase 8 net income; gross margin never labelled net profit |
+| Q11 | RESOLVED for Phase4 by owner 2026-10-25 ([D-P04-003](#d-p04-003--q11-recognition-and-double-count-prevention)): a sale/purchase is the single revenue/cost event; payments only settle receivables/payables; standalone income/expense only for other items | Accounting/domain owner | 4 | Owner decision recorded; allocation invariants verified in [T001](reports/phase-04-t001-2026-10-25.md) |
 | Q12 | Inventory valuation, grade/storage, negative-stock exceptions and conversion | Accounting/agricultural owner | 5/8 | Costing policy approved or value unavailable; concurrency proof |
 | Q13 | Production/flock vs stock movements and atomic sale/harvest accounting links | Domain owner | 5 | One source event per effect and conservation fixtures |
 | Q14 | Recurrence exceptions, missed definition, worker invitation and notifications | Product owner | 6 | Approve recurrence/timezone/cancellation examples; notifications not presumed |
@@ -308,3 +308,30 @@ APPROVED owner clarification 2026-10-25 (Africa/Nairobi), during the instruction
 ## D-P03-015 - T013 closeout acceptance and hosted closure policy
 
 APPROVED owner 2026-10-25 (Africa/Nairobi), explicitly selecting "Approve policy and local closeout" after reviewing the concrete T013 report and exact provider file. Phase 3 is COMPLETED - 100% (13/13), PASS WITH CONDITIONS - LOCAL VERIFICATION, under D-P03-004 and the inherited production conditions in the closeout. Applied only `supabase/policies/production-closure-runtime.sql` to development project `sudqhluwsaijvjjcegpv` in one transaction, after capturing prior table/column ACLs and policies. Independent read-only checks confirm runtime UPDATE only for status/version/updatedAt on Season/CropCycle, no table-wide UPDATE, record-field update, DELETE or browser grants; RLS remains enabled. No farmer records, migration history, production settings or application deployment were changed. This does not authorize Phase 4, a push or a production release. [Closeout](reports/phase-03-closeout-2026-10-25.md).
+
+## D-P04-001 — Phase 4 authorization and local CI
+
+APPROVED, owner 2026-10-25 ("proceed to next task", then selecting "Start Phase 4 (Recommended)"). Phase 4 (farm accounting) is authorized on `main` directly from `8c373d1`, with one local commit per completed task. The D-P01-LOCAL-CI-001 substitution extends to Phase 4 as in D-P03-004; GitHub-hosted CI stays **NOT VERIFIED** and must pass before any production release. This does not authorize pushes, deployment, hosted database changes or a production release.
+
+## D-P04-002 — Q09 basis, money and corrections
+
+APPROVED, owner 2026-10-25 (selected "Accrual + cash view" and "Multi-currency, no tax"):
+
+- Accrual is the default reporting basis; a cash-basis view is also available, and every report labels the basis it used.
+- Money is an exact decimal amount (numeric(20,4)) with its ISO 4217 currency. Amounts in different currencies are never added together and there is no conversion.
+- Tax (VAT, withholding) is out of scope for Phase 4.
+- Posted records are never edited; a correction appends a reversal with a reason (and, where needed, a new record).
+
+## D-P04-003 — Q11 recognition and double-count prevention
+
+APPROVED, owner 2026-10-25 (selected "No double count; defer net (Recommended)"):
+
+- A sale or purchase is the single revenue or cost event and opens a receivable or payable.
+- Payments only settle receivables and payables; they never create revenue or cost.
+- Standalone income and expense records are only for items that are not sales or purchases.
+
+T001 interpretation recorded for owner review: income and expenses are settled when recorded, so anything on credit is a sale or purchase; Phase 4 payments are fully allocated and do not predate the record they settle (no advances). [T001 evidence](reports/phase-04-t001-2026-10-25.md).
+
+## D-P04-004 — Q10 net income deferred
+
+APPROVED, owner 2026-10-25, with D-P04-003. Overhead, depreciation and finance costs, and therefore net farm income, are deferred to Phase 8. Phase 4 computes and shows only figures labelled gross margin (revenue minus direct costs).
