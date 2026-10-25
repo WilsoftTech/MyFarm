@@ -65,6 +65,12 @@ export interface ObligationBalance extends Money { obligationId: string; settled
 export function settlesObligation(direction: PaymentDirection, kind: ObligationKind): boolean {
   return PAYMENT_SETTLES[direction] === kind;
 }
+/** A sale is settled by money RECEIVED, a purchase by money MADE; never chosen by the client. */
+export function settlementDirection(kind: ObligationKind): PaymentDirection {
+  if (kind === "SALE") return "RECEIVED";
+  if (kind === "PURCHASE") return "MADE";
+  throw new FoundationError("INVALID_INPUT");
+}
 /** Display form for counterparty and reason text; the farmer's capitalization is kept. */
 export function normalizeAccountingText(value: string): string {
   return displayText(value);

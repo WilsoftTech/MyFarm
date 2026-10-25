@@ -19,7 +19,7 @@ async function lockObligations(tx: Prisma.TransactionClient, ids: readonly strin
   for (const id of [...new Set(ids)].sort()) await tx.$queryRaw`SELECT pg_advisory_xact_lock(hashtextextended(${"myfarm:accounting-obligation:" + id}, 0))::text`;
 }
 
-const recordInclude = { reversal: true, allocations: { include: { payment: { select: { status: true } } } } } satisfies Prisma.AccountingRecordInclude;
+const recordInclude = { reversal: true, allocations: { include: { payment: { select: { status: true, paidOn: true, createdAt: true } } } } } satisfies Prisma.AccountingRecordInclude;
 type RecordRow = Prisma.AccountingRecordGetPayload<{ include: typeof recordInclude }>;
 const paymentInclude = { reversal: true, allocations: true } satisfies Prisma.PaymentRecordInclude;
 type PaymentRow = Prisma.PaymentRecordGetPayload<{ include: typeof paymentInclude }>;
@@ -36,6 +36,8 @@ const recordView = (row: RecordRow): AccountingRecordView => ({
   amount: money(row.amount), currency: row.currency, occurredOn: day(row.occurredOn), counterparty: row.counterparty, paymentMethodId: row.paymentMethodId,
   plotId: row.plotId, enterpriseId: row.enterpriseId, seasonId: row.seasonId, status: row.status, reversal: reversalView(row.reversal),
   balance: isObligation(row.kind) ? obligationBalance(obligation(row), allocations(row)) : null,
+  payments: [...row.allocations].sort((a, b) => a.payment.createdAt.getTime() - b.payment.createdAt.getTime() || a.paymentId.localeCompare(b.paymentId))
+    .map(a => ({ paymentId: a.paymentId, amount: money(a.amount), paidOn: day(a.payment.paidOn), status: a.payment.status })),
   version: row.version, createdBy: row.createdBy, createdAt: row.createdAt.toISOString(), updatedAt: row.updatedAt.toISOString(),
 });
 const paymentView = (row: PaymentRow): PaymentView => ({

@@ -56,12 +56,31 @@ export const recordPaymentSchema = z.object({
   if (allocated !== moneyUnits(value.amount)) context.addIssue({ code: "custom", message: "The amounts settled must add up to " + value.amount + ", not " + moneyString(allocated) + ".", path: ["allocations"] });
 });
 
+/**
+ * Screen command to settle one sale/purchase: the service derives the direction, currency and
+ * single allocation from the authorized record, so the client cannot choose them.
+ */
+export const settleObligationSchema = z.object({
+  requestId: idSchema,
+  amount: amountSchema,
+  paidOn: date,
+  paymentMethodId: idSchema,
+  externalReference: optionalText(120),
+}).strict();
+export type SettleObligation = z.output<typeof settleObligationSchema>;
+
 export const reverseAccountingRecordSchema = z.object({
   requestId: idSchema,
   recordType: z.enum(REVERSIBLE_TYPES),
   recordId: idSchema,
   reason: z.string().transform(normalizeAccountingText).pipe(z.string().min(1, "Explain why this record is being reversed.").max(500, "Use 500 characters or fewer.")),
 }).strict();
+
+/** Screen form: the target type and ID are bound server-side; the farmer must confirm explicitly. */
+export const confirmReversalSchema = reverseAccountingRecordSchema.pick({ requestId: true, reason: true }).extend({
+  confirmed: z.literal(true, { error: "Confirm that you want to reverse this record." }),
+}).strict();
+export type ConfirmReversal = z.output<typeof confirmReversalSchema>;
 
 export const accountingPageSchema = farmPageSchema;
 export const categoryQuerySchema = farmPageSchema.extend({ kind: z.enum(CATEGORY_KINDS).optional() }).strict();
@@ -97,6 +116,8 @@ export interface AccountingRecordView extends FarmScope, ProductionRecord {
   reversal: ReversalView | null;
   /** Receivable (SALE) or payable (PURCHASE) derived from allocations; null for income/expense. */
   balance: ObligationBalance | null;
+  /** Payments allocated to this sale/purchase (POSTED and REVERSED), oldest first; empty for income/expense. */
+  payments: { paymentId: string; amount: string; paidOn: string; status: AccountingStatus }[];
 }
 export interface PaymentView extends FarmScope, ProductionRecord {
   paymentId: string;

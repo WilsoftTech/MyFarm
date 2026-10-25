@@ -2,8 +2,8 @@ import { idSchema } from "@/modules/engineering-foundation/contracts/identity";
 import { FoundationError } from "@/modules/engineering-foundation/domain/errors";
 import type { RegistryAuthorization } from "@/modules/farmer-registry/application/registry";
 import { authorizeProductionFarm, parseProductionInput as parse, type ProductionFarmAccess } from "@/modules/enterprises-seasons/application/farm-access";
-import { accountingPageSchema, categoryQuerySchema, recordExpenseSchema, recordIncomeSchema, recordPaymentSchema, recordPurchaseSchema, recordSaleSchema, reverseAccountingRecordSchema, type FarmAccountingRepository, type RecordCommand } from "../contracts/accounting";
-import type { AccountingRecordKind } from "../domain/accounting";
+import { accountingPageSchema, categoryQuerySchema, recordExpenseSchema, recordIncomeSchema, recordPaymentSchema, recordPurchaseSchema, recordSaleSchema, reverseAccountingRecordSchema, settleObligationSchema, type FarmAccountingRepository, type RecordCommand } from "../contracts/accounting";
+import { settlementDirection, type AccountingRecordKind } from "../domain/accounting";
 
 const recordSchemas = { EXPENSE: recordExpenseSchema, INCOME: recordIncomeSchema, SALE: recordSaleSchema, PURCHASE: recordPurchaseSchema } as const;
 
@@ -45,6 +45,18 @@ export class FarmAccountingService {
   async recordPayment(farmId: unknown, input: unknown) {
     const scope = await this.scope(farmId);
     return this.repository.recordPayment(scope, parse(recordPaymentSchema, input));
+  }
+  /** Record one payment against one authorized sale/purchase; direction, currency and allocation come from the record. */
+  async settle(farmId: unknown, recordId: unknown, input: unknown) {
+    const scope = await this.scope(farmId);
+    const obligationId = parse(idSchema, recordId), form = parse(settleObligationSchema, input);
+    const record = await this.repository.record(scope, obligationId);
+    if (!record) throw new FoundationError("FORBIDDEN");
+    if (record.kind !== "SALE" && record.kind !== "PURCHASE") throw new FoundationError("INVALID_INPUT");
+    return this.repository.recordPayment(scope, parse(recordPaymentSchema, {
+      requestId: form.requestId, direction: settlementDirection(record.kind), amount: form.amount, currency: record.currency, paidOn: form.paidOn,
+      paymentMethodId: form.paymentMethodId, externalReference: form.externalReference, allocations: [{ obligationId, amount: form.amount }],
+    }));
   }
   async reverse(farmId: unknown, input: unknown) {
     const scope = await this.scope(farmId);

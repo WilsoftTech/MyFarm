@@ -10,7 +10,7 @@ const expense = { requestId: id(), categoryId: id(), amount: "0150000.00", curre
 const paymentInput = { requestId: id(), direction: "RECEIVED", amount: "80000", currency: "UGX", paidOn: "2027-06-05", paymentMethodId: id(), allocations: [{ obligationId: id(), amount: "80000" }] };
 const reversal = { requestId: id(), recordType: "SALE", recordId: id(), reason: " Entered twice " };
 const meta = { version: 1, createdBy: actorId, createdAt: "2026-10-25T00:00:00Z", updatedAt: "2026-10-25T00:00:00Z" };
-const record: AccountingRecordView = { ...meta, recordId: id(), tenantId, farmId, kind: "EXPENSE", categoryId: expense.categoryId, categoryName: "Fertilizer", amount: "150000", currency: "UGX", occurredOn: "2027-03-10", counterparty: "ABC Agro", paymentMethodId: expense.paymentMethodId, plotId: null, enterpriseId: null, seasonId: null, status: "POSTED", reversal: null, balance: null };
+const record: AccountingRecordView = { ...meta, recordId: id(), tenantId, farmId, kind: "EXPENSE", categoryId: expense.categoryId, categoryName: "Fertilizer", amount: "150000", currency: "UGX", occurredOn: "2027-03-10", counterparty: "ABC Agro", paymentMethodId: expense.paymentMethodId, plotId: null, enterpriseId: null, seasonId: null, status: "POSTED", reversal: null, balance: null, payments: [] };
 const payment: PaymentView = { ...meta, paymentId: id(), tenantId, farmId, direction: "RECEIVED", amount: "80000", currency: "UGX", paidOn: "2027-06-05", paymentMethodId: paymentInput.paymentMethodId, externalReference: null, status: "POSTED", reversal: null, allocations: paymentInput.allocations };
 function fixture() {
   const authorization: RegistryAuthorization = { account: vi.fn(async () => ({ id: actorId, authSubject: id(), status: "ACTIVE" as const })), scope: vi.fn(async () => ({ actorId, organizationId: tenantId, role: "FARMER" as const })) };
@@ -97,6 +97,41 @@ describe("farm accounting service (P04-T002)", () => {
       await expect(service.categories(farmId, page)).rejects.toMatchObject({ code: "INVALID_INPUT" });
     }
     await expect(service.categories(farmId, { kind: "TAX" })).rejects.toMatchObject({ code: "INVALID_INPUT" });
+    untouched(repository);
+  });
+});
+
+describe("settling one sale or purchase from the screen (P04-T003)", () => {
+  const sale: AccountingRecordView = { ...record, kind: "SALE", categoryName: "Crop sales", amount: "200000", paymentMethodId: null,
+    balance: { obligationId: record.recordId, amount: "200000", currency: "UGX", settled: "0", outstanding: "200000", settlement: "OPEN" } };
+  const form = { requestId: id(), amount: "080000", paidOn: "2027-06-05", paymentMethodId: paymentInput.paymentMethodId, externalReference: " MM-1 " };
+  it("derives direction, currency and the single allocation from the authorized record", async () => {
+    for (const [kind, direction] of [["SALE", "RECEIVED"], ["PURCHASE", "MADE"]] as const) {
+      const { service, repository } = fixture();
+      vi.mocked(repository.record).mockResolvedValue({ ...sale, kind, currency: "USD" });
+      await service.settle(farmId, record.recordId, form);
+      expect(repository.record).toHaveBeenCalledWith(scope, record.recordId);
+      expect(repository.recordPayment).toHaveBeenCalledWith(scope, { requestId: form.requestId, direction, amount: "80000", currency: "USD", paidOn: "2027-06-05", paymentMethodId: form.paymentMethodId, externalReference: "MM-1", allocations: [{ obligationId: record.recordId, amount: "80000" }] });
+    }
+  });
+  it("refuses client-chosen direction, currency or allocations and income/expense targets", async () => {
+    for (const key of ["direction", "currency", "allocations", "obligationId", "tenantId"]) {
+      const { service, repository } = fixture();
+      await expect(service.settle(farmId, record.recordId, { ...form, [key]: "RECEIVED" })).rejects.toMatchObject({ code: "INVALID_INPUT" });
+      untouched(repository);
+    }
+    const { service, repository } = fixture();
+    await expect(service.settle(farmId, record.recordId, form)).rejects.toMatchObject({ code: "INVALID_INPUT" });
+    expect(repository.recordPayment).not.toHaveBeenCalled();
+    vi.mocked(repository.record).mockResolvedValue(null);
+    await expect(service.settle(farmId, id(), form)).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(service.settle(farmId, "bad", form)).rejects.toMatchObject({ code: "INVALID_INPUT" });
+    expect(repository.recordPayment).not.toHaveBeenCalled();
+  });
+  it("authenticates and authorizes before reading the record", async () => {
+    const { service, authorization, repository } = fixture();
+    vi.mocked(authorization.account).mockRejectedValue(new FoundationError("UNAUTHENTICATED"));
+    await expect(service.settle("bad", "bad", {})).rejects.toMatchObject({ code: "UNAUTHENTICATED" });
     untouched(repository);
   });
 });

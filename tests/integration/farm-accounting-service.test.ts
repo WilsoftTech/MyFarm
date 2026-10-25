@@ -231,3 +231,28 @@ describe("runtime role and tenant isolation (P04-T002)", () => {
     expect(new Set(seen).size).toBe(seen.length); expect(seen.length).toBe(await owner.accountingRecord.count({ where: { farmId: farmA2 } }));
   });
 });
+
+describe("screen settlement and payment history (P04-T003)", () => {
+  it("settles one record with server-derived direction and currency and lists its payments oldest first", async () => {
+    const row = await service().recordTransaction("SALE", farmA, sale({ currency: "USD", amount: "500" }));
+    const first = await service().settle(farmA, row.recordId, { requestId: id(), amount: "200", paidOn: "2027-06-05", paymentMethodId: cash });
+    expect(first).toMatchObject({ direction: "RECEIVED", currency: "USD", amount: "200", allocations: [{ obligationId: row.recordId, amount: "200" }] });
+    const second = await service().settle(farmA, row.recordId, { requestId: id(), amount: "100.5", paidOn: "2027-06-06", paymentMethodId: mobileMoney });
+    await service().reverse(farmA, { requestId: id(), recordType: "PAYMENT", recordId: first.paymentId, reason: "Wrong amount" });
+    const detail = await service().record(farmA, row.recordId);
+    expect(detail.payments).toEqual([{ paymentId: first.paymentId, amount: "200", paidOn: "2027-06-05", status: "REVERSED" }, { paymentId: second.paymentId, amount: "100.5", paidOn: "2027-06-06", status: "POSTED" }]);
+    expect(detail.balance).toMatchObject({ settled: "100.5", outstanding: "399.5", settlement: "PARTIALLY_SETTLED" });
+    const purchase = await service().recordTransaction("PURCHASE", farmA, sale({ categoryId: fertilizer }));
+    expect(await service().settle(farmA, purchase.recordId, { requestId: id(), amount: "1", paidOn: "2027-06-05", paymentMethodId: cash })).toMatchObject({ direction: "MADE" });
+  });
+  it("refuses income/expense targets, another farm's record and overpayment without receipts", async () => {
+    const expense = await service().recordTransaction("EXPENSE", farmA, sale({ categoryId: fertilizer }));
+    const sibling = await service().recordTransaction("SALE", farmA2, sale()), own = await service().recordTransaction("SALE", farmA, sale());
+    const form = () => ({ requestId: id(), amount: "1", paidOn: "2027-06-05", paymentMethodId: cash });
+    for (const [recordId, code, input] of [[expense.recordId, "INVALID_INPUT", form()], [sibling.recordId, "FORBIDDEN", form()], [own.recordId, "CONFLICT", { ...form(), amount: "200001" }]] as const) {
+      await expect(service().settle(farmA, recordId, input)).rejects.toMatchObject({ code });
+      expect(await receipts(input.requestId)).toBe(0);
+    }
+    expect((await service().record(farmA, expense.recordId)).payments).toEqual([]);
+  });
+});
