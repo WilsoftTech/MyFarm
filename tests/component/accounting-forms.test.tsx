@@ -43,10 +43,10 @@ describe("transaction form (P04-T003)", () => {
     await saveExpense();
     expect(await screen.findByText("Choose a category.")).toBeVisible();
     await waitFor(() => expect(screen.getByLabelText("Category")).toHaveFocus());
+    await fillExpense("1");
     for (const amount of ["150,000", "1e5", "-5", "0", "1.23456"]) {
-      await userEvent.clear(screen.getByLabelText("Amount")); await fillExpense(amount); await saveExpense();
+      await userEvent.clear(screen.getByLabelText("Amount")); await userEvent.type(screen.getByLabelText("Amount"), amount); await saveExpense();
       expect(await screen.findByText("Enter an amount above 0 using digits, with up to 4 decimal places.")).toBeVisible();
-      await userEvent.clear(screen.getByLabelText("Date")); await userEvent.clear(screen.getByLabelText("Paid to (optional)"));
     }
     expect(submit).not.toHaveBeenCalled();
   });

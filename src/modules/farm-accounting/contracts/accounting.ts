@@ -82,6 +82,21 @@ export const confirmReversalSchema = reverseAccountingRecordSchema.pick({ reques
 }).strict();
 export type ConfirmReversal = z.output<typeof confirmReversalSchema>;
 
+/**
+ * Shape of a reviewed category/payment-method data release (D-P04-005). Names are validated, not
+ * rewritten, by applyCategoryRelease/applyPaymentMethodRelease because they ship verbatim in reviewed
+ * SQL. There is no tenant or farm field: catalogs are global and runtime roles never write them.
+ */
+export const categoryReleaseSchema = z.object({
+  additions: z.array(z.object({ id: idSchema, kind: z.enum(CATEGORY_KINDS), name: z.string() }).strict()).max(200),
+  deactivations: z.array(idSchema).max(200).default([]),
+}).strict();
+export const paymentMethodReleaseSchema = z.object({
+  additions: z.array(z.object({ id: idSchema, name: z.string() }).strict()).max(200),
+  deactivations: z.array(idSchema).max(200).default([]),
+}).strict();
+export type CategoryReleaseInput = z.output<typeof categoryReleaseSchema>;
+
 export const accountingPageSchema = farmPageSchema;
 export const categoryQuerySchema = farmPageSchema.extend({ kind: z.enum(CATEGORY_KINDS).optional() }).strict();
 export const recognitionBasisSchema = z.enum(RECOGNITION_BASES);
@@ -141,6 +156,9 @@ export interface PaymentView extends FarmScope, ProductionRecord {
  * normalized retries replay, changed commands or scope conflict, failures roll back both.
  * Posted rows are never updated except status REVERSED plus its reversal row; reversing a payment reverses its
  * allocations in the same transaction. Category/payment-method catalogs and attachments are later tasks.
+ * T005 (R002): record views add the categoryHistory() result (snapshot name plus whether the category is
+ * archived) for every record, including records whose category is no longer offered; catalog pages stay
+ * active-only for new records. Catalog changes ship only as reviewed releases checked by applyCategoryRelease.
  */
 export interface FarmAccountingRepository {
   categories(scope: FarmScope, query: CategoryQuery): Promise<ProductionPage<CategoryView>>;
