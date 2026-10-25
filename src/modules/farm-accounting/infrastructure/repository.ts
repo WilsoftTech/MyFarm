@@ -6,6 +6,7 @@ import type { FarmScope } from "@/modules/enterprises-seasons/domain/production"
 import { productionAfter, requireProductionWriteAccess } from "@/modules/enterprises-seasons/infrastructure/production-access";
 import type { AccountingRecordView, FarmAccountingRepository, PaymentView, RecordPayment, RecordSale, RecordExpense, ReversalView, ReverseAccountingRecord } from "../contracts/accounting";
 import { assertAccountingRecord, assertPaymentAllocation, assertReversal, obligationBalance, OBLIGATION_KINDS, type AccountingRecordKind, type AccountingStatus, type AllocationRecord, type ObligationKind, type ObligationReference } from "../domain/accounting";
+import { categoryHistory } from "../domain/catalog";
 import { moneyString, moneyUnits } from "../domain/money";
 
 type Reader = PrismaClient | Prisma.TransactionClient;
@@ -19,7 +20,7 @@ async function lockObligations(tx: Prisma.TransactionClient, ids: readonly strin
   for (const id of [...new Set(ids)].sort()) await tx.$queryRaw`SELECT pg_advisory_xact_lock(hashtextextended(${"myfarm:accounting-obligation:" + id}, 0))::text`;
 }
 
-const recordInclude = { reversal: true, allocations: { include: { payment: { select: { status: true, paidOn: true, createdAt: true } } } } } satisfies Prisma.AccountingRecordInclude;
+const recordInclude = { reversal: true, category: { select: { id: true, kind: true, name: true, active: true } }, allocations: { include: { payment: { select: { status: true, paidOn: true, createdAt: true } } } } } satisfies Prisma.AccountingRecordInclude;
 type RecordRow = Prisma.AccountingRecordGetPayload<{ include: typeof recordInclude }>;
 const paymentInclude = { reversal: true, allocations: true } satisfies Prisma.PaymentRecordInclude;
 type PaymentRow = Prisma.PaymentRecordGetPayload<{ include: typeof paymentInclude }>;
@@ -33,6 +34,7 @@ const obligation = (row: RecordRow): ObligationReference => ({
 const allocations = (row: RecordRow): AllocationRecord[] => row.allocations.map(a => ({ paymentId: a.paymentId, obligationId: a.obligationId, amount: money(a.amount), status: a.payment.status }));
 const recordView = (row: RecordRow): AccountingRecordView => ({
   recordId: row.id, tenantId: row.tenantId, farmId: row.farmId, kind: row.kind, categoryId: row.categoryId, categoryName: row.categoryName,
+  category: categoryHistory(row, row.category),
   amount: money(row.amount), currency: row.currency, occurredOn: day(row.occurredOn), counterparty: row.counterparty, paymentMethodId: row.paymentMethodId,
   plotId: row.plotId, enterpriseId: row.enterpriseId, seasonId: row.seasonId, status: row.status, reversal: reversalView(row.reversal),
   balance: isObligation(row.kind) ? obligationBalance(obligation(row), allocations(row)) : null,

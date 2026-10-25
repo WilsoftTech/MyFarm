@@ -7,7 +7,7 @@ const origin = { origin: "http://127.0.0.1:3102" };
 const cropSales = "f4040002-0000-4000-8000-000000000204", fertilizer = "f4040002-0000-4000-8000-000000000111", mobileMoney = "f4040002-0000-4000-8000-000000000302";
 let fixtures: ProductionBrowserFixtures;
 const balance = z.object({ obligationId: z.uuid(), amount: z.string(), currency: z.string(), settled: z.string(), outstanding: z.string(), settlement: z.string() });
-const recordBody = z.object({ record: z.object({ recordId: z.uuid(), farmId: z.uuid(), tenantId: z.uuid(), kind: z.string(), categoryName: z.string(), amount: z.string(), currency: z.string(), status: z.literal("POSTED"), version: z.literal(1), balance: balance.nullable() }) });
+const recordBody = z.object({ record: z.object({ recordId: z.uuid(), farmId: z.uuid(), tenantId: z.uuid(), kind: z.string(), categoryName: z.string(), category: z.object({ categoryId: z.uuid(), name: z.string(), archived: z.boolean() }), amount: z.string(), currency: z.string(), status: z.literal("POSTED"), version: z.literal(1), balance: balance.nullable() }) });
 const paymentBody = z.object({ payment: z.object({ paymentId: z.uuid(), amount: z.string(), status: z.string(), allocations: z.array(z.object({ obligationId: z.uuid(), amount: z.string() })) }) });
 async function query(sql: string, values: unknown[]) {
   const db = new Client({ connectionString: process.env.TEST_DATABASE_URL }); await db.connect();
@@ -73,4 +73,18 @@ test("accounting API checks a revoked server session", async ({ context }) => {
   const denied = await context.request.post(base() + "/sales", { headers: origin, data }); expect(denied.status()).toBe(401);
   expect(await denied.json()).toEqual({ error: "UNAUTHENTICATED", requestId: expect.any(String) });
   expect((await query('SELECT count(*)::int AS n FROM "AuditEvent" WHERE "requestId"=$1', [data.requestId])).rows[0].n).toBe(0);
+});
+test("archived category: history keeps its name over HTTP while new records and the picker exclude it (P04-T005)", async ({ context }) => {
+  const created = await context.request.post(base() + "/sales", { headers: origin, data: sale() }); expect(created.status()).toBe(201);
+  const row = recordBody.parse(await created.json()).record;
+  expect(row.category).toEqual({ categoryId: cropSales, name: "Crop sales", archived: false });
+  await query('UPDATE "TransactionCategory" SET active = false WHERE id = $1', [cropSales]);
+  try {
+    const detail = await context.request.get(base() + "/records/" + row.recordId); expect(detail.status()).toBe(200);
+    expect(recordBody.parse(await detail.json()).record).toMatchObject({ categoryName: "Crop sales", category: { name: "Crop sales", archived: true } });
+    const picker = z.object({ items: z.array(z.object({ categoryId: z.uuid() })) }).parse(await (await context.request.get(base() + "/categories?kind=REVENUE")).json());
+    expect(picker.items.map(c => c.categoryId)).not.toContain(cropSales);
+    const blocked = sale(); expect((await context.request.post(base() + "/sales", { headers: origin, data: blocked })).status()).toBe(409);
+    expect((await query('SELECT count(*)::int AS n FROM "AuditEvent" WHERE "requestId"=$1', [blocked.requestId])).rows[0].n).toBe(0);
+  } finally { await query('UPDATE "TransactionCategory" SET active = true WHERE id = $1', [cropSales]); }
 });

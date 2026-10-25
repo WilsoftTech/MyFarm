@@ -11,6 +11,7 @@ import { ProductionService } from "@/modules/enterprises-seasons/application/pro
 import { productionRepository } from "@/modules/enterprises-seasons/infrastructure/repository";
 import { FarmAccountingService } from "@/modules/farm-accounting/application/accounting";
 import { farmAccountingRepository } from "@/modules/farm-accounting/infrastructure/repository";
+import { applyCategoryRelease } from "@/modules/farm-accounting/domain/catalog";
 import { applyProviderSql, runSqlFile, supabaseEmulation } from "../support/provisioning";
 
 config({ path: ".env.test.local", quiet: true });
@@ -254,5 +255,50 @@ describe("screen settlement and payment history (P04-T003)", () => {
       expect(await receipts(input.requestId)).toBe(0);
     }
     expect((await service().record(farmA, expense.recordId)).payments).toEqual([]);
+  });
+});
+
+describe("archived categories stay readable in history (P04-T005, AC002)", () => {
+  it("archives through a reviewed release shape, keeps saved names, and blocks only new records", async () => {
+    const expense = await service().recordTransaction("EXPENSE", farmA, sale({ categoryId: categoryFixture, paymentMethodId: cash }));
+    const purchase = await service().recordTransaction("PURCHASE", farmA, sale({ categoryId: categoryFixture }));
+    expect(expense.category).toEqual({ categoryId: categoryFixture, name: "Synthetic cost " + categoryFixture, archived: false });
+    // A reviewed data release (D-P04-005) archives by setting active = false; the domain rule decides the result first.
+    const current = (await owner.transactionCategory.findMany()).map(row => ({ id: row.id, kind: row.kind, name: row.name, active: row.active }));
+    const expected = applyCategoryRelease(current, { additions: [], deactivations: [categoryFixture] });
+    await owner.$transaction(async tx => { await tx.transactionCategory.update({ where: { id: categoryFixture }, data: { active: false } }); });
+    try {
+      const after = (await owner.transactionCategory.findMany()).map(row => ({ id: row.id, kind: row.kind, name: row.name, active: row.active }));
+      const byId = (rows: typeof after) => [...rows].sort((a, b) => a.id.localeCompare(b.id));
+      expect(byId(after)).toEqual(byId(expected));
+      for (const row of [await service().record(farmA, expense.recordId), (await service().records(farmA, { limit: 50 })).items.find(r => r.recordId === purchase.recordId)!]) {
+        expect(row.categoryName).toBe("Synthetic cost " + categoryFixture);
+        expect(row.category).toEqual({ categoryId: categoryFixture, name: "Synthetic cost " + categoryFixture, archived: true });
+      }
+      expect((await service().categories(farmA, { kind: "COST", limit: 50 })).items.map(c => c.categoryId)).not.toContain(categoryFixture);
+      const blocked = sale({ categoryId: categoryFixture, paymentMethodId: cash });
+      await expect(service().recordTransaction("EXPENSE", farmA, blocked)).rejects.toMatchObject({ code: "CONFLICT" });
+      expect(await receipts(blocked.requestId)).toBe(0);
+      await expect(runtime.$executeRaw`INSERT INTO "AccountingRecord" (id,"tenantId","farmId",kind,"categoryId","categoryName",amount,currency,"occurredOn","createdBy") VALUES (${id()}::uuid,${tenantA}::uuid,${farmA}::uuid,'EXPENSE',${categoryFixture}::uuid,${"Synthetic cost " + categoryFixture},1,'UGX','2027-06-01',${users.a}::uuid)`).rejects.toThrow(/row-level security/);
+      // Existing obligations in an archived category can still be settled and corrected.
+      expect(await service().settle(farmA, purchase.recordId, { requestId: id(), amount: "1000", paidOn: "2027-06-05", paymentMethodId: cash })).toMatchObject({ status: "POSTED" });
+      expect(await service().reverse(farmA, { requestId: id(), recordType: "EXPENSE", recordId: expense.recordId, reason: "Wrong farm" })).toMatchObject({ recordId: expense.recordId });
+      expect((await service().record(farmA, expense.recordId)).category.archived).toBe(true);
+    } finally { await owner.transactionCategory.update({ where: { id: categoryFixture }, data: { active: true } }); }
+    expect((await service().record(farmA, purchase.recordId)).category.archived).toBe(false);
+  });
+  it("shows the saved category name even if the catalog entry's name later differs", async () => {
+    const row = await service().recordTransaction("EXPENSE", farmA, sale({ categoryId: categoryFixture }));
+    const original = "Synthetic cost " + categoryFixture;
+    await owner.transactionCategory.update({ where: { id: categoryFixture }, data: { name: "Renamed " + categoryFixture } });
+    try {
+      expect((await service().record(farmA, row.recordId)).category).toEqual({ categoryId: categoryFixture, name: original, archived: false });
+      expect((await owner.accountingRecord.findUniqueOrThrow({ where: { id: row.recordId } })).categoryName).toBe(original);
+    } finally { await owner.transactionCategory.update({ where: { id: categoryFixture }, data: { name: original } }); }
+  });
+  it("keeps every seeded source category available to new records in the database", async () => {
+    const names = (await service().categories(farmA, { kind: "COST", limit: 50 })).items.map(c => c.name);
+    expect(names).toEqual(expect.arrayContaining(["Seeds", "Feed", "Fertilizer", "Veterinary", "Labour", "Transport", "Fuel", "Equipment", "Rent", "Utilities", "Medication", "Pesticides", "Packaging"]));
+    expect(await owner.transactionCategory.count({ where: { kind: "COST", active: true, name: { in: names.filter(name => !name.startsWith("Synthetic")) } } })).toBe(13);
   });
 });

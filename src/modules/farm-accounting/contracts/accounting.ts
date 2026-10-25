@@ -5,6 +5,7 @@ import { isCalendarDate, type FarmScope } from "@/modules/enterprises-seasons/do
 import type { ProductionPage, ProductionRecord, ProductionWriteScope } from "@/modules/enterprises-seasons/contracts/production";
 import { CATEGORY_KINDS, MAX_PAYMENT_ALLOCATIONS, PAYMENT_DIRECTIONS, RECOGNITION_BASES, REVERSIBLE_TYPES, normalizeAccountingText, type AccountingRecordKind, type AccountingStatus, type CategoryKind, type ObligationBalance, type PaymentDirection, type ReversibleType } from "../domain/accounting";
 import { moneyString, moneyUnits, normalizeCurrency, normalizePositiveAmount } from "../domain/money";
+import type { CategoryHistory } from "../domain/catalog";
 
 const optionalId = z.union([z.literal(""), idSchema]).optional().transform(value => value || undefined);
 const optionalText = (max: number) => z.string().transform(normalizeAccountingText).pipe(z.string().max(max, "Use " + max + " characters or fewer.")).optional().transform(value => value || undefined);
@@ -119,6 +120,8 @@ export interface AccountingRecordView extends FarmScope, ProductionRecord {
   kind: AccountingRecordKind;
   categoryId: string;
   categoryName: string;
+  /** Saved category name plus whether the category is still offered for new records (R002). */
+  category: CategoryHistory;
   amount: string;
   currency: string;
   occurredOn: string;
