@@ -43,3 +43,7 @@ Additive migration `202610180002_crop_cycles` and the new manifest-listed runtim
 ## Phase 3 T008 rehearsal (2026-10-19)
 
 Additive migration `202610190001_poultry_batches` and the new manifest-listed `poultry-batch-runtime.sql` passed fresh install, upgrade from the five prior migrations with row preservation, injected-failure rollback, provider rerun, Prisma drift comparison and a synthetic dump/restore (`tests/support/poultry-batch-recovery.mjs`) on isolated PostgreSQL 17. Roll back application code rather than dropping the tables. Not applied to hosted dev. [T008 evidence](../reports/phase-03-t008-2026-10-19.md).
+
+## Phase 4 T002 rehearsal (2026-10-25)
+
+Additive migration `202610250002_farm_accounting` and the manifest-listed `farm-accounting-runtime.sql` passed fresh install, upgrade from the seven prior migrations with row preservation, injected-failure rollback, provider rerun, Prisma drift comparison and a synthetic dump/restore (`tests/support/farm-accounting-recovery.mjs`) on isolated PostgreSQL 17. Roll back application code rather than dropping the tables. Not applied to hosted dev. [T002 evidence](../reports/phase-04-t002-2026-10-25.md).

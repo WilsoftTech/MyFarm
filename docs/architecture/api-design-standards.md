@@ -87,3 +87,7 @@ Under `/api/v1/farms/{farmId}`, `GET /animal-types` returns the authorized activ
 ## Phase 3 T011 capabilities (2026-10-25)
 
 Enterprise create/replay (`{ enterprise }`), detail (`{ enterprise }`) and list (`{ items, nextCursor }`) responses now include an additive `workflow` field derived from the domain registry: `CROP_CYCLE`, `POULTRY_BATCH`, or `null` for unsupported types. Existing authorization, pagination, cache and strict input rules apply; a client-supplied `workflow` is rejected. Capability describes the enterprise type, while current membership and active-parent checks still authorize each production start. The crop catalog includes the 12 entries approved in D-P03-012 after its additive migration. There is no catalog-write endpoint. [T011 evidence](../reports/phase-03-t011-2026-10-25.md).
+
+## Phase 4 T002 accounting endpoints (2026-10-25)
+
+Under `/api/v1/farms/{farmId}/accounting`: `GET categories?kind=` and `GET payment-methods` return active catalogs; `GET records`/`records/{recordId}` return `{ record }` with a derived `balance` for sales/purchases; `POST expenses|income|sales|purchases` (201 `{ record }`), `POST payments` and `GET payments/{paymentId}` (`{ payment }`), and `POST reversals` (201 `{ reversal }`). Money is a decimal string or safe integer; floats, separators and exponents return 400. Changed replays, overpayment and repeated reversal return 409. Origin checks, private caching and error envelopes match the production endpoints. [T002 evidence](../reports/phase-04-t002-2026-10-25.md).

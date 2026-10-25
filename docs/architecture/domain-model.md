@@ -63,3 +63,7 @@ CropCycle uses same-farm/tenant composite links to enterprise, plot and season; 
 ## T007–T008 poultry batch model
 
 A poultry batch belongs to one ACTIVE POULTRY enterprise on the farm (no plot or season link). It references a global animal-type catalog entry, stores an optional breed, a farmer label unique per farm ignoring case and spacing, a whole starting count from 0 up, an acquisition date and one of EGGS/MEAT/DUAL_PURPOSE/BREEDING (D-P03-010). The current count is reported as the starting count with source STARTING_COUNT until Phase 5 flock movements exist. [T007](../reports/phase-03-t007-2026-10-19.md), [T008](../reports/phase-03-t008-2026-10-19.md).
+
+## T001–T002 farm accounting model
+
+A farm owns every accounting record. A SALE or PURCHASE is the single revenue/cost event and opens a receivable/payable derived from POSTED payment allocations; INCOME and EXPENSE are settled when recorded. A payment (RECEIVED settles sales, MADE settles purchases) is fully allocated, in one currency, dated on or after what it settles. Posted records are corrected only by one reasoned reversal; a sale/purchase with POSTED payments is reversed after those payments (D-P04-002/003/005). [T001](../reports/phase-04-t001-2026-10-25.md), [T002](../reports/phase-04-t002-2026-10-25.md).

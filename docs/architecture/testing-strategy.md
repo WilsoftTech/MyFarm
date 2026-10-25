@@ -66,3 +66,7 @@ Final local results: 279 unit/component, 83 integration, 36 anonymous browser an
 ## Phase 3 T007–T008 evidence (2026-10-19)
 
 T007 adds 81 poultry contract cases. Final T008 local results: 388 unit/component, 103 integration, 36 anonymous and 46 signed-in browser checks PASS. New database cases cover competing requests for one batch label, concurrent duplicates, 0/maximum counts, label case/spacing and closed-batch conflicts, replay snapshots, revocation during a receipt wait, constraints and forged runtime inserts. A dump/restore rehearsal also passes. [T008 evidence](../reports/phase-03-t008-2026-10-19.md).
+
+## Phase 4 T001–T002 evidence (2026-10-25)
+
+T001 adds 108 accounting contract cases; T002 adds 16 service unit, 19 integration, 8 anonymous and 6 signed-in browser cases. Final T002 local results: 599 unit/component, 138 integration, 46 anonymous and 78 signed-in browser checks PASS. Database cases cover the AC001 sale/partial-payment oracle on the restricted runtime role, concurrent payments against one balance, concurrent reversal, exact decimal round trips, replay/changed-replay, foreign links, forbidden direct edits/deletes and non-UTC runs; a dump/restore rehearsal also passes. [T002 evidence](../reports/phase-04-t002-2026-10-25.md).

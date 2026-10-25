@@ -1,16 +1,16 @@
 # Phase 04 Farm Accounting Engine
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — MYF-P04-T001 accounting domain contract and evidence.
-- Implementation status: PARTIALLY COMPLETE — 6.25% (1/16 verified tasks; T001 complete at its stage).
-- Last reviewed: 2026-10-25 (Africa/Nairobi), T001 verification.
+- Documentation review: REVIEWED — MYF-P04-T002 accounting persistence, API and evidence.
+- Implementation status: PARTIALLY COMPLETE — 12.5% (2/16 verified tasks; T001-T002 complete at their stages).
+- Last reviewed: 2026-10-25 (Africa/Nairobi), T002 verification.
 - Related phase/task IDs: Phase 04; MYF-P04-T001 through MYF-P04-T016; review session Phase01; Phase02 review session (MYF-P02-T001–T013).
-- Verified completed work: T001 accounting domain contract under D-P04-002/003. [T001 evidence](../reports/phase-04-t001-2026-10-25.md).
-- Remaining work/blockers: T002-T016 and all acceptance/exit gates pending. Accounting persistence/UI and hosted Phase 4 provisioning remain pending. Next: T002.
+- Verified completed work: T001 accounting domain contract under D-P04-002/003; T002 persistence, approved catalogs and API under D-P04-005/006. [T002 evidence](../reports/phase-04-t002-2026-10-25.md).
+- Remaining work/blockers: T003-T016 and all acceptance/exit gates pending. Accounting UI and hosted Phase 4 provisioning remain pending. Next: T003.
 - Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **PARTIALLY COMPLETE — 6.25% (1/16), T001 verified locally at its stage**. [T001 evidence](../reports/phase-04-t001-2026-10-25.md). Authorization: [D-P04-001](../DECISION-LOG.md#d-p04-001--phase-4-authorization-and-local-ci); Q09 and Q11 resolved by [D-P04-002](../DECISION-LOG.md#d-p04-002--q09-basis-money-and-corrections) and [D-P04-003](../DECISION-LOG.md#d-p04-003--q11-recognition-and-double-count-prevention); Q10 deferred to Phase 8 by [D-P04-004](../DECISION-LOG.md#d-p04-004--q10-net-income-deferred). Specification date: 2026-10-08. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **PARTIALLY COMPLETE — 12.5% (2/16), T001-T002 verified locally at their stages**. [T002 evidence](../reports/phase-04-t002-2026-10-25.md); [T001 evidence](../reports/phase-04-t001-2026-10-25.md). Catalogs: [D-P04-005](../DECISION-LOG.md#d-p04-005--t002-catalogs-and-confirmed-interpretations). Authorization: [D-P04-001](../DECISION-LOG.md#d-p04-001--phase-4-authorization-and-local-ci); Q09 and Q11 resolved by [D-P04-002](../DECISION-LOG.md#d-p04-002--q09-basis-money-and-corrections) and [D-P04-003](../DECISION-LOG.md#d-p04-003--q11-recognition-and-double-count-prevention); Q10 deferred to Phase 8 by [D-P04-004](../DECISION-LOG.md#d-p04-004--q10-net-income-deferred). Specification date: 2026-10-08. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
@@ -74,7 +74,7 @@ Offline: see [sync](../architecture/offline-sync-architecture.md); Phases 1–6 
 
 ## F. Database Design
 
-**Proposal until implementation approval. No migrations created now.**
+**Proposal until implementation approval.** T002 implements the reviewed subset in the additive `202610250002_farm_accounting` migration (one `AccountingRecord` table for the four kinds, `PaymentRecord`, `PaymentAllocation`, `AccountingReversal`, global `TransactionCategory`/`PaymentMethod` catalogs); Attachment stays deferred ([T002](../reports/phase-04-t002-2026-10-25.md)).
 
 Expense/Income(id UUID,tenantId UUID,farmId UUID,plotId UUID?,enterpriseId UUID?,seasonId UUID?,activityId UUID?,amount numeric(20,4),currency char(3),occurredOn date,categoryId UUID,paymentMethodId UUID?,counterparty text,status enum); Sale/Purchase(id UUID,tenantId UUID,farmId UUID,total numeric,currency char(3),counterparty text); Receivable/Payable(id UUID,sourceId UUID,outstanding derived); PaymentRecord(id UUID,tenantId UUID,farmId UUID,amount numeric,currency char(3),methodId UUID,externalReference text?); PaymentAllocation(paymentId UUID,obligationId UUID,amount numeric); TransactionCategory(id UUID,tenantId UUID?,kind enum,name text); PaymentMethod(id UUID,code text); Attachment uses Document; AccountingCorrection(originalId UUID,replacementId UUID,reason text).
 
@@ -275,7 +275,7 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 ## O. Completion Checklist
 
 - [x] MYF-P04-T001 domain/contract stage complete with [evidence](../reports/phase-04-t001-2026-10-25.md); full AC001 pending T002/T003.
-- [ ] MYF-P04-T002 complete with evidence.
+- [x] MYF-P04-T002 service/persistence stage complete with [evidence](../reports/phase-04-t002-2026-10-25.md); full AC001 pending T003.
 - [ ] MYF-P04-T003 complete with evidence.
 - [ ] MYF-P04-T004 complete with evidence.
 - [ ] MYF-P04-T005 complete with evidence.

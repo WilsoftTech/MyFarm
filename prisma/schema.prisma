@@ -74,6 +74,9 @@ model User {
   seasons Season[]
   cropCycles CropCycle[]
   poultryBatches PoultryBatch[]
+  accountingRecords AccountingRecord[]
+  payments PaymentRecord[]
+  accountingReversals AccountingReversal[]
 }
 model Organization {
   id String @id @default(uuid()) @db.Uuid
@@ -139,6 +142,8 @@ model Farm {
   members FarmMember[]
   enterprises Enterprise[]
   seasons Season[]
+  accountingRecords AccountingRecord[]
+  payments PaymentRecord[]
   @@unique([id, tenantId])
   @@index([tenantId, createdAt, id])
 }
@@ -156,6 +161,7 @@ model Plot {
   tenant Organization @relation(fields: [tenantId], references: [id], onDelete: Restrict)
   farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
   cropCycles CropCycle[]
+  accountingRecords AccountingRecord[]
   @@unique([id, farmId, tenantId])
   @@unique([farmId, name])
   @@index([tenantId, farmId, createdAt, id])
@@ -213,6 +219,7 @@ model Enterprise {
   creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
   cropCycles CropCycle[]
   poultryBatches PoultryBatch[]
+  accountingRecords AccountingRecord[]
   @@unique([id, farmId, tenantId])
   @@index([tenantId, farmId, createdAt, id])
   @@index([farmId, tenantId])
@@ -234,6 +241,7 @@ model Season {
   farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
   creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
   cropCycles CropCycle[]
+  accountingRecords AccountingRecord[]
   @@unique([id, farmId, tenantId])
   @@index([tenantId, farmId, createdAt, id])
   @@index([farmId, tenantId])
@@ -318,5 +326,142 @@ model PoultryBatch {
   @@index([tenantId, farmId, createdAt, id])
   @@index([enterpriseId, farmId, tenantId])
   @@index([animalTypeId])
+  @@index([createdBy])
+}
+enum AccountingRecordKind {
+  EXPENSE
+  INCOME
+  PURCHASE
+  SALE
+}
+enum TransactionCategoryKind {
+  COST
+  REVENUE
+}
+enum AccountingStatus {
+  POSTED
+  REVERSED
+}
+enum PaymentDirection {
+  RECEIVED
+  MADE
+}
+// Global reviewed catalogs (D-P04-005); changes only by data-release migration.
+model TransactionCategory {
+  id String @id @db.Uuid
+  kind TransactionCategoryKind
+  name String @db.VarChar(120)
+  active Boolean @default(true)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  records AccountingRecord[]
+  @@unique([kind, name])
+  @@index([kind, active, createdAt, id])
+}
+model PaymentMethod {
+  id String @id @db.Uuid
+  name String @unique @db.VarChar(120)
+  active Boolean @default(true)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  records AccountingRecord[]
+  payments PaymentRecord[]
+  @@index([active, createdAt, id])
+}
+// Expense/income/purchase/sale (D-P04-003). Optional analytical links are single-column FKs;
+// same-farm consistency is enforced by the service and the runtime INSERT policy.
+model AccountingRecord {
+  id String @id @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  kind AccountingRecordKind
+  categoryId String @db.Uuid
+  // Creation snapshot: catalog renaming does not rewrite historical meaning.
+  categoryName String @db.VarChar(120)
+  amount Decimal @db.Decimal(20, 4)
+  currency String @db.Char(3)
+  occurredOn DateTime @db.Date
+  counterparty String? @db.VarChar(120)
+  paymentMethodId String? @db.Uuid
+  plotId String? @db.Uuid
+  enterpriseId String? @db.Uuid
+  seasonId String? @db.Uuid
+  status AccountingStatus @default(POSTED)
+  version Int @default(1)
+  createdBy String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  category TransactionCategory @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  paymentMethod PaymentMethod? @relation(fields: [paymentMethodId], references: [id], onDelete: Restrict)
+  plot Plot? @relation(fields: [plotId], references: [id], onDelete: Restrict)
+  enterprise Enterprise? @relation(fields: [enterpriseId], references: [id], onDelete: Restrict)
+  season Season? @relation(fields: [seasonId], references: [id], onDelete: Restrict)
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  allocations PaymentAllocation[]
+  reversal AccountingReversal?
+  @@unique([id, farmId, tenantId])
+  @@index([tenantId, farmId, createdAt, id])
+  @@index([farmId, tenantId])
+  @@index([categoryId])
+  @@index([paymentMethodId])
+  @@index([plotId])
+  @@index([enterpriseId])
+  @@index([seasonId])
+  @@index([createdBy])
+}
+// A payment only settles sale/purchase obligations; its allocations share its status.
+model PaymentRecord {
+  id String @id @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  direction PaymentDirection
+  amount Decimal @db.Decimal(20, 4)
+  currency String @db.Char(3)
+  paidOn DateTime @db.Date
+  paymentMethodId String @db.Uuid
+  externalReference String? @db.VarChar(120)
+  status AccountingStatus @default(POSTED)
+  version Int @default(1)
+  createdBy String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  paymentMethod PaymentMethod @relation(fields: [paymentMethodId], references: [id], onDelete: Restrict)
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  allocations PaymentAllocation[]
+  reversal AccountingReversal?
+  @@unique([id, farmId, tenantId])
+  @@index([tenantId, farmId, createdAt, id])
+  @@index([farmId, tenantId])
+  @@index([paymentMethodId])
+  @@index([createdBy])
+}
+model PaymentAllocation {
+  id String @id @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  paymentId String @db.Uuid
+  obligationId String @db.Uuid
+  amount Decimal @db.Decimal(20, 4)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  payment PaymentRecord @relation(fields: [paymentId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  obligation AccountingRecord @relation(fields: [obligationId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  @@unique([paymentId, obligationId])
+  @@index([obligationId, farmId, tenantId])
+  @@index([paymentId, farmId, tenantId])
+}
+// Append-only correction (D-P04-002): exactly one of recordId/paymentId, each reversed at most once.
+model AccountingReversal {
+  id String @id @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  recordId String? @unique @db.Uuid
+  paymentId String? @unique @db.Uuid
+  reason String @db.VarChar(500)
+  createdBy String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  record AccountingRecord? @relation(fields: [recordId], references: [id], onDelete: Restrict)
+  payment PaymentRecord? @relation(fields: [paymentId], references: [id], onDelete: Restrict)
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  @@index([tenantId, farmId, createdAt, id])
   @@index([createdBy])
 }

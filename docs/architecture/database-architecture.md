@@ -74,3 +74,7 @@ Migration `202610190001_poultry_batches` adds the `PoultryPurpose` enum, `Animal
 ## Phase 3 T011 reference release (2026-10-25)
 
 Migration `202610250001_crop_catalog_release` adds the 12 crops approved in D-P03-012, with stable UUIDs. A transaction and catalog write lock protect the release; primary-key/exact-name conflicts and normalized-name collisions (including inactive entries) abort the entire release. Existing rows and cycle snapshots are preserved. There is no schema or runtime grant change. The alternate incoming `202610240001_poultry_batches` migration is excluded by owner decision D-P03-013; a database that applied it requires a separate reconciliation plan. [Migration, rollback and verification evidence](../reports/phase-03-t011-2026-10-25.md).
+
+## Phase 4 T002 persistence (2026-10-25)
+
+Migration `202610250002_farm_accounting` adds global `TransactionCategory`/`PaymentMethod` catalogs (D-P04-005), `AccountingRecord` (numeric(20,4) amount with ISO currency, category-name snapshot, optional plot/enterprise/season links), `PaymentRecord`, `PaymentAllocation` (composite same-farm FKs to payment and obligation) and `AccountingReversal` (exactly one unique target). Optional links are single-column FKs because Prisma cannot model optional composite relations over required scope columns; same-farm consistency is enforced by the service and the runtime INSERT policy. Balances are derived, never stored. Deny-all RLS precedes the manifest-listed `farm-accounting-runtime.sql`. [T002 evidence](../reports/phase-04-t002-2026-10-25.md).

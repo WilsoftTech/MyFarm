@@ -335,3 +335,16 @@ T001 interpretation recorded for owner review: income and expenses are settled w
 ## D-P04-004 — Q10 net income deferred
 
 APPROVED, owner 2026-10-25, with D-P04-003. Overhead, depreciation and finance costs, and therefore net farm income, are deferred to Phase 8. Phase 4 computes and shows only figures labelled gross margin (revenue minus direct costs).
+
+## D-P04-005 — T002 catalogs and confirmed interpretations
+
+APPROVED, owner 2026-10-25 ("implement next T002", then selecting "Cash, Mobile Money, Bank (Recommended)", "Confirm all three (Recommended)" and "Crop, Livestock, Eggs, Other (Recommended)"):
+
+- Payment methods: Cash, Mobile Money, Bank transfer.
+- Transaction categories: the 13 source cost categories (Seeds, Feed, Fertilizer, Veterinary, Labour, Transport, Fuel, Equipment, Rent, Utilities, Medication, Pesticides, Packaging) and revenue categories Crop sales, Livestock sales, Egg sales and Other income.
+- Both catalogs are global reviewed data; like crops (D-P03-012) they change only by a reviewed data-release migration, with no in-app editor in Phase 4.
+- The T001 interpretations in D-P04-003 are confirmed: income and expenses are settled when recorded; payments are fully allocated and not dated before what they settle (no advances); attachments wait for the retention/export policy.
+
+## D-P04-006 — T002 accounting persistence
+
+APPROVED by the owner instruction above. T002 adds the additive `202610250002_farm_accounting` migration, the manifest-listed `supabase/policies/farm-accounting-runtime.sql`, the scoped service and the accounting API. Posted history is append-only: the runtime role can insert, and can update only status/version/updatedAt from POSTED to REVERSED when a reversal row exists; there is no DELETE. Applied only to a disposable local container; hosted dev application needs separate authorization. [T002 evidence](reports/phase-04-t002-2026-10-25.md).

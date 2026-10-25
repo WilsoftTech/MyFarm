@@ -53,7 +53,7 @@ export default async function setup() {
     const cleanup = new Client({ connectionString: url }); await cleanup.connect();
     try {
       await cleanup.query("BEGIN");
-      for (const table of ["CropCycle", "PoultryBatch", "Enterprise", "Season", "Plot", "FarmMember", "Farm"]) await cleanup.query(`DELETE FROM "${table}" WHERE "tenantId" = ANY($1::uuid[])`, [Object.values(tenants)]);
+      for (const table of ["AccountingReversal", "PaymentAllocation", "PaymentRecord", "AccountingRecord", "CropCycle", "PoultryBatch", "Enterprise", "Season", "Plot", "FarmMember", "Farm"]) await cleanup.query(`DELETE FROM "${table}" WHERE "tenantId" = ANY($1::uuid[])`, [Object.values(tenants)]);
       await cleanup.query('DELETE FROM "AuditEvent" WHERE "actorId" = ANY($1::uuid[])', [Object.values(users)]);
       await cleanup.query('DELETE FROM "FarmerProfile" WHERE "farmerId" = ANY($1::uuid[])', [Object.values(farmers)]);
       await cleanup.query('DELETE FROM "Farmer" WHERE id = ANY($1::uuid[])', [Object.values(farmers)]);

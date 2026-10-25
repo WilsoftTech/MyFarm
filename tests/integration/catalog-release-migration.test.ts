@@ -4,7 +4,8 @@ import { config } from "dotenv";
 import { Client } from "pg";
 import { applyCatalogRelease, type CatalogEntry } from "@/modules/enterprises-seasons/domain/catalog";
 import { catalogReleaseSchema } from "@/modules/enterprises-seasons/contracts/catalog";
-import { applyProviderSql, runSqlFile, supabaseEmulation } from "../support/provisioning";
+import { providerSqlFiles, runSqlFile, supabaseEmulation } from "../support/provisioning";
+const laterProviderFiles = ["supabase/policies/farm-accounting-runtime.sql"];
 
 config({ path: ".env.test.local", quiet: true });
 const url = process.env.TEST_DATABASE_URL;
@@ -25,7 +26,9 @@ beforeAll(async () => {
   for (const part of readdirSync("prisma/migrations").filter(part => /^\d/.test(part) && part < releaseName).sort()) {
     await upgrade.query(readFileSync(`prisma/migrations/${part}/migration.sql`, "utf8"));
   }
-  await runSqlFile(upgrade, supabaseEmulation); await applyProviderSql(upgrade);
+  await runSqlFile(upgrade, supabaseEmulation);
+  // This fixture stops before later migrations, so it skips provider files for tables they introduce.
+  for (const file of providerSqlFiles.filter(file => !laterProviderFiles.includes(file))) await runSqlFile(upgrade, file);
 }, 30_000);
 afterAll(async () => {
   await upgrade.end(); if (created) await admin.query(`DROP DATABASE "${name}"`); await admin.end();

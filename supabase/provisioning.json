@@ -10,6 +10,7 @@
     "supabase/policies/crop-cycle-runtime.sql",
     "supabase/policies/poultry-batch-runtime.sql",
     "supabase/policies/production-closure-runtime.sql",
+    "supabase/policies/farm-accounting-runtime.sql",
     "supabase/policies/browser-role-lockdown.sql"
   ]
 }
