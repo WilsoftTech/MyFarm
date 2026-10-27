@@ -3,8 +3,10 @@ import { authorizationService } from "@/modules/engineering-foundation/infrastru
 import { database } from "@/modules/engineering-foundation/infrastructure/database";
 import { registryRepository } from "@/modules/farmer-registry/infrastructure/repository";
 import { FarmAccountingService } from "../application/accounting";
-import type { FarmAccountingRepository } from "../contracts/accounting";
+import type { FarmAccountingRepository, FarmReportRepository } from "../contracts/accounting";
 import { farmAccountingRepository } from "./repository";
+import { FarmReportService } from "../application/reporting";
+import { farmReportRepository } from "./report-repository";
 
 export function farmAccountingService() {
   // Anonymous requests must fail before constructing a database client.
@@ -20,6 +22,17 @@ export function farmAccountingService() {
     reverse: (scope, command) => repository().reverse(scope, command),
   };
   return new FarmAccountingService(authorizationService(), {
+    farmScopeForMember: input => registryRepository(database()).farmScopeForMember(input),
+  }, lazy);
+}
+
+export function farmReportService() {
+  const reports = () => farmReportRepository(database());
+  const lazy: FarmReportRepository = {
+    reportSources: (scope, query) => reports().reportSources(scope, query),
+    recordExport: (scope, requestId) => reports().recordExport(scope, requestId),
+  };
+  return new FarmReportService(authorizationService(), {
     farmScopeForMember: input => registryRepository(database()).farmScopeForMember(input),
   }, lazy);
 }

@@ -1,9 +1,10 @@
 import { beforeEach, expect, it, vi } from "vitest";
 import { FoundationError } from "@/modules/engineering-foundation/domain/errors";
-const mocks = vi.hoisted(() => ({ recordTransaction: vi.fn(), settle: vi.fn(), reverse: vi.fn(), redirect: vi.fn((path: string): never => { throw new Error("REDIRECT:" + path); }) }));
+const mocks = vi.hoisted(() => ({ recordTransaction: vi.fn(), settle: vi.fn(), reverse: vi.fn(), listEnterprises: vi.fn(), listSeasons: vi.fn(), plots: vi.fn(), farmContext: vi.fn(), redirect: vi.fn((path: string): never => { throw new Error("REDIRECT:" + path); }) }));
 vi.mock("@/modules/farm-accounting/infrastructure/services", () => ({ farmAccountingService: () => mocks }));
 vi.mock("next/navigation", () => ({ redirect: mocks.redirect }));
-import { recordTransactionAction, reverseAccountingAction, settleRecordAction } from "@/app/farms/[farmId]/accounting/actions";
+vi.mock("@/modules/enterprises-seasons/infrastructure/services", () => ({ productionService: () => mocks, cropCycleService: () => mocks }));
+import { moreAccountingChoicesAction, recordTransactionAction, reverseAccountingAction, settleRecordAction } from "@/app/farms/[farmId]/accounting/actions";
 const requestId = crypto.randomUUID();
 beforeEach(() => vi.clearAllMocks());
 
@@ -43,4 +44,16 @@ it("reverses only a confirmed, reasoned command with the bound type and target",
   expect(mocks.reverse).toHaveBeenCalledTimes(1);
   mocks.reverse.mockRejectedValueOnce(new FoundationError("CONFLICT"));
   expect(await reverseAccountingAction("farm-a", "SALE", "record-a", { requestId, reason: "x", confirmed: true })).toEqual({ ok: false, message: expect.stringContaining("Reverse its payments first") });
+});
+it("pages link choices for any enterprise type, keeps closed ones selectable and sanitizes failures (P04-T009)", async () => {
+  mocks.listEnterprises.mockResolvedValueOnce({ items: [{ enterpriseId: "e1", name: "Maize", type: "CROP", status: "ACTIVE" }, { enterpriseId: "e2", name: "Old flock", type: "POULTRY", status: "CLOSED" }], nextCursor: "n" });
+  expect(await moreAccountingChoicesAction("farm-a", "enterprises", "cursor")).toEqual({ ok: true, page: { items: [{ id: "e1", label: "Maize — Crops" }, { id: "e2", label: "Old flock — Poultry (closed)" }], nextCursor: "n" } });
+  expect(mocks.listEnterprises).toHaveBeenCalledWith("farm-a", { cursor: "cursor" });
+  mocks.plots.mockResolvedValueOnce({ items: [{ plotId: "p1", name: "Plot 1", area: null, areaUnit: null }], nextCursor: null });
+  expect(await moreAccountingChoicesAction("farm-a", "plots", "cursor")).toEqual({ ok: true, page: { items: [{ id: "p1", label: "Plot 1" }], nextCursor: null } });
+  expect(await moreAccountingChoicesAction("farm-a", "crops" as "plots", "cursor")).toEqual({ ok: false, message: "Choose a valid list." });
+  expect(mocks.farmContext).toHaveBeenCalledWith("farm-a");
+  mocks.listSeasons.mockRejectedValueOnce(new Error("private-provider-detail"));
+  const failed = await moreAccountingChoicesAction("farm-a", "seasons", "cursor");
+  expect(failed).toEqual({ ok: false, message: expect.stringContaining("Your details are still here") }); expect(JSON.stringify(failed)).not.toContain("private-provider-detail");
 });

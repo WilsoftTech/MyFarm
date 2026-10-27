@@ -32,6 +32,12 @@ let tenantA: string, tenantB: string, farmA: string, farmA2: string, farmB: stri
 const sale = (overrides: Record<string, unknown> = {}) => ({ requestId: id(), categoryId: cropSales, amount: "200000", currency: "UGX", occurredOn: "2027-06-01", counterparty: "Market buyer", ...overrides });
 const received = (obligationId: string, amount: string, overrides: Record<string, unknown> = {}) => ({ requestId: id(), direction: "RECEIVED", amount, currency: "UGX", paidOn: "2027-06-05", paymentMethodId: mobileMoney, allocations: [{ obligationId, amount }], ...overrides });
 const receipts = (requestId: string) => owner.auditEvent.count({ where: { requestId } });
+/** A crop cycle written directly as the owner; crop-cycle rules are Phase 3 and tested there. */
+async function cycle(farmId: string, enterpriseId: string, seasonId: string, plotId: string, status: "ACTIVE" | "CLOSED" = "ACTIVE") {
+  const crop = await owner.cropCatalog.findFirstOrThrow({ where: { active: true } });
+  const tenantId = farmId === farmB ? tenantB : tenantA, createdBy = farmId === farmB ? users.b : users.a;
+  return owner.cropCycle.create({ data: { id: id(), tenantId, farmId, enterpriseId, seasonId, plotId, cropId: crop.id, cropName: crop.name, areaPlanted: "1", areaUnit: "ACRE", plantingDate: new Date("2027-03-01T00:00:00Z"), status, createdBy } });
+}
 
 beforeAll(async () => {
   const pg = new Client({ connectionString: url }); await pg.connect();
@@ -51,7 +57,7 @@ afterAll(async () => {
     await owner.accountingReversal.deleteMany({ where }); await owner.paymentAllocation.deleteMany({ where });
     await owner.paymentRecord.deleteMany({ where }); await owner.accountingRecord.deleteMany({ where });
     await owner.transactionCategory.deleteMany({ where: { id: categoryFixture } });
-    await owner.enterprise.deleteMany({ where }); await owner.season.deleteMany({ where }); await owner.plot.deleteMany({ where });
+    await owner.cropCycle.deleteMany({ where }); await owner.enterprise.deleteMany({ where }); await owner.season.deleteMany({ where }); await owner.plot.deleteMany({ where });
     await owner.auditEvent.deleteMany({ where: { actorId: { in: actors } } });
     await owner.farmMember.deleteMany({ where: { userId: { in: actors } } }); await owner.farm.deleteMany({ where });
     await owner.farmerProfile.deleteMany({ where: { farmer: { userId: { in: actors } } } }); await owner.farmer.deleteMany({ where: { userId: { in: actors } } });
@@ -92,6 +98,7 @@ describe("record persistence (P04-T002)", () => {
     const enterprise = await production("a").createEnterprise(farmA, { requestId: id(), name: "Maize " + id(), type: "CROP" });
     const season = await production("a").createSeason(farmA, { requestId: id(), label: "2027A " + id(), startDate: "2027-03-01" });
     const plot = await registry("a").createPlot(farmA, { requestId: id(), name: "Plot " + id() });
+    await cycle(farmA, enterprise.enterpriseId, season.seasonId, plot.plotId);
     const row = await service().recordTransaction("EXPENSE", farmA, { requestId: id(), categoryId: fertilizer, amount: "0150000.00", currency: "ugx", occurredOn: "2027-03-10", counterparty: " ABC  Agro ", paymentMethodId: mobileMoney, enterpriseId: enterprise.enterpriseId, seasonId: season.seasonId, plotId: plot.plotId });
     expect(row).toMatchObject({ kind: "EXPENSE", categoryName: "Fertilizer", amount: "150000", currency: "UGX", counterparty: "ABC Agro", paymentMethodId: mobileMoney, enterpriseId: enterprise.enterpriseId, seasonId: season.seasonId, plotId: plot.plotId, balance: null });
     expect(String((await owner.accountingRecord.findUniqueOrThrow({ where: { id: row.recordId } })).amount)).toBe("150000");
@@ -300,5 +307,47 @@ describe("archived categories stay readable in history (P04-T005, AC002)", () =>
     const names = (await service().categories(farmA, { kind: "COST", limit: 50 })).items.map(c => c.name);
     expect(names).toEqual(expect.arrayContaining(["Seeds", "Feed", "Fertilizer", "Veterinary", "Labour", "Transport", "Fuel", "Equipment", "Rent", "Utilities", "Medication", "Pesticides", "Packaging"]));
     expect(await owner.transactionCategory.count({ where: { kind: "COST", active: true, name: { in: names.filter(name => !name.startsWith("Synthetic")) } } })).toBe(13);
+  });
+});
+
+describe("AC003: allocation links with crop-cycle matching (P04-T008)", () => {
+  it("assigns exactly UGX 150,000 to maize 2027A, round-trips it and replays once", async () => {
+    const maize = await production("a").createEnterprise(farmA, { requestId: id(), name: "Maize " + id(), type: "CROP" });
+    const season = await production("a").createSeason(farmA, { requestId: id(), label: "2027A " + id(), startDate: "2027-03-01" });
+    const plot = await registry("a").createPlot(farmA, { requestId: id(), name: "Plot " + id() });
+    await cycle(farmA, maize.enterpriseId, season.seasonId, plot.plotId);
+    const command = { requestId: id(), categoryId: fertilizer, amount: "150000", currency: "UGX", occurredOn: "2027-03-10", counterparty: "ABC Agro", paymentMethodId: mobileMoney, enterpriseId: maize.enterpriseId, seasonId: season.seasonId };
+    const row = await service().recordTransaction("EXPENSE", farmA, command);
+    expect(row).toMatchObject({ amount: "150000", enterpriseId: maize.enterpriseId, enterpriseName: maize.name, seasonId: season.seasonId, seasonLabel: season.label, plotId: null, plotName: null });
+    expect((await owner.$queryRaw<{ amount: string }[]>`SELECT amount::text FROM "AccountingRecord" WHERE id = ${row.recordId}::uuid`)[0].amount).toBe("150000.0000");
+    expect(await service().recordTransaction("EXPENSE", farmA, { ...command, amount: "150000.00" })).toEqual(row);
+    await expect(service().recordTransaction("EXPENSE", farmA, { ...command, seasonId: undefined })).rejects.toMatchObject({ code: "CONFLICT" });
+    expect(await receipts(command.requestId)).toBe(1);
+  });
+  it("rejects a crop enterprise with a plot or season that matches none of its cycles, without receipts", async () => {
+    const maize = await production("a").createEnterprise(farmA, { requestId: id(), name: "Maize " + id(), type: "CROP" });
+    const [seasonA, seasonB] = await Promise.all([1, 2].map(n => production("a").createSeason(farmA, { requestId: id(), label: "Season " + n + " " + id(), startDate: "2027-03-01" })));
+    const [plot1, plot2] = await Promise.all([1, 2].map(n => registry("a").createPlot(farmA, { requestId: id(), name: "Plot " + n + " " + id() })));
+    await cycle(farmA, maize.enterpriseId, seasonA.seasonId, plot1.plotId, "CLOSED");
+    const base = { categoryId: fertilizer, amount: "1", currency: "UGX", occurredOn: "2027-03-10", enterpriseId: maize.enterpriseId };
+    for (const links of [{ seasonId: seasonA.seasonId }, { plotId: plot1.plotId }, { seasonId: seasonA.seasonId, plotId: plot1.plotId }]) {
+      expect(await service().recordTransaction("EXPENSE", farmA, { ...base, ...links, requestId: id() })).toMatchObject({ status: "POSTED" });
+    }
+    for (const links of [{ seasonId: seasonB.seasonId }, { plotId: plot2.plotId }, { seasonId: seasonA.seasonId, plotId: plot2.plotId }]) {
+      const bad = { ...base, ...links, requestId: id() };
+      await expect(service().recordTransaction("EXPENSE", farmA, bad)).rejects.toMatchObject({ code: "INVALID_INPUT" });
+      expect(await receipts(bad.requestId)).toBe(0);
+    }
+    await expect(runtime.$executeRaw`INSERT INTO "AccountingRecord" (id,"tenantId","farmId",kind,"categoryId","categoryName",amount,currency,"occurredOn","enterpriseId","seasonId","createdBy") VALUES (${id()}::uuid,${tenantA}::uuid,${farmA}::uuid,'EXPENSE',${fertilizer}::uuid,'Fertilizer',1,'UGX','2027-03-10',${maize.enterpriseId}::uuid,${seasonB.seasonId}::uuid,${users.a}::uuid)`).rejects.toThrow(/row-level security/);
+  });
+  it("lets poultry/other enterprises and enterprise-free records use any same-farm plot or season", async () => {
+    const layers = await production("a").createEnterprise(farmA, { requestId: id(), name: "Layers " + id(), type: "POULTRY" });
+    const season = await production("a").createSeason(farmA, { requestId: id(), label: "S " + id(), startDate: "2027-03-01" });
+    const plot = await registry("a").createPlot(farmA, { requestId: id(), name: "House " + id() });
+    const base = { categoryId: fertilizer, amount: "1", currency: "UGX", occurredOn: "2027-03-10" };
+    expect(await service().recordTransaction("EXPENSE", farmA, { ...base, requestId: id(), enterpriseId: layers.enterpriseId, plotId: plot.plotId, seasonId: season.seasonId })).toMatchObject({ plotName: expect.stringContaining("House"), enterpriseName: layers.name });
+    expect(await service().recordTransaction("EXPENSE", farmA, { ...base, requestId: id(), plotId: plot.plotId, seasonId: season.seasonId })).toMatchObject({ enterpriseId: null });
+    const foreignPlot = await registry("b").createPlot(farmB, { requestId: id(), name: "B plot " + id() });
+    await expect(service().recordTransaction("EXPENSE", farmA, { ...base, requestId: id(), enterpriseId: layers.enterpriseId, plotId: foreignPlot.plotId })).rejects.toMatchObject({ code: "FORBIDDEN" });
   });
 });

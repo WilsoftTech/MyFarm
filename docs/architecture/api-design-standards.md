@@ -91,3 +91,7 @@ Enterprise create/replay (`{ enterprise }`), detail (`{ enterprise }`) and list 
 ## Phase 4 T002 accounting endpoints (2026-10-25)
 
 Under `/api/v1/farms/{farmId}/accounting`: `GET categories?kind=` and `GET payment-methods` return active catalogs; `GET records`/`records/{recordId}` return `{ record }` with a derived `balance` for sales/purchases; `POST expenses|income|sales|purchases` (201 `{ record }`), `POST payments` and `GET payments/{paymentId}` (`{ payment }`), and `POST reversals` (201 `{ reversal }`). Money is a decimal string or safe integer; floats, separators and exponents return 400. Changed replays, overpayment and repeated reversal return 409. Origin checks, private caching and error envelopes match the production endpoints. [T002 evidence](../reports/phase-04-t002-2026-10-25.md).
+
+## Phase 4 T011/T014 report endpoints (2026-10-26)
+
+`GET /api/v1/farms/{farmId}/accounting/gross-margin` and `GET …/accounting/summary` take `basis=ACCRUAL|CASH`, `from` and `to` (inclusive calendar dates, either open) and return `{ grossMargin }` / `{ summary }` with basis, range and `asOf` labels, per-currency results and referenced enterprise names. `GET …/accounting/summary/export` returns an audited private `text/csv` attachment for active farm members only (D-P04-009). Unknown or forged query keys return 400; record views now also carry category history and linked plot/enterprise/season names. [Closeout](../reports/phase-04-closeout-2026-10-26.md).

@@ -6,6 +6,8 @@ import type { ProductionPage, ProductionRecord, ProductionWriteScope } from "@/m
 import { CATEGORY_KINDS, MAX_PAYMENT_ALLOCATIONS, PAYMENT_DIRECTIONS, RECOGNITION_BASES, REVERSIBLE_TYPES, normalizeAccountingText, type AccountingRecordKind, type AccountingStatus, type CategoryKind, type ObligationBalance, type PaymentDirection, type ReversibleType } from "../domain/accounting";
 import { moneyString, moneyUnits, normalizeCurrency, normalizePositiveAmount } from "../domain/money";
 import type { CategoryHistory } from "../domain/catalog";
+import type { CurrencyMargin, CurrencySummary } from "../domain/reporting";
+import type { RecognitionPayment, RecognitionRecord } from "../domain/accounting";
 
 const optionalId = z.union([z.literal(""), idSchema]).optional().transform(value => value || undefined);
 const optionalText = (max: number) => z.string().transform(normalizeAccountingText).pipe(z.string().max(max, "Use " + max + " characters or fewer.")).optional().transform(value => value || undefined);
@@ -98,6 +100,15 @@ export const paymentMethodReleaseSchema = z.object({
 }).strict();
 export type CategoryReleaseInput = z.output<typeof categoryReleaseSchema>;
 
+/** Report filters (D-P04-010): inclusive dates, either end open; accrual unless the cash view is chosen. */
+const reportDate = z.union([z.literal(""), date]).optional().transform(value => value || undefined);
+export const reportQuerySchema = z.object({
+  basis: z.enum(RECOGNITION_BASES).default("ACCRUAL"),
+  from: reportDate,
+  to: reportDate,
+}).strict().refine(value => !value.from || !value.to || value.from <= value.to, { message: "The end date must be on or after the start date.", path: ["to"] });
+export type ReportQuery = z.output<typeof reportQuerySchema>;
+
 export const accountingPageSchema = farmPageSchema;
 export const categoryQuerySchema = farmPageSchema.extend({ kind: z.enum(CATEGORY_KINDS).optional() }).strict();
 export const recognitionBasisSchema = z.enum(RECOGNITION_BASES);
@@ -122,6 +133,10 @@ export interface AccountingRecordView extends FarmScope, ProductionRecord {
   categoryName: string;
   /** Saved category name plus whether the category is still offered for new records (R002). */
   category: CategoryHistory;
+  /** Current names of the linked plot/enterprise/season, for display only (R003). */
+  plotName: string | null;
+  enterpriseName: string | null;
+  seasonLabel: string | null;
   amount: string;
   currency: string;
   occurredOn: string;
@@ -172,4 +187,22 @@ export interface FarmAccountingRepository {
   recordTransaction<K extends AccountingRecordKind>(scope: ProductionWriteScope, kind: K, command: RecordCommand<K>): Promise<AccountingRecordView>;
   recordPayment(scope: ProductionWriteScope, command: RecordPayment): Promise<PaymentView>;
   reverse(scope: ProductionWriteScope, command: ReverseAccountingRecord): Promise<{ recordType: ReversibleType; recordId: string; reversal: ReversalView }>;
+}
+
+/** Every report states its basis, date range and computation time (D-P04-002, D-P04-010). */
+export interface ReportLabels { basis: "ACCRUAL" | "CASH"; from: string | null; to: string | null; asOf: string }
+export interface ReportEnterprise { enterpriseId: string; name: string }
+export interface GrossMarginView extends ReportLabels { currencies: CurrencyMargin[]; enterprises: ReportEnterprise[] }
+export interface MoneySummaryView extends ReportLabels { currencies: CurrencySummary[]; enterprises: ReportEnterprise[] }
+export interface ReportSources { records: RecognitionRecord[]; payments: RecognitionPayment[]; enterprises: ReportEnterprise[] }
+
+/**
+ * Read port for R004/R005 reports. Constrains tenant AND farm. ACCRUAL: POSTED records dated in range.
+ * CASH: POSTED income/expense dated in range, POSTED payments paid in range with their allocations, and
+ * every obligation those allocations settle (any date). Enterprises are those referenced, with names.
+ */
+export interface FarmReportRepository {
+  reportSources(scope: FarmScope, query: ReportQuery): Promise<ReportSources>;
+  /** Audit receipt for a summary export (actor/time/scope/request), committed before the file is returned. */
+  recordExport(scope: ProductionWriteScope, requestId: string): Promise<void>;
 }

@@ -5,7 +5,7 @@ const origin = { origin: "http://127.0.0.1:3101" };
 const writes = ["expenses", "income", "sales", "purchases", "payments", "reversals"];
 
 test("accounting reads deny anonymous callers before query or ID validation (P04-T002)", async ({ request }) => {
-  for (const path of ["records", "records/" + record, "records/bad", "payments/" + record, "payments/bad", "categories", "categories?kind=TAX", "payment-methods"]) {
+  for (const path of ["records", "records/" + record, "records/bad", "payments/" + record, "payments/bad", "categories", "categories?kind=TAX", "payment-methods", "gross-margin", "summary", "summary/export", "summary?basis=NET"]) {
     for (const suffix of ["", path.includes("?") ? "&limit=no" : "?limit=no", path.includes("?") ? "&tenantId=forged" : "?tenantId=forged"]) {
       const response = await request.get(`${base}/${path}${suffix}`);
       expect(response.status()).toBe(401); expect(response.headers()["cache-control"]).toContain("no-store");

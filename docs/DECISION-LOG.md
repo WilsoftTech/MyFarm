@@ -348,3 +348,27 @@ APPROVED, owner 2026-10-25 ("implement next T002", then selecting "Cash, Mobile 
 ## D-P04-006 — T002 accounting persistence
 
 APPROVED by the owner instruction above. T002 adds the additive `202610250002_farm_accounting` migration, the manifest-listed `supabase/policies/farm-accounting-runtime.sql`, the scoped service and the accounting API. Posted history is append-only: the runtime role can insert, and can update only status/version/updatedAt from POSTED to REVERSED when a reversal row exists; there is no DELETE. Applied only to a disposable local container; hosted dev application needs separate authorization. [T002 evidence](reports/phase-04-t002-2026-10-25.md).
+
+## D-P04-007 — R003 crop-cycle matched links
+
+APPROVED, owner 2026-10-26 ("implement T006 -T016. COMMIT AFTER PHASE 04 COMPLETE", then selecting "Same farm + crop-cycle match (Recommended)"). Plot, enterprise and season links must be on the record's farm. A CROP enterprise linked together with a plot and/or season must match one of its crop cycles (any status, so late bills still link). Poultry and other enterprises, and records without an enterprise, need same-farm links only. Activity links remain Phase 6. Enforced by the service and the runtime INSERT policy. [Evidence](reports/phase-04-t006-t015-2026-10-26.md).
+
+## D-P04-008 — R004 enterprise gross margin
+
+APPROVED, owner 2026-10-26 (selected "Enterprise-linked costs (Recommended)"). Enterprise gross margin = revenue linked to the enterprise − costs linked to it. The farm figure is the sum of enterprise margins. Revenue and costs not linked to an enterprise are shown separately and never deducted; overhead, depreciation and finance remain Phase 8 (D-P04-004). Results are per currency and labelled "gross margin", never profit.
+
+## D-P04-009 — R005 CSV export
+
+APPROVED, owner 2026-10-26 (selected "CSV export for farm members"). The money summary can be downloaded as CSV by active farm members only; other users, admins without farm membership and revoked members are denied. Each export is audited (`ACCOUNTING_SUMMARY_EXPORTED`) before the file is returned; formula-like cells are neutralized.
+
+## D-P04-010 — Report filters
+
+APPROVED, owner 2026-10-26 (selected "Date range + basis (Recommended)"). Gross margin and the money summary filter by an inclusive from/to date (either end open) and by basis (accrual default, or cash). Every report states its basis, date range and as-of time; currencies are reported separately.
+
+## D-P04-011 — T006–T016 delivery and single commit
+
+APPROVED by the same owner instruction. T006–T016 are implemented together and committed once after the phase audit, unlike the per-task commits of T001–T005. The T016 closeout records PASS WITH CONDITIONS - LOCAL VERIFICATION and requests owner acceptance; pushing, hosted application of the Phase 4 schema/policy (condition P4-C2) and Phase 5 each need explicit instruction. [Closeout](reports/phase-04-closeout-2026-10-26.md).
+
+## D-P04-012 — Phase 4 closeout acceptance
+
+APPROVED, owner 2026-10-27 (Africa/Nairobi), selecting "Accept and commit (Recommended)" after reviewing the T016 verdict and conditions. Phase 4 is COMPLETED - 100% (16/16), PASS WITH CONDITIONS - LOCAL VERIFICATION under D-P04-001. Conditions: P4-C1 GitHub-hosted CI before any production release; P4-C2 hosted application of migration `202610250002_farm_accounting` and `farm-accounting-runtime.sql` with separate authorization before hosted use of the money screens; P4-C3 report projections/pagination for large histories (Phase 8); P4-C4 export rate limits before real farmer production data. T006–T016 are committed once, locally. This does not authorize a push, hosted changes, a production release or Phase 5. [Closeout](reports/phase-04-closeout-2026-10-26.md).

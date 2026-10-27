@@ -20,7 +20,8 @@ async function lockObligations(tx: Prisma.TransactionClient, ids: readonly strin
   for (const id of [...new Set(ids)].sort()) await tx.$queryRaw`SELECT pg_advisory_xact_lock(hashtextextended(${"myfarm:accounting-obligation:" + id}, 0))::text`;
 }
 
-const recordInclude = { reversal: true, category: { select: { id: true, kind: true, name: true, active: true } }, allocations: { include: { payment: { select: { status: true, paidOn: true, createdAt: true } } } } } satisfies Prisma.AccountingRecordInclude;
+const recordInclude = { reversal: true, category: { select: { id: true, kind: true, name: true, active: true } },
+  plot: { select: { name: true } }, enterprise: { select: { name: true } }, season: { select: { label: true } }, allocations: { include: { payment: { select: { status: true, paidOn: true, createdAt: true } } } } } satisfies Prisma.AccountingRecordInclude;
 type RecordRow = Prisma.AccountingRecordGetPayload<{ include: typeof recordInclude }>;
 const paymentInclude = { reversal: true, allocations: true } satisfies Prisma.PaymentRecordInclude;
 type PaymentRow = Prisma.PaymentRecordGetPayload<{ include: typeof paymentInclude }>;
@@ -35,6 +36,7 @@ const allocations = (row: RecordRow): AllocationRecord[] => row.allocations.map(
 const recordView = (row: RecordRow): AccountingRecordView => ({
   recordId: row.id, tenantId: row.tenantId, farmId: row.farmId, kind: row.kind, categoryId: row.categoryId, categoryName: row.categoryName,
   category: categoryHistory(row, row.category),
+  plotName: row.plot?.name ?? null, enterpriseName: row.enterprise?.name ?? null, seasonLabel: row.season?.label ?? null,
   amount: money(row.amount), currency: row.currency, occurredOn: day(row.occurredOn), counterparty: row.counterparty, paymentMethodId: row.paymentMethodId,
   plotId: row.plotId, enterpriseId: row.enterpriseId, seasonId: row.seasonId, status: row.status, reversal: reversalView(row.reversal),
   balance: isObligation(row.kind) ? obligationBalance(obligation(row), allocations(row)) : null,
@@ -114,12 +116,18 @@ export function farmAccountingRepository(db: PrismaClient): FarmAccountingReposi
       if (!category || (methodId && !method)) throw new FoundationError("INVALID_INPUT");
       // Another farm's (or an unknown) link is indistinguishable from a missing one: FORBIDDEN.
       if ((command.plotId && !plot) || (command.enterpriseId && !enterprise) || (command.seasonId && !season)) throw new FoundationError("FORBIDDEN");
+      // D-P04-007: a crop enterprise linked with a plot and/or season must match one of its cycles (any status).
+      const cropCycles = enterprise && (command.plotId || command.seasonId) ? (await tx.cropCycle.findMany({
+        where: { ...where, enterpriseId: enterprise.id, ...(command.plotId ? { plotId: command.plotId } : {}), ...(command.seasonId ? { seasonId: command.seasonId } : {}) },
+        select: { id: true, tenantId: true, farmId: true, enterpriseId: true, seasonId: true, plotId: true }, take: 1,
+      })).map(cycle => ({ cycleId: cycle.id, tenantId: cycle.tenantId, farmId: cycle.farmId, enterpriseId: cycle.enterpriseId, seasonId: cycle.seasonId, plotId: cycle.plotId })) : [];
       assertAccountingRecord(scope, { ...command, kind, paymentMethodId: methodId }, {
         category: { categoryId: category.id, kind: category.kind, active: category.active },
         paymentMethod: method ? { paymentMethodId: method.id, active: method.active } : undefined,
         plot: plot ? { ...where, plotId: plot.id } : undefined,
         enterprise: enterprise ? { ...where, enterpriseId: enterprise.id, type: enterprise.type, status: enterprise.status } : undefined,
         season: season ? { ...where, seasonId: season.id, status: season.status } : undefined,
+        cropCycles,
       });
       const row = await tx.accountingRecord.create({ data: {
         id, ...where, kind, categoryId: category.id, categoryName: category.name, amount: command.amount, currency: command.currency, occurredOn: date(command.occurredOn),

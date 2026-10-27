@@ -25,10 +25,13 @@ export default async function AccountingRecordPage({ params, searchParams }: { p
     <dl className="grid gap-5 rounded-2xl border border-border bg-white p-6 sm:grid-cols-2">
       <div><dt className="text-sm text-foreground/70">Amount</dt><dd className="mt-1 text-2xl font-semibold">{formatMoney(row.amount, row.currency)}</dd></div>
       <div><dt className="text-sm text-foreground/70">Status</dt><dd className="mt-1 font-semibold">{recordStatusLabels[row.status]}</dd></div>
-      <div><dt className="text-sm text-foreground/70">Category</dt><dd className="mt-1 break-words font-semibold">{row.categoryName}</dd></div>
+      <div><dt className="text-sm text-foreground/70">Category</dt><dd className="mt-1 break-words font-semibold">{row.category.name}</dd>{row.category.archived && <dd className="mt-1 text-sm leading-6 text-foreground/75">No longer offered for new records. This record keeps the name it was saved with.</dd>}</div>
       <div><dt className="text-sm text-foreground/70">Date</dt><dd className="mt-1 font-semibold"><time dateTime={row.occurredOn}>{row.occurredOn}</time></dd></div>
       <div><dt className="text-sm text-foreground/70">{counterpartyLabels[row.kind]}</dt><dd className="mt-1 break-words font-semibold">{row.counterparty ?? "Not recorded"}</dd></div>
       {!obligation && <div><dt className="text-sm text-foreground/70">{row.kind === "INCOME" ? "How it was received" : "How it was paid"}</dt><dd className="mt-1 font-semibold">{method ?? "Not recorded"}</dd></div>}
+      <div><dt className="text-sm text-foreground/70">Enterprise</dt><dd className="mt-1 break-words font-semibold">{row.enterpriseId ? <Link className="underline" href={"/farms/" + farm.farmId + "/enterprises/" + row.enterpriseId}>{row.enterpriseName}</Link> : "Not linked"}</dd></div>
+      <div><dt className="text-sm text-foreground/70">Season</dt><dd className="mt-1 break-words font-semibold">{row.seasonId ? <Link className="underline" href={"/farms/" + farm.farmId + "/seasons/" + row.seasonId}>{row.seasonLabel}</Link> : "Not linked"}</dd></div>
+      <div><dt className="text-sm text-foreground/70">Plot</dt><dd className="mt-1 break-words font-semibold">{row.plotName ?? "Not linked"}</dd></div>
     </dl>
     {obligation && row.balance && <section aria-labelledby="balanceHeading" className="mt-6 rounded-2xl border border-border bg-white p-6">
       <h2 id="balanceHeading" className="text-xl font-semibold">{obligation === "SALE" ? "Money for this sale" : "Payments for this purchase"}</h2>

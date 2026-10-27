@@ -35,3 +35,7 @@ Phase 17 source requires immutable LedgerEntry and derived balance. **Proposal:*
 Webhook authenticity, duplicate/reordered events, provider timeout, refund/reversal and payout concurrency need explicit state machine. Persist intent before provider call with stable key; verified event processing and journal/audit/receipt are atomic. DB cannot atomically commit external provider action: reconcile unknown states before retrying payout.
 
 Dashboard/profiles are rebuildable snapshots with as-of sequence/formula/basis/coverage. Golden tests, ledger rebuild, reconciliation, replay, scope, decimals/zero/missing/unit/currency and real concurrent stock/money writes are mandatory. [DB](database-architecture.md), [payments phase](../phases/phase-17-payments-wallet.md), [analytics](../phases/phase-08-analytics-profitability.md) and [decisions](../DECISION-LOG.md) retain unresolved policy.
+
+## Phase 4 implementation (2026-10-26)
+
+Implemented locally under D-P04-002–010: exact numeric(20,4) money per ISO currency (never combined or converted), accrual default with a labelled cash view, one revenue/cost event per sale/purchase, payments that only settle derived balances, append-only reversals, and deterministic enterprise gross margin and money summaries. Net farm income, tax and FX remain out of scope. [Closeout](../reports/phase-04-closeout-2026-10-26.md).

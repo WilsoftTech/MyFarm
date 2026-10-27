@@ -12,17 +12,22 @@ import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useProductionSubmit } from "@/components/production/use-production-submit";
 import { ProductionFormFeedback } from "@/components/production/form-feedback";
+import { ChoiceField } from "@/components/production/choice-field";
+import type { ChoiceLoad, ChoicePage } from "@/components/production/choice-types";
+import type { AccountingChoiceKind } from "./link-choices";
 import { counterpartyLabels, recordKindLabels } from "./labels";
 
 export interface CatalogOption { id: string; label: string }
 type Values = z.input<typeof recordExpenseSchema>;
 const settledWhenRecorded = (kind: AccountingRecordKind) => kind === "EXPENSE" || kind === "INCOME";
 
-/** Expense/income may name how they were paid; sales/purchases are settled later by payments. */
-export function TransactionForm({ kind, categories, paymentMethods, submit }: { kind: AccountingRecordKind; categories: CatalogOption[]; paymentMethods: CatalogOption[]; submit: CommandSubmit }) {
+export interface LinkChoices { pages: Record<AccountingChoiceKind, ChoicePage>; load: ChoiceLoad<AccountingChoiceKind> }
+
+/** Expense/income may name how they were paid; sales/purchases are settled later by payments. Links are optional (R003). */
+export function TransactionForm({ kind, categories, paymentMethods, links, submit }: { kind: AccountingRecordKind; categories: CatalogOption[]; paymentMethods: CatalogOption[]; links?: LinkChoices; submit: CommandSubmit }) {
   const state = useProductionSubmit(submit), form = useRef<HTMLFormElement>(null), withMethod = settledWhenRecorded(kind);
   const resolver = zodResolver(withMethod ? recordExpenseSchema : recordSaleSchema) as Resolver<Values, unknown, RecordExpense>;
-  const defaults: Values = { requestId: state.initialRequestId, categoryId: "", amount: "", currency: "UGX", occurredOn: "", counterparty: "", ...(withMethod ? { paymentMethodId: "" } : {}) };
+  const defaults: Values = { requestId: state.initialRequestId, categoryId: "", amount: "", currency: "UGX", occurredOn: "", counterparty: "", plotId: "", enterpriseId: "", seasonId: "", ...(withMethod ? { paymentMethodId: "" } : {}) };
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<Values, unknown, RecordExpense>({ resolver, shouldFocusError: false, defaultValues: defaults });
   const label = recordKindLabels[kind].toLowerCase();
   if (categories.length === 0) return <div className="space-y-4 leading-7"><h2 className="text-xl font-semibold">No categories are available</h2><p>There are no {kind === "SALE" || kind === "INCOME" ? "income" : "spending"} categories to choose from. Ask farm support to check the category list.</p></div>;
@@ -37,6 +42,12 @@ export function TransactionForm({ kind, categories, paymentMethods, submit }: { 
     <Field id="recordDate" label="Date" hint={withMethod ? "The day the money was " + (kind === "INCOME" ? "received." : "paid.") : "The day of the " + label + "."} error={errors.occurredOn?.message}>{aria => <Input {...aria} type="date" min="0001-01-01" max="9999-12-31" {...register("occurredOn")} />}</Field>
     <Field id="recordCounterparty" label={counterpartyLabels[kind]} optional hint="A name you will recognise, for example ABC Agro." error={errors.counterparty?.message}>{aria => <Input {...aria} maxLength={120} {...register("counterparty")} />}</Field>
     {withMethod && <Field id="recordMethod" label={kind === "INCOME" ? "How it was received" : "How it was paid"} optional error={errors.paymentMethodId ? "Choose how the money moved, or leave it empty." : undefined}>{aria => <Select {...aria} {...register("paymentMethodId")}><option value="">Not recorded</option>{paymentMethods.map(option => <option key={option.id} value={option.id}>{option.label}</option>)}</Select>}</Field>}
+    {links && <fieldset className="min-w-0 space-y-4 rounded-xl border border-border p-4"><legend className="px-1 font-semibold">Link to farm work <span className="font-normal text-foreground/65">(optional)</span></legend>
+      <p className="text-sm leading-6 text-foreground/75">Linking shows which enterprise this money belongs to. If you choose a crop enterprise with a season or plot, they must match one of its crop cycles.</p>
+      <ChoiceField id="recordEnterprise" label="Enterprise" optional kind="enterprises" initial={links.pages.enterprises} control={register("enterpriseId")} error={errors.enterpriseId ? "Choose an enterprise or leave it empty." : undefined} online={state.online} load={links.load} />
+      <ChoiceField id="recordSeason" label="Season" optional kind="seasons" initial={links.pages.seasons} control={register("seasonId")} error={errors.seasonId ? "Choose a season or leave it empty." : undefined} online={state.online} load={links.load} />
+      <ChoiceField id="recordPlot" label="Plot" optional kind="plots" initial={links.pages.plots} control={register("plotId")} error={errors.plotId ? "Choose a plot or leave it empty." : undefined} online={state.online} load={links.load} />
+    </fieldset>}
     <ProductionFormFeedback online={state.online} saving={isSubmitting} message={state.message} />
     <Button type="submit" disabled={isSubmitting || !state.online} className="w-full sm:w-auto">{isSubmitting ? "Saving…" : "Save " + label}</Button>
     </fieldset>

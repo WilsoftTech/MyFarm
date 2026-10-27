@@ -67,3 +67,7 @@ A poultry batch belongs to one ACTIVE POULTRY enterprise on the farm (no plot or
 ## T001–T002 farm accounting model
 
 A farm owns every accounting record. A SALE or PURCHASE is the single revenue/cost event and opens a receivable/payable derived from POSTED payment allocations; INCOME and EXPENSE are settled when recorded. A payment (RECEIVED settles sales, MADE settles purchases) is fully allocated, in one currency, dated on or after what it settles. Posted records are corrected only by one reasoned reversal; a sale/purchase with POSTED payments is reversed after those payments (D-P04-002/003/005). [T001](../reports/phase-04-t001-2026-10-25.md), [T002](../reports/phase-04-t002-2026-10-25.md).
+
+## T006–T015 accounting links and reports
+
+Records may link a plot, enterprise and season on their farm; a crop enterprise with a plot/season must match one of its crop cycles. Reports derive from recognition events only: enterprise gross margin = linked revenue − linked costs, the farm figure sums enterprises, unlinked amounts are shown apart (D-P04-008); the money summary answers spent, by category, revenue and the costliest enterprise with ties, per currency and basis (D-P04-010). [Evidence](../reports/phase-04-t006-t015-2026-10-26.md).

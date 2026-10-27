@@ -47,3 +47,7 @@ Additive migration `202610190001_poultry_batches` and the new manifest-listed `p
 ## Phase 4 T002 rehearsal (2026-10-25)
 
 Additive migration `202610250002_farm_accounting` and the manifest-listed `farm-accounting-runtime.sql` passed fresh install, upgrade from the seven prior migrations with row preservation, injected-failure rollback, provider rerun, Prisma drift comparison and a synthetic dump/restore (`tests/support/farm-accounting-recovery.mjs`) on isolated PostgreSQL 17. Roll back application code rather than dropping the tables. Not applied to hosted dev. [T002 evidence](../reports/phase-04-t002-2026-10-25.md).
+
+## Phase 4 closeout (2026-10-26)
+
+No migration after `202610250002_farm_accounting`; all nine migrations replayed on a fresh PostgreSQL 17 from a clean clone with recorded SHA-256 checksums, no Prisma drift and a passing dump/restore rehearsal. The updated provider file stays manifest-listed and rerunnable. Hosted application is pending owner authorization (P4-C2). [Closeout](../reports/phase-04-closeout-2026-10-26.md).

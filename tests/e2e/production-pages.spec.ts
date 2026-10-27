@@ -18,7 +18,7 @@ test("production pages return a private, real redirect for anonymous requests", 
 });
 
 test("accounting pages send anonymous users to sign-in before rendering farm money records (P04-T003)", async ({ page, request }) => {
-  for (const path of ["accounting", "accounting/new/sale", "accounting/new/expense", "accounting/records/" + record, "accounting/records/" + record + "/payments/new", "accounting/payments/" + record]) {
+  for (const path of ["accounting", "accounting/new/sale", "accounting/new/expense", "accounting/records/" + record, "accounting/records/" + record + "/payments/new", "accounting/payments/" + record, "accounting/summary", "accounting/gross-margin"]) {
     await page.goto(`/farms/${farm}/${path}`);
     await expect(page).toHaveURL(/\/sign-in\?reason=session-required/);
     const response = await request.get(`/farms/${farm}/${path}`, { maxRedirects: 0 });

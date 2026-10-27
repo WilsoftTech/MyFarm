@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import type { Choice, ChoiceLoad, ChoicePage } from "./choice-types";
 
 /** A paged server-backed select; later pages append without losing the current draft or selection. */
-export function ChoiceField<K extends string>({ id, label, kind, initial, control, error, online, load, onSelect }: { id: string; label: string; kind: K; initial: ChoicePage; control: UseFormRegisterReturn; error?: string; online: boolean; load: ChoiceLoad<K>; onSelect?: (choice: Choice | undefined) => void }) {
+export function ChoiceField<K extends string>({ id, label, kind, initial, control, error, online, load, onSelect, optional, hint }: { id: string; label: string; kind: K; initial: ChoicePage; control: UseFormRegisterReturn; error?: string; online: boolean; load: ChoiceLoad<K>; onSelect?: (choice: Choice | undefined) => void; optional?: boolean; hint?: string }) {
   const [page, setPage] = useState(initial), [pending, setPending] = useState(false), [message, setMessage] = useState("");
   async function more() {
     if (!page.nextCursor || pending || !online) return;
@@ -20,7 +20,7 @@ export function ChoiceField<K extends string>({ id, label, kind, initial, contro
     finally { setPending(false); }
   }
   return <div>
-    <Field id={id} label={label} error={error}>{aria => <Select {...aria} {...control} onChange={event => { void control.onChange(event); onSelect?.(page.items.find(row => row.id === event.target.value)); }}><option value="">Choose one</option>{page.items.map(row => <option key={row.id} value={row.id} disabled={row.disabled}>{row.label}</option>)}</Select>}</Field>
+    <Field id={id} label={label} error={error} optional={optional} hint={hint}>{aria => <Select {...aria} {...control} onChange={event => { void control.onChange(event); onSelect?.(page.items.find(row => row.id === event.target.value)); }}><option value="">{optional ? "Not linked" : "Choose one"}</option>{page.items.map(row => <option key={row.id} value={row.id} disabled={row.disabled}>{row.label}</option>)}</Select>}</Field>
     {page.nextCursor && <Button type="button" variant="outline" className="mt-2" disabled={pending || !online} onClick={more}>{pending ? "Loading…" : "More " + label.toLowerCase() + " choices"}</Button>}
     {pending && <p role="status" className="mt-2 text-sm">Loading more {label.toLowerCase()} choices…</p>}
     {message && <p role="alert" className="mt-2 text-sm text-destructive">{message}</p>}

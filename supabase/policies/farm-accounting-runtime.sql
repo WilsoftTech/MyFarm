@@ -33,6 +33,17 @@ CREATE POLICY myfarm_server_accounting_record_create ON public."AccountingRecord
   AND ("plotId" IS NULL OR EXISTS (SELECT 1 FROM public."Plot" p WHERE p.id = "AccountingRecord"."plotId" AND p."farmId" = "AccountingRecord"."farmId" AND p."tenantId" = "AccountingRecord"."tenantId"))
   AND ("enterpriseId" IS NULL OR EXISTS (SELECT 1 FROM public."Enterprise" e WHERE e.id = "AccountingRecord"."enterpriseId" AND e."farmId" = "AccountingRecord"."farmId" AND e."tenantId" = "AccountingRecord"."tenantId"))
   AND ("seasonId" IS NULL OR EXISTS (SELECT 1 FROM public."Season" s WHERE s.id = "AccountingRecord"."seasonId" AND s."farmId" = "AccountingRecord"."farmId" AND s."tenantId" = "AccountingRecord"."tenantId"))
+  -- D-P04-007: a CROP enterprise linked with a plot and/or season must match one of its crop cycles (any status).
+  AND NOT (
+    "enterpriseId" IS NOT NULL AND ("plotId" IS NOT NULL OR "seasonId" IS NOT NULL)
+    AND EXISTS (SELECT 1 FROM public."Enterprise" e WHERE e.id = "AccountingRecord"."enterpriseId" AND e.type = 'CROP')
+    AND NOT EXISTS (
+      SELECT 1 FROM public."CropCycle" c
+      WHERE c."enterpriseId" = "AccountingRecord"."enterpriseId" AND c."farmId" = "AccountingRecord"."farmId" AND c."tenantId" = "AccountingRecord"."tenantId"
+        AND ("AccountingRecord"."plotId" IS NULL OR c."plotId" = "AccountingRecord"."plotId")
+        AND ("AccountingRecord"."seasonId" IS NULL OR c."seasonId" = "AccountingRecord"."seasonId")
+    )
+  )
 );
 DROP POLICY IF EXISTS myfarm_server_accounting_record_reverse ON public."AccountingRecord";
 CREATE POLICY myfarm_server_accounting_record_reverse ON public."AccountingRecord" FOR UPDATE TO myfarm_runtime

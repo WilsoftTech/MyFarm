@@ -31,6 +31,11 @@ export function moneyString(units: bigint): string {
   return (units / scale).toString() + (fraction ? "." + fraction : "");
 }
 
+/** Report results such as a gross margin may be negative: "-150000.5". Stored amounts never are. */
+export function signedMoneyString(units: bigint): string {
+  return units < 0n ? "-" + moneyString(-units) : moneyString(units);
+}
+
 /**
  * Form digit strings ("150000", "0150000.50") or JSON safe integers; result is canonical and > 0.
  * Signs, exponents, separators ("150,000"), fractional numbers, more than 4 decimals or 16 whole digits fail.

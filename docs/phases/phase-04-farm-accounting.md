@@ -1,16 +1,16 @@
 # Phase 04 Farm Accounting Engine
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — MYF-P04-T005 category history persistence and evidence.
-- Implementation status: PARTIALLY COMPLETE — 31.25% (5/16 verified tasks; T001-T005 complete at their stages; AC001 verified locally).
-- Last reviewed: 2026-10-26 (Africa/Nairobi), T005 verification.
+- Documentation review: REVIEWED — MYF-P04-T016 audit, closeout and evidence.
+- Implementation status: COMPLETED — 100% (16/16 verified tasks); PASS WITH CONDITIONS - LOCAL VERIFICATION; owner accepted 2026-10-27 (D-P04-012).
+- Last reviewed: 2026-10-26 (Africa/Nairobi), T016 audit.
 - Related phase/task IDs: Phase 04; MYF-P04-T001 through MYF-P04-T016; review session Phase01; Phase02 review session (MYF-P02-T001–T013).
-- Verified completed work: T001 contract, T002 persistence/API and T003 money screens (MYF-P04-AC001 verified locally); T004 category contract; T005 category history persistence. [T005 evidence](../reports/phase-04-t005-2026-10-26.md).
-- Remaining work/blockers: T006-T016, AC002-AC005 and the exit gate pending. Hosted Phase 4 provisioning remains pending. Next: T006.
+- Verified completed work: T001-T016 and MYF-P04-AC001-AC005 verified locally, including a clean clone against fresh PostgreSQL 17. [Closeout](../reports/phase-04-closeout-2026-10-26.md); [T006-T015 evidence](../reports/phase-04-t006-t015-2026-10-26.md).
+- Remaining work/blockers: Conditions P4-C1 (hosted CI), P4-C2 (hosted schema/policy application), P4-C3/C4 (report scale, export rate limits). Phase 5 requires separate authorization.
 - Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **PARTIALLY COMPLETE — 31.25% (5/16), T001-T005 verified locally at their stages; AC001 accepted locally**. [T005 evidence](../reports/phase-04-t005-2026-10-26.md); [T004 evidence](../reports/phase-04-t004-2026-10-26.md); [T003 evidence](../reports/phase-04-t003-2026-10-26.md); [T002 evidence](../reports/phase-04-t002-2026-10-25.md); [T001 evidence](../reports/phase-04-t001-2026-10-25.md). Catalogs: [D-P04-005](../DECISION-LOG.md#d-p04-005--t002-catalogs-and-confirmed-interpretations). Authorization: [D-P04-001](../DECISION-LOG.md#d-p04-001--phase-4-authorization-and-local-ci); Q09 and Q11 resolved by [D-P04-002](../DECISION-LOG.md#d-p04-002--q09-basis-money-and-corrections) and [D-P04-003](../DECISION-LOG.md#d-p04-003--q11-recognition-and-double-count-prevention); Q10 deferred to Phase 8 by [D-P04-004](../DECISION-LOG.md#d-p04-004--q10-net-income-deferred). Specification date: 2026-10-08. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **COMPLETED — 100% (16/16), PASS WITH CONDITIONS - LOCAL VERIFICATION; owner accepted 2026-10-27**. [Closeout](../reports/phase-04-closeout-2026-10-26.md); [T006-T015 evidence](../reports/phase-04-t006-t015-2026-10-26.md); [T005 evidence](../reports/phase-04-t005-2026-10-26.md); [T003 evidence](../reports/phase-04-t003-2026-10-26.md); [T001 evidence](../reports/phase-04-t001-2026-10-25.md). Authorization and rules: D-P04-001 to D-P04-012 in the [decision log](../DECISION-LOG.md). Specification date: 2026-10-08.
 
 ## A. Phase Overview
 
@@ -279,18 +279,18 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 - [x] MYF-P04-T003 complete with [evidence](../reports/phase-04-t003-2026-10-26.md); MYF-P04-AC001 verified locally.
 - [x] MYF-P04-T004 domain/contract stage complete with [evidence](../reports/phase-04-t004-2026-10-26.md); full AC002 pending T005/T006.
 - [x] MYF-P04-T005 service/persistence stage complete with [evidence](../reports/phase-04-t005-2026-10-26.md); full AC002 pending T006.
-- [ ] MYF-P04-T006 complete with evidence.
-- [ ] MYF-P04-T007 complete with evidence.
-- [ ] MYF-P04-T008 complete with evidence.
-- [ ] MYF-P04-T009 complete with evidence.
-- [ ] MYF-P04-T010 complete with evidence.
-- [ ] MYF-P04-T011 complete with evidence.
-- [ ] MYF-P04-T012 complete with evidence.
-- [ ] MYF-P04-T013 complete with evidence.
-- [ ] MYF-P04-T014 complete with evidence.
-- [ ] MYF-P04-T015 complete with evidence.
-- [ ] MYF-P04-T016 complete with evidence.
-- [ ] Every K criterion verified.
-- [ ] Security/integrity audit, remediation and retest complete.
-- [ ] Applicable quality/E2E/integration/migration evidence recorded.
-- [ ] L gate approved; closeout/status updated from evidence.
+- [x] MYF-P04-T006 complete with [evidence](../reports/phase-04-t006-t015-2026-10-26.md).
+- [x] MYF-P04-T007 complete with [evidence](../reports/phase-04-t006-t015-2026-10-26.md).
+- [x] MYF-P04-T008 complete with [evidence](../reports/phase-04-t006-t015-2026-10-26.md).
+- [x] MYF-P04-T009 complete with [evidence](../reports/phase-04-t006-t015-2026-10-26.md).
+- [x] MYF-P04-T010 complete with [evidence](../reports/phase-04-t006-t015-2026-10-26.md).
+- [x] MYF-P04-T011 complete with [evidence](../reports/phase-04-t006-t015-2026-10-26.md).
+- [x] MYF-P04-T012 complete with [evidence](../reports/phase-04-t006-t015-2026-10-26.md).
+- [x] MYF-P04-T013 complete with [evidence](../reports/phase-04-t006-t015-2026-10-26.md).
+- [x] MYF-P04-T014 complete with [evidence](../reports/phase-04-t006-t015-2026-10-26.md).
+- [x] MYF-P04-T015 complete with [evidence](../reports/phase-04-t006-t015-2026-10-26.md).
+- [x] MYF-P04-T016 audit and closeout complete with [evidence](../reports/phase-04-closeout-2026-10-26.md).
+- [x] Every K criterion verified locally (AC001-AC005).
+- [x] Security/integrity audit complete; no blocking finding (P4-A01-A08).
+- [x] Applicable quality/E2E/integration/migration evidence recorded (clean clone, `.cache/p04-evidence/`).
+- [x] L gate approved by the owner 2026-10-27 ([D-P04-012](../DECISION-LOG.md#d-p04-012--phase-4-closeout-acceptance)); closeout/status updated from evidence.

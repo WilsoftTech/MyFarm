@@ -10,6 +10,8 @@ export function AccountingShell({ farm, title, children }: { farm: { farmId: str
     <h1 className="mt-2 break-words text-3xl font-bold">{title}</h1>
     <nav aria-label="Farm money" className="my-6 flex flex-wrap gap-x-6 gap-y-2 border-b border-border pb-3">
       <Link href={base} className="inline-flex min-h-12 items-center py-2 underline underline-offset-4">Money records</Link>
+      <Link href={base + "/summary"} className="inline-flex min-h-12 items-center py-2 underline underline-offset-4">Summary</Link>
+      <Link href={base + "/gross-margin"} className="inline-flex min-h-12 items-center py-2 underline underline-offset-4">Gross margin</Link>
       {(Object.keys(recordKindSlugs) as RecordKindSlug[]).map(slug => <Link key={slug} href={base + "/new/" + slug} className="inline-flex min-h-12 items-center py-2 underline underline-offset-4">{"Add " + recordKindLabels[recordKindSlugs[slug]].toLowerCase()}</Link>)}
     </nav>
     {children}

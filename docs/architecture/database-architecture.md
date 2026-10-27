@@ -78,3 +78,7 @@ Migration `202610250001_crop_catalog_release` adds the 12 crops approved in D-P0
 ## Phase 4 T002 persistence (2026-10-25)
 
 Migration `202610250002_farm_accounting` adds global `TransactionCategory`/`PaymentMethod` catalogs (D-P04-005), `AccountingRecord` (numeric(20,4) amount with ISO currency, category-name snapshot, optional plot/enterprise/season links), `PaymentRecord`, `PaymentAllocation` (composite same-farm FKs to payment and obligation) and `AccountingReversal` (exactly one unique target). Optional links are single-column FKs because Prisma cannot model optional composite relations over required scope columns; same-farm consistency is enforced by the service and the runtime INSERT policy. Balances are derived, never stored. Deny-all RLS precedes the manifest-listed `farm-accounting-runtime.sql`. [T002 evidence](../reports/phase-04-t002-2026-10-25.md).
+
+## Phase 4 T008 crop-cycle link backstop (2026-10-26)
+
+No new migration. `farm-accounting-runtime.sql` adds to the AccountingRecord INSERT policy that a CROP enterprise linked with a plot and/or season must match a CropCycle of that enterprise on the same farm (D-P04-007). Report reads are date-filtered queries over POSTED rows; projections for large histories remain Phase 8 (P4-C3). [Closeout](../reports/phase-04-closeout-2026-10-26.md).

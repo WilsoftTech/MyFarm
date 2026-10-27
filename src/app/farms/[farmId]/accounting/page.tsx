@@ -19,7 +19,8 @@ export default async function AccountingPage({ params, searchParams }: { params:
       : <ul aria-label="Money records on this farm" className="mt-6 grid gap-4 sm:grid-cols-2">{page.items.map(row => <li key={row.recordId} className="min-w-0"><Link href={path + "/records/" + row.recordId} className="block rounded-2xl border border-border bg-white p-6 hover:border-primary focus-visible:outline-2 focus-visible:outline-ring">
         <p className="text-sm text-foreground/75">{recordKindLabels[row.kind]} · <time dateTime={row.occurredOn}>{row.occurredOn}</time></p>
         <h2 className="mt-1 break-words text-xl font-semibold">{formatMoney(row.amount, row.currency)}</h2>
-        <p className="mt-2 break-words leading-7">{row.categoryName}{row.counterparty ? " — " + row.counterparty : ""}</p>
+        <p className="mt-2 break-words leading-7">{row.category.name}{row.category.archived ? " (no longer offered)" : ""}{row.counterparty ? " — " + row.counterparty : ""}</p>
+        {row.enterpriseName && <p className="break-words text-sm leading-6">Enterprise: {row.enterpriseName}{row.seasonLabel ? " · " + row.seasonLabel : ""}</p>}
         {row.balance && (row.kind === "SALE" || row.kind === "PURCHASE") && row.status === "POSTED" && <p className="leading-7">{row.balance.settlement === "SETTLED" ? settlementLabels[row.kind].SETTLED : outstandingLabels[row.kind] + ": " + formatMoney(row.balance.outstanding, row.currency)}</p>}
         <p className="text-sm">{recordStatusLabels[row.status]}</p></Link></li>)}</ul>}
     <ProductionPagination path={path} cursor={typeof cursor === "string" ? cursor : undefined} nextCursor={page.nextCursor} />

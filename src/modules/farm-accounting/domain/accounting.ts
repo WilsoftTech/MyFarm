@@ -1,5 +1,5 @@
 import { FoundationError } from "@/modules/engineering-foundation/domain/errors";
-import { assertSameFarm, displayText, isCalendarDate, type EnterpriseReference, type FarmScope, type PlotReference, type SeasonReference } from "@/modules/enterprises-seasons/domain/production";
+import { assertSameFarm, displayText, enterpriseWorkflow, isCalendarDate, type EnterpriseReference, type FarmScope, type PlotReference, type SeasonReference } from "@/modules/enterprises-seasons/domain/production";
 import { moneyString, moneyUnits, normalizeCurrency, normalizePositiveAmount, type Money } from "./money";
 
 /**
@@ -46,7 +46,10 @@ export interface AccountingRecordParents {
   plot?: PlotReference;
   enterprise?: EnterpriseReference;
   season?: SeasonReference;
+  /** Crop cycles of the linked CROP enterprise on the authorized farm (any status), needed when plot/season are linked too. */
+  cropCycles?: readonly CropCycleLinkReference[];
 }
+export interface CropCycleLinkReference extends FarmScope { cycleId: string; enterpriseId: string; seasonId: string; plotId: string }
 
 /** A sale or purchase as the settlement rules see it; outstanding is always derived, never stored. */
 export interface ObligationReference extends FarmScope, Money { obligationId: string; kind: ObligationKind; occurredOn: string; status: AccountingStatus }
@@ -107,6 +110,19 @@ export function assertAccountingRecord(scope: FarmScope, fields: AccountingRecor
   assertLink(scope, fields.plotId, parents.plot, plot => plot.plotId);
   assertLink(scope, fields.enterpriseId, parents.enterprise, enterprise => enterprise.enterpriseId);
   assertLink(scope, fields.seasonId, parents.season, season => season.seasonId);
+  assertCropCycleLink(scope, fields, parents.enterprise, parents.cropCycles ?? []);
+}
+
+/**
+ * D-P04-007: a CROP enterprise linked together with a plot and/or season must match one of its crop
+ * cycles (any status, so late bills still link), e.g. Maize · 2027A · Plot 1. Other enterprise types
+ * and records without an enterprise only need same-farm links.
+ */
+export function assertCropCycleLink(scope: FarmScope, links: AccountingLinks, enterprise: EnterpriseReference | undefined, cycles: readonly CropCycleLinkReference[]): void {
+  if (!enterprise || enterpriseWorkflow(enterprise.type) !== "CROP_CYCLE" || (!links.plotId && !links.seasonId)) return;
+  assertSameFarm(scope, cycles);
+  const match = cycles.some(cycle => cycle.enterpriseId === enterprise.enterpriseId && (!links.plotId || cycle.plotId === links.plotId) && (!links.seasonId || cycle.seasonId === links.seasonId));
+  if (!match) throw new FoundationError("INVALID_INPUT");
 }
 
 /** Receivable/payable = obligation total minus its POSTED allocations; a reversed obligation is VOID. */
@@ -179,7 +195,16 @@ export function assertReversal(scope: FarmScope, target: ReversalTarget, reason:
   }
 }
 
-export interface RecognitionRecord extends Money { recordId: string; kind: AccountingRecordKind; occurredOn: string; status: AccountingStatus }
+export interface RecognitionRecord extends Money {
+  recordId: string;
+  kind: AccountingRecordKind;
+  occurredOn: string;
+  status: AccountingStatus;
+  /** Report attribution (R004/R005); omitted means unassigned. */
+  enterpriseId?: string | null;
+  categoryId?: string;
+  categoryName?: string;
+}
 export interface RecognitionPayment { paymentId: string; direction: PaymentDirection; paidOn: string; status: AccountingStatus; allocations: readonly PaymentAllocationEntry[] }
 export type RecognitionEffect = CategoryKind;
 export interface RecognitionEvent extends Money {
@@ -190,6 +215,9 @@ export interface RecognitionEvent extends Money {
   /** The payment whose allocation produced a cash-basis sale/purchase event; null otherwise. */
   paymentId: string | null;
   recognizedOn: string;
+  enterpriseId: string | null;
+  categoryId: string | null;
+  categoryName: string | null;
 }
 
 /**
@@ -207,6 +235,7 @@ export function recognizedEvents(basis: RecognitionBasis, records: readonly Reco
   }
   const event = (record: RecognitionRecord, amount: string, recognizedOn: string, paymentId: string | null): RecognitionEvent => ({
     basis, effect: RECORD_CATEGORY_KIND[record.kind], recordId: record.recordId, kind: record.kind, paymentId, amount, currency: record.currency, recognizedOn,
+    enterpriseId: record.enterpriseId ?? null, categoryId: record.categoryId ?? null, categoryName: record.categoryName ?? null,
   });
   const events: RecognitionEvent[] = [];
   for (const record of records) {

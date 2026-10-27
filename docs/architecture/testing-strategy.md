@@ -74,3 +74,7 @@ T001 adds 108 accounting contract cases; T002 adds 16 service unit, 19 integrati
 ## Phase 4 T003 evidence (2026-10-26)
 
 T003 adds 15 accounting form component cases, 8 action/settle unit cases, 2 integration cases, 12 signed-in browser cases (AC001 journey, expense/purchase, overpayment and lost response, reversal order, offline, access/revocation/expiry on desktop and mobile) and 2 anonymous page cases. Final local results: 622 unit/component, 140 integration, 48 anonymous and 90 signed-in browser checks PASS. [T003 evidence](../reports/phase-04-t003-2026-10-26.md).
+
+## Phase 4 T006–T016 evidence (2026-10-26)
+
+New cases: 29 report/link domain, 4 report service, 1 link action and 1 link component unit cases; 11 integration cases (links, gross margin, summary, export, access); 8 signed-in browser cases (AC002–AC005 screens, CSV download, denial). Final clean-clone results: 686 unit/component, 154 integration, 44 non-UTC, 48 anonymous and 100 signed-in browser checks PASS; drift and dump/restore PASS. [Closeout](../reports/phase-04-closeout-2026-10-26.md).

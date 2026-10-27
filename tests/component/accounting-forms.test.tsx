@@ -122,3 +122,19 @@ describe("accounting display helpers (P04-T003)", () => {
     expect(recordKindFromSlug("__proto__")).toBeNull(); expect(recordKindFromSlug("toString")).toBeNull();
   });
 });
+
+describe("record links (P04-T009)", () => {
+  const maize = id(), season = id(), plot = id(), later = id();
+  const pages = { enterprises: { items: [{ id: maize, label: "Maize — Crops" }, { id: id(), label: "Old flock — Poultry (closed)" }], nextCursor: "next" }, seasons: { items: [{ id: season, label: "2027A" }], nextCursor: null }, plots: { items: [{ id: plot, label: "Plot 1" }], nextCursor: null } };
+  it("sends optional links, leaves blanks unlinked and loads later enterprises without losing the draft", async () => {
+    const load = vi.fn(async () => ({ ok: true as const, page: { items: [{ id: later, label: "Beans — Crops" }], nextCursor: null } }));
+    const submit = vi.fn(failed); render(<TransactionForm kind="EXPENSE" categories={costCategories} paymentMethods={methods} links={{ pages, load }} submit={submit} />);
+    expect(screen.getByLabelText("Enterprise (optional)")).toHaveValue(""); expect(screen.getByRole("option", { name: "Old flock — Poultry (closed)" })).toBeEnabled();
+    await fillExpense();
+    await userEvent.click(screen.getByRole("button", { name: "More enterprise choices" })); expect(await screen.findByRole("option", { name: "Beans — Crops" })).toBeVisible();
+    expect(load).toHaveBeenCalledWith("enterprises", "next"); expect(screen.getByLabelText("Amount")).toHaveValue("0150000");
+    await userEvent.selectOptions(screen.getByLabelText("Enterprise (optional)"), maize); await userEvent.selectOptions(screen.getByLabelText("Season (optional)"), season);
+    await saveExpense(); await waitFor(() => expect(submit).toHaveBeenCalledTimes(1));
+    expect(recordExpenseSchema.parse(submit.mock.calls[0][0])).toMatchObject({ enterpriseId: maize, seasonId: season, plotId: undefined, amount: "150000" });
+  });
+});
