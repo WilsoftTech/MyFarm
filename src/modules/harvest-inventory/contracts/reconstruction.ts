@@ -5,7 +5,7 @@ export interface ReconstructionView {
   itemId: string; name: string; unit: string; asOf: string; matches: boolean;
   balances: ReconstructedBalance[]; nextCursor: string | null;
 }
-export interface MovementView { movementId: string; locationId: string; locationName: string; quantityDelta: string; reason: string; occurredOn: string; createdAt: string }
+export interface MovementView { unit: string; itemName: string; movementId: string; locationId: string; locationName: string; quantityDelta: string; reason: string; occurredOn: string; createdAt: string }
 /** Scoped repeatable-read reconciliation; page output, never truncate authoritative calculations. */
 export interface ReconstructionRepository {
   reconstruct(scope: ProductionWriteScope, itemId: string, page: ProductionPageInput): Promise<ReconstructionView>;

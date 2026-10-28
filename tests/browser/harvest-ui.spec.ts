@@ -1,9 +1,10 @@
 import { test, expect } from "@playwright/test";
 import { z } from "zod";
 import { Client } from "pg";
+import {mkdirSync} from "node:fs";
 import { readProductionBrowserFixtures } from "../support/production-browser-fixtures";
 
-test("harvest entry preserves offline input, posts once and denies foreign farm access", async ({ page, context }) => {
+test("harvest entry preserves offline input, posts once and denies foreign farm access", async ({ page, context }, info) => {
   const f = readProductionBrowserFixtures(), farm = f.farms.a;
   await context.addCookies([{ name: "sb-127-auth-token", value: f.accounts.a.cookie, url: "http://127.0.0.1:3102", httpOnly: true, sameSite: "Lax" }]);
   const headers = { origin: "http://127.0.0.1:3102" }, id = () => crypto.randomUUID();
@@ -65,6 +66,17 @@ test("harvest entry preserves offline input, posts once and denies foreign farm 
     await page.getByLabel("I have reviewed this correction",{exact:true}).check();
     await page.getByRole("button",{name:"Confirm reversal"}).click();
     await expect(page.getByText(/: 650 KG$/)).toBeVisible();
+    await page.getByRole("link",{name:"Maize",exact:true}).click();
+    await expect(page.getByRole("status")).toHaveText("Display matches movement history.");
+    await expect(page.getByText("650 KG",{exact:true})).toBeVisible();
+    await page.getByRole("button",{name:"Recalculate stock"}).click();
+    await expect(page.getByRole("button",{name:"Recalculate stock"})).toBeEnabled();
+    await expect(page.getByRole("status")).toHaveText("Display matches movement history.");
+    await page.getByRole("link",{name:"View movement history"}).click();
+    await expect(page.getByRole("heading",{name:"Stock movement history"})).toBeVisible();
+    await expect(page.getByText("sale - -1600 KG",{exact:true})).toBeVisible();
+    expect((await context.request.get(`/api/v1/farms/${f.farms.a2}/inventory-items/${itemId}/history`)).status()).toBe(403);
+    mkdirSync(".cache/p05-visual",{recursive:true});await page.screenshot({path:`.cache/p05-visual/history-${info.project.name}.png`,fullPage:true});
     const db = new Client({ connectionString: process.env.TEST_DATABASE_URL }); await db.connect();
     try { expect((await db.query('SELECT count(*)::int AS n FROM "StockMovement" WHERE "harvestId"=$1', [harvestId])).rows[0].n).toBe(2); }
     finally { await db.end(); }

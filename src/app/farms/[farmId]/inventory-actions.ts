@@ -81,3 +81,10 @@ export async function saveStockReversal(farmId:string,targetType:string,targetId
   const {stockService}=await import("@/modules/harvest-inventory/infrastructure/services");await stockService().reverse(farmId,{...p.data,targetType,targetId});return "/farms/"+farmId+"/inventory";
  },"This record is already reversed, its stock has been used, or its payments must be reversed first. Check the history before retrying.");
 }
+
+export async function refreshStockReconstruction(farmId:string,itemId:string) {
+ return runServerCommand(async()=>{
+  const {reconstructionService}=await import("@/modules/harvest-inventory/infrastructure/services");await reconstructionService().reconstruct(farmId,itemId);
+  const path="/farms/"+farmId+"/inventory/items/"+itemId;const {revalidatePath}=await import("next/cache");revalidatePath(path);return path;
+ });
+}

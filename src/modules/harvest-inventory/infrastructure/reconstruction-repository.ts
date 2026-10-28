@@ -26,8 +26,8 @@ export function reconstructionRepository(db:PrismaClient):ReconstructionReposito
    const where=stockScope(scope);
    if(!await db.inventoryItem.findFirst({where:{...where,id:itemId},select:{id:true}}))throw new FoundationError("FORBIDDEN");
    const anchor=cursor?productionAfter(await db.stockMovement.findFirst({where:{...where,itemId,id:cursor}})):{};
-   const rows=await db.stockMovement.findMany({where:{...where,itemId,...anchor},include:{location:{select:{name:true}}},orderBy:[{createdAt:"desc"},{id:"desc"}],take:limit+1});
-   return {items:rows.slice(0,limit).map(r=>({movementId:r.id,locationId:r.locationId,locationName:r.location.name,quantityDelta:r.quantityDelta.toString(),reason:r.reason,occurredOn:r.occurredOn.toISOString().slice(0,10),createdAt:r.createdAt.toISOString()})),nextCursor:rows.length>limit?rows[limit-1].id:null};
+   const rows=await db.stockMovement.findMany({where:{...where,itemId,...anchor},include:{location:{select:{name:true}},item:{select:{name:true,unit:true}}},orderBy:[{createdAt:"desc"},{id:"desc"}],take:limit+1});
+   return {items:rows.slice(0,limit).map(r=>({unit:r.item.unit,itemName:r.item.name,movementId:r.id,locationId:r.locationId,locationName:r.location.name,quantityDelta:r.quantityDelta.toString(),reason:r.reason,occurredOn:r.occurredOn.toISOString().slice(0,10),createdAt:r.createdAt.toISOString()})),nextCursor:rows.length>limit?rows[limit-1].id:null};
   },
  };
 }
