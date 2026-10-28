@@ -1,16 +1,16 @@
 # Phase 05 Harvest Production and Inventory
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — T013 metadata/status scope and evidence-link relevance; historical and future-phase facts unchanged.
-- Implementation status: NOT STARTED — 0% (0/13 verified tasks).
-- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
-- Related phase/task IDs: Phase 05; MYF-P05-T001 through MYF-P05-T013; review session Phase01; Phase02 review session (MYF-P02-T001–T013).
-- Verified completed work: No tasks implemented or verified in this phase; status/provider applicability reviewed only.
-- Remaining work/blockers: All 13 tasks and their acceptance/exit gates pending; Phase01 completion and future phase authorization required.
-- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
+- Documentation review: REVIEWED - T001 requirements, dependencies and affected architecture/contracts.
+- Implementation status: PARTIALLY COMPLETE - 7.69% (1/13 verified tasks).
+- Last reviewed: 2026-10-29 (Africa/Nairobi).
+- Related phase/task IDs: MYF-P05-T001 through MYF-P05-T013; D-P05-001; Q12/Q13.
+- Verified completed work: T001 harvest domain/DTO/repository contract verified; 56 focused and 742 cumulative unit/component tests pass. Full AC001 pending.
+- Remaining work/blockers: T002 authorized persistence next; T003 UI and all later tasks pending. Q12/Q13 scope approved under D-P05-002/003; no schema applied.
+- Evidence/report links: [T001 evidence](../reports/phase-05-t001-2026-10-29.md); [Start plan](../reports/phase-05-start-2026-10-29.md); [Phase 4 closeout](../reports/phase-04-closeout-2026-10-26.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **NOT STARTED**. Date: 2026-10-08. This is a specification, not implementation approval. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **PARTIALLY COMPLETE - 7.69% (1/13)**. Date: 2026-10-29. Local start authorized by D-P05-001; Q12/Q13 scope approved under D-P05-002/003. T001 verified; T002 is next. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
@@ -22,7 +22,7 @@ Target users: Farmers/managers/stock operators. Expected outcomes: K's observabl
 
 Source: P0346–P0392 in [complete extract](../reports/source-extract.md). Examples are illustrative. Exclusions: later phase features and any application implementation during this assignment. Source 2,400/1,600/650/150 reconciliation and 2,400/1,000/200/50 ledger are different examples. Never merge them.
 
-Ambiguities: Q12 conversions/negative stock/valuation; Q13 flock-vs-stock overlap and sale posting. Resolve affected policy before dependent tasks; do not invent rules.
+Ambiguities: Q12 conversions/negative stock/valuation; Q13 flock-vs-stock overlap and sale posting. D-P05-002/003 approve initial units, no negative stock, storage/losses and single sale effects. Valuation remains deferred; dependent correction/linking contracts still require specification.
 
 | Requirement | Source | Capability |
 |---|---|---|
@@ -73,7 +73,7 @@ Offline: see [sync](../architecture/offline-sync-architecture.md); Phases 1–6 
 
 Harvest(id UUID,tenantId UUID,farmId UUID,cropCycleId UUID,plotId UUID,harvestDate date,quantity numeric(18,6),unit text,grade text?,storageLocationId UUID); ProductionEvent(id UUID,tenantId UUID,batchId UUID,type enum,quantity numeric,unit text,occurredOn date); InventoryItem(id UUID,tenantId UUID,farmId UUID,name text,baseUnit text,kind enum); StockMovement(id UUID,tenantId UUID,farmId UUID,itemId UUID,locationId UUID,quantityDelta numeric,reason enum,sourceId UUID?,transferId UUID?,occurredAt timestamptz); StorageLocation(id UUID,tenantId UUID,farmId UUID,name text); StockAdjustment(id UUID,movementId UUID,reason text,approvedBy UUID).
 
-Shared tenant-owned fields: id UUID, tenantId UUID, relevant farmId UUID, createdAt/updatedAt timestamptz, version integer >=1, createdBy UUID. Global catalogs, append histories and research evidence declare distinct ownership. Quantity uses numeric(18,6) plus unit; money numeric(20,4) plus currency pending precision approval. JSON evidence/contracts versioned and validated.
+Shared tenant-owned fields: id UUID, tenantId UUID, relevant farmId UUID, createdAt/updatedAt timestamptz, version integer >=1, createdBy UUID. Global catalogs, append histories and research evidence declare distinct ownership. Quantity uses numeric(18,6) plus unit; money numeric(20,4) plus currency under D-P04-002; no monetary inventory valuation yet. JSON evidence/contracts versioned and validated.
 
 Relationships/constraints: enforce parent/child tenant/farm consistency through composite keys/FKs where applicable plus server policy; unique membership/occurrence/command/provider keys; restrict history deletion. Corrections append reasoned records; balance projections are never authority.
 
@@ -89,7 +89,7 @@ Loading announced; recoverable errors retain input and safe retry. Empty states 
 
 ## H. Implementation Tasks
 
-Execute these small stages sequentially after authorization. Field/model/provider policies remain proposals until affected decisions are resolved. Each capability separates contract/domain work, authorized service/evidence work, and user-visible acceptance. All task IDs remain pending.
+Execute these small stages sequentially after authorization. Field/model/provider policies remain proposals until affected decisions are resolved. Each capability separates contract/domain work, authorized service/evidence work, and user-visible acceptance. T001 is verified; T002-T013 remain pending.
 
 ### MYF-P05-T001 — Specify and implement domain contract for MYF-P05-R001
 
@@ -241,7 +241,7 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 
 ## O. Completion Checklist
 
-- [ ] MYF-P05-T001 complete with evidence.
+- [x] MYF-P05-T001 complete with [evidence](../reports/phase-05-t001-2026-10-29.md).
 - [ ] MYF-P05-T002 complete with evidence.
 - [ ] MYF-P05-T003 complete with evidence.
 - [ ] MYF-P05-T004 complete with evidence.
@@ -258,3 +258,7 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 - [ ] Security/integrity audit, remediation and retest complete.
 - [ ] Applicable quality/E2E/integration/migration evidence recorded.
 - [ ] L gate approved; closeout/status updated from evidence.
+
+## T001 implemented subset - 2026-10-29
+
+Harvest domain and strict DTO/repository contracts are implemented without a migration. Gross kilograms and separate initial loss use exact six-decimal arithmetic; crop-cycle/plot/storage references must match the authorized farm. Closed historical references do not reopen production; harvest date cannot precede planting. Reuses existing UUID/date/farm/decimal helpers and adds no dependencies. T002 must prove authorization, atomic effects, replay and rollback in PostgreSQL; T003/full AC001 remain pending. [Evidence](../reports/phase-05-t001-2026-10-29.md).

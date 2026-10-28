@@ -6,7 +6,7 @@
 - Last reviewed: 2026-10-26 (Africa/Nairobi), Phase 4 T016 audit and closeout.
 - Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
-- Remaining work/blockers: Phase 4 COMPLETED - 100% (16/16), PASS WITH CONDITIONS - LOCAL VERIFICATION (owner accepted 2026-10-27, D-P04-012). T001-T016 and AC001-AC005 verified locally, including a clean clone against fresh PostgreSQL 17; conditions P4-C1 hosted CI, P4-C2 hosted application of the Phase 4 schema/policy, P4-C3/C4 report scale and export rate limits. Phase 5 is NOT STARTED and requires separate authorization. [Closeout](reports/phase-04-closeout-2026-10-26.md).
+- Remaining work/blockers: Phase 4 COMPLETED - 100% (16/16), PASS WITH CONDITIONS - LOCAL VERIFICATION (owner accepted 2026-10-27, D-P04-012). T001-T016 and AC001-AC005 verified locally, including a clean clone against fresh PostgreSQL 17; conditions P4-C1 hosted CI, P4-C2 hosted application of the Phase 4 schema/policy, P4-C3/C4 report scale and export rate limits. Phase 5 local start is authorized on 2026-10-29 (D-P05-001); T001 verified, 1/13 tasks (7.69%), Q12/Q13 scope approved under D-P05-002/003. [Plan](reports/phase-05-start-2026-10-29.md). [Closeout](reports/phase-04-closeout-2026-10-26.md).
 - Evidence/report links: [Phase02 closeout](reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](reports/phase-03-closeout-2026-10-25.md).
 <!-- MYFARM-STATUS-END -->
 
@@ -129,3 +129,7 @@ Phase 1 conditions C3 (migration order) and C5 (anonymous streamed redirect) are
 **Update 2026-10-10:** Phase 2 completion reconfirmed after the provisioning hardening was merged to `main` (`756f3c4`) and applied to hosted dev; P2-C2, P2-C6 and P2-C8 are resolved ([integration report §9](reports/phase-01-02-integration-2026-10-09.md#9-hosted-application--2026-10-10)). Phase 3 is authorized ([D-P03-001](DECISION-LOG.md#d-p03-001--phase-3-authorization-and-sequencing)) but **NOT STARTED — 0%**.
 
 The immediate path continues Phase 3 → 4 only after explicit owner authorization; nothing in this roadmap authorizes it.
+
+## Phase 5 start - 2026-10-29
+
+Local start authorized under D-P05-001. T001 harvest contract/domain is verified; 1/13 tasks (7.69%). Q12/Q13 scope approved under D-P05-002/003. Lint, typecheck, 742 unit/component tests, build and boundaries PASS. No schema or hosted change. T002 persistence is next. [T001 evidence](reports/phase-05-t001-2026-10-29.md). [Scope, reuse, verification plan and pending policies](reports/phase-05-start-2026-10-29.md). Historical checkpoints above remain historical.

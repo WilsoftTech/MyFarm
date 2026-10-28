@@ -71,3 +71,7 @@ A farm owns every accounting record. A SALE or PURCHASE is the single revenue/co
 ## T006–T015 accounting links and reports
 
 Records may link a plot, enterprise and season on their farm; a crop enterprise with a plot/season must match one of its crop cycles. Reports derive from recognition events only: enterprise gross margin = linked revenue − linked costs, the farm figure sums enterprises, unlinked amounts are shown apart (D-P04-008); the money summary answers spent, by category, revenue and the costliest enterprise with ties, per currency and basis (D-P04-010). [Evidence](../reports/phase-04-t006-t015-2026-10-26.md).
+
+## Phase 5 T001 harvest contract - 2026-10-29
+
+Strict harvest commands carry crop-cycle/crop/plot/storage references, date, gross kilograms, separate initial loss and optional grade. Exact numeric(18,6)-compatible strings and pure relationship rules are implemented under D-P05-002/003. Actor/tenant/farm and derived stored quantities are server-owned. This is a domain/DTO/repository contract only, without persisted Harvest/StorageLocation/StockMovement models or runtime authorization. T002 is next. [Evidence](../reports/phase-05-t001-2026-10-29.md).

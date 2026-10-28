@@ -372,3 +372,21 @@ APPROVED by the same owner instruction. T006–T016 are implemented together and
 ## D-P04-012 — Phase 4 closeout acceptance
 
 APPROVED, owner 2026-10-27 (Africa/Nairobi), selecting "Accept and commit (Recommended)" after reviewing the T016 verdict and conditions. Phase 4 is COMPLETED - 100% (16/16), PASS WITH CONDITIONS - LOCAL VERIFICATION under D-P04-001. Conditions: P4-C1 GitHub-hosted CI before any production release; P4-C2 hosted application of migration `202610250002_farm_accounting` and `farm-accounting-runtime.sql` with separate authorization before hosted use of the money screens; P4-C3 report projections/pagination for large histories (Phase 8); P4-C4 export rate limits before real farmer production data. T006–T016 are committed once, locally. This does not authorize a push, hosted changes, a production release or Phase 5. [Closeout](reports/phase-04-closeout-2026-10-26.md).
+
+
+## D-P05-001 - Phase 5 local start authorization
+
+AUTHORIZED by direct owner instruction 2026-10-29 (Africa/Nairobi): "resume the previus task and proceed with phase progress". Phase 4 is already accepted and locally committed at `b389090`; proceed with Phase 5 planning and sequential local implementation, starting T001. Q12/Q13 business-policy proposals remain pending owner answers; this instruction does not approve those proposals, extend the Phase 4 local-CI closure exception, or authorize pushes, hosted changes or deployment. No Phase 5 task is complete at this checkpoint. [Plan and pending decisions](reports/phase-05-start-2026-10-29.md).
+
+## D-P05-002 - Q12 quantities, storage and valuation
+
+APPROVED, owner 2026-10-29 (Africa/Nairobi), selecting the recommended rules for both quantity and harvest questions: exact decimal quantities up to six places, kilograms for crop harvests, whole birds/eggs, no bag conversion and no negative stock. Require a named same-farm storage location, optional free-text grade and loss separate from gross harvested quantity. Inventory monetary value remains unavailable until an approved Phase 8 costing policy. T001 uses numeric(18,6)-compatible strings, like existing crop areas, without creating a schema. Initial loss may be zero or the full gross harvest; later losses append events. This does not authorize hosted changes or a costing method.
+
+## D-P05-003 - Q13 single stock and accounting sale
+
+APPROVED, owner 2026-10-29, selecting "Approve this approach (Recommended)": a stock-linked sale uses one atomic command for its stock movement and Phase 4 sale; bird sales affect flock count once. Existing accounting-only sales remain unchanged unless explicitly linked. Dependent tasks must specify and test replay, reversal and linking behavior before implementation; T001 adds no sale posting or flock movement.
+
+
+## D-P05-004 - Complete Phase 5 and task commits
+
+AUTHORIZED by direct owner instruction 2026-10-29: complete T001-T013, commit every completed task, and push after the phase is complete. Commit the already verified T001 first, then continue sequentially. This authorizes the final push of phase commits, but not hosted migrations, deployment or production settings. The existing Phase 4 hosted-CI condition remains; Phase 5 closure must report its own actual verification and any unmet gates.
