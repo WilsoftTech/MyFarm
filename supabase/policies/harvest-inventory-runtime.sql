@@ -44,4 +44,22 @@ CREATE POLICY myfarm_server_create ON "ProductionEvent" FOR INSERT TO myfarm_run
  EXISTS (SELECT 1 FROM "FarmMember" fm JOIN "Membership" m ON m."userId"=fm."userId" AND m."organizationId"=fm."tenantId" JOIN "User" u ON u.id=fm."userId"
  WHERE fm."farmId"="ProductionEvent"."farmId" AND fm."tenantId"="ProductionEvent"."tenantId" AND fm."userId"="ProductionEvent"."createdBy" AND fm.status='ACTIVE' AND m.status='ACTIVE' AND m.role='FARMER' AND u.status='ACTIVE')
 );
+REVOKE ALL ON TABLE "StockOperation" FROM PUBLIC, anon, authenticated, myfarm_runtime;
+GRANT SELECT, INSERT ON TABLE "StockOperation" TO myfarm_runtime;
+DROP POLICY IF EXISTS myfarm_server_read ON "StockOperation";
+CREATE POLICY myfarm_server_read ON "StockOperation" FOR SELECT TO myfarm_runtime USING (true);
+DROP POLICY IF EXISTS myfarm_server_create ON "StockOperation";
+CREATE POLICY myfarm_server_create ON "StockOperation" FOR INSERT TO myfarm_runtime WITH CHECK (
+ EXISTS (SELECT 1 FROM "FarmMember" fm JOIN "Membership" m ON m."userId"=fm."userId" AND m."organizationId"=fm."tenantId" JOIN "User" u ON u.id=fm."userId"
+ WHERE fm."farmId"="StockOperation"."farmId" AND fm."tenantId"="StockOperation"."tenantId" AND fm."userId"="StockOperation"."createdBy" AND fm.status='ACTIVE' AND m.status='ACTIVE' AND m.role='FARMER' AND u.status='ACTIVE')
+);
+REVOKE ALL ON TABLE "StockAdjustment" FROM PUBLIC, anon, authenticated, myfarm_runtime;
+GRANT SELECT, INSERT ON TABLE "StockAdjustment" TO myfarm_runtime;
+DROP POLICY IF EXISTS myfarm_server_read ON "StockAdjustment";
+CREATE POLICY myfarm_server_read ON "StockAdjustment" FOR SELECT TO myfarm_runtime USING (true);
+DROP POLICY IF EXISTS myfarm_server_create ON "StockAdjustment";
+CREATE POLICY myfarm_server_create ON "StockAdjustment" FOR INSERT TO myfarm_runtime WITH CHECK (
+ EXISTS (SELECT 1 FROM "FarmMember" fm JOIN "Membership" m ON m."userId"=fm."userId" AND m."organizationId"=fm."tenantId" JOIN "User" u ON u.id=fm."userId"
+ WHERE fm."farmId"="StockAdjustment"."farmId" AND fm."tenantId"="StockAdjustment"."tenantId" AND fm."userId"="StockAdjustment"."createdBy" AND fm.status='ACTIVE' AND fm.role='OWNER' AND m.status='ACTIVE' AND m.role='FARMER' AND u.status='ACTIVE')
+);
 COMMIT;

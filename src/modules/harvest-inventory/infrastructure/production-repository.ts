@@ -6,6 +6,8 @@ import { requireProductionWriteAccess } from "@/modules/enterprises-seasons/infr
 import { createAccountingRecord } from "@/modules/farm-accounting/infrastructure/repository";
 import type { PoultryProductionRepository, ProductionEventView } from "../contracts/production";
 import { assertProductionQuantity, reconstructFlock } from "../domain/production";
+import { reconstructStock } from "../domain/stock";
+import { movementDelta } from "./stock-repository";
 import { commandHash, stockDate, stockScope } from "./harvest-repository";
 
 const eventView = (r: ProductionEvent): ProductionEventView => ({ eventId: r.id, batchId: r.batchId, type: r.type, quantity: r.quantity.toString(), unit: r.unit, occurredOn: r.occurredOn.toISOString().slice(0, 10), note: r.note, accountingRecordId: r.accountingRecordId });
@@ -61,6 +63,8 @@ export function poultryProductionRepository(db: PrismaClient): PoultryProduction
         const negative = command.type === "MORTALITY" || command.type === "BIRD_SALE";
         const balance = await tx.stockMovement.aggregate({ where: { ...where, itemId: item.id, locationId: location.id }, _sum: { quantityDelta: true } });
         if (negative && (balance._sum.quantityDelta?.lessThan(command.quantity) ?? true)) throw new FoundationError("CONFLICT");
+        const history = await tx.stockMovement.findMany({ where: { ...where, itemId: item.id } });
+        reconstructStock([...history.map(movementDelta), { itemId: item.id, locationId: location.id, occurredOn: command.occurredOn, quantityDelta: (negative ? "-" : "") + command.quantity }]);
         await tx.stockMovement.create({ data: { ...where, itemId: item.id, locationId: location.id, productionEventId: row.id, quantityDelta: (negative ? "-" : "") + command.quantity,
           reason: command.type, sourceKey: "production:" + row.id, occurredOn: row.occurredOn, createdBy: scope.actorId } });
       }

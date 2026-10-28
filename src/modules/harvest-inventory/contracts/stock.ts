@@ -25,9 +25,10 @@ export const reverseStockSchema = z.object({ requestId: idSchema, targetType: z.
 export type CreateItem = z.output<typeof createItemSchema>;
 export type StockOperation = z.output<typeof stockOperationSchema>;
 export type ReverseStock = z.output<typeof reverseStockSchema>;
-export interface StockItemView { itemId: string; name: string; unit: string; kind: string }
+export interface StockItemView { itemId: string; name: string; unit: string; kind: string; balances: { locationId: string; locationName: string; quantity: string }[] }
 export interface StockOperationView { operationId: string; type: string; itemId: string | null; quantity: string; unit: string; occurredOn: string; reason: string; accountingRecordId: string | null }
 export interface StockRepository {
+  operations(scope: import("@/modules/enterprises-seasons/domain/production").FarmScope, page: import("@/modules/enterprises-seasons/contracts/production").ProductionPageInput): Promise<import("@/modules/enterprises-seasons/contracts/production").ProductionPage<StockOperationView>>;
   createItem(scope: import("@/modules/enterprises-seasons/contracts/production").ProductionWriteScope, input: CreateItem): Promise<StockItemView>;
   items(scope: import("@/modules/enterprises-seasons/domain/production").FarmScope, page: import("@/modules/enterprises-seasons/contracts/production").ProductionPageInput): Promise<import("@/modules/enterprises-seasons/contracts/production").ProductionPage<StockItemView>>;
   post(scope: import("@/modules/enterprises-seasons/contracts/production").ProductionWriteScope, input: StockOperation): Promise<StockOperationView>;

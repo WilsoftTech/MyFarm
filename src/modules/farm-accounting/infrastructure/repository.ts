@@ -146,37 +146,7 @@ export function farmAccountingRepository(db: PrismaClient): FarmAccountingReposi
         if (!prior || prior.createdBy !== scope.actorId || (prior.recordId ?? prior.paymentId) !== command.recordId || priorType !== command.recordType || prior.reason !== command.reason) throw new FoundationError("CONFLICT");
         return { recordType: command.recordType, recordId: command.recordId, reversal: toReversal(prior) };
       }
-      const isPayment = command.recordType === "PAYMENT";
-      // Lock every obligation whose balance the reversal changes, in the same order as payments.
-      const lockIds = isPayment ? (await tx.paymentAllocation.findMany({ where: { ...where, paymentId: command.recordId }, select: { obligationId: true } })).map(a => a.obligationId) : [command.recordId];
-      await lockObligations(tx, lockIds);
-      await requireProductionWriteAccess(tx, scope);
-      let status: AccountingStatus, posted: AllocationRecord[] = [];
-      if (isPayment) {
-        const row = await payment(tx, scope, command.recordId);
-        if (!row) throw new FoundationError("FORBIDDEN");
-        status = row.status;
-      } else {
-        const row = await record(tx, scope, command.recordId);
-        if (!row || row.kind !== command.recordType) throw new FoundationError("FORBIDDEN");
-        status = row.status; posted = allocations(row);
-      }
-      if (!isPayment && await tx.productionEvent.findFirst({ where: { ...where, accountingRecordId: command.recordId } })) throw new FoundationError("CONFLICT");
-      assertReversal(scope, { ...where, recordType: command.recordType, recordId: command.recordId, status }, command.reason, posted);
-      try {
-        const reversal = await tx.accountingReversal.create({ data: {
-          id, ...where, recordId: isPayment ? null : command.recordId, paymentId: isPayment ? command.recordId : null, reason: command.reason, createdBy: scope.actorId,
-        } });
-        const data = { status: "REVERSED" as const, version: { increment: 1 } };
-        const target = { ...where, id: command.recordId, status: "POSTED" as const };
-        const updated = isPayment ? await tx.paymentRecord.updateMany({ where: target, data }) : await tx.accountingRecord.updateMany({ where: target, data });
-        if (updated.count !== 1) throw new FoundationError("CONFLICT");
-        return { recordType: command.recordType, recordId: command.recordId, reversal: toReversal(reversal) };
-      } catch (error) {
-        // The unique target index is the last word on a concurrent second reversal.
-        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") throw new FoundationError("CONFLICT");
-        throw error;
-      }
+      return reverseAccountingRecord(tx, scope, command, id);
     }, { isolationLevel: "ReadCommitted", timeout: 10_000 }),
   };
 }
@@ -214,4 +184,40 @@ export async function createAccountingRecord(tx: Prisma.TransactionClient, scope
         counterparty: command.counterparty, paymentMethodId: methodId, plotId: command.plotId, enterpriseId: command.enterpriseId, seasonId: command.seasonId, createdBy: scope.actorId,
       }, include: recordInclude });
       return recordView(row);
+}
+
+/** Caller owns the coordinated stock/finance receipt and transaction. Payments must be reversed first. */
+export async function reverseAccountingRecord(tx: Prisma.TransactionClient, scope: import("@/modules/enterprises-seasons/contracts/production").ProductionWriteScope, command: ReverseAccountingRecord, id: string, coordinated = false) {
+  const where = scoped(scope);
+      const isPayment = command.recordType === "PAYMENT";
+      // Lock every obligation whose balance the reversal changes, in the same order as payments.
+      const lockIds = isPayment ? (await tx.paymentAllocation.findMany({ where: { ...where, paymentId: command.recordId }, select: { obligationId: true } })).map(a => a.obligationId) : [command.recordId];
+      await lockObligations(tx, lockIds);
+      await requireProductionWriteAccess(tx, scope);
+      let status: AccountingStatus, posted: AllocationRecord[] = [];
+      if (isPayment) {
+        const row = await payment(tx, scope, command.recordId);
+        if (!row) throw new FoundationError("FORBIDDEN");
+        status = row.status;
+      } else {
+        const row = await record(tx, scope, command.recordId);
+        if (!row || row.kind !== command.recordType) throw new FoundationError("FORBIDDEN");
+        status = row.status; posted = allocations(row);
+      }
+      if (!coordinated && !isPayment && (await tx.productionEvent.findFirst({ where: { ...where, accountingRecordId: command.recordId } }) || await tx.stockOperation.findFirst({ where: { ...where, accountingRecordId: command.recordId } }))) throw new FoundationError("CONFLICT");
+      assertReversal(scope, { ...where, recordType: command.recordType, recordId: command.recordId, status }, command.reason, posted);
+      try {
+        const reversal = await tx.accountingReversal.create({ data: {
+          id, ...where, recordId: isPayment ? null : command.recordId, paymentId: isPayment ? command.recordId : null, reason: command.reason, createdBy: scope.actorId,
+        } });
+        const data = { status: "REVERSED" as const, version: { increment: 1 } };
+        const target = { ...where, id: command.recordId, status: "POSTED" as const };
+        const updated = isPayment ? await tx.paymentRecord.updateMany({ where: target, data }) : await tx.accountingRecord.updateMany({ where: target, data });
+        if (updated.count !== 1) throw new FoundationError("CONFLICT");
+        return { recordType: command.recordType, recordId: command.recordId, reversal: toReversal(reversal) };
+      } catch (error) {
+        // The unique target index is the last word on a concurrent second reversal.
+        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") throw new FoundationError("CONFLICT");
+        throw error;
+      }
 }

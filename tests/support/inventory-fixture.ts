@@ -35,7 +35,7 @@ export async function inventoryFixture() {
     harvestDate: "2026-10-01", quantity: "2400", unit: "KG", lossQuantity: "150" });
   return { owner, runtime, auth, harvest, scope, cycle, command, location, async cleanup() {
     // Only this fixture tenant on the explicit isolated database; reverse dependency order.
-    for (const table of ["StockMovement", "ProductionEvent", "Harvest", "InventoryItem", "StorageLocation", "AccountingReversal", "PaymentAllocation", "PaymentRecord", "AccountingRecord", "CropCycle", "PoultryBatch", "Enterprise", "Season", "Plot", "FarmMember", "Farm", "AuditEvent", "Farmer"]) {
+    for (const table of ["StockMovement", "StockAdjustment", "StockOperation", "ProductionEvent", "Harvest", "InventoryItem", "StorageLocation", "AccountingReversal", "PaymentAllocation", "PaymentRecord", "AccountingRecord", "CropCycle", "PoultryBatch", "Enterprise", "Season", "Plot", "FarmMember", "Farm", "AuditEvent", "Farmer"]) {
       await owner.$executeRawUnsafe('DELETE FROM "' + table + '" WHERE "tenantId" = $1::uuid', org.id);
     }
     await owner.membership.deleteMany({ where: { userId: user.id } });

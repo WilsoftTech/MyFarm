@@ -82,6 +82,9 @@ model User {
   inventoryItems InventoryItem[]
   stockMovements StockMovement[]
   productionEvents ProductionEvent[]
+  stockOperations StockOperation[]
+  stockAdjustments StockAdjustment[] @relation("AdjustmentCreator")
+  approvedStockAdjustments StockAdjustment[] @relation("AdjustmentApprover")
 }
 model Organization {
   id String @id @default(uuid()) @db.Uuid
@@ -156,6 +159,8 @@ model Farm {
   inventoryItems InventoryItem[]
   stockMovements StockMovement[]
   productionEvents ProductionEvent[]
+  stockOperations StockOperation[]
+  stockAdjustments StockAdjustment[]
 }
 model Plot {
   id String @id @db.Uuid
@@ -426,6 +431,7 @@ model AccountingRecord {
   @@index([seasonId])
   @@index([createdBy])
   productionEvent ProductionEvent?
+  stockOperation StockOperation?
 }
 // A payment only settles sale/purchase obligations; its allocations share its status.
 model PaymentRecord {
@@ -505,6 +511,8 @@ model StorageLocation {
   @@index([tenantId, farmId, createdAt, id])
   @@index([createdBy])
   productionEvents ProductionEvent[]
+  outgoingOperations StockOperation[] @relation("OperationSource")
+  incomingOperations StockOperation[] @relation("OperationDestination")
 }
 model InventoryItem {
   id String @id @default(uuid()) @db.Uuid
@@ -529,6 +537,9 @@ model InventoryItem {
   batchId String? @db.Uuid
   batch PoultryBatch? @relation(fields: [batchId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
   @@unique([batchId, kind])
+  stockOperations StockOperation[]
+  nameKey String?
+  @@unique([farmId, tenantId, nameKey, unit])
 }
 model Harvest {
   id String @id @default(uuid()) @db.Uuid
@@ -592,6 +603,13 @@ model StockMovement {
   openingBatchId String? @unique @db.Uuid
   openingBatch PoultryBatch? @relation(fields: [openingBatchId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
   @@index([productionEventId, farmId, tenantId])
+  stockOperationId String? @db.Uuid
+  operation StockOperation? @relation(fields: [stockOperationId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  reversalOfId String? @unique @db.Uuid
+  reversalOf StockMovement? @relation("MovementReversal", fields: [reversalOfId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  reversedBy StockMovement[] @relation("MovementReversal")
+  @@unique([id, farmId, tenantId])
+  @@index([stockOperationId, farmId, tenantId])
 }
 
 model ProductionEvent {
@@ -621,4 +639,61 @@ model ProductionEvent {
   @@index([tenantId, farmId, batchId, occurredOn, createdAt, id])
   @@index([locationId, farmId, tenantId])
   @@index([createdBy])
+}
+
+model StockOperation {
+  id String @id @default(uuid()) @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  type String @db.VarChar(30)
+  itemId String? @db.Uuid
+  locationId String? @db.Uuid
+  destinationLocationId String? @db.Uuid
+  quantity Decimal @db.Decimal(18,6)
+  unit String @db.VarChar(20)
+  occurredOn DateTime @db.Date
+  direction String? @db.VarChar(10)
+  reason String @db.VarChar(500)
+  targetType String? @db.VarChar(20)
+  targetId String? @db.Uuid
+  reversalKey String? @unique @db.VarChar(80)
+  accountingRecordId String? @unique @db.Uuid
+  requestHash String @db.VarChar(64)
+  createdBy String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  version Int @default(1)
+  farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  item InventoryItem? @relation(fields: [itemId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  location StorageLocation? @relation("OperationSource", fields: [locationId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  destination StorageLocation? @relation("OperationDestination", fields: [destinationLocationId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  accountingRecord AccountingRecord? @relation(fields: [accountingRecordId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  movements StockMovement[]
+  adjustment StockAdjustment?
+  @@unique([id, farmId, tenantId])
+  @@unique([accountingRecordId, farmId, tenantId])
+  @@index([tenantId, farmId, createdAt, id])
+  @@index([itemId, farmId, tenantId])
+  @@index([locationId, farmId, tenantId])
+  @@index([destinationLocationId, farmId, tenantId])
+  @@index([createdBy])
+}
+model StockAdjustment {
+  id String @id @default(uuid()) @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  operationId String @unique @db.Uuid
+  @@unique([operationId, farmId, tenantId])
+  reason String @db.VarChar(500)
+  approvedBy String @db.Uuid
+  createdBy String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  operation StockOperation @relation(fields: [operationId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  creator User @relation("AdjustmentCreator", fields: [createdBy], references: [id], onDelete: Restrict)
+  approver User @relation("AdjustmentApprover", fields: [approvedBy], references: [id], onDelete: Restrict)
+  @@index([tenantId, farmId, createdAt, id])
+  @@index([operationId, farmId, tenantId])
+  @@index([createdBy])
+  @@index([approvedBy])
 }
