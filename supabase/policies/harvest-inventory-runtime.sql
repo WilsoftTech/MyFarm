@@ -35,4 +35,13 @@ CREATE POLICY myfarm_server_create ON "StockMovement" FOR INSERT TO myfarm_runti
  EXISTS (SELECT 1 FROM "FarmMember" fm JOIN "Membership" m ON m."userId"=fm."userId" AND m."organizationId"=fm."tenantId" JOIN "User" u ON u.id=fm."userId"
  WHERE fm."farmId"="StockMovement"."farmId" AND fm."tenantId"="StockMovement"."tenantId" AND fm."userId"="StockMovement"."createdBy" AND fm.status='ACTIVE' AND m.status='ACTIVE' AND m.role='FARMER' AND u.status='ACTIVE')
 );
+REVOKE ALL ON TABLE "ProductionEvent" FROM PUBLIC, anon, authenticated, myfarm_runtime;
+GRANT SELECT, INSERT ON TABLE "ProductionEvent" TO myfarm_runtime;
+DROP POLICY IF EXISTS myfarm_server_read ON "ProductionEvent";
+CREATE POLICY myfarm_server_read ON "ProductionEvent" FOR SELECT TO myfarm_runtime USING (true);
+DROP POLICY IF EXISTS myfarm_server_create ON "ProductionEvent";
+CREATE POLICY myfarm_server_create ON "ProductionEvent" FOR INSERT TO myfarm_runtime WITH CHECK (
+ EXISTS (SELECT 1 FROM "FarmMember" fm JOIN "Membership" m ON m."userId"=fm."userId" AND m."organizationId"=fm."tenantId" JOIN "User" u ON u.id=fm."userId"
+ WHERE fm."farmId"="ProductionEvent"."farmId" AND fm."tenantId"="ProductionEvent"."tenantId" AND fm."userId"="ProductionEvent"."createdBy" AND fm.status='ACTIVE' AND m.status='ACTIVE' AND m.role='FARMER' AND u.status='ACTIVE')
+);
 COMMIT;

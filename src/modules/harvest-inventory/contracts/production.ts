@@ -22,3 +22,10 @@ export const productionEventSchema = z.object({
   if ((value.type === "BIRD_SALE") !== Boolean(value.sale)) ctx.addIssue({ code: "custom", message: "A bird sale needs its sale amount and category; other events cannot post a sale.", path: ["sale"] });
 });
 export type RecordProductionEvent = z.output<typeof productionEventSchema>;
+
+export interface ProductionEventView { eventId: string; batchId: string; type: string; quantity: string; unit: string; occurredOn: string; note: string | null; accountingRecordId: string | null }
+export interface FlockSummary { batchId: string; startingQuantity: number; currentQuantity: number; asOf: string; events: ProductionEventView[]; historyTruncated: boolean }
+export interface PoultryProductionRepository {
+  record(scope: import("@/modules/enterprises-seasons/contracts/production").ProductionWriteScope, input: RecordProductionEvent): Promise<ProductionEventView>;
+  summary(scope: import("@/modules/enterprises-seasons/domain/production").FarmScope, batchId: string): Promise<FlockSummary>;
+}

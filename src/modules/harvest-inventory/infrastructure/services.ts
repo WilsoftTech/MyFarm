@@ -12,3 +12,11 @@ export function harvestService() {
     recordHarvest: (...args) => harvestRepository(database()).recordHarvest(...args),
   });
 }
+
+import { PoultryProductionService } from "../application/production";
+import { poultryProductionRepository } from "./production-repository";
+export function poultryProductionService() {
+ return new PoultryProductionService(authorizationService(), { farmScopeForMember: input => registryRepository(database()).farmScopeForMember(input) }, {
+  record: (...args) => poultryProductionRepository(database()).record(...args), summary: (...args) => poultryProductionRepository(database()).summary(...args),
+ });
+}

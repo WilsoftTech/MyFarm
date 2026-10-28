@@ -104,36 +104,7 @@ export function farmAccountingRepository(db: PrismaClient): FarmAccountingReposi
       const replay = await claimCommandReceipt(tx, { actorId: scope.actorId, tenantId: scope.tenantId, requestId: command.requestId, action: "ACCOUNTING_" + kind + "_RECORDED", targetId: id });
       await requireProductionWriteAccess(tx, scope);
       if (replay) return assertRecordReplay(await record(tx, scope, replay), kind, command, scope.actorId);
-      const where = scoped(scope);
-      const methodId = "paymentMethodId" in command ? command.paymentMethodId : undefined;
-      const [category, method, plot, enterprise, season] = await Promise.all([
-        tx.transactionCategory.findUnique({ where: { id: command.categoryId } }),
-        methodId ? tx.paymentMethod.findUnique({ where: { id: methodId } }) : null,
-        command.plotId ? tx.plot.findFirst({ where: { ...where, id: command.plotId } }) : null,
-        command.enterpriseId ? tx.enterprise.findFirst({ where: { ...where, id: command.enterpriseId } }) : null,
-        command.seasonId ? tx.season.findFirst({ where: { ...where, id: command.seasonId } }) : null,
-      ]);
-      if (!category || (methodId && !method)) throw new FoundationError("INVALID_INPUT");
-      // Another farm's (or an unknown) link is indistinguishable from a missing one: FORBIDDEN.
-      if ((command.plotId && !plot) || (command.enterpriseId && !enterprise) || (command.seasonId && !season)) throw new FoundationError("FORBIDDEN");
-      // D-P04-007: a crop enterprise linked with a plot and/or season must match one of its cycles (any status).
-      const cropCycles = enterprise && (command.plotId || command.seasonId) ? (await tx.cropCycle.findMany({
-        where: { ...where, enterpriseId: enterprise.id, ...(command.plotId ? { plotId: command.plotId } : {}), ...(command.seasonId ? { seasonId: command.seasonId } : {}) },
-        select: { id: true, tenantId: true, farmId: true, enterpriseId: true, seasonId: true, plotId: true }, take: 1,
-      })).map(cycle => ({ cycleId: cycle.id, tenantId: cycle.tenantId, farmId: cycle.farmId, enterpriseId: cycle.enterpriseId, seasonId: cycle.seasonId, plotId: cycle.plotId })) : [];
-      assertAccountingRecord(scope, { ...command, kind, paymentMethodId: methodId }, {
-        category: { categoryId: category.id, kind: category.kind, active: category.active },
-        paymentMethod: method ? { paymentMethodId: method.id, active: method.active } : undefined,
-        plot: plot ? { ...where, plotId: plot.id } : undefined,
-        enterprise: enterprise ? { ...where, enterpriseId: enterprise.id, type: enterprise.type, status: enterprise.status } : undefined,
-        season: season ? { ...where, seasonId: season.id, status: season.status } : undefined,
-        cropCycles,
-      });
-      const row = await tx.accountingRecord.create({ data: {
-        id, ...where, kind, categoryId: category.id, categoryName: category.name, amount: command.amount, currency: command.currency, occurredOn: date(command.occurredOn),
-        counterparty: command.counterparty, paymentMethodId: methodId, plotId: command.plotId, enterpriseId: command.enterpriseId, seasonId: command.seasonId, createdBy: scope.actorId,
-      }, include: recordInclude });
-      return recordView(row);
+      return createAccountingRecord(tx, scope, kind, command, id);
     }, { isolationLevel: "ReadCommitted", timeout: 10_000 }),
 
     recordPayment: (scope, command) => db.$transaction(async tx => {
@@ -190,6 +161,7 @@ export function farmAccountingRepository(db: PrismaClient): FarmAccountingReposi
         if (!row || row.kind !== command.recordType) throw new FoundationError("FORBIDDEN");
         status = row.status; posted = allocations(row);
       }
+      if (!isPayment && await tx.productionEvent.findFirst({ where: { ...where, accountingRecordId: command.recordId } })) throw new FoundationError("CONFLICT");
       assertReversal(scope, { ...where, recordType: command.recordType, recordId: command.recordId, status }, command.reason, posted);
       try {
         const reversal = await tx.accountingReversal.create({ data: {
@@ -207,4 +179,39 @@ export function farmAccountingRepository(db: PrismaClient): FarmAccountingReposi
       }
     }, { isolationLevel: "ReadCommitted", timeout: 10_000 }),
   };
+}
+
+/** Shared transaction writer for single stock/financial source events. Caller owns receipt and commit. */
+export async function createAccountingRecord(tx: Prisma.TransactionClient, scope: import("@/modules/enterprises-seasons/contracts/production").ProductionWriteScope, kind: AccountingRecordKind, command: RecordExpense | RecordSale, id: string) {
+  await requireProductionWriteAccess(tx, scope);
+      const where = scoped(scope);
+      const methodId = "paymentMethodId" in command ? command.paymentMethodId : undefined;
+      const [category, method, plot, enterprise, season] = await Promise.all([
+        tx.transactionCategory.findUnique({ where: { id: command.categoryId } }),
+        methodId ? tx.paymentMethod.findUnique({ where: { id: methodId } }) : null,
+        command.plotId ? tx.plot.findFirst({ where: { ...where, id: command.plotId } }) : null,
+        command.enterpriseId ? tx.enterprise.findFirst({ where: { ...where, id: command.enterpriseId } }) : null,
+        command.seasonId ? tx.season.findFirst({ where: { ...where, id: command.seasonId } }) : null,
+      ]);
+      if (!category || (methodId && !method)) throw new FoundationError("INVALID_INPUT");
+      // Another farm's (or an unknown) link is indistinguishable from a missing one: FORBIDDEN.
+      if ((command.plotId && !plot) || (command.enterpriseId && !enterprise) || (command.seasonId && !season)) throw new FoundationError("FORBIDDEN");
+      // D-P04-007: a crop enterprise linked with a plot and/or season must match one of its cycles (any status).
+      const cropCycles = enterprise && (command.plotId || command.seasonId) ? (await tx.cropCycle.findMany({
+        where: { ...where, enterpriseId: enterprise.id, ...(command.plotId ? { plotId: command.plotId } : {}), ...(command.seasonId ? { seasonId: command.seasonId } : {}) },
+        select: { id: true, tenantId: true, farmId: true, enterpriseId: true, seasonId: true, plotId: true }, take: 1,
+      })).map(cycle => ({ cycleId: cycle.id, tenantId: cycle.tenantId, farmId: cycle.farmId, enterpriseId: cycle.enterpriseId, seasonId: cycle.seasonId, plotId: cycle.plotId })) : [];
+      assertAccountingRecord(scope, { ...command, kind, paymentMethodId: methodId }, {
+        category: { categoryId: category.id, kind: category.kind, active: category.active },
+        paymentMethod: method ? { paymentMethodId: method.id, active: method.active } : undefined,
+        plot: plot ? { ...where, plotId: plot.id } : undefined,
+        enterprise: enterprise ? { ...where, enterpriseId: enterprise.id, type: enterprise.type, status: enterprise.status } : undefined,
+        season: season ? { ...where, seasonId: season.id, status: season.status } : undefined,
+        cropCycles,
+      });
+      const row = await tx.accountingRecord.create({ data: {
+        id, ...where, kind, categoryId: category.id, categoryName: category.name, amount: command.amount, currency: command.currency, occurredOn: date(command.occurredOn),
+        counterparty: command.counterparty, paymentMethodId: methodId, plotId: command.plotId, enterpriseId: command.enterpriseId, seasonId: command.seasonId, createdBy: scope.actorId,
+      }, include: recordInclude });
+      return recordView(row);
 }
