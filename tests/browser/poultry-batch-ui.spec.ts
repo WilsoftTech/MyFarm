@@ -64,7 +64,7 @@ test("empty/setup states → batch with whole count and provenance → separate 
   await save(page);
   await expect(page.getByRole("heading", { name: "Batch #004" })).toBeVisible();
   await expect(page.getByText("1,200 birds", { exact: true }).first()).toBeVisible();
-  await expect(page.getByText(/This is the starting number\. Purchases, deaths and sales cannot be recorded yet/)).toBeVisible();
+  await expect(page.getByText(/Starting number; no production stock movements have been recorded yet/)).toBeVisible();
   await expect(page.getByRole("link", { name: "Layers", exact: true })).toHaveAttribute("href", `/farms/${farm}/enterprises/${parents.enterpriseId}`);
   await expect(page.getByText("Eggs (layers)", { exact: true })).toBeVisible(); await expect(page.getByText("Kuroiler", { exact: true })).toBeVisible();
   await page.screenshot({ path: `.cache/t009-visual/poultry-detail-${info.project.name}.png`, fullPage: true });

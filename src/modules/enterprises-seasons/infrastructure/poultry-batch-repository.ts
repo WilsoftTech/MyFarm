@@ -16,6 +16,17 @@ const view = (row: PoultryBatch): PoultryBatchView => ({
   ...currentQuantity(row.startingQuantity), acquisitionDate: row.acquisitionDate.toISOString().slice(0, 10), purpose: row.purpose,
   status: row.status, version: row.version, createdBy: row.createdBy, createdAt: row.createdAt.toISOString(), updatedAt: row.updatedAt.toISOString(),
 });
+async function currentViews(db: Reader, scope: FarmScope, rows: PoultryBatch[]): Promise<PoultryBatchView[]> {
+  const items = await db.inventoryItem.findMany({ where: { ...scoped(scope), kind: "BIRD", batchId: { in: rows.map(r => r.id) } }, select: { id: true, batchId: true } });
+  const sums = await db.stockMovement.groupBy({ by: ["itemId"], where: { ...scoped(scope), itemId: { in: items.map(r => r.id) } }, _sum: { quantityDelta: true } });
+  return rows.map(r => {
+    const item = items.find(i => i.batchId === r.id);
+    if (!item) return view(r);
+    const total = Number(sums.find(s => s.itemId === item.id)?._sum.quantityDelta?.toString() ?? "0");
+    if (!Number.isInteger(total) || total < 0 || total > 2_147_483_647) throw new FoundationError("CONFLICT");
+    return { ...view(r), currentQuantity: total, currentQuantitySource: "PRODUCTION_LEDGER" };
+  });
+}
 function assertReplay(row: PoultryBatch | null, command: StartPoultryBatch, actorId: string): PoultryBatchView {
   if (!row || row.createdBy !== actorId) throw new FoundationError("CONFLICT");
   const result = view(row);
@@ -33,11 +44,11 @@ export function poultryBatchRepository(db: PrismaClient): PoultryBatchRepository
       const items = rows.slice(0, limit).map(row => ({ animalTypeId: row.id, name: row.name }));
       return { items, nextCursor: rows.length > limit ? items[items.length - 1].animalTypeId : null };
     },
-    async poultryBatch(scope, id) { const row = await batch(db, scope, id); return row ? view(row) : null; },
+    async poultryBatch(scope, id) { const row = await batch(db, scope, id); return row ? (await currentViews(db, scope, [row]))[0] : null; },
     async poultryBatches(scope, { cursor, limit }) {
       const anchor = cursor ? productionAfter(await batch(db, scope, cursor)) : {};
       const rows = await db.poultryBatch.findMany({ where: { ...scoped(scope), ...anchor }, orderBy: [{ createdAt: "desc" }, { id: "desc" }], take: limit + 1 });
-      const items = rows.slice(0, limit).map(view);
+      const items = await currentViews(db, scope, rows.slice(0, limit));
       return { items, nextCursor: rows.length > limit ? items[items.length - 1].batchId : null };
     },
     startPoultryBatch: (scope, command) => db.$transaction(async tx => {

@@ -12,6 +12,7 @@ export default async function PoultryBatchPage({ params, searchParams }: { param
   const enterprise = await loadPage(() => productionService().enterprise(farmId, row.enterpriseId));
   return <ProductionShell farm={farm} active="poultry-batches" title={row.batchLabel}>
     {(await searchParams).saved === "1" && <p role="status" className="mb-6 rounded-xl bg-muted p-4">Poultry batch saved.</p>}
+    <Link className="inline-block min-h-12 py-3 underline" href={"/farms/" + farmId + "/poultry-production/" + batchId}>Production and flock history</Link>
     <dl className="grid gap-5 rounded-2xl border border-border bg-white p-6 sm:grid-cols-2">
       <div className="sm:col-span-2"><dt className="text-sm text-foreground/70">Current number of birds</dt><dd className="mt-1 text-2xl font-semibold">{birdCount(row.currentQuantity)}</dd><dd className="mt-1 text-sm leading-6 text-foreground/75">{currentQuantitySourceLabels[row.currentQuantitySource]}</dd></div>
       <div><dt className="text-sm text-foreground/70">Starting number of birds</dt><dd className="mt-1 font-semibold">{birdCount(row.startingQuantity)}</dd></div>

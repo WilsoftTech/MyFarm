@@ -6,7 +6,7 @@ export type PoultryPurpose = typeof POULTRY_PURPOSES[number];
 /** PostgreSQL integer upper bound; bird counts are whole numbers (D-P03-003). */
 export const MAX_BIRD_COUNT = 2_147_483_647;
 /** Until Phase 5 flock movements exist, the current count is the recorded starting count. */
-export const CURRENT_QUANTITY_SOURCES = ["STARTING_COUNT"] as const;
+export const CURRENT_QUANTITY_SOURCES = ["STARTING_COUNT", "PRODUCTION_LEDGER"] as const;
 export type CurrentQuantitySource = typeof CURRENT_QUANTITY_SOURCES[number];
 
 export interface PoultryBatchFields extends PoultryBatchLinks {

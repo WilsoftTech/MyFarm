@@ -390,3 +390,8 @@ APPROVED, owner 2026-10-29, selecting "Approve this approach (Recommended)": a s
 ## D-P05-004 - Complete Phase 5 and task commits
 
 AUTHORIZED by direct owner instruction 2026-10-29: complete T001-T013, commit every completed task, and push after the phase is complete. Commit the already verified T001 first, then continue sequentially. This authorizes the final push of phase commits, but not hosted migrations, deployment or production settings. The existing Phase 4 hosted-CI condition remains; Phase 5 closure must report its own actual verification and any unmet gates.
+
+
+## D-P05-005 - Hosted CI required before closure
+
+Owner decision 2026-10-29: "Require hosted CI before Phase 5 closes". No Phase 5 local-CI substitution is approved. After the dependency was explained, the owner selected "Allow the verification push after local audit (Recommended)": push after T001-T012 and the local T013 audit pass, then close Phase 5 only after hosted CI passes. This supersedes D-P05-004 push timing only. Failed or unavailable hosted CI keeps T013/phase closure incomplete. No deployment or hosted database mutation is authorized.

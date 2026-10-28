@@ -2,7 +2,7 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - T001 requirements, dependencies and affected architecture/contracts.
-- Implementation status: PARTIALLY COMPLETE - 38.46% (5/13 verified tasks).
+- Implementation status: PARTIALLY COMPLETE - 46.15% (6/13 verified tasks).
 - Last reviewed: 2026-10-29 (Africa/Nairobi).
 - Related phase/task IDs: MYF-P05-T001 through MYF-P05-T013; D-P05-001; Q12/Q13.
 - Verified completed work: T001 harvest domain/DTO/repository contract verified; 56 focused and 742 cumulative unit/component tests pass. Full AC001 pending.
@@ -10,7 +10,7 @@
 - Evidence/report links: [T001 evidence](../reports/phase-05-t001-2026-10-29.md); [Start plan](../reports/phase-05-start-2026-10-29.md); [Phase 4 closeout](../reports/phase-04-closeout-2026-10-26.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **PARTIALLY COMPLETE - 38.46% (5/13 verified tasks)**. Date: 2026-10-29. Local start authorized by D-P05-001; Q12/Q13 scope approved under D-P05-002/003. T001 verified; T002 is next. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **PARTIALLY COMPLETE - 46.15% (6/13 verified tasks)**. Date: 2026-10-29. Local start authorized by D-P05-001; Q12/Q13 scope approved under D-P05-002/003. T001 verified; T002 is next. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
@@ -246,7 +246,7 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 - [x] MYF-P05-T003 complete with [evidence](../reports/phase-05-t003-2026-10-29.md).
 - [x] MYF-P05-T004 complete with [evidence](../reports/phase-05-t004-2026-10-29.md).
 - [x] MYF-P05-T005 complete with [evidence](../reports/phase-05-t005-2026-10-29.md).
-- [ ] MYF-P05-T006 complete with evidence.
+- [x] MYF-P05-T006 complete with [evidence](../reports/phase-05-t006-2026-10-29.md).
 - [ ] MYF-P05-T007 complete with evidence.
 - [ ] MYF-P05-T008 complete with evidence.
 - [ ] MYF-P05-T009 complete with evidence.
@@ -278,3 +278,7 @@ Poultry event and flock domain contract. PASS: 8 focused domain tests and lint. 
 ### T005 checkpoint
 
 Authorized poultry events and atomic bird sales. PASS: lint and 27 focused poultry/accounting PostgreSQL tests. Additive migration 202610290003 applied only to isolated PostgreSQL 17. Batch locks serialize mortality and identical retries; opening birds enter stock once, eggs are separate items, feed/medication events do not decrement birds. Bird sale plus stock effect, audit and receipt commit atomically via the existing accounting writer. Independent accounting reversal of a stock-linked bird sale is blocked pending coordinated reversal. Failed category validation rolls back all effects. Existing accounting tests remain green. Full UI/AC002 remains T006. [Report](../reports/phase-05-t005-2026-10-29.md).
+
+### T006 checkpoint
+
+Poultry production screens and reconstructed batch counts. PASS: lint, typecheck and production build; 4 signed-in desktop/mobile harvest/poultry browser tests. AC002 source journey yields 105 birds with one bird sale. Existing batch list/detail APIs now derive counts in bounded bulk queries from all bird stock movements, with explicit source labels. No schema change. Reuses paged choices, RecordForm and offline/error/retry feedback. Browser runners complete successfully outside the Windows sandbox; the earlier sandbox runs hung during process teardown despite passing assertions. [Report](../reports/phase-05-t006-2026-10-29.md).

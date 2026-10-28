@@ -1,6 +1,6 @@
 "use server";
 import { harvestService } from "@/modules/harvest-inventory/infrastructure/services";
-import { cropCycleService } from "@/modules/enterprises-seasons/infrastructure/services";
+import { cropCycleService, poultryBatchService } from "@/modules/enterprises-seasons/infrastructure/services";
 import { runServerCommand } from "@/modules/engineering-foundation/infrastructure/server-command";
 import { FoundationError } from "@/modules/engineering-foundation/domain/errors";
 import type { ChoicePage } from "@/components/production/choice-types";
@@ -14,6 +14,15 @@ export async function inventoryChoices(farmId: string, kind: string, cursor?: st
   if (kind === "locations") {
     const page = await harvestService().locations(farmId, input);
     return { items: page.items.map(r => ({ id: r.storageLocationId, label: r.name })), nextCursor: page.nextCursor };
+  }
+  if (kind === "batches") {
+    const p = await poultryBatchService().list(farmId, input);
+    return { items: p.items.map(r => ({ id: r.batchId, label: r.batchLabel })), nextCursor: p.nextCursor };
+  }
+  if (kind === "revenue-categories") {
+    const { farmAccountingService } = await import("@/modules/farm-accounting/infrastructure/services");
+    const p = await farmAccountingService().categories(farmId, { ...input, kind: "REVENUE" });
+    return { items: p.items.map(r => ({ id: r.categoryId, label: r.name })), nextCursor: p.nextCursor };
   }
   throw new FoundationError("INVALID_INPUT");
 }
@@ -34,4 +43,17 @@ export async function saveHarvest(farmId: string, input: unknown) {
 }
 export async function saveStorage(farmId: string, input: unknown) {
   return runServerCommand(async () => { await harvestService().createLocation(farmId, input); return "/farms/" + farmId + "/storage-locations"; }, "A store with this name already exists on this farm.");
+}
+
+export async function savePoultryEvent(farmId: string, input: unknown) {
+ return runServerCommand(async () => {
+  const { z } = await import("zod");
+  const parsed = z.object({ requestId:z.string(), batchId:z.string(), locationId:z.string(),type:z.string(),quantity:z.string(),unit:z.string(),occurredOn:z.string(),note:z.string().optional(),categoryId:z.string().optional(),amount:z.string().optional(),currency:z.string().optional() }).strict().safeParse(input);
+  if (!parsed.success) throw new FoundationError("INVALID_INPUT");
+  const { categoryId,amount,currency,...fields } = parsed.data;
+  if (fields.type !== "BIRD_SALE" && (categoryId || amount || currency)) throw new FoundationError("INVALID_INPUT");
+  const { poultryProductionService } = await import("@/modules/harvest-inventory/infrastructure/services");
+  await poultryProductionService().record(farmId, { ...fields, ...(fields.type === "BIRD_SALE" ? {sale:{categoryId,amount,currency}} : {}) });
+  return "/farms/" + farmId + "/poultry-production/" + fields.batchId;
+ }, "Not enough birds at this location, or the request conflicts. Reload and check the flock.", "Check the event, date, quantity and unit. Bird sales also need category, amount and currency.");
 }

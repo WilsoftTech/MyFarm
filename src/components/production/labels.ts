@@ -9,7 +9,8 @@ export const poultryPurposeLabels: Record<PoultryPurpose, string> = {
 };
 /** How the shown current count was derived; Phase 5 flock movements add sources. */
 export const currentQuantitySourceLabels: Record<CurrentQuantitySource, string> = {
-  STARTING_COUNT: "This is the starting number. Purchases, deaths and sales cannot be recorded yet, so it does not change.",
+  PRODUCTION_LEDGER: "Reconstructed from opening birds and all stock movements.",
+  STARTING_COUNT: "Starting number; no production stock movements have been recorded yet.",
 };
 const birds = new Intl.NumberFormat("en");
 export function birdCount(count: number): string { return birds.format(count) + (count === 1 ? " bird" : " birds"); }
