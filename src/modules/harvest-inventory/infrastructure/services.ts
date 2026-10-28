@@ -28,3 +28,11 @@ export function stockService() {
   operation:(...args)=>stockRepository(database()).operation(...args),operations:(...args)=>stockRepository(database()).operations(...args),items:(...args)=>stockRepository(database()).items(...args),createItem:(...args)=>stockRepository(database()).createItem(...args),post:(...args)=>stockRepository(database()).post(...args),reverse:(...args)=>stockRepository(database()).reverse(...args),
  });
 }
+
+import { ReconstructionService } from "../application/reconstruction";
+import { reconstructionRepository } from "./reconstruction-repository";
+export function reconstructionService() {
+ return new ReconstructionService(authorizationService(), { farmScopeForMember:input=>registryRepository(database()).farmScopeForMember(input) }, {
+  reconstruct:(...args)=>reconstructionRepository(database()).reconstruct(...args),history:(...args)=>reconstructionRepository(database()).history(...args),
+ });
+}
