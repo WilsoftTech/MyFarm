@@ -2,10 +2,10 @@ import { test, expect } from "@playwright/test";
 import { z } from "zod";
 import { Client } from "pg";
 import {mkdirSync} from "node:fs";
-import { readProductionBrowserFixtures } from "../support/production-browser-fixtures";
+import {prepareInventoryBrowser,clearInventoryBrowser} from "../support/inventory-browser";
 
 test("harvest entry preserves offline input, posts once and denies foreign farm access", async ({ page, context }, info) => {
-  const f = readProductionBrowserFixtures(), farm = f.farms.a;
+  const f = await prepareInventoryBrowser(), farm = f.farms.a;
   await context.addCookies([{ name: "sb-127-auth-token", value: f.accounts.a.cookie, url: "http://127.0.0.1:3102", httpOnly: true, sameSite: "Lax" }]);
   const headers = { origin: "http://127.0.0.1:3102" }, id = () => crypto.randomUUID();
   const post = async (path: string, data: object) => { const r = await context.request.post(`/api/v1/farms/${farm}/${path}`, { headers, data }); expect(r.status()).toBe(201); return r.json(); };
@@ -82,8 +82,6 @@ test("harvest entry preserves offline input, posts once and denies foreign farm 
     finally { await db.end(); }
   } finally {
     await context.setOffline(false);
-    const db = new Client({ connectionString: process.env.TEST_DATABASE_URL }); await db.connect();
-    try { for (const table of ["StockMovement", "StockAdjustment", "StockOperation", "Harvest", "InventoryItem", "StorageLocation"]) await db.query('DELETE FROM "' + table + '" WHERE "tenantId"=$1', [f.tenants.a]); }
-    finally { await db.end(); }
+    await clearInventoryBrowser(f);
   }
 });

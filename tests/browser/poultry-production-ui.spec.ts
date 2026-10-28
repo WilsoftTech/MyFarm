@@ -1,9 +1,8 @@
 import { test, expect } from "@playwright/test";
 import { z } from "zod";
-import { Client } from "pg";
-import { readProductionBrowserFixtures } from "../support/production-browser-fixtures";
+import {prepareInventoryBrowser,clearInventoryBrowser} from "../support/inventory-browser";
 test("source flock reconstructs 105 birds after purchase, mortality and an atomic sale", async ({page, context}) => {
- const f=readProductionBrowserFixtures(), farm=f.farms.a, id=()=>crypto.randomUUID();
+ const f=await prepareInventoryBrowser(), farm=f.farms.a, id=()=>crypto.randomUUID();
  await context.addCookies([{name:"sb-127-auth-token",value:f.accounts.a.cookie,url:"http://127.0.0.1:3102",httpOnly:true,sameSite:"Lax"}]);
  const post=async(path:string,data:object)=>{const r=await context.request.post(`/api/v1/farms/${farm}/${path}`,{headers:{origin:"http://127.0.0.1:3102"},data});expect(r.status()).toBe(201);return r.json();};
  try {
@@ -25,7 +24,6 @@ test("source flock reconstructs 105 birds after purchase, mortality and an atomi
   await page.reload(); await expect(page.getByText("Current birds: 105",{exact:true})).toBeVisible();
   await page.goto(`/farms/${farm}/poultry-batches/${b.batchId}`);await expect(page.getByText("105 birds",{exact:true})).toBeVisible();
  } finally {
-  const db=new Client({connectionString:process.env.TEST_DATABASE_URL});await db.connect();
-  try{for(const table of ["StockMovement","StockAdjustment","StockOperation","ProductionEvent","Harvest","InventoryItem","StorageLocation"])await db.query('DELETE FROM "'+table+'" WHERE "tenantId"=$1',[f.tenants.a]);}finally{await db.end();}
+  await clearInventoryBrowser(f);
  }
 });
