@@ -99,6 +99,14 @@ Committed LF migration SHA-256 checksums, independently matched against the clea
 | 202610290004_stock_operations | 3f1b5835ccaf20f972b4aaa731aa0a18e1ea94818a3b8d161f8bba7552341ca8 |
 | 202610290005_stock_integrity | 46c800b3a911bbd332d8598f3d785049d5caaaae2023e5c7d7f42ae7a365c9b2 |
 
-The pre-existing `next-env.d.ts` dev-route imports are preserved and excluded from phase commits. No source-extract body or package manifest/lockfile changed. [Every-document review](phase-05-document-review-2026-10-29.md).
+The pre-existing `next-env.d.ts` dev-route imports are preserved and excluded from phase commits. No source-extract body or package manifest changed. The lockfile subsequently received the targeted optional-transitive repair described below. [Every-document review](phase-05-document-review-2026-10-29.md).
 
 Local audit verdict: **PASS** at application candidate `c6fb24f` plus test-only correction `8c2f66a`. The corrected full signed-in suite passes 104/104. All four acceptance criteria are locally verified; the final implementation tree has no failing local quality gate. Phase verdict remains **PENDING hosted CI**, not closed, under D-P05-005. The authorized verification push is the next step.
+
+## First hosted run and portable lockfile repair
+
+The authorized fast-forward push moved `origin/main` from `ac0a004` to `f04ba8d`. [Hosted run 40782969000](https://github.com/WilsoftTech/MyFarm/actions/runs/40782969000) started successfully on Ubuntu 24.04 / Node 24.22.1 / npm 11.19.1, but failed at `npm ci` before any application check: the pre-existing lockfile omitted `@emnapi/runtime@1.11.3` and `@emnapi/core@1.11.3`, already required by locked Sharp/Tailwind WASM fallback packages. Windows npm 11.6.2 had accepted that incomplete optional graph.
+
+Repair: add only those two exact optional package entries, with official npm-registry integrity hashes, MIT licences and their existing dependency edges. Every pre-existing lock entry/version and `package.json` remains byte/structurally unchanged. No library, framework, provider or direct dependency is introduced. Native Windows/Linux application paths remain the same; the metadata restores the already-declared optional fallback graph. Skipping optional dependencies, bypass flags, broad upgrades and full lockfile regeneration were not used.
+
+Validation: exact hosted npm 11.19.1 `ci --dry-run --ignore-scripts --no-audit --os=linux --cpu=x64` passes in an isolated manifest/lockfile directory with the repaired file. The dry-run does not execute cross-platform binaries or change application dependencies; actual hosted `npm ci` remains unchanged and must pass before closure. The original lockfile is independently checked to reproduce the missing-entry error. Phase 5 remains open pending the corrected hosted run.
