@@ -82,3 +82,7 @@ Migration `202610250002_farm_accounting` adds global `TransactionCategory`/`Paym
 ## Phase 4 T008 crop-cycle link backstop (2026-10-26)
 
 No new migration. `farm-accounting-runtime.sql` adds to the AccountingRecord INSERT policy that a CROP enterprise linked with a plot and/or season must match a CropCycle of that enterprise on the same farm (D-P04-007). Report reads are date-filtered queries over POSTED rows; projections for large histories remain Phase 8 (P4-C3). [Closeout](../reports/phase-04-closeout-2026-10-26.md).
+
+## Phase 5 implementation and audit - 2026-10-29
+
+Five additive 20261029 migrations add harvest/storage/movement scope keys, poultry events, stock operations/adjustments and finite-quantity/date checks. Manifest-listed harvest-inventory-runtime.sql grants SELECT/INSERT only to the backend, with membership/owner checks for writes. RLS is enabled and browser/PUBLIC grants revoked. No hosted application is performed. Real rollback, dump/restore, uniqueness and grants are tested in isolated PostgreSQL 17. [Audit and required hosted gate](../reports/phase-05-closeout-2026-10-29.md). Phase 5 closure is pending T013/hosted CI.

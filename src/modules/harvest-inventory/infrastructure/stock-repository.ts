@@ -39,8 +39,9 @@ export function stockRepository(db:PrismaClient):StockRepository {
    const rows=await db.inventoryItem.findMany({where:{...where,...anchor},orderBy:[{createdAt:"desc"},{id:"desc"}],take:limit+1});
    const ids=rows.slice(0,limit).map(r=>r.id);
    const sums=await db.stockMovement.groupBy({by:["itemId","locationId"],where:{...where,itemId:{in:ids}},_sum:{quantityDelta:true}});
-   const stores=await db.storageLocation.findMany({where:{...where,id:{in:sums.map(r=>r.locationId)}},select:{id:true,name:true}});
-   return {items:rows.slice(0,limit).map(r=>({itemId:r.id,name:r.name,unit:r.unit,kind:r.kind,balances:sums.filter(t=>t.itemId===r.id).map(t=>({locationId:t.locationId,locationName:stores.find(l=>l.id===t.locationId)?.name??"Store",quantity:signedQuantityString(BigInt(t._sum.quantityDelta?.mul(1_000_000).toFixed(0)??"0"))}))})),nextCursor:rows.length>limit?rows[limit-1].id:null}; },
+   const selected=ids.flatMap(id=>sums.filter(t=>t.itemId===id).slice(0,20));
+   const stores=await db.storageLocation.findMany({where:{...where,id:{in:selected.map(r=>r.locationId)}},select:{id:true,name:true}});
+   return {items:rows.slice(0,limit).map(r=>({itemId:r.id,name:r.name,unit:r.unit,kind:r.kind,balancesTruncated:sums.filter(t=>t.itemId===r.id).length>20,balances:selected.filter(t=>t.itemId===r.id).map(t=>({locationId:t.locationId,locationName:stores.find(l=>l.id===t.locationId)?.name??"Store",quantity:signedQuantityString(BigInt(t._sum.quantityDelta?.mul(1_000_000).toFixed(0)??"0"))}))})),nextCursor:rows.length>limit?rows[limit-1].id:null}; },
   createItem:(scope,input)=>db.$transaction(async tx=>{
    await requireProductionWriteAccess(tx,scope);const id=crypto.randomUUID(),where=stockScope(scope);
    const replay=await claimCommandReceipt(tx,{actorId:scope.actorId,tenantId:scope.tenantId,requestId:input.requestId,action:"INVENTORY_ITEM_CREATED",targetId:id});

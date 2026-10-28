@@ -74,7 +74,7 @@ test("harvest entry preserves offline input, posts once and denies foreign farm 
     await expect(page.getByRole("status")).toHaveText("Display matches movement history.");
     await page.getByRole("link",{name:"View movement history"}).click();
     await expect(page.getByRole("heading",{name:"Stock movement history"})).toBeVisible();
-    await expect(page.getByText("sale - -1600 KG",{exact:true})).toBeVisible();
+    await expect(page.getByText("sale: -1600 KG",{exact:true})).toBeVisible();
     expect((await context.request.get(`/api/v1/farms/${f.farms.a2}/inventory-items/${itemId}/history`)).status()).toBe(403);
     mkdirSync(".cache/p05-visual",{recursive:true});await page.screenshot({path:`.cache/p05-visual/history-${info.project.name}.png`,fullPage:true});
     const db = new Client({ connectionString: process.env.TEST_DATABASE_URL }); await db.connect();

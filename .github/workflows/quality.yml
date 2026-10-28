@@ -1,4 +1,4 @@
-name: Phase 1 quality
+name: MyFarm quality
 on:
   push:
   pull_request:
@@ -35,9 +35,25 @@ jobs:
       - run: npm test
       - run: npm run db:migrate
       - run: npm run test:integration
+      - name: Non-UTC stock and accounting verification
+        run: npm run test:integration -- tests/integration/harvest-service.test.ts tests/integration/poultry-production.test.ts tests/integration/stock-operations.test.ts tests/integration/stock-reconstruction.test.ts tests/integration/farm-accounting-service.test.ts
+        env:
+          TZ: Africa/Nairobi
+      - run: npx prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code
+      - name: Stock recovery rehearsal
+        run: node tests/support/phase05-recovery.mjs
+        env:
+          MYFARM_TEST_CONTAINER: ${{ job.services.postgres.id }}
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
+      - name: Build signed-in fixture application
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:3211
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: fixture-publishable-key
+      - name: Signed-in desktop and mobile acceptance
+        run: npm run test:e2e -- --config playwright.production.config.ts
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

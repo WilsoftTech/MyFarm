@@ -95,3 +95,7 @@ Under `/api/v1/farms/{farmId}/accounting`: `GET categories?kind=` and `GET payme
 ## Phase 4 T011/T014 report endpoints (2026-10-26)
 
 `GET /api/v1/farms/{farmId}/accounting/gross-margin` and `GET …/accounting/summary` take `basis=ACCRUAL|CASH`, `from` and `to` (inclusive calendar dates, either open) and return `{ grossMargin }` / `{ summary }` with basis, range and `asOf` labels, per-currency results and referenced enterprise names. `GET …/accounting/summary/export` returns an audited private `text/csv` attachment for active farm members only (D-P04-009). Unknown or forged query keys return 400; record views now also carry category history and linked plot/enterprise/season names. [Closeout](../reports/phase-04-closeout-2026-10-26.md).
+
+## Phase 5 implementation and audit - 2026-10-29
+
+Farm-scoped harvests, storage-locations, poultry-production, inventory-items, stock-operations and stock-reversals endpoints are implemented. Services authenticate before parsing/domain access, validate nested scope and page anchors, and return private/no-store responses. Stock/production writes use transaction receipts and locks; changed retries conflict. Reconstruction/history responses are bounded and calculations use complete source history. Full offline sync remains Phase 7. [Audit and required hosted gate](../reports/phase-05-closeout-2026-10-29.md). Phase 5 closure is pending T013/hosted CI.

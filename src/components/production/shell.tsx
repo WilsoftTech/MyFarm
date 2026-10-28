@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 const sections = { enterprises: "Enterprises", seasons: "Seasons", "crop-cycles": "Crop cycles", "poultry-batches": "Poultry batches", inventory: "Inventory", harvests: "Harvests", "storage-locations": "Stores" } as const;
 
 export function ProductionShell({ farm, active, title, children }: { farm: { farmId: string; name: string }; active: keyof typeof sections; title: string; children: ReactNode }) {
-  return <section>
+  return <section className="min-w-0 break-words">
     <Link href={"/farms/" + farm.farmId} className="inline-block py-2 text-sm underline">Back to farm</Link>
     <p className="mt-3 break-words text-sm text-primary">Farm: {farm.name}</p>
     <h1 className="mt-2 break-words text-3xl font-bold">{title}</h1>

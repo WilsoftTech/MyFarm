@@ -39,3 +39,7 @@ Dashboard/profiles are rebuildable snapshots with as-of sequence/formula/basis/c
 ## Phase 4 implementation (2026-10-26)
 
 Implemented locally under D-P04-002–010: exact numeric(20,4) money per ISO currency (never combined or converted), accrual default with a labelled cash view, one revenue/cost event per sale/purchase, payments that only settle derived balances, append-only reversals, and deterministic enterprise gross margin and money summaries. Net farm income, tax and FX remain out of scope. [Closeout](../reports/phase-04-closeout-2026-10-26.md).
+
+## Phase 5 implementation and audit - 2026-10-29
+
+Stock-linked crop/egg/bird sales post their one stock effect and one sale atomically, reusing the accounting transaction writer. Payments do not add revenue or stock effects. Independent accounting reversal of linked sales is rejected; coordinated stock reversal first requires posted payments to be reversed, appends opposite stock entries and preserves originals. KG and whole bird/egg quantities remain exact; effective-date stock cannot be negative. Inventory valuation stays unavailable until Phase 8. [Audit and required hosted gate](../reports/phase-05-closeout-2026-10-29.md). Phase 5 closure is pending T013/hosted CI.

@@ -2,7 +2,7 @@ import "server-only";
 import type { PrismaClient, ProductionEvent } from "@/generated/prisma/client";
 import { FoundationError } from "@/modules/engineering-foundation/domain/errors";
 import { claimCommandReceipt } from "@/modules/engineering-foundation/infrastructure/command-receipts";
-import { requireProductionWriteAccess } from "@/modules/enterprises-seasons/infrastructure/production-access";
+import { requireProductionWriteAccess, productionAfter } from "@/modules/enterprises-seasons/infrastructure/production-access";
 import { createAccountingRecord } from "@/modules/farm-accounting/infrastructure/repository";
 import type { PoultryProductionRepository, ProductionEventView } from "../contracts/production";
 import { assertProductionQuantity, reconstructFlock } from "../domain/production";
@@ -10,18 +10,26 @@ import { reconstructStock } from "../domain/stock";
 import { movementDelta } from "./stock-repository";
 import { commandHash, stockDate, stockScope } from "./harvest-repository";
 
-const eventView = (r: ProductionEvent): ProductionEventView => ({ eventId: r.id, batchId: r.batchId, type: r.type, quantity: r.quantity.toString(), unit: r.unit, occurredOn: r.occurredOn.toISOString().slice(0, 10), note: r.note, accountingRecordId: r.accountingRecordId });
+const eventView = (r: ProductionEvent, reversed = false): ProductionEventView => ({ reversed, eventId: r.id, batchId: r.batchId, type: r.type, quantity: r.quantity.toString(), unit: r.unit, occurredOn: r.occurredOn.toISOString().slice(0, 10), note: r.note, accountingRecordId: r.accountingRecordId });
 export function poultryProductionRepository(db: PrismaClient): PoultryProductionRepository {
   return {
-    async event(scope,id) {const row=await db.productionEvent.findFirst({where:{...stockScope(scope),id}});return row?eventView(row):null;},
+    async events(scope,batchId,{cursor,limit}) {
+      const where=stockScope(scope);if(!await db.poultryBatch.findFirst({where:{...where,id:batchId}}))throw new FoundationError("FORBIDDEN");
+      const anchor=cursor?productionAfter(await db.productionEvent.findFirst({where:{...where,batchId,id:cursor}})):{};
+      const rows=await db.productionEvent.findMany({where:{...where,batchId,...anchor},orderBy:[{createdAt:"desc"},{id:"desc"}],take:limit+1});
+      const reversals=await db.stockOperation.findMany({where:{...where,reversalKey:{in:rows.map(r=>"PRODUCTION:"+r.id)}},select:{targetId:true}});
+      return {items:rows.slice(0,limit).map(r=>eventView(r,reversals.some(v=>v.targetId===r.id))),nextCursor:rows.length>limit?rows[limit-1].id:null};
+    },
+    async event(scope,id) {const where=stockScope(scope),row=await db.productionEvent.findFirst({where:{...where,id}});const reversed=Boolean(await db.stockOperation.findFirst({where:{...where,reversalKey:"PRODUCTION:"+id}}));return row?eventView(row,reversed):null;},
     async summary(scope, batchId) {
       const where = stockScope(scope), batch = await db.poultryBatch.findFirst({ where: { ...where, id: batchId } });
       if (!batch) throw new FoundationError("FORBIDDEN");
       const rows = await db.productionEvent.findMany({ where: { ...where, batchId }, orderBy: [{ occurredOn: "desc" }, { createdAt: "desc" }, { id: "desc" }], take: 101 });
+      const reversals=await db.stockOperation.findMany({where:{...where,reversalKey:{in:rows.map(r=>"PRODUCTION:"+r.id)}},select:{targetId:true}});
       const bird = await db.inventoryItem.findFirst({ where: { ...where, batchId, kind: "BIRD" } });
       const balance = bird ? await db.stockMovement.aggregate({ where: { ...where, itemId: bird.id }, _sum: { quantityDelta: true } }) : null;
       const current = bird ? Number(balance?._sum.quantityDelta?.toString() ?? "0") : batch.startingQuantity;
-      return { batchId, startingQuantity: batch.startingQuantity, currentQuantity: reconstructFlock(current, []), asOf: new Date().toISOString(), events: rows.slice(0, 100).map(eventView), historyTruncated: rows.length > 100 };
+      return { batchId, startingQuantity: batch.startingQuantity, currentQuantity: reconstructFlock(current, []), asOf: new Date().toISOString(), events: rows.slice(0, 100).map(r=>eventView(r,reversals.some(v=>v.targetId===r.id))), historyTruncated: rows.length > 100 };
     },
     record: (scope, command) => db.$transaction(async tx => {
       await requireProductionWriteAccess(tx, scope);
@@ -51,7 +59,7 @@ export function poultryProductionRepository(db: PrismaClient): PoultryProduction
       let item = bird;
       if (command.type === "EGGS") {
         const eggs = await tx.inventoryItem.findFirst({ where: { ...where, batchId: batch.id, kind: "EGG" } });
-        item = eggs ?? await tx.inventoryItem.create({ data: { ...where, name: batch.batchLabel + " eggs", kind: "EGG", unit: "EGG", batchId: batch.id, createdBy: scope.actorId } });
+        item = eggs ?? await tx.inventoryItem.create({ data: { ...where, name: batch.batchLabel, kind: "EGG", unit: "EGG", batchId: batch.id, createdBy: scope.actorId } });
       }
       let accountingRecordId: string | undefined;
       if (command.sale) {

@@ -11,7 +11,10 @@ import { assertHarvest, quantityString, quantityUnits } from "../domain/harvest"
 export const commandHash = (value: object) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 export const stockScope = (scope: FarmScope) => ({ tenantId: scope.tenantId, farmId: scope.farmId });
 export const stockDate = (value: string) => new Date(value + "T00:00:00.000Z");
-const view = (r: Harvest): HarvestView => ({ ...r, harvestId: r.id, quantity: r.quantity.toString(), lossQuantity: r.lossQuantity.toString(),
+const view = (r: Harvest): HarvestView => ({ harvestId: r.id, itemId: r.itemId, tenantId: r.tenantId, farmId: r.farmId,
+  cropCycleId: r.cropCycleId, cropId: r.cropId, plotId: r.plotId, storageLocationId: r.storageLocationId,
+  cropName: r.cropName, storageLocationName: r.storageLocationName, grade: r.grade, version: r.version, createdBy: r.createdBy,
+  quantity: r.quantity.toString(), lossQuantity: r.lossQuantity.toString(),
   unit: "KG", harvestDate: r.harvestDate.toISOString().slice(0, 10), storedQuantity: quantityString(quantityUnits(r.quantity.toString()) - quantityUnits(r.lossQuantity.toString())),
   createdAt: r.createdAt.toISOString(), updatedAt: r.updatedAt.toISOString() });
 

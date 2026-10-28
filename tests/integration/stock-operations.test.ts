@@ -25,8 +25,8 @@ it("keeps the harvest source oracle separate: 2400-1600-150=650",async()=>{
 it("proves the independent ledger oracle and transfer conservation",async()=>{
  const r=await harvested();
  await stock.post(f.scope.farmId,{...input(r.itemId,r.locationId,"SALE","1000"),sale:{categoryId,amount:"1000",currency:"UGX"}});
- await stock.post(f.scope.farmId,input(r.itemId,r.locationId,"LOSS","200"));
- await stock.post(f.scope.farmId,{...input(r.itemId,r.locationId,"ADJUSTMENT","50"),direction:"OUT"});
+ await stock.post(f.scope.farmId,{...input(r.itemId,r.locationId,"SALE","200"),sale:{categoryId,amount:"200",currency:"UGX"}});
+ await stock.post(f.scope.farmId,{...input(r.itemId,r.locationId,"LOSS","50"),reason:"Damage"});
  expect(await balance(r.itemId,r.locationId)).toBe("1150");
  const dest=await f.harvest.createLocation(f.scope.farmId,{requestId:id(),name:"Transfer "+id()});
  const transfer=await stock.post(f.scope.farmId,{...input(r.itemId,r.locationId,"TRANSFER","650"),destinationLocationId:dest.storageLocationId});

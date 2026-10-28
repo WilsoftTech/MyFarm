@@ -25,7 +25,7 @@ export const reverseStockSchema = z.object({ requestId: idSchema, targetType: z.
 export type CreateItem = z.output<typeof createItemSchema>;
 export type StockOperation = z.output<typeof stockOperationSchema>;
 export type ReverseStock = z.output<typeof reverseStockSchema>;
-export interface StockItemView { itemId: string; name: string; unit: string; kind: string; balances: { locationId: string; locationName: string; quantity: string }[] }
+export interface StockItemView { itemId: string; name: string; unit: string; kind: string; balancesTruncated?: boolean; balances: { locationId: string; locationName: string; quantity: string }[] }
 export interface StockOperationView { operationId: string; type: string; itemId: string | null; quantity: string; unit: string; occurredOn: string; reason: string; accountingRecordId: string | null }
 export interface StockRepository {
   operation(scope: import("@/modules/enterprises-seasons/domain/production").FarmScope, id: string): Promise<StockOperationView | null>;

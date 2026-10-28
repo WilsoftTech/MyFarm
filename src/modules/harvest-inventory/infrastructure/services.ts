@@ -17,7 +17,7 @@ import { PoultryProductionService } from "../application/production";
 import { poultryProductionRepository } from "./production-repository";
 export function poultryProductionService() {
  return new PoultryProductionService(authorizationService(), { farmScopeForMember: input => registryRepository(database()).farmScopeForMember(input) }, {
-  event: (...args) => poultryProductionRepository(database()).event(...args),record: (...args) => poultryProductionRepository(database()).record(...args), summary: (...args) => poultryProductionRepository(database()).summary(...args),
+  events: (...args) => poultryProductionRepository(database()).events(...args),event: (...args) => poultryProductionRepository(database()).event(...args),record: (...args) => poultryProductionRepository(database()).record(...args), summary: (...args) => poultryProductionRepository(database()).summary(...args),
  });
 }
 

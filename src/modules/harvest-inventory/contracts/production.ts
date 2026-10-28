@@ -23,9 +23,10 @@ export const productionEventSchema = z.object({
 });
 export type RecordProductionEvent = z.output<typeof productionEventSchema>;
 
-export interface ProductionEventView { eventId: string; batchId: string; type: string; quantity: string; unit: string; occurredOn: string; note: string | null; accountingRecordId: string | null }
+export interface ProductionEventView { reversed: boolean; eventId: string; batchId: string; type: string; quantity: string; unit: string; occurredOn: string; note: string | null; accountingRecordId: string | null }
 export interface FlockSummary { batchId: string; startingQuantity: number; currentQuantity: number; asOf: string; events: ProductionEventView[]; historyTruncated: boolean }
 export interface PoultryProductionRepository {
+  events(scope: import("@/modules/enterprises-seasons/domain/production").FarmScope, batchId: string, page: import("@/modules/enterprises-seasons/contracts/production").ProductionPageInput): Promise<import("@/modules/enterprises-seasons/contracts/production").ProductionPage<ProductionEventView>>;
   event(scope: import("@/modules/enterprises-seasons/domain/production").FarmScope, id: string): Promise<ProductionEventView | null>;
   record(scope: import("@/modules/enterprises-seasons/contracts/production").ProductionWriteScope, input: RecordProductionEvent): Promise<ProductionEventView>;
   summary(scope: import("@/modules/enterprises-seasons/domain/production").FarmScope, batchId: string): Promise<FlockSummary>;

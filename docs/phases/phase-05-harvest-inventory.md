@@ -5,12 +5,12 @@
 - Implementation status: PARTIALLY COMPLETE - 92.31% (12/13 verified tasks).
 - Last reviewed: 2026-10-29 (Africa/Nairobi).
 - Related phase/task IDs: MYF-P05-T001 through MYF-P05-T013; D-P05-001; Q12/Q13.
-- Verified completed work: T001 harvest domain/DTO/repository contract verified; 56 focused and 742 cumulative unit/component tests pass. Full AC001 pending.
-- Remaining work/blockers: T002 authorized persistence next; T003 UI and all later tasks pending. Q12/Q13 scope approved under D-P05-002/003; no schema applied.
+- Verified completed work: T001-T012 locally verified and committed; all four acceptance oracles have local domain/DB/browser evidence.
+- Remaining work/blockers: T013 final local audit and required GitHub-hosted CI (D-P05-005); phase remains open.
 - Evidence/report links: [T001 evidence](../reports/phase-05-t001-2026-10-29.md); [Start plan](../reports/phase-05-start-2026-10-29.md); [Phase 4 closeout](../reports/phase-04-closeout-2026-10-26.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **PARTIALLY COMPLETE - 92.31% (12/13 verified tasks)**. Date: 2026-10-29. Local start authorized by D-P05-001; Q12/Q13 scope approved under D-P05-002/003. T001 verified; T002 is next. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **PARTIALLY COMPLETE - 92.31% (12/13 verified tasks)**. Date: 2026-10-29. Local start authorized by D-P05-001; Q12/Q13 scope approved under D-P05-002/003. T001-T012 verified; T013 remains pending hosted CI under D-P05-005. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
@@ -69,7 +69,7 @@ Offline: see [sync](../architecture/offline-sync-architecture.md); Phases 1–6 
 
 ## F. Database Design
 
-**Proposal until implementation approval. No migrations created now.**
+**Original proposal retained for traceability.** The implemented subset is now in `prisma/schema.prisma` and the five `20261029*` additive migrations. It adds StockOperation for atomic operation/reversal provenance, while balances remain derived; see the [audit](../reports/phase-05-closeout-2026-10-29.md). Hosted application is not performed.
 
 Harvest(id UUID,tenantId UUID,farmId UUID,cropCycleId UUID,plotId UUID,harvestDate date,quantity numeric(18,6),unit text,grade text?,storageLocationId UUID); ProductionEvent(id UUID,tenantId UUID,batchId UUID,type enum,quantity numeric,unit text,occurredOn date); InventoryItem(id UUID,tenantId UUID,farmId UUID,name text,baseUnit text,kind enum); StockMovement(id UUID,tenantId UUID,farmId UUID,itemId UUID,locationId UUID,quantityDelta numeric,reason enum,sourceId UUID?,transferId UUID?,occurredAt timestamptz); StorageLocation(id UUID,tenantId UUID,farmId UUID,name text); StockAdjustment(id UUID,movementId UUID,reason text,approvedBy UUID).
 
@@ -89,7 +89,7 @@ Loading announced; recoverable errors retain input and safe retry. Empty states 
 
 ## H. Implementation Tasks
 
-Execute these small stages sequentially after authorization. Field/model/provider policies remain proposals until affected decisions are resolved. Each capability separates contract/domain work, authorized service/evidence work, and user-visible acceptance. T001 is verified; T002-T013 remain pending.
+Execute these small stages sequentially after authorization. Field/model/provider policies remain proposals until affected decisions are resolved. Each capability separates contract/domain work, authorized service/evidence work, and user-visible acceptance. T001-T012 are verified; T013 is pending hosted CI.
 
 ### MYF-P05-T001 — Specify and implement domain contract for MYF-P05-R001
 
@@ -306,3 +306,7 @@ Authorized snapshot reconciliation and movement history API. PASS: 3 real Postgr
 ### T012 checkpoint
 
 Stock reconstruction, recalculation and history screens. PASS: lint and production build including TypeScript; 4 signed-in desktop/mobile browser tests covering harvest-sale balance, transfer/reversal, recalculation, history and nested cross-farm denial. Screenshots inspected on desktop/mobile with readable wrapping and no horizontal overflow. AC004 compares live SQL display with deterministic ledger reconstruction; corrupted projection domain regression rebuilds expected balances. Reuses existing pagination, farm shell and accessible form feedback. No schema change. Historical rows remain visible after corrections. T013 full audit and required hosted CI remain pending. [Report](../reports/phase-05-t012-2026-10-29.md).
+
+## T013 audit checkpoint
+
+All implementation stages T001-T012 are committed. The final audit is in progress and hosted CI is mandatory before phase closure; no local substitution was approved. [Current audit and limitations](../reports/phase-05-closeout-2026-10-29.md).

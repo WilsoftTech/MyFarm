@@ -75,3 +75,7 @@ Records may link a plot, enterprise and season on their farm; a crop enterprise 
 ## Phase 5 T001 harvest contract - 2026-10-29
 
 Strict harvest commands carry crop-cycle/crop/plot/storage references, date, gross kilograms, separate initial loss and optional grade. Exact numeric(18,6)-compatible strings and pure relationship rules are implemented under D-P05-002/003. Actor/tenant/farm and derived stored quantities are server-owned. This is a domain/DTO/repository contract only, without persisted Harvest/StorageLocation/StockMovement models or runtime authorization. T002 is next. [Evidence](../reports/phase-05-t001-2026-10-29.md).
+
+## Phase 5 implementation and audit - 2026-10-29
+
+Harvest, StorageLocation, InventoryItem, StockMovement, ProductionEvent, StockOperation and StockAdjustment are implemented. Movements are append-only; balances and current flocks derive from them. A stock-linked sale creates a single Phase 4 sale, with payments remaining settlement only. Corrections append opposite movements and coordinate financial reversal. Feed/medication usage is recorded with explicit units; no automatic supply consumption or bird decrement is inferred. [Audit and required hosted gate](../reports/phase-05-closeout-2026-10-29.md). Phase 5 closure is pending T013/hosted CI.

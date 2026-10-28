@@ -1,13 +1,13 @@
 # Master implementation roadmap
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — T013 task-relevant content, status and evidence.
-- Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-26 (Africa/Nairobi), Phase 4 T016 audit and closeout.
-- Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
-- Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
-- Remaining work/blockers: Phase 4 COMPLETED - 100% (16/16), PASS WITH CONDITIONS - LOCAL VERIFICATION (owner accepted 2026-10-27, D-P04-012). T001-T016 and AC001-AC005 verified locally, including a clean clone against fresh PostgreSQL 17; conditions P4-C1 hosted CI, P4-C2 hosted application of the Phase 4 schema/policy, P4-C3/C4 report scale and export rate limits. Phase 5 local start is authorized on 2026-10-29 (D-P05-001); T001 verified, 1/13 tasks (7.69%), Q12/Q13 scope approved under D-P05-002/003. [Plan](reports/phase-05-start-2026-10-29.md). [Closeout](reports/phase-04-closeout-2026-10-26.md).
-- Evidence/report links: [Phase02 closeout](reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](reports/phase-03-closeout-2026-10-25.md).
+- Documentation review: REVIEWED - Phase 5 audit and task evidence; historical checkpoints preserved.
+- Implementation status: REFERENCE ONLY - N/A (navigation and verified progress record).
+- Last reviewed: 2026-10-29 (Africa/Nairobi).
+- Related phase/task IDs: MYF-P05-T001 through MYF-P05-T013; D-P05-005.
+- Verified completed work: Phase 4 owner-accepted; Phase 5 T001-T012 committed and locally verified (12/13, 92.31%).
+- Remaining work/blockers: T013 clean-checkout audit and required hosted CI before Phase 5 closure. No Phase 6 authorization.
+- Evidence/report links: [Phase 5 audit](reports/phase-05-closeout-2026-10-29.md); [Phase 4 closeout](reports/phase-04-closeout-2026-10-26.md).
 <!-- MYFARM-STATUS-END -->
 
 Source roadmap remains authoritative. Preserve Phase 0–24 in order; cumulative gates apply. Phase 8 closes MVP, Phase 9 validates field use. No release dates or implementation approvals are inferred.
@@ -133,3 +133,5 @@ The immediate path continues Phase 3 → 4 only after explicit owner authorizati
 ## Phase 5 start - 2026-10-29
 
 Local start authorized under D-P05-001. T001 harvest contract/domain is verified; 1/13 tasks (7.69%). Q12/Q13 scope approved under D-P05-002/003. Lint, typecheck, 742 unit/component tests, build and boundaries PASS. No schema or hosted change. T002 persistence is next. [T001 evidence](reports/phase-05-t001-2026-10-29.md). [Scope, reuse, verification plan and pending policies](reports/phase-05-start-2026-10-29.md). Historical checkpoints above remain historical.
+
+Latest Phase 5 audit: T001-T012 locally verified and committed; T013 remains pending hosted CI under D-P05-005. [Current evidence](reports/phase-05-closeout-2026-10-29.md). No later phase is started.
