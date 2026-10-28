@@ -2,7 +2,7 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - T001 requirements, dependencies and affected architecture/contracts.
-- Implementation status: PARTIALLY COMPLETE - 7.69% (1/13 verified tasks).
+- Implementation status: PARTIALLY COMPLETE - 15.38% (2/13 verified tasks).
 - Last reviewed: 2026-10-29 (Africa/Nairobi).
 - Related phase/task IDs: MYF-P05-T001 through MYF-P05-T013; D-P05-001; Q12/Q13.
 - Verified completed work: T001 harvest domain/DTO/repository contract verified; 56 focused and 742 cumulative unit/component tests pass. Full AC001 pending.
@@ -10,7 +10,7 @@
 - Evidence/report links: [T001 evidence](../reports/phase-05-t001-2026-10-29.md); [Start plan](../reports/phase-05-start-2026-10-29.md); [Phase 4 closeout](../reports/phase-04-closeout-2026-10-26.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **PARTIALLY COMPLETE - 7.69% (1/13)**. Date: 2026-10-29. Local start authorized by D-P05-001; Q12/Q13 scope approved under D-P05-002/003. T001 verified; T002 is next. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **PARTIALLY COMPLETE - 15.38% (2/13 verified tasks)**. Date: 2026-10-29. Local start authorized by D-P05-001; Q12/Q13 scope approved under D-P05-002/003. T001 verified; T002 is next. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
@@ -242,7 +242,7 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 ## O. Completion Checklist
 
 - [x] MYF-P05-T001 complete with [evidence](../reports/phase-05-t001-2026-10-29.md).
-- [ ] MYF-P05-T002 complete with evidence.
+- [x] MYF-P05-T002 complete with [evidence](../reports/phase-05-t002-2026-10-29.md).
 - [ ] MYF-P05-T003 complete with evidence.
 - [ ] MYF-P05-T004 complete with evidence.
 - [ ] MYF-P05-T005 complete with evidence.
@@ -262,3 +262,7 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 ## T001 implemented subset - 2026-10-29
 
 Harvest domain and strict DTO/repository contracts are implemented without a migration. Gross kilograms and separate initial loss use exact six-decimal arithmetic; crop-cycle/plot/storage references must match the authorized farm. Closed historical references do not reopen production; harvest date cannot precede planting. Reuses existing UUID/date/farm/decimal helpers and adds no dependencies. T002 must prove authorization, atomic effects, replay and rollback in PostgreSQL; T003/full AC001 remain pending. [Evidence](../reports/phase-05-t001-2026-10-29.md).
+
+### T002 checkpoint
+
+Authorized harvest persistence and API. PASS: lint, typecheck, 742 unit/component tests, production build; 16 focused PostgreSQL/migration/provisioning tests. Additive migrations 202610290001 and 202610290002 applied only to isolated PostgreSQL 17. Concurrent replay creates one harvest with gross/loss movements; failed parents roll back receipts. Composite foreign keys preserve scope/provenance. Runtime SELECT/INSERT only and browser grants denied. Full UI/AC001 remains pending T003 and dependent stock-sale acceptance. [Report](../reports/phase-05-t002-2026-10-29.md).

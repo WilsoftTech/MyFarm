@@ -77,6 +77,10 @@ model User {
   accountingRecords AccountingRecord[]
   payments PaymentRecord[]
   accountingReversals AccountingReversal[]
+  harvests Harvest[]
+  storageLocations StorageLocation[]
+  inventoryItems InventoryItem[]
+  stockMovements StockMovement[]
 }
 model Organization {
   id String @id @default(uuid()) @db.Uuid
@@ -146,6 +150,10 @@ model Farm {
   payments PaymentRecord[]
   @@unique([id, tenantId])
   @@index([tenantId, createdAt, id])
+  harvests Harvest[]
+  storageLocations StorageLocation[]
+  inventoryItems InventoryItem[]
+  stockMovements StockMovement[]
 }
 model Plot {
   id String @id @db.Uuid
@@ -290,6 +298,10 @@ model CropCycle {
   @@index([seasonId, farmId, tenantId])
   @@index([cropId])
   @@index([createdBy])
+  harvests Harvest[]
+  inventoryItems InventoryItem[]
+  @@unique([id, farmId, tenantId])
+  @@unique([id, plotId, cropId, farmId, tenantId])
 }
 model AnimalTypeCatalog {
   id String @id @db.Uuid
@@ -463,5 +475,105 @@ model AccountingReversal {
   payment PaymentRecord? @relation(fields: [paymentId], references: [id], onDelete: Restrict)
   creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
   @@index([tenantId, farmId, createdAt, id])
+  @@index([createdBy])
+}
+
+
+model StorageLocation {
+  id String @id @default(uuid()) @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  name String @db.VarChar(120)
+  nameKey String
+  createdBy String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @db.Timestamptz(6)
+  version Int @default(1)
+  farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  harvests Harvest[]
+  movements StockMovement[]
+  @@unique([id, farmId, tenantId])
+  @@unique([farmId, tenantId, nameKey])
+  @@index([tenantId, farmId, createdAt, id])
+  @@index([createdBy])
+}
+model InventoryItem {
+  id String @id @default(uuid()) @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  name String @db.VarChar(120)
+  kind String @db.VarChar(20)
+  unit String @db.VarChar(20)
+  cropCycleId String? @unique @db.Uuid
+  createdBy String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @db.Timestamptz(6)
+  version Int @default(1)
+  farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  cycle CropCycle? @relation(fields: [cropCycleId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  harvests Harvest[]
+  movements StockMovement[]
+  @@unique([id, farmId, tenantId])
+  @@index([tenantId, farmId, createdAt, id])
+  @@index([createdBy])
+}
+model Harvest {
+  id String @id @default(uuid()) @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  cropCycleId String @db.Uuid
+  cropId String @db.Uuid
+  plotId String @db.Uuid
+  storageLocationId String @db.Uuid
+  itemId String @db.Uuid
+  cropName String @db.VarChar(120)
+  storageLocationName String @db.VarChar(120)
+  harvestDate DateTime @db.Date
+  quantity Decimal @db.Decimal(18,6)
+  unit String @db.VarChar(20)
+  grade String? @db.VarChar(120)
+  lossQuantity Decimal @db.Decimal(18,6)
+  requestHash String @db.VarChar(64)
+  createdBy String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @db.Timestamptz(6)
+  version Int @default(1)
+  farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  cycle CropCycle @relation(fields: [cropCycleId, plotId, cropId, farmId, tenantId], references: [id, plotId, cropId, farmId, tenantId], onDelete: Restrict)
+  storage StorageLocation @relation(fields: [storageLocationId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  item InventoryItem @relation(fields: [itemId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  movements StockMovement[]
+  @@unique([id, farmId, tenantId])
+  @@index([tenantId, farmId, createdAt, id])
+  @@index([cropCycleId, farmId, tenantId])
+  @@index([storageLocationId, farmId, tenantId])
+  @@index([itemId, farmId, tenantId])
+  @@index([createdBy])
+  @@unique([id, itemId, storageLocationId, farmId, tenantId])
+}
+model StockMovement {
+  id String @id @default(uuid()) @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  itemId String @db.Uuid
+  locationId String @db.Uuid
+  harvestId String @db.Uuid
+  quantityDelta Decimal @db.Decimal(18,6)
+  reason String @db.VarChar(30)
+  sourceKey String @unique @db.VarChar(120)
+  occurredOn DateTime @db.Date
+  createdBy String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  item InventoryItem @relation(fields: [itemId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  location StorageLocation @relation(fields: [locationId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  harvest Harvest @relation(fields: [harvestId, itemId, locationId, farmId, tenantId], references: [id, itemId, storageLocationId, farmId, tenantId], onDelete: Restrict)
+  @@index([tenantId, farmId, itemId, locationId, occurredOn, id])
+  @@index([locationId, farmId, tenantId])
+  @@index([harvestId, farmId, tenantId])
   @@index([createdBy])
 }

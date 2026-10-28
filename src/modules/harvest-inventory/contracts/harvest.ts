@@ -30,6 +30,7 @@ export const recordHarvestSchema = z.object({
 export type RecordHarvest = z.output<typeof recordHarvestSchema>;
 export interface HarvestView extends FarmScope, ProductionRecord, Omit<HarvestFields, "grade"> {
   harvestId: string;
+  itemId: string;
   cropName: string;
   storageLocationName: string;
   grade: string | null;
@@ -48,7 +49,12 @@ export interface HarvestView extends FarmScope, ProductionRecord, Omit<HarvestFi
  * Device/outbox synchronization remains Phase 7; requestId does not implement offline sync.
  */
 export interface HarvestRepository {
+  locations(scope: FarmScope, page: ProductionPageInput): Promise<ProductionPage<{ storageLocationId: string; name: string }>>;
+  createLocation(scope: ProductionWriteScope, command: CreateStorageLocation): Promise<{ storageLocationId: string; name: string }>;
   harvest(scope: FarmScope, harvestId: string): Promise<HarvestView | null>;
   harvests(scope: FarmScope, page: ProductionPageInput): Promise<ProductionPage<HarvestView>>;
   recordHarvest(scope: ProductionWriteScope, command: RecordHarvest): Promise<HarvestView>;
 }
+
+export const createStorageLocationSchema = z.object({ requestId: idSchema, name: z.string().trim().min(1).max(120) }).strict();
+export type CreateStorageLocation = z.output<typeof createStorageLocationSchema>;
