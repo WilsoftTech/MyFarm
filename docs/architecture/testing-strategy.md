@@ -1,13 +1,13 @@
 # Testing strategy
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — T013 task-relevant content, status and evidence.
-- Implementation status: Phase01 scope COMPLETED — 100% (13/13 verified Phase01 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); Phase02 scope COMPLETED — 100% (13/13 verified Phase02 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); later-phase scope not counted.
-- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
+- Documentation review: REVIEWED - Phase 5 task-relevant contracts, implementation, status and evidence; historical sections preserved.
+- Implementation status: Phase 1-4 accepted with documented conditions; Phase 5 T001-T012 locally verified, T013/hosted CI pending. No whole-architecture completion percentage claimed.
+- Last reviewed: 2026-10-29 (Africa/Nairobi), Phase 5 T013 audit.
 - Related phase/task IDs: Phase01 MYF-P01-T001–T013; Phase02 MYF-P02-T001–T013.
 - Verified completed work: Phase01 scope as previously verified; Phase02: farmer registry contracts/policies/migration/API/tests in this document's area verified (see the Phase 2 implementation section).
-- Remaining work/blockers: Phase02 conditions P2-C1–P2-C8 where applicable; later-phase scope pending authorization.
-- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
+- Remaining work/blockers: Required hosted CI before Phase 5 closes; hosted migrations/provisioning and inherited production conditions remain separate gates.
+- Evidence/report links: [Current Phase 5 audit](../reports/phase-05-closeout-2026-10-29.md); [document review](../reports/phase-05-document-review-2026-10-29.md). Historical task evidence remains linked below.
 <!-- MYFARM-STATUS-END -->
 
 Testing is phase-specific evidence, not a successful build alone. Source Vitest/React Testing Library/Playwright baseline is preserved. No tests have been run: application does not exist.
@@ -78,3 +78,7 @@ T003 adds 15 accounting form component cases, 8 action/settle unit cases, 2 inte
 ## Phase 4 T006–T016 evidence (2026-10-26)
 
 New cases: 29 report/link domain, 4 report service, 1 link action and 1 link component unit cases; 11 integration cases (links, gross margin, summary, export, access); 8 signed-in browser cases (AC002–AC005 screens, CSV download, denial). Final clean-clone results: 686 unit/component, 154 integration, 44 non-UTC, 48 anonymous and 100 signed-in browser checks PASS; drift and dump/restore PASS. [Closeout](../reports/phase-04-closeout-2026-10-26.md).
+
+## Phase 5 verification scope - 2026-10-29
+
+Phase 5 task reports link 760 unit/component tests, real PostgreSQL concurrency/rollback/provenance/security/reconstruction suites and signed-in desktop/mobile journeys. The expanded quality workflow includes non-UTC checks, migration drift, real dump/restore and signed-in acceptance. Final clean-checkout and hosted results are recorded in the audit; local success alone does not satisfy the owner-required hosted CI gate. [Current audit](../reports/phase-05-closeout-2026-10-29.md).

@@ -6,7 +6,7 @@
 - Last reviewed: 2026-10-29 (Africa/Nairobi).
 - Related phase/task IDs: MYF-P05-T001 through MYF-P05-T013; D-P05-001 through D-P05-005.
 - Verified completed work: T001-T012 committed separately. Local targeted domain, persistence and browser checks are linked in task reports.
-- Remaining work/blockers: Final clean-checkout audit and required GitHub-hosted CI before T013/phase closure.
+- Remaining work/blockers: Required GitHub-hosted CI before T013/phase closure; clean-checkout local audit passed.
 - Evidence/report links: [Phase specification](../phases/phase-05-harvest-inventory.md); [Project status](../PROJECT-STATUS.md).
 <!-- MYFARM-STATUS-END -->
 
@@ -39,7 +39,7 @@ Applied only to isolated loopback PostgreSQL 17. Hosted application is NOT PERFO
 
 Task-level verified results are recorded in T001-T012 reports. Primary tree: 760 unit/component tests passed; previous full integration checkpoint passed 173 tests; additional security, schema and correction regressions are now included. Migration rollback tests preserve prior rows and schema; native PostgreSQL dump/restore passes for exact stock, approvals, audits, uniqueness, RLS and grants. Actionlint passes for the expanded quality workflow.
 
-Final clean-checkout results and exact hosted run remain pending. No passing result is inferred from a command that has not completed.
+Final clean-checkout results are recorded below; the exact hosted run remains pending. No passing result is inferred from a command that has not completed.
 
 ## Acceptance and exit gate
 
@@ -60,3 +60,45 @@ Inherited production conditions remain: canonical hosted migrations/policies, re
 ## Status-update evidence
 
 T001-T012 each have a separate local commit and linked task report. Final audit will update current phase/status/traceability/architecture summaries and record a per-document status/link review. Historical checkpoints remain historical and the source-extract body is preserved. Next allowed action: finish clean local verification, make the authorized verification push, inspect the exact hosted workflow and only then evaluate closure.
+
+## Clean-checkout verification checkpoint
+
+Application candidate `c6fb24f`, then test-only fixture correction `8c2f66a`, checked out separately at `.cache/p05-clean` with no `.env.local`. Fresh PostgreSQL **17.11** on isolated loopback port 55466, database timezone Africa/Nairobi. No production/provider credentials are used. Logs are retained under ignored `.cache/p05-evidence/`.
+
+| Command/suite | Result | Evidence file |
+|---|---|---|
+| `npm ci --cache D:/Myfarm/.cache/npm --prefer-offline --no-audit` | PASS, exact lockfile; no dependency change | checks-0.log |
+| `npm run db:generate` | PASS | checks-1.log |
+| `npm run lint` | PASS | checks-2.log |
+| `npm run typecheck` | PASS | checks-3.log |
+| `npm run check:boundaries` | PASS | checks-4.log |
+| `npm test` | PASS, 760 tests / 41 files | checks-5.log |
+| `npm run db:migrate` | PASS, 13 migrations on a fresh database | checks-6.log |
+| `npm run test:integration` | PASS, 179 tests / 21 files | checks-7.log |
+| `TZ=Africa/Nairobi` selected stock/accounting integration suites | PASS, 43 tests | nonutc-0.log |
+| Prisma migration drift (`migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code`) | PASS, no difference | checks-8.log |
+| `node tests/support/phase05-recovery.mjs` | PASS, real dump/restore | checks-9.log |
+| Ordinary production build | PASS | anonymous-0.log |
+| `npx playwright install chromium` | PASS | anonymous-1.log |
+| `npm run test:e2e` | PASS, 48 anonymous desktop/mobile tests | anonymous-2.log |
+| Fixture-auth production build | PASS | signed-0.log |
+| Full signed-in desktop/mobile suite | PASS, 104 tests on corrected fixture commit 8c2f66a | signed-1.log |
+| `npm audit --omit=dev` | PASS, 0 production dependency vulnerabilities | primary session output |
+| Actionlint, diff whitespace and document targets | PASS | session output / document review |
+| GitHub-hosted quality | PENDING authorized verification push; required for closure | to be recorded |
+
+The first full signed-in run passed all 100 legacy checks but failed the four new cases because preceding tests intentionally expired fixture sessions. Commit `8c2f66a` resets only those generated fixture sessions/memberships and clears linked stock/accounting fixtures in dependency order. No assertion or application authorization check was weakened. Initial failed evidence is retained as `signed-initial-failed.log` and `signed-initial.json`; the whole suite is rerun.
+
+Committed LF migration SHA-256 checksums, independently matched against the clean database history:
+
+| Migration | SHA-256 |
+|---|---|
+| 202610290001_harvest_inventory | b79ff352641e3ea3f3c34071535ad4107b757a58f78516c5b9931dfd95365bb5 |
+| 202610290002_harvest_scope | 848cff97a7354a16638d00d768628594f7f4d82e20283e9e0820666b76afdc67 |
+| 202610290003_poultry_production | f5207d6ffffad2d033e1bce5e014b718a0a5c56d70c33aae1249f9a2cbe578e3 |
+| 202610290004_stock_operations | 3f1b5835ccaf20f972b4aaa731aa0a18e1ea94818a3b8d161f8bba7552341ca8 |
+| 202610290005_stock_integrity | 46c800b3a911bbd332d8598f3d785049d5caaaae2023e5c7d7f42ae7a365c9b2 |
+
+The pre-existing `next-env.d.ts` dev-route imports are preserved and excluded from phase commits. No source-extract body or package manifest/lockfile changed. [Every-document review](phase-05-document-review-2026-10-29.md).
+
+Local audit verdict: **PASS** at application candidate `c6fb24f` plus test-only correction `8c2f66a`. The corrected full signed-in suite passes 104/104. All four acceptance criteria are locally verified; the final implementation tree has no failing local quality gate. Phase verdict remains **PENDING hosted CI**, not closed, under D-P05-005. The authorized verification push is the next step.

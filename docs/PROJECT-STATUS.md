@@ -6,7 +6,7 @@
 - Last reviewed: 2026-10-29 (Africa/Nairobi).
 - Related phase/task IDs: MYF-P05-T001 through MYF-P05-T013; D-P05-005.
 - Verified completed work: Phase 4 owner-accepted; Phase 5 T001-T012 committed and locally verified (12/13, 92.31%).
-- Remaining work/blockers: T013 clean-checkout audit and required hosted CI before Phase 5 closure. No Phase 6 authorization.
+- Remaining work/blockers: T013 clean-checkout local audit PASS; required hosted CI remains pending before Phase 5 closure. No Phase 6 authorization.
 - Evidence/report links: [Phase 5 audit](reports/phase-05-closeout-2026-10-29.md); [Phase 4 closeout](reports/phase-04-closeout-2026-10-26.md).
 <!-- MYFARM-STATUS-END -->
 
@@ -34,7 +34,7 @@ Current phase: **Phase1 — COMPLETED — 100% (13/13), verdict PASS WITH CONDIT
 | 2 | [Farmer Identity and Farm Registry](phases/phase-02-farmer-registry.md) | COMPLETED — 100% (PASS WITH CONDITIONS — LOCAL VERIFICATION) | T001–T013 verified | Open conditions P2-C1, P2-C3–P2-C5, P2-C7 (hosted CI, checksums, proposed defaults, retention policy, JWT redirect residual); P2-C2, P2-C6, P2-C8 resolved 2026-10-10 | [Closeout](reports/phase-02-closeout-2026-10-09.md), [hosted application](reports/phase-01-02-integration-2026-10-09.md#9-hosted-application--2026-10-10) |
 | 3 | [Enterprises Crops Livestock and Seasons](phases/phase-03-enterprises-seasons.md) | COMPLETED - 100% (13/13), PASS WITH CONDITIONS - LOCAL VERIFICATION | T001-T013 and AC001-AC004 verified locally; owner accepted L gate; hosted closure grants verified | Inherited hosted CI/production conditions; Phase 4 not started | [Closeout](reports/phase-03-closeout-2026-10-25.md) |
 | 4 | [Farm Accounting Engine](phases/phase-04-farm-accounting.md) | COMPLETED - 100% (16/16), PASS WITH CONDITIONS - LOCAL VERIFICATION | T001-T016 and AC001-AC005 verified locally (records, payments, categories, links, gross margin, summary/export) | P4-C1 hosted CI; P4-C2 hosted schema/policy; P4-C3/C4; Phase 5 not started | [Closeout](reports/phase-04-closeout-2026-10-26.md) |
-| 5 | [Harvest Production and Inventory](phases/phase-05-harvest-inventory.md) | PARTIALLY COMPLETE - 92.31% (12/13) | T001-T012 verified | Dependent tasks and full phase audit pending | [T012 evidence](reports/phase-05-t012-2026-10-29.md) |
+| 5 | [Harvest Production and Inventory](phases/phase-05-harvest-inventory.md) | PARTIALLY COMPLETE - 92.31% (12/13) | T001-T012 verified; T013 local audit PASS | Hosted CI required before T013/phase closure (D-P05-005) | [Audit](reports/phase-05-closeout-2026-10-29.md) |
 | 6 | [Production Activities and Farm Calendar](phases/phase-06-farm-activities.md) | NOT STARTED — 0% | None | All H tasks | None |
 | 7 | [Offline First Architecture](phases/phase-07-offline-first.md) | NOT STARTED — 0% | None | All H tasks | None |
 | 8 | [Farm Analytics and Profitability Engine](phases/phase-08-analytics-profitability.md) | NOT STARTED — 0% | None | All H tasks | None |
@@ -184,3 +184,5 @@ Phase 5 latest checkpoint: T011, 84.62% (11/13); [evidence](reports/phase-05-t01
 Phase 5 latest checkpoint: T012, 92.31% (12/13); [evidence](reports/phase-05-t012-2026-10-29.md).
 
 Latest Phase 5 audit: T001-T012 locally verified and committed; T013 remains pending hosted CI under D-P05-005. [Current evidence](reports/phase-05-closeout-2026-10-29.md). No later phase is started.
+
+T013 local audit PASS (760 unit/component, 179 integration, 43 non-UTC, 48 anonymous, 104 signed-in browser checks; full evidence in the [audit](reports/phase-05-closeout-2026-10-29.md)). Hosted verification remains pending; no Phase 5 closure or Phase 6 authorization is claimed.

@@ -6,7 +6,7 @@
 - Last reviewed: 2026-10-29 (Africa/Nairobi).
 - Related phase/task IDs: MYF-P05-T001 through MYF-P05-T013; D-P05-001; Q12/Q13.
 - Verified completed work: T001-T012 locally verified and committed; all four acceptance oracles have local domain/DB/browser evidence.
-- Remaining work/blockers: T013 final local audit and required GitHub-hosted CI (D-P05-005); phase remains open.
+- Remaining work/blockers: T013 local audit passes; required GitHub-hosted CI (D-P05-005) remains pending before closure.
 - Evidence/report links: [T001 evidence](../reports/phase-05-t001-2026-10-29.md); [Start plan](../reports/phase-05-start-2026-10-29.md); [Phase 4 closeout](../reports/phase-04-closeout-2026-10-26.md).
 <!-- MYFARM-STATUS-END -->
 
@@ -310,3 +310,5 @@ Stock reconstruction, recalculation and history screens. PASS: lint and producti
 ## T013 audit checkpoint
 
 All implementation stages T001-T012 are committed. The final audit is in progress and hosted CI is mandatory before phase closure; no local substitution was approved. [Current audit and limitations](../reports/phase-05-closeout-2026-10-29.md).
+
+Local T013 audit PASS: clean checkout, 760 unit/component, 179 integration, 43 non-UTC, 48 anonymous and 104 signed-in browser checks; lint/typecheck/build, boundaries, migration rollback/drift/checksums, recovery and production dependency audit pass. Hosted CI remains required; T013 is not yet counted complete. [Evidence](../reports/phase-05-closeout-2026-10-29.md).

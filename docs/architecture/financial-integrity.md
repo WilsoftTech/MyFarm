@@ -1,13 +1,13 @@
 # Financial and inventory integrity
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — T013 metadata/status scope and evidence-link relevance; historical and future-phase facts unchanged.
-- Implementation status: NOT STARTED — 0% (direct feature scope unimplemented).
-- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
+- Documentation review: REVIEWED - Phase 5 task-relevant contracts, implementation, status and evidence; historical sections preserved.
+- Implementation status: Phase 1-4 accepted with documented conditions; Phase 5 T001-T012 locally verified, T013/hosted CI pending. No whole-architecture completion percentage claimed.
+- Last reviewed: 2026-10-29 (Africa/Nairobi), Phase 5 T013 audit.
 - Related phase/task IDs: Future phase architecture as referenced; Phase01 review session T001–T013; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Scope/status/provider applicability reviewed; no financial/offline/farm-domain runtime implementation verified.
-- Remaining work/blockers: Associated future tasks, business decisions and exit gates pending; no phase advancement.
-- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
+- Remaining work/blockers: Required hosted CI before Phase 5 closes; hosted migrations/provisioning and inherited production conditions remain separate gates.
+- Evidence/report links: [Current Phase 5 audit](../reports/phase-05-closeout-2026-10-29.md); [document review](../reports/phase-05-document-review-2026-10-29.md). Historical task evidence remains linked below.
 <!-- MYFARM-STATUS-END -->
 
 All authoritative money/quantity calculations are deterministic application/domain services. AI may explain returned values; it cannot invent balances, recognize revenue or post financial entries. Money uses exact decimals plus currency, explicit rounding and approved basis (Q09). Do not aggregate currencies or confuse household consumption, transfers and income.

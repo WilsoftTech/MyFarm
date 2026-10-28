@@ -1,13 +1,13 @@
 # Domain model
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — T013 task-relevant content, status and evidence.
-- Implementation status: PARTIALLY COMPLETE — Phase02 registry scope verified; Phase03 T001 Enterprise/Season foundation schema verified locally; no whole-document percentage claimed.
-- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
+- Documentation review: REVIEWED - Phase 5 task-relevant contracts, implementation, status and evidence; historical sections preserved.
+- Implementation status: Phase 1-4 accepted with documented conditions; Phase 5 T001-T012 locally verified, T013/hosted CI pending. No whole-architecture completion percentage claimed.
+- Last reviewed: 2026-10-29 (Africa/Nairobi), Phase 5 T013 audit.
 - Related phase/task IDs: Phase02 MYF-P02-T001–T013; later phases per roadmap.
 - Verified completed work: Farmer, FarmerProfile, Farm, Plot, FarmMember implemented; User/Organization reused; Address/Contact as columns; Document deferred (D-P02-003).
-- Remaining work/blockers: Phase03 crop-cycle contract and runtime persistence/API verified in T004/T005; crop UI, batch detail and later entities remain pending. Document awaits retention policy (P2-C5). [T002 evidence](../reports/phase-03-t002-2026-10-18.md).
-- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md) [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
+- Remaining work/blockers: Required hosted CI before Phase 5 closes; hosted migrations/provisioning and inherited production conditions remain separate gates.
+- Evidence/report links: [Current Phase 5 audit](../reports/phase-05-closeout-2026-10-29.md); [document review](../reports/phase-05-document-review-2026-10-29.md). Historical task evidence remains linked below.
 <!-- MYFARM-STATUS-END -->
 
 ## Phase 3 foundation subset — 2026-10-18

@@ -1,13 +1,13 @@
 # Security architecture
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — T013 task-relevant content, status and evidence.
-- Implementation status: Phase01 scope COMPLETED — 100% (13/13 verified Phase01 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); Phase02 scope COMPLETED — 100% (13/13 verified Phase02 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); later-phase scope not counted.
-- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
+- Documentation review: REVIEWED - Phase 5 task-relevant contracts, implementation, status and evidence; historical sections preserved.
+- Implementation status: Phase 1-4 accepted with documented conditions; Phase 5 T001-T012 locally verified, T013/hosted CI pending. No whole-architecture completion percentage claimed.
+- Last reviewed: 2026-10-29 (Africa/Nairobi), Phase 5 T013 audit.
 - Related phase/task IDs: Phase01 MYF-P01-T001–T013; Phase02 MYF-P02-T001–T013.
 - Verified completed work: Phase01 scope as previously verified; Phase02: farmer registry contracts/policies/migration/API/tests in this document's area verified (see the Phase 2 implementation section).
-- Remaining work/blockers: Phase02 conditions P2-C1–P2-C8 where applicable; later-phase scope pending authorization.
-- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
+- Remaining work/blockers: Required hosted CI before Phase 5 closes; hosted migrations/provisioning and inherited production conditions remain separate gates.
+- Evidence/report links: [Current Phase 5 audit](../reports/phase-05-closeout-2026-10-29.md); [document review](../reports/phase-05-document-review-2026-10-29.md). Historical task evidence remains linked below.
 <!-- MYFARM-STATUS-END -->
 
 Baseline security starts Phase 1; Phase 24 validates scale/recovery. Threats include cross-farm IDOR, shared-device leakage, privilege changes, malicious uploads, prompt injection, forged/replayed provider events, duplicate financial writes, stolen sessions/secrets and accidental backup exposure.
@@ -53,3 +53,7 @@ Open: Supabase advisors not run this session (P2-C6); `_prisma_migrations` brows
 ## Where tenant isolation is enforced (2026-10-09)
 
 The application is the primary isolation layer; the database is defense in depth. Read isolation between tenants and the caller's identity are enforced only by the application, because one shared runtime role serves every user and its SELECT policies are `USING (true)`. Browser roles have no access to any object in `public` ([browser-role lockdown](deployment-infrastructure.md#provisioning-updated-2026-10-09-provisioning-hardening)). Full breakdown: [multi-tenancy](multi-tenancy.md#where-tenant-isolation-is-enforced-2026-10-09).
+
+## Phase 5 verification scope - 2026-10-29
+
+Phase 5 reuses current session/FARMER/farm checks, scoped nested IDs and strict command DTOs. New stock histories are append-only to the runtime and inaccessible to browser roles; transaction locks and receipt checks cover replay, overselling, revocation during waits and coordinated financial corrections. Real two-tenant/same-tenant-farm/ADMIN/revocation tests pass. Shared backend SELECT policies remain defense-in-depth, not a replacement for application read isolation. [Current audit](../reports/phase-05-closeout-2026-10-29.md).

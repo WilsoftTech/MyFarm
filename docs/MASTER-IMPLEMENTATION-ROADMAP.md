@@ -6,7 +6,7 @@
 - Last reviewed: 2026-10-29 (Africa/Nairobi).
 - Related phase/task IDs: MYF-P05-T001 through MYF-P05-T013; D-P05-005.
 - Verified completed work: Phase 4 owner-accepted; Phase 5 T001-T012 committed and locally verified (12/13, 92.31%).
-- Remaining work/blockers: T013 clean-checkout audit and required hosted CI before Phase 5 closure. No Phase 6 authorization.
+- Remaining work/blockers: T013 clean-checkout local audit PASS; required hosted CI remains pending before Phase 5 closure. No Phase 6 authorization.
 - Evidence/report links: [Phase 5 audit](reports/phase-05-closeout-2026-10-29.md); [Phase 4 closeout](reports/phase-04-closeout-2026-10-26.md).
 <!-- MYFARM-STATUS-END -->
 
@@ -135,3 +135,5 @@ The immediate path continues Phase 3 → 4 only after explicit owner authorizati
 Local start authorized under D-P05-001. T001 harvest contract/domain is verified; 1/13 tasks (7.69%). Q12/Q13 scope approved under D-P05-002/003. Lint, typecheck, 742 unit/component tests, build and boundaries PASS. No schema or hosted change. T002 persistence is next. [T001 evidence](reports/phase-05-t001-2026-10-29.md). [Scope, reuse, verification plan and pending policies](reports/phase-05-start-2026-10-29.md). Historical checkpoints above remain historical.
 
 Latest Phase 5 audit: T001-T012 locally verified and committed; T013 remains pending hosted CI under D-P05-005. [Current evidence](reports/phase-05-closeout-2026-10-29.md). No later phase is started.
+
+T013 local audit PASS (760 unit/component, 179 integration, 43 non-UTC, 48 anonymous, 104 signed-in browser checks; full evidence in the [audit](reports/phase-05-closeout-2026-10-29.md)). Hosted verification remains pending; no Phase 5 closure or Phase 6 authorization is claimed.
