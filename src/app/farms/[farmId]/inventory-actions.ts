@@ -15,6 +15,10 @@ export async function inventoryChoices(farmId: string, kind: string, cursor?: st
     const page = await harvestService().locations(farmId, input);
     return { items: page.items.map(r => ({ id: r.storageLocationId, label: r.name })), nextCursor: page.nextCursor };
   }
+  if (kind === "items") {
+    const {stockService}=await import("@/modules/harvest-inventory/infrastructure/services");const p=await stockService().items(farmId,input);
+    return {items:p.items.map(r=>({id:r.itemId,label:r.name+" ("+r.unit+")",unit:r.unit})),nextCursor:p.nextCursor};
+  }
   if (kind === "batches") {
     const p = await poultryBatchService().list(farmId, input);
     return { items: p.items.map(r => ({ id: r.batchId, label: r.batchLabel })), nextCursor: p.nextCursor };
@@ -56,4 +60,24 @@ export async function savePoultryEvent(farmId: string, input: unknown) {
   await poultryProductionService().record(farmId, { ...fields, ...(fields.type === "BIRD_SALE" ? {sale:{categoryId,amount,currency}} : {}) });
   return "/farms/" + farmId + "/poultry-production/" + fields.batchId;
  }, "Not enough birds at this location, or the request conflicts. Reload and check the flock.", "Check the event, date, quantity and unit. Bird sales also need category, amount and currency.");
+}
+
+export async function saveInventoryItem(farmId:string,input:unknown) {
+ return runServerCommand(async()=>{const {stockService}=await import("@/modules/harvest-inventory/infrastructure/services");await stockService().createItem(farmId,input);return "/farms/"+farmId+"/inventory";},"An item with this name and unit already exists.");
+}
+export async function saveStockOperation(farmId:string,input:unknown) {
+ return runServerCommand(async()=>{
+  const {z}=await import("zod");const p=z.object({requestId:z.string(),itemId:z.string(),locationId:z.string(),type:z.string(),quantity:z.string(),unit:z.string(),occurredOn:z.string(),reason:z.string(),destinationLocationId:z.string().optional(),direction:z.string().optional(),categoryId:z.string().optional(),amount:z.string().optional(),currency:z.string().optional()}).strict().safeParse(input);
+  if(!p.success)throw new FoundationError("INVALID_INPUT");const {categoryId,amount,currency,destinationLocationId,direction,...fields}=p.data;
+  if(fields.type!=="SALE"&&(categoryId||amount||currency))throw new FoundationError("INVALID_INPUT");
+  const {stockService}=await import("@/modules/harvest-inventory/infrastructure/services");
+  await stockService().post(farmId,{...fields,...(destinationLocationId?{destinationLocationId}:{}),...(direction?{direction}:{}),...(fields.type==="SALE"?{sale:{categoryId,amount,currency}}:{})});
+  return "/farms/"+farmId+"/inventory";
+ },"There is not enough stock at this store on the chosen date, or this request conflicts. Reload and check history.","Check the units, dates and details for the selected operation. Bird sales and losses must be recorded as poultry events.");
+}
+export async function saveStockReversal(farmId:string,targetType:string,targetId:string,input:unknown) {
+ return runServerCommand(async()=>{
+  const {z}=await import("zod");const p=z.object({requestId:z.string(),reason:z.string(),occurredOn:z.string(),confirmed:z.literal(true)}).strict().safeParse(input);if(!p.success)throw new FoundationError("INVALID_INPUT");
+  const {stockService}=await import("@/modules/harvest-inventory/infrastructure/services");await stockService().reverse(farmId,{...p.data,targetType,targetId});return "/farms/"+farmId+"/inventory";
+ },"This record is already reversed, its stock has been used, or its payments must be reversed first. Check the history before retrying.");
 }

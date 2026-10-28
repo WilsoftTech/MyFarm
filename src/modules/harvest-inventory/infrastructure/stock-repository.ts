@@ -31,6 +31,7 @@ async function validateTimeline(tx:Prisma.TransactionClient,scope:ProductionWrit
 }
 export function stockRepository(db:PrismaClient):StockRepository {
  return {
+  async operation(scope,id) {const row=await db.stockOperation.findFirst({where:{...stockScope(scope),id}});return row?view(row):null;},
   async operations(scope,{cursor,limit}) { const where=stockScope(scope),anchor=cursor?productionAfter(await db.stockOperation.findFirst({where:{...where,id:cursor}})):{};
    const rows=await db.stockOperation.findMany({where:{...where,...anchor},orderBy:[{createdAt:"desc"},{id:"desc"}],take:limit+1});return {items:rows.slice(0,limit).map(view),nextCursor:rows.length>limit?rows[limit-1].id:null};
   },

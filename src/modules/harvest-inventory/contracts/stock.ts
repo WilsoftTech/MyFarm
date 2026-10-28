@@ -28,6 +28,7 @@ export type ReverseStock = z.output<typeof reverseStockSchema>;
 export interface StockItemView { itemId: string; name: string; unit: string; kind: string; balances: { locationId: string; locationName: string; quantity: string }[] }
 export interface StockOperationView { operationId: string; type: string; itemId: string | null; quantity: string; unit: string; occurredOn: string; reason: string; accountingRecordId: string | null }
 export interface StockRepository {
+  operation(scope: import("@/modules/enterprises-seasons/domain/production").FarmScope, id: string): Promise<StockOperationView | null>;
   operations(scope: import("@/modules/enterprises-seasons/domain/production").FarmScope, page: import("@/modules/enterprises-seasons/contracts/production").ProductionPageInput): Promise<import("@/modules/enterprises-seasons/contracts/production").ProductionPage<StockOperationView>>;
   createItem(scope: import("@/modules/enterprises-seasons/contracts/production").ProductionWriteScope, input: CreateItem): Promise<StockItemView>;
   items(scope: import("@/modules/enterprises-seasons/domain/production").FarmScope, page: import("@/modules/enterprises-seasons/contracts/production").ProductionPageInput): Promise<import("@/modules/enterprises-seasons/contracts/production").ProductionPage<StockItemView>>;

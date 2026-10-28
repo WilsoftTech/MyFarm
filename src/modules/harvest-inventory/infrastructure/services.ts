@@ -17,7 +17,7 @@ import { PoultryProductionService } from "../application/production";
 import { poultryProductionRepository } from "./production-repository";
 export function poultryProductionService() {
  return new PoultryProductionService(authorizationService(), { farmScopeForMember: input => registryRepository(database()).farmScopeForMember(input) }, {
-  record: (...args) => poultryProductionRepository(database()).record(...args), summary: (...args) => poultryProductionRepository(database()).summary(...args),
+  event: (...args) => poultryProductionRepository(database()).event(...args),record: (...args) => poultryProductionRepository(database()).record(...args), summary: (...args) => poultryProductionRepository(database()).summary(...args),
  });
 }
 
@@ -25,6 +25,6 @@ import { StockService } from "../application/stock";
 import { stockRepository } from "./stock-repository";
 export function stockService() {
  return new StockService(authorizationService(), { farmScopeForMember: input => registryRepository(database()).farmScopeForMember(input) }, {
-  operations:(...args)=>stockRepository(database()).operations(...args),items:(...args)=>stockRepository(database()).items(...args),createItem:(...args)=>stockRepository(database()).createItem(...args),post:(...args)=>stockRepository(database()).post(...args),reverse:(...args)=>stockRepository(database()).reverse(...args),
+  operation:(...args)=>stockRepository(database()).operation(...args),operations:(...args)=>stockRepository(database()).operations(...args),items:(...args)=>stockRepository(database()).items(...args),createItem:(...args)=>stockRepository(database()).createItem(...args),post:(...args)=>stockRepository(database()).post(...args),reverse:(...args)=>stockRepository(database()).reverse(...args),
  });
 }

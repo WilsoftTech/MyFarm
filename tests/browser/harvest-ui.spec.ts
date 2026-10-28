@@ -30,13 +30,48 @@ test("harvest entry preserves offline input, posts once and denies foreign farm 
     const harvestId = page.url().split("/").pop();
     expect((await context.request.get(`/api/v1/farms/${f.farms.a2}/harvests/${harvestId}`)).status()).toBe(403);
     expect((await context.request.post(`/api/v1/farms/${farm}/harvests`, { headers, data: { requestId: id(), cropCycleId: c.cycleId, cropId: "f4030005-0000-4000-8000-000000000001", plotId: id(), storageLocationId: store.storageLocationId, harvestDate: "2026-10-01", quantity: "1", unit: "BAG" } })).status()).toBe(400);
+    const detail = await context.request.get(`/api/v1/farms/${farm}/harvests/${harvestId}`);
+    const itemId = z.object({harvest:z.object({itemId:z.uuid()})}).parse(await detail.json()).harvest.itemId;
+    const categories = z.object({items:z.array(z.object({categoryId:z.uuid()}))}).parse(await (await context.request.get(`/api/v1/farms/${farm}/accounting/categories?kind=REVENUE`)).json());
+    await page.goto(`/farms/${farm}/inventory/new`);
+    await page.getByLabel("Inventory item",{exact:true}).selectOption(itemId);
+    await expect(page.getByLabel("Unit",{exact:true})).toHaveValue("KG");
+    await page.getByLabel("From store",{exact:true}).selectOption(store.storageLocationId);
+    await page.getByLabel("Operation",{exact:true}).selectOption("SALE");
+    await page.getByLabel("Quantity",{exact:true}).fill("1600");
+    await page.getByLabel("Movement date",{exact:true}).fill("2026-10-01");
+    await page.getByLabel("Reason",{exact:true}).fill("Harvest sold");
+    await page.getByLabel("Sale category (optional)",{exact:true}).selectOption(categories.items[0].categoryId);
+    await page.getByLabel("Sale amount (optional)",{exact:true}).fill("200000");
+    await page.getByLabel("Sale currency (optional)",{exact:true}).fill("UGX");
+    await page.getByRole("button",{name:"Save stock movement"}).click();
+    await expect(page.getByRole("heading",{name:"Inventory",exact:true})).toBeVisible();
+    await expect(page.getByText(/: 650 KG$/)).toBeVisible();
+    const dest = z.object({location:z.object({storageLocationId:z.uuid()})}).parse(await post("storage-locations",{requestId:id(),name:"Destination "+id()})).location;
+    await page.goto(`/farms/${farm}/inventory/new`);
+    await page.getByLabel("Inventory item",{exact:true}).selectOption(itemId);
+    await page.getByLabel("From store",{exact:true}).selectOption(store.storageLocationId);
+    await page.getByLabel("Operation",{exact:true}).selectOption("TRANSFER");
+    await page.getByLabel("Quantity",{exact:true}).fill("150");
+    await page.getByLabel("Movement date",{exact:true}).fill("2026-10-01");
+    await page.getByLabel("Reason",{exact:true}).fill("Move to dry store");
+    await page.getByLabel("Destination store (optional)",{exact:true}).selectOption(dest.storageLocationId);
+    await page.getByRole("button",{name:"Save stock movement"}).click();
+    await expect(page.getByText(/: 500 KG$/)).toBeVisible();await expect(page.getByText(/: 150 KG$/)).toBeVisible();
+    await page.getByRole("link",{name:"Stock operations",exact:true}).click();
+    await page.getByRole("link",{name:"Review reversal",exact:true}).first().click();
+    await page.getByLabel("Reversal date",{exact:true}).fill("2026-10-01");
+    await page.getByLabel("Reason for reversal",{exact:true}).fill("Wrong destination");
+    await page.getByLabel("I have reviewed this correction",{exact:true}).check();
+    await page.getByRole("button",{name:"Confirm reversal"}).click();
+    await expect(page.getByText(/: 650 KG$/)).toBeVisible();
     const db = new Client({ connectionString: process.env.TEST_DATABASE_URL }); await db.connect();
     try { expect((await db.query('SELECT count(*)::int AS n FROM "StockMovement" WHERE "harvestId"=$1', [harvestId])).rows[0].n).toBe(2); }
     finally { await db.end(); }
   } finally {
     await context.setOffline(false);
     const db = new Client({ connectionString: process.env.TEST_DATABASE_URL }); await db.connect();
-    try { for (const table of ["StockMovement", "Harvest", "InventoryItem", "StorageLocation"]) await db.query('DELETE FROM "' + table + '" WHERE "tenantId"=$1', [f.tenants.a]); }
+    try { for (const table of ["StockMovement", "StockAdjustment", "StockOperation", "Harvest", "InventoryItem", "StorageLocation"]) await db.query('DELETE FROM "' + table + '" WHERE "tenantId"=$1', [f.tenants.a]); }
     finally { await db.end(); }
   }
 });

@@ -13,6 +13,7 @@ import { commandHash, stockDate, stockScope } from "./harvest-repository";
 const eventView = (r: ProductionEvent): ProductionEventView => ({ eventId: r.id, batchId: r.batchId, type: r.type, quantity: r.quantity.toString(), unit: r.unit, occurredOn: r.occurredOn.toISOString().slice(0, 10), note: r.note, accountingRecordId: r.accountingRecordId });
 export function poultryProductionRepository(db: PrismaClient): PoultryProductionRepository {
   return {
+    async event(scope,id) {const row=await db.productionEvent.findFirst({where:{...stockScope(scope),id}});return row?eventView(row):null;},
     async summary(scope, batchId) {
       const where = stockScope(scope), batch = await db.poultryBatch.findFirst({ where: { ...where, id: batchId } });
       if (!batch) throw new FoundationError("FORBIDDEN");

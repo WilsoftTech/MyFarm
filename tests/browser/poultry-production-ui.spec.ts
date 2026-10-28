@@ -26,6 +26,6 @@ test("source flock reconstructs 105 birds after purchase, mortality and an atomi
   await page.goto(`/farms/${farm}/poultry-batches/${b.batchId}`);await expect(page.getByText("105 birds",{exact:true})).toBeVisible();
  } finally {
   const db=new Client({connectionString:process.env.TEST_DATABASE_URL});await db.connect();
-  try{for(const table of ["StockMovement","ProductionEvent","Harvest","InventoryItem","StorageLocation"])await db.query('DELETE FROM "'+table+'" WHERE "tenantId"=$1',[f.tenants.a]);}finally{await db.end();}
+  try{for(const table of ["StockMovement","StockAdjustment","StockOperation","ProductionEvent","Harvest","InventoryItem","StorageLocation"])await db.query('DELETE FROM "'+table+'" WHERE "tenantId"=$1',[f.tenants.a]);}finally{await db.end();}
  }
 });
