@@ -32,7 +32,7 @@ Current phase: **Phase1 — COMPLETED — 100% (13/13), verdict PASS WITH CONDIT
 | 2 | [Farmer Identity and Farm Registry](phases/phase-02-farmer-registry.md) | COMPLETED — 100% (PASS WITH CONDITIONS — LOCAL VERIFICATION) | T001–T013 verified | Open conditions P2-C1, P2-C3–P2-C5, P2-C7 (hosted CI, checksums, proposed defaults, retention policy, JWT redirect residual); P2-C2, P2-C6, P2-C8 resolved 2026-10-10 | [Closeout](reports/phase-02-closeout-2026-10-09.md), [hosted application](reports/phase-01-02-integration-2026-10-09.md#9-hosted-application--2026-10-10) |
 | 3 | [Enterprises Crops Livestock and Seasons](phases/phase-03-enterprises-seasons.md) | COMPLETED - 100% (13/13), PASS WITH CONDITIONS - LOCAL VERIFICATION | T001-T013 and AC001-AC004 verified locally; owner accepted L gate; hosted closure grants verified | Inherited hosted CI/production conditions; Phase 4 not started | [Closeout](reports/phase-03-closeout-2026-10-25.md) |
 | 4 | [Farm Accounting Engine](phases/phase-04-farm-accounting.md) | COMPLETED - 100% (16/16), PASS WITH CONDITIONS - LOCAL VERIFICATION | T001-T016 and AC001-AC005 verified locally (records, payments, categories, links, gross margin, summary/export) | P4-C1 hosted CI; P4-C2 hosted schema/policy; P4-C3/C4; Phase 5 not started | [Closeout](reports/phase-04-closeout-2026-10-26.md) |
-| 5 | [Harvest Production and Inventory](phases/phase-05-harvest-inventory.md) | PARTIALLY COMPLETE - 69.23% (9/13) | T001-T009 verified | Dependent tasks and full phase audit pending | [T009 evidence](reports/phase-05-t009-2026-10-29.md) |
+| 5 | [Harvest Production and Inventory](phases/phase-05-harvest-inventory.md) | PARTIALLY COMPLETE - 76.92% (10/13) | T001-T010 verified | Dependent tasks and full phase audit pending | [T010 evidence](reports/phase-05-t010-2026-10-29.md) |
 | 6 | [Production Activities and Farm Calendar](phases/phase-06-farm-activities.md) | NOT STARTED — 0% | None | All H tasks | None |
 | 7 | [Offline First Architecture](phases/phase-07-offline-first.md) | NOT STARTED — 0% | None | All H tasks | None |
 | 8 | [Farm Analytics and Profitability Engine](phases/phase-08-analytics-profitability.md) | NOT STARTED — 0% | None | All H tasks | None |
@@ -174,3 +174,5 @@ Phase 5 latest checkpoint: T007, 53.85% (7/13); [evidence](reports/phase-05-t007
 Phase 5 latest checkpoint: T008, 61.54% (8/13); [evidence](reports/phase-05-t008-2026-10-29.md).
 
 Phase 5 latest checkpoint: T009, 69.23% (9/13); [evidence](reports/phase-05-t009-2026-10-29.md).
+
+Phase 5 latest checkpoint: T010, 76.92% (10/13); [evidence](reports/phase-05-t010-2026-10-29.md).

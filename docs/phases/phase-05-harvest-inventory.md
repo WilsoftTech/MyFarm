@@ -2,7 +2,7 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - T001 requirements, dependencies and affected architecture/contracts.
-- Implementation status: PARTIALLY COMPLETE - 69.23% (9/13 verified tasks).
+- Implementation status: PARTIALLY COMPLETE - 76.92% (10/13 verified tasks).
 - Last reviewed: 2026-10-29 (Africa/Nairobi).
 - Related phase/task IDs: MYF-P05-T001 through MYF-P05-T013; D-P05-001; Q12/Q13.
 - Verified completed work: T001 harvest domain/DTO/repository contract verified; 56 focused and 742 cumulative unit/component tests pass. Full AC001 pending.
@@ -10,7 +10,7 @@
 - Evidence/report links: [T001 evidence](../reports/phase-05-t001-2026-10-29.md); [Start plan](../reports/phase-05-start-2026-10-29.md); [Phase 4 closeout](../reports/phase-04-closeout-2026-10-26.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **PARTIALLY COMPLETE - 69.23% (9/13 verified tasks)**. Date: 2026-10-29. Local start authorized by D-P05-001; Q12/Q13 scope approved under D-P05-002/003. T001 verified; T002 is next. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **PARTIALLY COMPLETE - 76.92% (10/13 verified tasks)**. Date: 2026-10-29. Local start authorized by D-P05-001; Q12/Q13 scope approved under D-P05-002/003. T001 verified; T002 is next. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
@@ -250,7 +250,7 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 - [x] MYF-P05-T007 complete with [evidence](../reports/phase-05-t007-2026-10-29.md).
 - [x] MYF-P05-T008 complete with [evidence](../reports/phase-05-t008-2026-10-29.md).
 - [x] MYF-P05-T009 complete with [evidence](../reports/phase-05-t009-2026-10-29.md).
-- [ ] MYF-P05-T010 complete with evidence.
+- [x] MYF-P05-T010 complete with [evidence](../reports/phase-05-t010-2026-10-29.md).
 - [ ] MYF-P05-T011 complete with evidence.
 - [ ] MYF-P05-T012 complete with evidence.
 - [ ] MYF-P05-T013 complete with evidence.
@@ -294,3 +294,7 @@ Atomic stock operations, transfers and coordinated reversals. PASS: lint, typech
 ### T009 checkpoint
 
 Stock entry, balances, transfers and confirmed reversal screens. PASS: lint and production build (including TypeScript), 7 focused domain/component tests and 4 signed-in desktop/mobile browser tests. AC001 full source journey now shows 650 kg after harvest/loss/sale; browser transfer shows 500 plus 150 kg and confirmed reversal restores 650 kg. AC003 ledger 1150 kg and concurrency/conservation remain verified in T008 DB tests. Reuses generic RecordForm, paged selectors, farm shell and feedback. No migration or dependency change. Reversal review displays original quantity/unit/date and requires confirmation. [Report](../reports/phase-05-t009-2026-10-29.md).
+
+### T010 checkpoint
+
+Deterministic balance reconstruction and reconciliation contract. PASS: 3 focused domain tests, lint and typecheck. Detects corrupted/missing projections, rebuilds from immutable movement history, retains zero balances, rejects duplicate/malformed projections and supports exact aggregate totals larger than one stored movement. No persisted balance authority or new schema introduced. Full authorized database/UI AC004 remains T011/T012. [Report](../reports/phase-05-t010-2026-10-29.md).
