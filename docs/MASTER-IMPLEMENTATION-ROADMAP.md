@@ -5,8 +5,8 @@
 - Implementation status: REFERENCE ONLY - N/A (navigation and verified progress record).
 - Last reviewed: 2026-10-29 (Africa/Nairobi).
 - Related phase/task IDs: MYF-P05-T001 through MYF-P05-T013; D-P05-005.
-- Verified completed work: Phase 4 owner-accepted; Phase 5 T001-T012 committed and locally verified (12/13, 92.31%).
-- Remaining work/blockers: T013 clean-checkout local audit PASS; required hosted CI remains pending before Phase 5 closure. No Phase 6 authorization.
+- Verified completed work: Phase 5 T001-T013 (13/13, 100%) and AC001-AC004 pass locally and in hosted CI run 40783651036.
+- Remaining work/blockers: No Phase 5 blocker; hosted migration/provisioning and documented production/scale conditions remain. Phase 6 not started or authorized.
 - Evidence/report links: [Phase 5 audit](reports/phase-05-closeout-2026-10-29.md); [Phase 4 closeout](reports/phase-04-closeout-2026-10-26.md).
 <!-- MYFARM-STATUS-END -->
 
@@ -137,3 +137,7 @@ Local start authorized under D-P05-001. T001 harvest contract/domain is verified
 Latest Phase 5 audit: T001-T012 locally verified and committed; T013 remains pending hosted CI under D-P05-005. [Current evidence](reports/phase-05-closeout-2026-10-29.md). No later phase is started.
 
 T013 local audit PASS (760 unit/component, 179 integration, 43 non-UTC, 48 anonymous, 104 signed-in browser checks; full evidence in the [audit](reports/phase-05-closeout-2026-10-29.md)). Hosted verification remains pending; no Phase 5 closure or Phase 6 authorization is claimed.
+
+## Final Phase 5 checkpoint - 2026-10-29
+
+**COMPLETED - 100% (13/13)**, **PASS WITH CONDITIONS - HOSTED CI VERIFIED**. [Successful run 40783651036](https://github.com/WilsoftTech/MyFarm/actions/runs/40783651036) verifies the f999449 implementation and lockfile after a targeted two-entry optional dependency repair. [Closeout](reports/phase-05-closeout-2026-10-29.md) records exact checks, acceptance, migration checksums and deployment conditions. This supersedes the earlier Phase 5 audit checkpoints; earlier reports remain historical. Phase 6 is NOT STARTED and needs separate authorization.

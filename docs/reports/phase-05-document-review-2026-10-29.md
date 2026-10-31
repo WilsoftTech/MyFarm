@@ -6,7 +6,7 @@
 - Last reviewed: 2026-10-29 (Africa/Nairobi).
 - Related phase/task IDs: MYF-P05-T013.
 - Verified completed work: All listed documents read for status metadata and local target checks; no future phase completion inferred.
-- Remaining work/blockers: Required hosted CI before Phase 5 closure.
+- Remaining work/blockers: Hosted CI passed; deployment conditions remain in the closeout.
 - Evidence/report links: [Audit](phase-05-closeout-2026-10-29.md).
 <!-- MYFARM-STATUS-END -->
 

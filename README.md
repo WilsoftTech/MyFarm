@@ -1,7 +1,7 @@
 # MyFarm
 Keep accurate farm records, track income & expenses, manage resources, monitor performance and improve farm profitability.
 
-Supabase PostgreSQL + Supabase Auth, Next.js App Router, strict TypeScript and Prisma. Phases 1-4 are implemented and owner-accepted with documented conditions. Phase 5 adds harvest, poultry production, stock movements and reconstruction; its final audit requires passing hosted CI before closure.
+Supabase PostgreSQL + Supabase Auth, Next.js App Router, strict TypeScript and Prisma. Phases 1-5 are implemented with documented deployment conditions. Phase 5 adds harvest, poultry production, stock movements and reconstruction; all 13 tasks and the GitHub-hosted quality workflow pass.
 
 Read [project status](docs/PROJECT-STATUS.md), [Phase 5](docs/phases/phase-05-harvest-inventory.md) and [local setup](docs/engineering/foundation-local-setup.md).
 

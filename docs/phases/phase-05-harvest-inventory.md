@@ -2,15 +2,15 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - T001 requirements, dependencies and affected architecture/contracts.
-- Implementation status: PARTIALLY COMPLETE - 92.31% (12/13 verified tasks).
+- Implementation status: COMPLETED - 100% (13/13 verified tasks).
 - Last reviewed: 2026-10-29 (Africa/Nairobi).
 - Related phase/task IDs: MYF-P05-T001 through MYF-P05-T013; D-P05-001; Q12/Q13.
-- Verified completed work: T001-T012 locally verified and committed; all four acceptance oracles have local domain/DB/browser evidence.
-- Remaining work/blockers: T013 local audit passes; required GitHub-hosted CI (D-P05-005) remains pending before closure.
+- Verified completed work: T001-T013 and AC001-AC004 pass locally and in hosted quality run 40783651036; all tasks committed.
+- Remaining work/blockers: No blocking phase issue. P5-C1 hosted migration/provisioning, P5-C2 scale and inherited P5-C3 production controls remain deployment conditions; Phase 6 not started.
 - Evidence/report links: [T001 evidence](../reports/phase-05-t001-2026-10-29.md); [Start plan](../reports/phase-05-start-2026-10-29.md); [Phase 4 closeout](../reports/phase-04-closeout-2026-10-26.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **PARTIALLY COMPLETE - 92.31% (12/13 verified tasks)**. Date: 2026-10-29. Local start authorized by D-P05-001; Q12/Q13 scope approved under D-P05-002/003. T001-T012 verified; T013 remains pending hosted CI under D-P05-005. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **COMPLETED - 100% (13/13 verified tasks)**. Date: 2026-10-29. Local start authorized by D-P05-001; Q12/Q13 scope approved under D-P05-002/003. T001-T013 verified; hosted run 40783651036 passes under D-P05-005. Verdict PASS WITH CONDITIONS - HOSTED CI VERIFIED. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
@@ -89,7 +89,7 @@ Loading announced; recoverable errors retain input and safe retry. Empty states 
 
 ## H. Implementation Tasks
 
-Execute these small stages sequentially after authorization. Field/model/provider policies remain proposals until affected decisions are resolved. Each capability separates contract/domain work, authorized service/evidence work, and user-visible acceptance. T001-T012 are verified; T013 is pending hosted CI.
+Execute these small stages sequentially after authorization. Field/model/provider policies remain proposals until affected decisions are resolved. Each capability separates contract/domain work, authorized service/evidence work, and user-visible acceptance. T001-T013 are verified; all local and hosted gates pass.
 
 ### MYF-P05-T001 — Specify and implement domain contract for MYF-P05-R001
 
@@ -253,11 +253,11 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 - [x] MYF-P05-T010 complete with [evidence](../reports/phase-05-t010-2026-10-29.md).
 - [x] MYF-P05-T011 complete with [evidence](../reports/phase-05-t011-2026-10-29.md).
 - [x] MYF-P05-T012 complete with [evidence](../reports/phase-05-t012-2026-10-29.md).
-- [ ] MYF-P05-T013 complete with evidence.
-- [ ] Every K criterion verified.
-- [ ] Security/integrity audit, remediation and retest complete.
-- [ ] Applicable quality/E2E/integration/migration evidence recorded.
-- [ ] L gate approved; closeout/status updated from evidence.
+- [x] MYF-P05-T013 complete with [evidence](../reports/phase-05-closeout-2026-10-29.md).
+- [x] Every K criterion verified.
+- [x] Security/integrity audit, remediation and retest complete.
+- [x] Applicable quality/E2E/integration/migration evidence recorded.
+- [x] L gate approved; closeout/status updated from evidence.
 
 ## T001 implemented subset - 2026-10-29
 
@@ -312,3 +312,7 @@ Stock reconstruction, recalculation and history screens. PASS: lint and producti
 All implementation stages T001-T012 are committed. The final audit is in progress and hosted CI is mandatory before phase closure; no local substitution was approved. [Current audit and limitations](../reports/phase-05-closeout-2026-10-29.md).
 
 Local T013 audit PASS: clean checkout, 760 unit/component, 179 integration, 43 non-UTC, 48 anonymous and 104 signed-in browser checks; lint/typecheck/build, boundaries, migration rollback/drift/checksums, recovery and production dependency audit pass. Hosted CI remains required; T013 is not yet counted complete. [Evidence](../reports/phase-05-closeout-2026-10-29.md).
+
+## Final closeout - 2026-10-29
+
+**COMPLETED - 100% (13/13)**; **PASS WITH CONDITIONS - HOSTED CI VERIFIED**. [Hosted run 40783651036](https://github.com/WilsoftTech/MyFarm/actions/runs/40783651036) passes at f999449, including 760 unit/component, 179 integration, 43 non-UTC, 48 anonymous and 104 signed-in browser checks, migration drift and recovery. [Closeout and deployment conditions](../reports/phase-05-closeout-2026-10-29.md). Historical checkpoints above remain historical. No Supabase migration, production release or Phase 6 start is claimed.

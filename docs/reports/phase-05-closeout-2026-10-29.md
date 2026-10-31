@@ -1,12 +1,12 @@
-# Phase 5 audit and closeout gate - 2026-10-29
+# Phase 5 closeout - 2026-10-29
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - Phase 5 requirements, implementation, security and verification plan.
-- Implementation status: PARTIALLY COMPLETE - 92.31% (12/13 verified tasks); T013 audit in progress.
+- Implementation status: COMPLETED - 100% (13/13 verified tasks), PASS WITH CONDITIONS - HOSTED CI VERIFIED.
 - Last reviewed: 2026-10-29 (Africa/Nairobi).
 - Related phase/task IDs: MYF-P05-T001 through MYF-P05-T013; D-P05-001 through D-P05-005.
-- Verified completed work: T001-T012 committed separately. Local targeted domain, persistence and browser checks are linked in task reports.
-- Remaining work/blockers: Required GitHub-hosted CI before T013/phase closure; clean-checkout local audit passed.
+- Verified completed work: T001-T013 and AC001-AC004 verified locally and in GitHub-hosted CI at f999449.
+- Remaining work/blockers: No phase blocker; hosted migration/provisioning, production controls and scale measurement remain deployment conditions. Phase 6 not started.
 - Evidence/report links: [Phase specification](../phases/phase-05-harvest-inventory.md); [Project status](../PROJECT-STATUS.md).
 <!-- MYFARM-STATUS-END -->
 
@@ -39,7 +39,7 @@ Applied only to isolated loopback PostgreSQL 17. Hosted application is NOT PERFO
 
 Task-level verified results are recorded in T001-T012 reports. Primary tree: 760 unit/component tests passed; previous full integration checkpoint passed 173 tests; additional security, schema and correction regressions are now included. Migration rollback tests preserve prior rows and schema; native PostgreSQL dump/restore passes for exact stock, approvals, audits, uniqueness, RLS and grants. Actionlint passes for the expanded quality workflow.
 
-Final clean-checkout results are recorded below; the exact hosted run remains pending. No passing result is inferred from a command that has not completed.
+Final clean-checkout results and the successful hosted run are recorded below. No passing result is inferred from a command that has not completed.
 
 ## Acceptance and exit gate
 
@@ -49,17 +49,17 @@ Final clean-checkout results are recorded below; the exact hosted run remains pe
 | AC002: 100+20-5-10=105 birds; eggs/feed independent | Domain, real DB and desktop/mobile production journey | Locally verified in T006 |
 | AC003: 2400-1000-200-50=1150; transfer conservation | Real DB source ledger, concurrent withdrawals, paired transfers and reversal browser journey | Locally verified in T008/T009 |
 | AC004: reconstruction equals display for every item/store | Corrupt-projection domain regression, repeatable-read DB comparison, closed-cycle history and desktop/mobile recalculation/history | Locally verified in T010-T012 |
-| L: all balances rebuild; concurrency/recovery/security and cumulative gates | Final clean-checkout audit plus GitHub-hosted quality workflow | PENDING |
+| L: all balances rebuild; concurrency/recovery/security and cumulative gates | Clean checkout plus hosted run 40783651036 | PASS |
 
 ## Limitations, deferred work and verdict
 
-**Phase not closed; no PASS verdict yet.** Hosted CI is a blocking requirement under D-P05-005. T013 cannot be checked complete until it passes. No local waiver is approved.
+**Verdict: PASS WITH CONDITIONS - HOSTED CI VERIFIED.** All 13 tasks, all four acceptance criteria and the exit gate pass. Hosted run 40783651036 passed on the exact application/lockfile commit `f9994499b80a9936e7cc2e754cef2b19f4ab6b1a`, satisfying D-P05-005 without a local waiver. This closes Phase 5 implementation, not a production release.
 
 Inherited production conditions remain: canonical hosted migrations/policies, retention/export controls and export rate limiting before real farmer production data. Inventory monetary valuation remains unavailable until Phase 8. No bag conversions, stock reservations, automatic accounting-only sale linking, durable offline outbox or later-phase activities/analytics are implemented. Ledger reconstruction reads full internal history for a selected item; response lists are paginated, but large-history performance still requires measurement before production scale. No production readiness claim is made.
 
 ## Status-update evidence
 
-T001-T012 each have a separate local commit and linked task report. Final audit will update current phase/status/traceability/architecture summaries and record a per-document status/link review. Historical checkpoints remain historical and the source-extract body is preserved. Next allowed action: finish clean local verification, make the authorized verification push, inspect the exact hosted workflow and only then evaluate closure.
+T001-T012 each have a separate local commit and linked task report. Final audit updates current phase/status/traceability/architecture summaries and records a 124-document metadata/link review. Historical checkpoints remain historical and the source-extract body is preserved. Next allowed action: separately authorized hosted development migration/provisioning, or owner authorization for Phase 6. No later phase is started automatically.
 
 ## Clean-checkout verification checkpoint
 
@@ -85,7 +85,7 @@ Application candidate `c6fb24f`, then test-only fixture correction `8c2f66a`, ch
 | Full signed-in desktop/mobile suite | PASS, 104 tests on corrected fixture commit 8c2f66a | signed-1.log |
 | `npm audit --omit=dev` | PASS, 0 production dependency vulnerabilities | primary session output |
 | Actionlint, diff whitespace and document targets | PASS | session output / document review |
-| GitHub-hosted quality | PENDING authorized verification push; required for closure | to be recorded |
+| GitHub-hosted quality | PASS, run 40783651036 on f999449 | linked below |
 
 The first full signed-in run passed all 100 legacy checks but failed the four new cases because preceding tests intentionally expired fixture sessions. Commit `8c2f66a` resets only those generated fixture sessions/memberships and clears linked stock/accounting fixtures in dependency order. No assertion or application authorization check was weakened. Initial failed evidence is retained as `signed-initial-failed.log` and `signed-initial.json`; the whole suite is rerun.
 
@@ -101,7 +101,7 @@ Committed LF migration SHA-256 checksums, independently matched against the clea
 
 The pre-existing `next-env.d.ts` dev-route imports are preserved and excluded from phase commits. No source-extract body or package manifest changed. The lockfile subsequently received the targeted optional-transitive repair described below. [Every-document review](phase-05-document-review-2026-10-29.md).
 
-Local audit verdict: **PASS** at application candidate `c6fb24f` plus test-only correction `8c2f66a`. The corrected full signed-in suite passes 104/104. All four acceptance criteria are locally verified; the final implementation tree has no failing local quality gate. Phase verdict remains **PENDING hosted CI**, not closed, under D-P05-005. The authorized verification push is the next step.
+Local audit verdict: **PASS** at application candidate `c6fb24f` plus test-only correction `8c2f66a`. The corrected full signed-in suite passes 104/104. All four acceptance criteria are locally verified; the final implementation tree has no failing local quality gate. At that local-only checkpoint, phase closure remained pending hosted CI under D-P05-005. The successful hosted verification below supersedes that checkpoint.
 
 ## First hosted run and portable lockfile repair
 
@@ -109,4 +109,22 @@ The authorized fast-forward push moved `origin/main` from `ac0a004` to `f04ba8d`
 
 Repair: add only those two exact optional package entries, with official npm-registry integrity hashes, MIT licences and their existing dependency edges. Every pre-existing lock entry/version and `package.json` remains byte/structurally unchanged. No library, framework, provider or direct dependency is introduced. Native Windows/Linux application paths remain the same; the metadata restores the already-declared optional fallback graph. Skipping optional dependencies, bypass flags, broad upgrades and full lockfile regeneration were not used.
 
-Validation: exact hosted npm 11.19.1 `ci --dry-run --ignore-scripts --no-audit --os=linux --cpu=x64` passes in an isolated manifest/lockfile directory with the repaired file. The dry-run does not execute cross-platform binaries or change application dependencies; actual hosted `npm ci` remains unchanged and must pass before closure. The original lockfile is independently checked to reproduce the missing-entry error. Phase 5 remains open pending the corrected hosted run.
+Validation: exact hosted npm 11.19.1 `ci --dry-run --ignore-scripts --no-audit --os=linux --cpu=x64` passes in an isolated manifest/lockfile directory with the repaired file. The dry-run does not execute cross-platform binaries or change application dependencies; actual hosted `npm ci` remains unchanged and must pass before closure. The original lockfile is independently checked to reproduce the missing-entry error. At that first-attempt checkpoint, Phase 5 remained open pending the corrected hosted run; the final success below supersedes it.
+
+## Final hosted verification and closure
+
+[GitHub-hosted quality run 40783651036](https://github.com/WilsoftTech/MyFarm/actions/runs/40783651036), commit `f9994499b80a9936e7cc2e754cef2b19f4ab6b1a`, **SUCCESS**. Completed 2026-10-29 (Africa/Nairobi; provider timestamp 2026-10-28 23:03 UTC). Ubuntu 24.04, Node 24.22.1, npm 11.19.1 and disposable PostgreSQL 17.11.
+
+The hosted job passed plain `npm ci`, Prisma generation, lint, strict typecheck, boundaries, **760 unit/component**, **179 integration**, **43 non-UTC**, schema migration/drift and real Docker dump/restore, both production builds, Chromium installation, **48 anonymous** and **104 signed-in desktop/mobile** browser checks. No failing mandatory gate was waived. The lockfile repair remains restricted to two previously required optional entries; no existing package version or direct dependency changed. The post-repair production dependency audit reports zero vulnerabilities.
+
+Local and hosted fixtures are synthetic; this does not claim a hosted Supabase schema application, a production deployment, field validation or production readiness. The two task-created native test PostgreSQL instances were stopped after verification; the existing machine service was not changed.
+
+| Condition | Owner | Deadline |
+|---|---|---|
+| P5-C1: apply canonical Phase 4/5 migrations and manifest policies to hosted development with backup, scope/grant/drift/recovery verification under separate authorization | Project owner / engineering | Before hosted use of these workflows |
+| P5-C2: measure large-history reconstruction/aggregate performance and add reviewed projections only if needed | Engineering | Phase 8 / before production-scale histories |
+| P5-C3: inherited retention/export and production abuse/rate-control requirements | Project owner / security | Before real farmer production data |
+
+The current baseline now satisfies the inherited GitHub-hosted CI condition; earlier historical runs remain historical. Tax/FX/net income, inventory costing, durable offline sync and later-phase capabilities remain deferred under their existing decisions. No schema or policy was applied to Supabase in this task.
+
+Progress: **13/13 = 100%**. Final verdict: **PASS WITH CONDITIONS - HOSTED CI VERIFIED**. All task implementations were committed in sequence; T013 includes audit preparation, the full-suite fixture fix, local evidence, the portable lockfile repair and this final closure record. Final documentation-only commits do not alter the application/schema/lockfile tree verified by the linked hosted run. Phase 6 remains NOT STARTED and requires authorization.

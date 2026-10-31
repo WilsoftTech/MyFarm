@@ -395,3 +395,8 @@ AUTHORIZED by direct owner instruction 2026-10-29: complete T001-T013, commit ev
 ## D-P05-005 - Hosted CI required before closure
 
 Owner decision 2026-10-29: "Require hosted CI before Phase 5 closes". No Phase 5 local-CI substitution is approved. After the dependency was explained, the owner selected "Allow the verification push after local audit (Recommended)": push after T001-T012 and the local T013 audit pass, then close Phase 5 only after hosted CI passes. This supersedes D-P05-004 push timing only. Failed or unavailable hosted CI keeps T013/phase closure incomplete. No deployment or hosted database mutation is authorized.
+
+
+## D-P05-006 - Verified Phase 5 closure
+
+IMPLEMENTATION/AUDIT RECORD, 2026-10-29 (Africa/Nairobi), within the owner's D-P05-004 complete-all-tasks instruction and D-P05-005 hosted-CI requirement. T001-T013 and AC001-AC004 pass; Phase 5 is COMPLETED - 100% (13/13), PASS WITH CONDITIONS - HOSTED CI VERIFIED. [Run 40783651036](https://github.com/WilsoftTech/MyFarm/actions/runs/40783651036) succeeds on f999449 after two missing, already-required optional WASM lock entries were restored without changing any existing package version or direct dependency. No local-CI waiver is used. P5-C1 hosted application, P5-C2 large-history measurement and inherited P5-C3 production controls remain; see [closeout](reports/phase-05-closeout-2026-10-29.md). Commits and the verification push are completed under owner authorization. This does not authorize hosted migrations/deployment or Phase 6.

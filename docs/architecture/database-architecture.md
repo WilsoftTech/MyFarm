@@ -2,11 +2,11 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - Phase 5 task-relevant contracts, implementation, status and evidence; historical sections preserved.
-- Implementation status: Phase 1-4 accepted with documented conditions; Phase 5 T001-T012 locally verified, T013/hosted CI pending. No whole-architecture completion percentage claimed.
+- Implementation status: Phase 1-4 accepted with documented conditions; Phase 5 T001-T013 verified locally and in hosted CI; deployment conditions remain. No whole-architecture completion percentage claimed.
 - Last reviewed: 2026-10-29 (Africa/Nairobi), Phase 5 T013 audit.
 - Related phase/task IDs: Phase01 MYF-P01-T001–T013; Phase02 MYF-P02-T001–T013.
 - Verified completed work: Phase01 scope as previously verified; Phase02: farmer registry contracts/policies/migration/API/tests in this document's area verified (see the Phase 2 implementation section).
-- Remaining work/blockers: Required hosted CI before Phase 5 closes; hosted migrations/provisioning and inherited production conditions remain separate gates.
+- Remaining work/blockers: Hosted CI passes for Phase 5; hosted migrations/provisioning, scale and inherited production conditions remain separate gates.
 - Evidence/report links: [Current Phase 5 audit](../reports/phase-05-closeout-2026-10-29.md); [document review](../reports/phase-05-document-review-2026-10-29.md). Historical task evidence remains linked below.
 <!-- MYFARM-STATUS-END -->
 
@@ -86,3 +86,5 @@ No new migration. `farm-accounting-runtime.sql` adds to the AccountingRecord INS
 ## Phase 5 implementation and audit - 2026-10-29
 
 Five additive 20261029 migrations add harvest/storage/movement scope keys, poultry events, stock operations/adjustments and finite-quantity/date checks. Manifest-listed harvest-inventory-runtime.sql grants SELECT/INSERT only to the backend, with membership/owner checks for writes. RLS is enabled and browser/PUBLIC grants revoked. No hosted application is performed. Real rollback, dump/restore, uniqueness and grants are tested in isolated PostgreSQL 17. [Audit and required hosted gate](../reports/phase-05-closeout-2026-10-29.md). Phase 5 closure is pending T013/hosted CI.
+
+Final Phase 5 audit: T001-T013 and the hosted quality workflow pass at f999449 ([run](https://github.com/WilsoftTech/MyFarm/actions/runs/40783651036)); [closeout](../reports/phase-05-closeout-2026-10-29.md). This supersedes the earlier pending-CI checkpoint, without claiming hosted Supabase application or later-phase implementation.
