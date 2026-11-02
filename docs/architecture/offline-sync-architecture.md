@@ -2,12 +2,12 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — T013 metadata/status scope and evidence-link relevance; historical and future-phase facts unchanged.
-- Implementation status: PARTIALLY COMPLETE - Phase 7 T001 (1/13); the sections below remain the proposed design unless a task report says otherwise.
+- Implementation status: COMPLETED - Phase 7 (13/13), PASS WITH CONDITIONS - LOCAL VERIFICATION, awaiting owner acceptance. Sections above the final paragraphs are the original proposal; the closing paragraph records the differences.
 - Last reviewed: 2026-11-03 (Africa/Nairobi), Phase 7 start.
-- Related phase/task IDs: MYF-P07-T001 through MYF-P07-T013; D-P07-001 through D-P07-005.
-- Verified completed work: T001 storage rules only; no client database, service worker or sync endpoint exists yet.
-- Remaining work/blockers: T002-T013 and real-device measurement.
-- Evidence/report links: [Phase 7 start and T001](../reports/phase-07-start-2026-11-03.md); [Phase 6 closeout](../reports/phase-06-closeout-2026-11-03.md).
+- Related phase/task IDs: MYF-P07-T001 through MYF-P07-T013; D-P07-001 through D-P07-008.
+- Verified completed work: Client database, service worker, push, pull, Sync Center and photos verified from a clean checkout; real-device behavior not measured.
+- Remaining work/blockers: P7-C1 real-device measurement; P7-C2 hosted CI; P7-C3 hosted photo schema.
+- Evidence/report links: [Closeout](../reports/phase-07-closeout-2026-11-03.md); [Plan](../reports/phase-07-start-2026-11-03.md).
 <!-- MYFARM-STATUS-END -->
 
 Offline farmer experience is mandatory by MVP Phase 8. Source P0456–P0479 requires expense/income/harvest/activity/task/photo recording and cached farm/record viewing; clientMutationId, deviceId, createdAt, updatedAt, syncStatus, version; six source states. Foundation prepares command boundaries, but complete sync is Phase 7.
@@ -52,3 +52,5 @@ Local tenant/user partition and lock policy address shared phones. Logout protec
 Test eight actions offline/reload, quota denial, crash during write/sync, duplicate/concurrent/lost-ack replay, two-device edits, clock skew, parent dependency, tombstones/expired cursors, revoked memberships and photo partial failures. Meaningful offline duration/row/media limits must be measured on approved devices. [API](api-design-standards.md), [financial integrity](financial-integrity.md) and [testing](testing-strategy.md) define authoritative boundaries. Browser limitations follow [MDN storage](https://developer.mozilla.org/en-US/docs/Web/API/Storage_API/Storage_quotas_and_eviction_criteria), checked 2026-10-08.
 
 Approved Q16 rules (D-P07-002 to D-P07-005): 14 days and 500 unsent entries per device, separate local data per account with no PIN, sign-out keeps unsent entries, and warnings plus an unencrypted download rather than any guarantee of recovery. Signed-in pages and API responses are never stored by the service worker; offline data lives only in the account's local database. [Plan](../reports/phase-07-start-2026-11-03.md).
+
+Implemented differences from the proposal (D-P07-007): receipts stay in `AuditEvent` rather than a `MutationReceipt` table, with a check that refuses a key reused on another operation. Pull reuses the authorized list services with bounded snapshots rather than a change log with tombstones, because records are only appended or change status. There is no device registration: the device ID stays on the phone. Offline work happens on a static `/offline` shell, and the service worker never stores signed-in pages or API responses.

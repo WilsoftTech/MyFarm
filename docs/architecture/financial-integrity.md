@@ -3,10 +3,10 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - Phase 5 task-relevant contracts, implementation, status and evidence; historical sections preserved.
 - Implementation status: Phase 1-4 accepted with documented conditions; Phase 5 T001-T013 verified locally and in hosted CI; deployment conditions remain. No whole-architecture completion percentage claimed.
-- Last reviewed: 2026-11-03 (Africa/Nairobi), Phase 6 T010 audit.
+- Last reviewed: 2026-11-03 (Africa/Nairobi), Phase 7 T013 audit.
 - Related phase/task IDs: Future phase architecture as referenced; Phase01 review session T001–T013; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Scope/status/provider applicability reviewed; no financial/offline/farm-domain runtime implementation verified.
-- Remaining work/blockers: Hosted CI passes for Phase 6 and hosted development has the schema (D-P06-010); scale and inherited production conditions remain separate gates.
+- Remaining work/blockers: Phase 7 awaits owner acceptance; real-device measurement, hosted CI and the hosted photo schema remain, with inherited production conditions.
 - Evidence/report links: [Current Phase 5 audit](../reports/phase-05-closeout-2026-10-29.md); [document review](../reports/phase-05-document-review-2026-10-29.md). Historical task evidence remains linked below.
 <!-- MYFARM-STATUS-END -->
 
@@ -47,3 +47,5 @@ Stock-linked crop/egg/bird sales post their one stock effect and one sale atomic
 Final Phase 5 audit: T001-T013 and the hosted quality workflow pass at f999449 ([run](https://github.com/WilsoftTech/MyFarm/actions/runs/40783651036)); [closeout](../reports/phase-05-closeout-2026-10-29.md). This supersedes the earlier pending-CI checkpoint, without claiming hosted Supabase application or later-phase implementation.
 
 Phase 6 activities link to an existing posted expense or purchase and store no money, so only the accounting record counts in totals and reversals show on the activity (D-P06-005). No activity command creates or changes an accounting record. Final Phase 6 audit: [hosted run 41524090703](https://github.com/WilsoftTech/MyFarm/actions/runs/41524090703); [closeout](../reports/phase-06-closeout-2026-11-03.md).
+
+Offline money entries go through the existing accounting service, so a lost response or retry creates one record, proved under racing retries on real PostgreSQL. Offline sale stays online-only because stock cannot be guaranteed offline. [Closeout](../reports/phase-07-closeout-2026-11-03.md).

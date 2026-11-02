@@ -468,3 +468,7 @@ AUTHORIZED by direct owner instruction 2026-11-03: "commit T001 and continue wit
 ## D-P07-007 - Sync persistence design
 
 ENGINEERING DECISION 2026-11-03, within D-P07-006, reversing proposals in the Phase 7 specification with reasons. No `MutationReceipt` table: existing receipts in `AuditEvent`, unique per tenant, request and action and held permanently, already give replay, and a check now refuses the same key on a different operation. No `ChangeLog` or tombstones: records are only appended or change status, so pull reuses the authorized list services and cannot skip a late commit. No `DeviceRegistration`: the device ID is a local hint and grants nothing, so it stays on the phone. Each has a concrete trigger to revisit: hard deletes, a need to sync much more than the bounded recent rows, or device-level revocation.
+
+## D-P07-008 - Phase 7 implementation record
+
+IMPLEMENTATION/AUDIT RECORD, 2026-11-03 (Africa/Nairobi), within D-P07-006. T001-T013 and AC001-AC004 pass from a clean checkout at 30f2aaf. Recommended verdict: PASS WITH CONDITIONS - LOCAL VERIFICATION, awaiting owner acceptance. The approved duration has not been measured on a real device and hosted CI has not run, because nothing has been pushed. No hosted database or deployment changed. See [closeout](reports/phase-07-closeout-2026-11-03.md).

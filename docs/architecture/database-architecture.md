@@ -3,10 +3,10 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - Phase 5 task-relevant contracts, implementation, status and evidence; historical sections preserved.
 - Implementation status: Phase 1-4 accepted with documented conditions; Phase 5 T001-T013 verified locally and in hosted CI; deployment conditions remain. No whole-architecture completion percentage claimed.
-- Last reviewed: 2026-11-03 (Africa/Nairobi), Phase 6 T010 audit.
+- Last reviewed: 2026-11-03 (Africa/Nairobi), Phase 7 T013 audit.
 - Related phase/task IDs: Phase01 MYF-P01-T001–T013; Phase02 MYF-P02-T001–T013.
 - Verified completed work: Phase01 scope as previously verified; Phase02: farmer registry contracts/policies/migration/API/tests in this document's area verified (see the Phase 2 implementation section).
-- Remaining work/blockers: Hosted CI passes for Phase 6 and hosted development has the schema (D-P06-010); scale and inherited production conditions remain separate gates.
+- Remaining work/blockers: Phase 7 awaits owner acceptance; real-device measurement, hosted CI and the hosted photo schema remain, with inherited production conditions.
 - Evidence/report links: [Current Phase 5 audit](../reports/phase-05-closeout-2026-10-29.md); [document review](../reports/phase-05-document-review-2026-10-29.md). Historical task evidence remains linked below.
 <!-- MYFARM-STATUS-END -->
 
@@ -90,3 +90,5 @@ Five additive 20261029 migrations add harvest/storage/movement scope keys, poult
 Final Phase 5 audit: T001-T013 and the hosted quality workflow pass at f999449 ([run](https://github.com/WilsoftTech/MyFarm/actions/runs/40783651036)); [closeout](../reports/phase-05-closeout-2026-10-29.md). This supersedes the earlier pending-CI checkpoint, without claiming hosted Supabase application or later-phase implementation.
 
 Phase 6 adds three additive 20261102 migrations for `ProductionActivity` and `ActivityRecurrence`. The specification's `FarmActivity` name was already an enum, and occurrences are activity rows with a unique series and due-date key rather than a separate table. Manifest-listed farm-activities-runtime.sql grants updates only on lifecycle and series-progress columns. Applied to hosted development on 2026-11-03 under D-P06-010. Final Phase 6 audit: [hosted run 41524090703](https://github.com/WilsoftTech/MyFarm/actions/runs/41524090703); [closeout](../reports/phase-06-closeout-2026-11-03.md).
+
+Phase 7 adds additive migration `202611030001_record_photos` and manifest-listed `offline-photos-runtime.sql`, with append-only rows and a tenant-prefixed storage insert policy. Not applied to hosted. [Closeout](../reports/phase-07-closeout-2026-11-03.md).

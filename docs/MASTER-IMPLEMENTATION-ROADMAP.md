@@ -1,13 +1,13 @@
 # Master implementation roadmap
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED - Phase 6 audit and task evidence; historical checkpoints preserved.
+- Documentation review: REVIEWED - Phase 7 audit and task evidence; historical checkpoints preserved.
 - Implementation status: REFERENCE ONLY - N/A (navigation and verified progress record).
 - Last reviewed: 2026-11-03 (Africa/Nairobi).
-- Related phase/task IDs: MYF-P07-T001 through MYF-P07-T012; D-P07-001 through D-P07-007.
-- Verified completed work: Phase 6 complete (10/10, hosted run 41524090703, hosted development schema applied); Phase 7 T001-T012 (12/13, 92.31%) verified locally.
-- Remaining work/blockers: Phase 7 T013-T013 and remaining acceptance/exit gates. P6-C2 to P6-C5 and production conditions remain.
-- Evidence/report links: [T012 report](reports/phase-07-t012-2026-11-03.md); [Phase 7 plan](reports/phase-07-start-2026-11-03.md); [Phase 6 closeout](reports/phase-06-closeout-2026-11-03.md).
+- Related phase/task IDs: MYF-P07-T001 through MYF-P07-T013; D-P07-001 through D-P07-008.
+- Verified completed work: Phase 7 T001-T013 (13/13, 100%) and AC001-AC004 pass from a clean checkout at 30f2aaf. Hosted CI has not run on this code.
+- Remaining work/blockers: Owner acceptance of Phase 7 conditions: real-device measurement (P7-C1), hosted CI (P7-C2), hosted photo schema (P7-C3), and P7-C4 to P7-C6. Phase 8 not started or authorized.
+- Evidence/report links: [Phase 7 closeout](reports/phase-07-closeout-2026-11-03.md); [Phase 7 plan](reports/phase-07-start-2026-11-03.md); [Phase 6 closeout](reports/phase-06-closeout-2026-11-03.md).
 <!-- MYFARM-STATUS-END -->
 
 Source roadmap remains authoritative. Preserve Phase 0–24 in order; cumulative gates apply. Phase 8 closes MVP, Phase 9 validates field use. No release dates or implementation approvals are inferred.
