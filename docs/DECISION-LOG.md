@@ -52,8 +52,8 @@ Q01 is **PARTIALLY RESOLVED**: user selected Rukungiri. Remaining components and
 | Q11 | RESOLVED for Phase4 by owner 2026-10-25 ([D-P04-003](#d-p04-003--q11-recognition-and-double-count-prevention)): a sale/purchase is the single revenue/cost event; payments only settle receivables/payables; standalone income/expense only for other items | Accounting/domain owner | 4 | Owner decision recorded; allocation invariants verified in [T001](reports/phase-04-t001-2026-10-25.md) |
 | Q12 | Inventory valuation, grade/storage, negative-stock exceptions and conversion | Accounting/agricultural owner | 5/8 | Costing policy approved or value unavailable; concurrency proof |
 | Q13 | Production/flock vs stock movements and atomic sale/harvest accounting links | Domain owner | 5 | One source event per effect and conservation fixtures |
-| Q14 | Recurrence exceptions, missed definition, worker invitation and notifications | Product owner | 6 | Approve recurrence/timezone/cancellation examples; notifications not presumed |
-| Q15 | Activity cost link vs expense creation/correction workflow | Accounting/product owner | 6 | Choose no-double-count cost linkage |
+| Q14 | RESOLVED for Phase6 by owner 2026-11-02 ([D-P06-002](#d-p06-002---q14-missed-definition), [D-P06-003](#d-p06-003---q14-recurrence), [D-P06-004](#d-p06-004---q14-worker-and-notifications)): missed after the due date in Africa/Kampala; daily/weekly/monthly recurrence; free-text worker; no notifications | Product owner | 6 | Approved |
+| Q15 | RESOLVED for Phase6 by owner 2026-11-02 ([D-P06-005](#d-p06-005---q15-activity-cost-link)): link an existing same-farm expense or purchase; the activity holds no money | Accounting/product owner | 6 | Approved |
 | Q16 | Meaningful offline duration, device/storage limits, local unlock, sync retention/recovery | Product/security/engineering owner | 1/7 | Approve measured support envelope, tombstone/receipt window and explicit unsynced-loss policy |
 | Q17 | Metric denominators, overhead allocations, absent/zero values, snapshot freshness | Accounting/agricultural owner | 8 | Formula catalog and golden fixtures approved |
 | Q18 | Pilot cohort/window, active/retained definition, thresholds, support/cycle completion | Product/research owner | 9 | Prospective criteria then real cohort evidence |
@@ -400,3 +400,31 @@ Owner decision 2026-10-29: "Require hosted CI before Phase 5 closes". No Phase 5
 ## D-P05-006 - Verified Phase 5 closure
 
 IMPLEMENTATION/AUDIT RECORD, 2026-10-29 (Africa/Nairobi), within the owner's D-P05-004 complete-all-tasks instruction and D-P05-005 hosted-CI requirement. T001-T013 and AC001-AC004 pass; Phase 5 is COMPLETED - 100% (13/13), PASS WITH CONDITIONS - HOSTED CI VERIFIED. [Run 40783651036](https://github.com/WilsoftTech/MyFarm/actions/runs/40783651036) succeeds on f999449 after two missing, already-required optional WASM lock entries were restored without changing any existing package version or direct dependency. No local-CI waiver is used. P5-C1 hosted application, P5-C2 large-history measurement and inherited P5-C3 production controls remain; see [closeout](reports/phase-05-closeout-2026-10-29.md). Commits and the verification push are completed under owner authorization. This does not authorize hosted migrations/deployment or Phase 6.
+
+## D-P06-001 - Phase 6 local start authorization
+
+AUTHORIZED by direct owner instruction 2026-11-02 (Africa/Nairobi): "check phase progress and continue. debug and fix errors first". Following D-P05-001, this authorizes starting Phase 6 locally after the regression audit. It does not authorize commits, pushes, deployment or hosted database changes. [T001 report](reports/phase-06-t001-2026-11-02.md).
+
+## D-P06-002 - Q14 missed definition
+
+APPROVED, owner 2026-11-02: an activity is missed once its due date has passed in Africa/Kampala and it is neither completed nor cancelled. It can still be completed late, and the real completion time is recorded. No per-farm timezone in Phase 6.
+
+## D-P06-003 - Q14 recurrence
+
+APPROVED, owner 2026-11-02: every N days, weeks or months with an optional end date, generated about 30 days ahead with one occurrence per due date. A farmer can skip one occurrence or stop the series from a date. Edits affect future occurrences only and history is kept.
+
+## D-P06-004 - Q14 worker and notifications
+
+APPROVED, owner 2026-11-02: an optional free-text worker name, and the signed-in member is always recorded as who completed the activity. No worker role, invitations, worker logins or notifications in Phase 6.
+
+## D-P06-005 - Q15 activity cost link
+
+APPROVED, owner 2026-11-02: an activity can link to an existing same-farm expense or purchase and shows its amount, but holds no money. Only the accounting record counts in totals, and reversals show on the activity. Activities do not create expenses.
+
+## D-P06-006 - T001 activity catalog interpretation
+
+ENGINEERING INTERPRETATION awaiting owner review, 2026-11-02. The catalog keeps the 11 R001 values plus Cleaning from R003. Crop: planting, irrigation, weeding, spraying, fertilizing, harvesting, pruning, inspection. Poultry: vaccination, feeding, cleaning, inspection. Farm-level work may use every value except milking. Enterprise types without a workflow (D-P03-003) offer none. Milking stays in the catalog but is unavailable until a dairy workflow exists, so its R003 recurrence cannot be used in the MVP.
+
+## D-P06-007 - Complete Phase 6 and task commits
+
+AUTHORIZED by direct owner instruction 2026-11-02: commit this work and continue with T002-T010, committing after each task. This does not authorize pushes, deployment or hosted database changes. D-P06-006 remains awaiting owner review and later tasks build on it.

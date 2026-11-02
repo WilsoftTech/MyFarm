@@ -1,16 +1,16 @@
 # Phase 06 Production Activities and Farm Calendar
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — T013 metadata/status scope and evidence-link relevance; historical and future-phase facts unchanged.
-- Implementation status: NOT STARTED — 0% (0/10 verified tasks).
-- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
-- Related phase/task IDs: Phase 06; MYF-P06-T001 through MYF-P06-T010; review session Phase01; Phase02 review session (MYF-P02-T001–T013).
-- Verified completed work: No tasks implemented or verified in this phase; status/provider applicability reviewed only.
-- Remaining work/blockers: All 10 tasks and their acceptance/exit gates pending; Phase01 completion and future phase authorization required.
-- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
+- Documentation review: REVIEWED - Phase 6 requirements against owner decisions D-P06-001 through D-P06-006.
+- Implementation status: PARTIALLY COMPLETE - 10% (1/10 verified tasks).
+- Last reviewed: 2026-11-02 (Africa/Nairobi).
+- Related phase/task IDs: Phase 06; MYF-P06-T001 through MYF-P06-T010; D-P06-001 through D-P06-006.
+- Verified completed work: MYF-P06-T001 activity catalog contract, verified locally.
+- Remaining work/blockers: T002-T010 and all acceptance/exit gates. Attachments stay deferred under D-P04-005.
+- Evidence/report links: [T001 report](../reports/phase-06-t001-2026-11-02.md); [Phase 5 closeout](../reports/phase-05-closeout-2026-10-29.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **NOT STARTED**. Date: 2026-10-08. This is a specification, not implementation approval. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **PARTIALLY COMPLETE - 10% (1/10)**, local start authorized by D-P06-001. Specification date: 2026-10-08. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
@@ -22,7 +22,7 @@ Target users: Farmers/managers/assigned workers. Expected outcomes: K's observab
 
 Source: P0394–P0436 in [complete extract](../reports/source-extract.md). Examples are illustrative. Exclusions: later phase features and any application implementation during this assignment. Propose costRecordId linking accounting so activity cost is not double-counted.
 
-Ambiguities: Q14 recurrence/missed/worker/notifications; Q15 cost linkage vs expense creation. Resolve affected policy before dependent tasks; do not invent rules.
+Ambiguities Q14 and Q15 are resolved by [D-P06-002 to D-P06-005](../DECISION-LOG.md#d-p06-002---q14-missed-definition).
 
 | Requirement | Source | Capability |
 |---|---|---|
@@ -208,7 +208,7 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 
 ## O. Completion Checklist
 
-- [ ] MYF-P06-T001 complete with evidence.
+- [x] MYF-P06-T001 complete with [evidence](../reports/phase-06-t001-2026-11-02.md).
 - [ ] MYF-P06-T002 complete with evidence.
 - [ ] MYF-P06-T003 complete with evidence.
 - [ ] MYF-P06-T004 complete with evidence.
