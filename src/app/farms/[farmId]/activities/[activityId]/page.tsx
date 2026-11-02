@@ -4,7 +4,7 @@ import { productionService } from "@/modules/enterprises-seasons/infrastructure/
 import { loadPage } from "@/app/farmer/guard";
 import { ProductionShell } from "@/components/production/shell";
 import { RecordForm } from "@/components/production/record-form";
-import { ActivityCancelForm } from "@/components/production/activity-cancel-form";
+import { ActivityConfirmForm } from "@/components/production/activity-confirm-form";
 import { activityBucketLabels, activityTime } from "@/components/production/activity-labels";
 import { activityCostChoices, moreActivityChoices, saveActivityCancellation, saveActivityCompletion } from "../actions";
 export const dynamic = "force-dynamic";
@@ -25,6 +25,7 @@ export default async function Activity({ params }: { params: Promise<{ farmId: s
  <RecordForm label="Mark as done" submit={saveActivityCompletion.bind(null, farmId, activityId, r.version)} load={moreActivityChoices.bind(null, farmId)} fields={[
  { name: "workerName", label: "Worker name", optional: true }, { name: "notes", label: "Notes", optional: true }, { name: "costRecordId", label: "Cost from money records", optional: true, choices: costs, kind: "costs", hint: "Choose an expense or purchase you already recorded. This does not add a new cost." },
  ]} /></section>
- <ActivityCancelForm version={r.version} submit={saveActivityCancellation.bind(null, farmId, activityId)} /></>}
+ <ActivityConfirmForm title="Cancel activity" body="It stays in your history as cancelled and cannot be scheduled again from here." confirm="I want to cancel this activity." pending="Cancelling…" version={r.version} field={{ name: "reason", label: "Why it was cancelled", optional: true, maxLength: 500 }} submit={saveActivityCancellation.bind(null, farmId, activityId)} /></>}
+ {r.recurrenceId && <Link className="mt-5 block min-h-12 py-3 underline" href={"/farms/" + farmId + "/activities/series/" + r.recurrenceId}>Open repeating activity</Link>}
  <Link className="mt-5 inline-block min-h-12 py-3 underline" href={"/farms/" + farmId + "/activities"}>Back to activities</Link></ProductionShell>;
 }

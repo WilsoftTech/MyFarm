@@ -1,5 +1,6 @@
 import type { ActivityUnavailableReason } from "@/modules/farm-activities/contracts/catalog";
 import { ACTIVITY_TIME_ZONE, type ActivityBucket } from "@/modules/farm-activities/domain/activity";
+import type { RecurrenceFrequency } from "@/modules/farm-activities/domain/recurrence";
 
 export const activityUnavailableLabels: Record<ActivityUnavailableReason, string> = {
   NO_MVP_WORKFLOW: "not available yet",
@@ -12,3 +13,8 @@ export const activityEmptyLabels: Record<ActivityBucket, string> = {
 };
 const time = new Intl.DateTimeFormat("en-GB", { timeZone: ACTIVITY_TIME_ZONE, dateStyle: "medium", timeStyle: "short" });
 export function activityTime(value: string): string { return time.format(new Date(value)) + " Kampala time"; }
+const frequencyUnits: Record<RecurrenceFrequency, [string, string]> = { DAILY: ["day", "days"], WEEKLY: ["week", "weeks"], MONTHLY: ["month", "months"] };
+export const recurrenceFrequencyChoices: { id: RecurrenceFrequency; label: string }[] = [{ id: "DAILY", label: "Days" }, { id: "WEEKLY", label: "Weeks" }, { id: "MONTHLY", label: "Months" }];
+export function recurrencePattern(frequency: RecurrenceFrequency, interval: number): string {
+  return interval === 1 ? "Every " + frequencyUnits[frequency][0] : "Every " + interval + " " + frequencyUnits[frequency][1];
+}

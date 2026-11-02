@@ -2,7 +2,7 @@ import { z } from "zod";
 import { idSchema } from "@/modules/engineering-foundation/contracts/identity";
 import { isCalendarDate, type FarmScope } from "@/modules/enterprises-seasons/domain/production";
 import { productionPageSchema, type ProductionPage, type ProductionRecord, type ProductionWriteScope } from "@/modules/enterprises-seasons/contracts/production";
-import { ACTIVITY_BUCKETS, type ActivityBucket, type ActivityStatus } from "../domain/activity";
+import { ACTIVITY_BUCKETS, isCalendarMonth, type ActivityBucket, type ActivityStatus } from "../domain/activity";
 import type { ActivityCapability, ActivityType } from "../domain/catalog";
 import { activityTypeSchema } from "./catalog";
 
@@ -23,7 +23,7 @@ export const scheduleActivitySchema = activityDetailsSchema.extend({
 export const activityCapabilitiesSchema = z.object({ enterpriseId: optionalId }).strict();
 export const completeActivitySchema = activityDetailsSchema.extend({ requestId: idSchema, expectedVersion }).strict();
 export const cancelActivitySchema = z.object({ requestId: idSchema, expectedVersion, reason: optionalText(500), confirmed: z.literal(true) }).strict();
-export const activityPageSchema = productionPageSchema.extend({ bucket: z.enum(ACTIVITY_BUCKETS).optional(), recurrenceId: idSchema.optional() });
+export const activityPageSchema = productionPageSchema.extend({ bucket: z.enum(ACTIVITY_BUCKETS).optional(), month: z.string().refine(isCalendarMonth, "Enter a month as YYYY-MM.").optional(), recurrenceId: idSchema.optional() });
 
 export type ScheduleActivity = z.output<typeof scheduleActivitySchema>;
 export type CompleteActivity = z.output<typeof completeActivitySchema>;

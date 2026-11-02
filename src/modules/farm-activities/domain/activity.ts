@@ -31,3 +31,16 @@ export function assertLinkableCost(scope: FarmScope, record: ActivityCostSource)
   if (record.kind !== "EXPENSE" && record.kind !== "PURCHASE") throw new FoundationError("INVALID_INPUT");
   if (record.status !== "POSTED") throw new FoundationError("CONFLICT");
 }
+
+/** Calendar month as YYYY-MM. Rejects impossible months rather than normalizing them. */
+export function isCalendarMonth(value: string): boolean {
+  return /^\d{4}-(0[1-9]|1[0-2])$/.test(value) && value >= "1900-01";
+}
+export function monthRange(month: string): { first: string; last: string } {
+  const [year, number] = month.split("-").map(Number);
+  return { first: month + "-01", last: month + "-" + String(new Date(Date.UTC(year, number, 0)).getUTCDate()).padStart(2, "0") };
+}
+export function adjacentMonth(month: string, delta: number): string {
+  const [year, number] = month.split("-").map(Number);
+  return new Date(Date.UTC(year, number - 1 + delta, 1)).toISOString().slice(0, 7);
+}

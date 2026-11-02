@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { activityPageSchema, cancelActivitySchema, completeActivitySchema } from "@/modules/farm-activities/contracts/activity";
-import { ACTIVITY_BUCKETS, activityState, assertActivityOpen, assertLinkableCost, farmToday } from "@/modules/farm-activities/domain/activity";
+import { ACTIVITY_BUCKETS, activityState, adjacentMonth, assertActivityOpen, assertLinkableCost, farmToday, isCalendarMonth, monthRange } from "@/modules/farm-activities/domain/activity";
 
 const conflict = expect.objectContaining({ code: "CONFLICT" });
 const scope = { tenantId: "tenant", farmId: "farm" };
@@ -95,5 +95,19 @@ describe("activity command contracts", () => {
     for (const bucket of ACTIVITY_BUCKETS) expect(activityPageSchema.parse({ bucket }).bucket).toBe(bucket);
     expect(activityPageSchema.safeParse({ bucket: "OVERDUE" }).success).toBe(false);
     expect(activityPageSchema.safeParse({ tenantId: crypto.randomUUID() }).success).toBe(false);
+  });
+});
+
+describe("calendar months", () => {
+  it.each(["2026-11", "1900-01", "2028-02"])("accepts %s", month => expect(isCalendarMonth(month)).toBe(true));
+  it.each(["2026-13", "2026-00", "2026-1", "26-11", "2026-11-01", "1899-12", ""])("rejects %s", month => expect(isCalendarMonth(month)).toBe(false));
+  it("gives the first and last day, including leap February", () => {
+    expect(monthRange("2026-11")).toEqual({ first: "2026-11-01", last: "2026-11-30" });
+    expect(monthRange("2028-02")).toEqual({ first: "2028-02-01", last: "2028-02-29" });
+    expect(monthRange("2027-02").last).toBe("2027-02-28");
+  });
+  it("steps across year boundaries", () => {
+    expect(adjacentMonth("2026-12", 1)).toBe("2027-01");
+    expect(adjacentMonth("2027-01", -1)).toBe("2026-12");
   });
 });

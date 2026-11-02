@@ -6,7 +6,7 @@ import { claimCommandReceipt } from "@/modules/engineering-foundation/infrastruc
 import { productionAfter, requireProductionWriteAccess } from "@/modules/enterprises-seasons/infrastructure/production-access";
 import type { FarmScope } from "@/modules/enterprises-seasons/domain/production";
 import type { ActivityRecord, ActivityRepository } from "../contracts/activity";
-import { assertActivityOpen, assertLinkableCost, type ActivityBucket } from "../domain/activity";
+import { assertActivityOpen, assertLinkableCost, monthRange, type ActivityBucket } from "../domain/activity";
 import { ACTIVITY_LABELS, activityCapabilities, assertActivityAllowed } from "../domain/catalog";
 
 export const farmWhere = (scope: FarmScope) => ({ tenantId: scope.tenantId, farmId: scope.farmId });
@@ -31,6 +31,10 @@ function bucketQuery(bucket: ActivityBucket, today: string): { where: Prisma.Pro
     case "COMPLETED": return { where: { status: "COMPLETED" }, direction: "desc" };
     case "CANCELLED": return { where: { status: "CANCELLED" }, direction: "desc" };
   }
+}
+function monthQuery(month: string): { where: Prisma.ProductionActivityWhereInput; direction: "asc" } {
+  const { first, last } = monthRange(month);
+  return { where: { dueOn: { gte: calendarDate(first), lte: calendarDate(last) } }, direction: "asc" };
 }
 export async function linkableCost(tx: Prisma.TransactionClient, scope: FarmScope, costRecordId: string | undefined) {
   if (!costRecordId) return;
@@ -68,14 +72,14 @@ export function activityRepository(db: PrismaClient): ActivityRepository {
   }, { isolationLevel: "ReadCommitted", timeout: 10_000 });
   return {
     async activity(scope, id) { const row = await db.productionActivity.findFirst({ where: { ...farmWhere(scope), id }, include: activityInclude }); return row ? activityRecord(row) : null; },
-    async activities(scope, { cursor, limit, bucket, recurrenceId }, today) {
+    async activities(scope, { cursor, limit, bucket, month, recurrenceId }, today) {
       const where = { ...farmWhere(scope), ...(recurrenceId ? { recurrenceId } : {}) };
-      if (!bucket) {
+      if (!bucket && !month) {
         const anchor = cursor ? productionAfter(await db.productionActivity.findFirst({ where: { ...where, id: cursor } })) : {};
         const rows = await db.productionActivity.findMany({ where: { ...where, ...anchor }, include: activityInclude, orderBy: [{ createdAt: "desc" }, { id: "desc" }], take: limit + 1 });
         return { items: rows.slice(0, limit).map(activityRecord), nextCursor: rows.length > limit ? rows[limit - 1].id : null };
       }
-      const query = bucketQuery(bucket, today), before = query.direction === "asc" ? "gt" : "lt";
+      const query = bucket ? bucketQuery(bucket, today) : monthQuery(month as string), before = query.direction === "asc" ? "gt" : "lt";
       const anchor = cursor ? await db.productionActivity.findFirst({ where: { ...where, ...query.where, id: cursor }, select: { id: true, dueOn: true } }) : null;
       if (cursor && !anchor) throw new FoundationError("INVALID_INPUT");
       const after = anchor ? { OR: [{ dueOn: { [before]: anchor.dueOn } }, { dueOn: anchor.dueOn, id: { [before]: anchor.id } }] } : {};
