@@ -9,7 +9,7 @@ import { farmAccountingService } from "@/modules/farm-accounting/infrastructure/
 import { harvestService } from "@/modules/harvest-inventory/infrastructure/services";
 import { activityService } from "@/modules/farm-activities/infrastructure/services";
 import { PhotoService } from "../application/photos";
-import { PullService, type SyncCommandServices } from "../application/sync";
+import { PullService, PushService, type SyncCommandServices } from "../application/sync";
 import { photoRepository } from "./photo-repository";
 import { photoStorage } from "./photo-storage";
 import { pullSources } from "./pull-sources";
@@ -21,8 +21,10 @@ export function syncCommandServices(): SyncCommandServices {
     scheduleActivity: (farmId, input) => activityService().schedule(farmId, input),
     recordActivityDone: (farmId, input) => activityService().recordDone(farmId, input),
     completeActivity: (farmId, activityId, input) => activityService().complete(farmId, activityId, input),
+    currentActivity: (farmId, activityId) => activityService().detail(farmId, activityId),
   };
 }
+export function pushService() { return new PushService(authorizationService(), syncCommandServices()); }
 export function pullService() {
   return new PullService(authorizationService(), pullSources({ registry: farmerRegistryService(), production: productionService(), crops: cropCycleService(), accounting: farmAccountingService(), harvest: harvestService(), activities: activityService() }));
 }

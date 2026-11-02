@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { activityFixture } from "../support/activity-fixture";
-import { PullService, applySyncCommand, type SyncCommandServices } from "@/modules/offline-first/application/sync";
+import { PullService, PushService, applySyncCommand, type SyncCommandServices } from "@/modules/offline-first/application/sync";
 import { PhotoService } from "@/modules/offline-first/application/photos";
 import { photoRepository } from "@/modules/offline-first/infrastructure/photo-repository";
 import { pullSources } from "@/modules/offline-first/infrastructure/pull-sources";
@@ -22,6 +22,7 @@ const services = (m: Member): SyncCommandServices => ({
   scheduleActivity: (farmId, input) => m.activities.schedule(farmId, input),
   recordActivityDone: (farmId, input) => m.activities.recordDone(farmId, input),
   completeActivity: (farmId, activityId, input) => m.activities.complete(farmId, activityId, input),
+  currentActivity: (farmId, activityId) => m.activities.detail(farmId, activityId),
 });
 const photos = (m: Member) => new PhotoService(m.auth, registryRepository(f.runtime), photoRepository(f.runtime), async () => ({ async put(tenantId, objectId, bytes) {
   if (storageDown) throw new Error("storage down");
@@ -193,5 +194,59 @@ describe("MYF-P07-AC002 cached data pull", () => {
       const page = await puller(f.b).pull();
       expect(page).toMatchObject({ status: "OK", farms: [], items: [], nextCursor: null });
     } finally { await f.owner.farmMember.updateMany({ where: { userId: f.b.scope.actorId }, data: { status: "ACTIVE" } }); }
+  });
+});
+
+describe("MYF-P07-AC003 push outcomes", () => {
+  const pusher = (m: Member) => new PushService(m.auth, services(m));
+  const outcomeOf = async (m: Member, command: ReturnType<typeof push>) => (await pusher(m).push({ commands: [command] })).results[0];
+  it("commits valid commands in order and reports each one", async () => {
+    const parent = push("CREATE_TASK", { type: "CLEANING", dueOn: "2026-11-20" }), expense = push("RECORD_EXPENSE", { categoryId: (await category("COST")).id, amount: "5000", currency: "UGX", occurredOn: "2026-11-01" });
+    const { results } = await pusher(f.a).push({ commands: [parent, expense] });
+    expect(results.map(row => [row.clientMutationId, row.outcome.status])).toEqual([[parent.clientMutationId, "COMMITTED"], [expense.clientMutationId, "COMMITTED"]]);
+    expect(results[0].outcome).toMatchObject({ result: { activityId: expect.any(String), version: 1 } });
+  });
+  it("a refused command does not stop or undo the others in its batch", async () => {
+    const bad = push("RECORD_EXPENSE", { categoryId: id(), amount: "-1", currency: "UGX", occurredOn: "2026-11-01" }), good = push("CREATE_TASK", { type: "CLEANING", dueOn: "2026-11-21" });
+    const { results } = await pusher(f.a).push({ commands: [bad, good] });
+    expect(results.map(row => row.outcome.status)).toEqual(["INVALID", "COMMITTED"]);
+    expect(await f.owner.auditEvent.count({ where: { requestId: bad.clientMutationId } })).toBe(0);
+  });
+  it("a malformed command is reported alone and leaves the rest of the queue moving", async () => {
+    const good = push("CREATE_TASK", { type: "CLEANING", dueOn: "2026-11-22" });
+    const { results } = await pusher(f.a).push({ commands: [{ clientMutationId: "not-a-uuid", operation: "DELETE_FARM" }, good] });
+    expect(results.map(row => row.outcome.status)).toEqual(["INVALID", "COMMITTED"]);
+  });
+  it("returns a stale edit as a conflict with the current record, and leaves the record alone", async () => {
+    const task = await f.a.activities.schedule(f.a.scope.farmId, f.command({ type: "CLEANING", enterpriseId: undefined, plotId: undefined }));
+    await f.a.activities.complete(f.a.scope.farmId, task.activityId, { requestId: id(), expectedVersion: 1, workerName: "First device" });
+    const { outcome } = await outcomeOf(f.a, push("COMPLETE_ACTIVITY", { activityId: task.activityId, workerName: "Second device" }, { baseVersion: 1 }));
+    expect(outcome).toEqual({ status: "CONFLICT", current: { activityId: task.activityId, version: 2, status: "COMPLETED" } });
+    expect((await f.a.activities.detail(f.a.scope.farmId, task.activityId)).workerName).toBe("First device");
+  });
+  it("rejects a reused key with a different payload and keeps the original", async () => {
+    const command = push("CREATE_TASK", { type: "CLEANING", dueOn: "2026-11-23" });
+    const first = await outcomeOf(f.a, command);
+    expect(first.outcome.status).toBe("COMMITTED");
+    expect((await outcomeOf(f.a, { ...command, payload: { type: "CLEANING", dueOn: "2026-11-24" } })).outcome.status).toBe("CONFLICT");
+    expect((await outcomeOf(f.a, command)).outcome).toEqual(first.outcome);
+  });
+  it("denies foreign farms and parents per command", async () => {
+    expect((await outcomeOf(f.a, push("CREATE_TASK", { type: "CLEANING", dueOn: "2026-11-23" }, { farmId: f.b.scope.farmId }))).outcome.status).toBe("DENIED");
+    expect((await outcomeOf(f.a, push("CREATE_TASK", { type: "CLEANING", dueOn: "2026-11-23", plotId: f.b.plot.id }))).outcome.status).toBe("DENIED");
+  });
+  it("denies a member revoked while offline, keeping nothing", async () => {
+    const command = push("CREATE_TASK", { type: "CLEANING", dueOn: "2026-11-25" });
+    await f.owner.farmMember.updateMany({ where: { userId: f.a.scope.actorId }, data: { status: "REVOKED" } });
+    try { expect((await outcomeOf(f.a, command)).outcome.status).toBe("DENIED"); }
+    finally { await f.owner.farmMember.updateMany({ where: { userId: f.a.scope.actorId }, data: { status: "ACTIVE" } }); }
+    expect(await f.owner.auditEvent.count({ where: { requestId: command.clientMutationId } })).toBe(0);
+  });
+  it("treats an unexpected failure as retryable, and a signed-out caller as the whole request failing", async () => {
+    const failing = new PushService(f.a.auth, { ...services(f.a), scheduleActivity: async () => { throw new Error("database down"); } });
+    expect((await failing.push({ commands: [push("CREATE_TASK", {})] })).results[0].outcome).toEqual({ status: "RETRYABLE" });
+    const { FoundationError } = await import("@/modules/engineering-foundation/domain/errors");
+    await expect(new PushService({ account: async () => { throw new FoundationError("UNAUTHENTICATED"); } }, services(f.a)).push({ commands: [push("CREATE_TASK", {})] })).rejects.toMatchObject({ code: "UNAUTHENTICATED" });
+    await expect(pusher(f.a).push({ commands: [] })).rejects.toMatchObject({ code: "INVALID_INPUT" });
   });
 });

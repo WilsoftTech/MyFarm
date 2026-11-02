@@ -2,7 +2,8 @@ import { FoundationError } from "@/modules/engineering-foundation/domain/errors"
 import type { RegistryAuthorization } from "@/modules/farmer-registry/application/registry";
 import { parseProductionInput as parse } from "@/modules/enterprises-seasons/application/farm-access";
 import { decodePullCursor, encodePullCursor, isPullCursorExpired, nextPullPosition, PULL_LIMITS, PULL_SECTIONS, type PullPosition, type PullSection } from "../domain/commands";
-import { pullPositionSchema, pullQuerySchema, type PullPage, type PushCommand } from "../contracts/commands";
+import { pullPositionSchema, pullQuerySchema, pushCommandSchema, pushRequestSchema, type PullPage, type PushCommand, type PushResponse } from "../contracts/commands";
+import type { PushOutcome } from "../domain/sync-state";
 
 /** The existing services do the work, so their authorization, validation, receipts and atomic writes all still apply. */
 export interface SyncCommandServices {
@@ -11,6 +12,8 @@ export interface SyncCommandServices {
   scheduleActivity(farmId: string, input: unknown): Promise<{ activityId: string; version: number }>;
   recordActivityDone(farmId: string, input: unknown): Promise<{ activityId: string; version: number }>;
   completeActivity(farmId: string, activityId: string, input: unknown): Promise<{ activityId: string; version: number }>;
+  /** What a stale edit is shown instead. */
+  currentActivity(farmId: string, activityId: string): Promise<{ activityId: string; version: number; status: string }>;
 }
 /** requestId is always the command's own ID, whatever the payload says, so one intent cannot claim another's receipt. Photos upload separately. */
 export function applySyncCommand(services: SyncCommandServices, command: PushCommand): Promise<Record<string, unknown>> {
@@ -28,6 +31,36 @@ export function applySyncCommand(services: SyncCommandServices, command: PushCom
       return services.completeActivity(command.farmId, activityId, { ...details, expectedVersion: command.baseVersion }).then(row => ({ activityId: row.activityId, version: row.version }));
     }
     default: return Promise.reject(new FoundationError("INVALID_INPUT"));
+  }
+}
+
+const OUTCOMES: Partial<Record<FoundationError["code"], PushOutcome>> = { CONFLICT: { status: "CONFLICT" }, INVALID_INPUT: { status: "INVALID" }, FORBIDDEN: { status: "DENIED" } };
+/** Each command stands alone, so one refusal does not undo another's committed effect. Order is kept so parents go first. */
+export class PushService {
+  constructor(private readonly auth: Pick<RegistryAuthorization, "account">, private readonly services: SyncCommandServices) {}
+  private async conflictDetails(command: PushCommand): Promise<PushOutcome> {
+    const activityId = command.payload.activityId;
+    if (command.operation !== "COMPLETE_ACTIVITY" || typeof activityId !== "string") return { status: "CONFLICT" };
+    try { const row = await this.services.currentActivity(command.farmId, activityId); return { status: "CONFLICT", current: { activityId: row.activityId, version: row.version, status: row.status } }; }
+    catch { return { status: "CONFLICT" }; }
+  }
+  async push(input: unknown): Promise<PushResponse> {
+    await this.auth.account();
+    const { commands } = parse(pushRequestSchema, input);
+    const results: PushResponse["results"] = [];
+    for (const raw of commands) {
+      const parsed = pushCommandSchema.safeParse(raw);
+      if (!parsed.success) { results.push({ clientMutationId: String(raw.clientMutationId ?? ""), outcome: { status: "INVALID" } }); continue; }
+      const command = parsed.data;
+      try { results.push({ clientMutationId: command.clientMutationId, outcome: { status: "COMMITTED", result: await applySyncCommand(this.services, command) } }); }
+      catch (error) {
+        // A session that ended mid-batch fails the whole request. Anything already committed replays from its receipt.
+        if (error instanceof FoundationError && error.code === "UNAUTHENTICATED") throw error;
+        const outcome = error instanceof FoundationError ? OUTCOMES[error.code] : undefined;
+        results.push({ clientMutationId: command.clientMutationId, outcome: outcome?.status === "CONFLICT" ? await this.conflictDetails(command) : outcome ?? { status: "RETRYABLE" } });
+      }
+    }
+    return { results };
   }
 }
 

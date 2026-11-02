@@ -71,6 +71,13 @@ test("the offline account route denies anonymous callers without leaking data", 
   expect(response.status()).toBe(401); expect(response.headers()["cache-control"]).toContain("no-store");
   expect((await response.json()).error).toBe("UNAUTHENTICATED");
 });
+test("the sync push route requires a session and same-origin JSON", async ({ request }) => {
+  const path = "/api/v1/sync/push", data = { commands: [{ clientMutationId: record }] };
+  const anonymous = await request.post(path, { headers: { origin: "http://127.0.0.1:3101" }, data });
+  expect(anonymous.status()).toBe(401); expect(anonymous.headers()["cache-control"]).toContain("no-store");
+  const invalidOrigins: Record<string, string>[] = [{ origin: "https://untrusted.test" }, {}];
+  for (const headers of invalidOrigins) expect((await request.post(path, { headers, data })).status()).toBe(403);
+});
 test("offline pull and photo routes deny anonymous callers without leaking data", async ({ request }) => {
   for (const path of ["/api/v1/sync/pull", "/api/v1/sync/pull?cursor=forged", `/api/v1/farms/${farm}/photos?target=ACTIVITY&recordId=${record}`]) {
     const response = await request.get(path);

@@ -4,6 +4,7 @@ import { recordExpenseSchema, recordIncomeSchema } from "@/modules/farm-accounti
 import { recordHarvestSchema } from "@/modules/harvest-inventory/contracts/harvest";
 import { completeActivitySchema, scheduleActivitySchema } from "@/modules/farm-activities/contracts/activity";
 import { OFFLINE_OPERATIONS, PHOTO_TARGETS, PULL_SECTIONS, type OfflineOperation, type PullSection } from "../domain/commands";
+import type { PushOutcome } from "../domain/sync-state";
 
 /**
  * Each command reuses the exact server schema, so the phone and the server cannot disagree about what is valid.
@@ -36,7 +37,9 @@ export const pushCommandSchema = z.object({
   createdAt: z.iso.datetime(),
 }).strict();
 export type PushCommand = z.output<typeof pushCommandSchema>;
-export const pushRequestSchema = z.object({ commands: z.array(pushCommandSchema).min(1).max(20) }).strict();
+/** Commands are checked one by one, so a single malformed entry cannot block everything queued behind it. */
+export const pushRequestSchema = z.object({ commands: z.array(z.record(z.string(), z.unknown())).min(1).max(20) }).strict();
+export interface PushResponse { results: { clientMutationId: string; outcome: PushOutcome }[] }
 
 export const pullPositionSchema = z.object({ snapshotId: idSchema, issuedAt: z.iso.datetime(), farmIndex: z.number().int().nonnegative().max(1000), sectionIndex: z.number().int().nonnegative().max(PULL_SECTIONS.length - 1), pageCursor: idSchema.nullable(), taken: z.number().int().nonnegative().max(100_000) }).strict();
 export const pullQuerySchema = z.object({ cursor: z.string().min(1).max(1000).optional() }).strict();
