@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { idSchema } from "@/modules/engineering-foundation/contracts/identity";
 import { isCalendarDate, type FarmScope } from "@/modules/enterprises-seasons/domain/production";
-import type { ProductionPage, ProductionPageInput, ProductionRecord, ProductionWriteScope } from "@/modules/enterprises-seasons/contracts/production";
+import { productionPageSchema, type ProductionPage, type ProductionPageInput, type ProductionRecord, type ProductionWriteScope } from "@/modules/enterprises-seasons/contracts/production";
+import { ACTIVITY_BUCKETS, type ActivityBucket, type ActivityStatus } from "../domain/activity";
 import type { ActivityCapability, ActivityType } from "../domain/catalog";
 import { activityTypeSchema } from "./catalog";
 
@@ -17,9 +18,19 @@ export const scheduleActivitySchema = z.object({
 }).strict();
 export const activityCapabilitiesSchema = z.object({ enterpriseId: optionalId }).strict();
 
+const optionalText = (max: number) => z.string().trim().max(max, "Use " + max + " characters or fewer.").optional().transform(value => value || undefined);
+const expectedVersion = z.number().int().positive().max(2147483646);
+/** D-P06-004: free text only. The completing member comes from the session, never from this payload. */
+export const activityDetailsSchema = z.object({ workerName: optionalText(120), notes: optionalText(1000), costRecordId: optionalId });
+export const completeActivitySchema = activityDetailsSchema.extend({ requestId: idSchema, expectedVersion }).strict();
+export const cancelActivitySchema = z.object({ requestId: idSchema, expectedVersion, reason: optionalText(500), confirmed: z.literal(true) }).strict();
+export const activityPageSchema = productionPageSchema.extend({ bucket: z.enum(ACTIVITY_BUCKETS).optional() });
+
 export type ScheduleActivity = z.output<typeof scheduleActivitySchema>;
-export const ACTIVITY_STATUSES = ["SCHEDULED", "COMPLETED", "CANCELLED"] as const;
-export type ActivityStatus = typeof ACTIVITY_STATUSES[number];
+export type CompleteActivity = z.output<typeof completeActivitySchema>;
+export type CancelActivity = z.output<typeof cancelActivitySchema>;
+export type ActivityPageInput = z.output<typeof activityPageSchema>;
+export type { ActivityBucket, ActivityStatus };
 export interface ActivityView extends FarmScope, ProductionRecord {
   activityId: string;
   type: ActivityType;
