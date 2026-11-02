@@ -18,6 +18,7 @@ export async function activityFixture() {
   const pg = new Client({ connectionString: url }); await pg.connect();
   try { await runSqlFile(pg, supabaseEmulation); await applyProviderSql(pg); } finally { await pg.end(); }
   const tenants: string[] = [], users: string[] = [];
+  let now = new Date("2026-11-02T09:00:00Z");
   async function member(label: string) {
     const subject = crypto.randomUUID();
     const user = await owner.user.create({ data: { authSubject: subject } });
@@ -34,12 +35,12 @@ export async function activityFixture() {
     const poultry = await owner.enterprise.create({ data: { ...parent, name: "Layers", type: "POULTRY" } });
     const fish = await owner.enterprise.create({ data: { ...parent, name: "Tilapia", type: "FISH" } });
     const plot = await owner.plot.create({ data: { id: crypto.randomUUID(), ...parent, name: "Plot B" } });
-    return { scope, auth, crop, poultry, fish, plot, activities: new ActivityService(auth, registryRepository(runtime), activityRepository(runtime)) };
+    return { scope, auth, crop, poultry, fish, plot, activities: new ActivityService(auth, registryRepository(runtime), activityRepository(runtime), () => now) };
   }
   const a = await member("Activity farm A");
   const b = await member("Activity farm B");
   const command = (overrides: Record<string, unknown> = {}) => ({ requestId: crypto.randomUUID(), type: "FERTILIZING", dueOn: "2026-11-03", enterpriseId: a.crop.id, plotId: a.plot.id, ...overrides });
-  return { owner, runtime, a, b, command, async cleanup() {
+  return { owner, runtime, a, b, command, setNow(value: string) { now = new Date(value); }, async cleanup() {
     // Only these fixture tenants on the explicit isolated database; reverse dependency order.
     for (const table of FIXTURE_TABLES) await owner.$executeRawUnsafe('DELETE FROM "' + table + '" WHERE "tenantId" = ANY($1::uuid[])', tenants);
     await owner.farmer.deleteMany({ where: { userId: { in: users } } });

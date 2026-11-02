@@ -85,7 +85,9 @@ model User {
   stockOperations StockOperation[]
   stockAdjustments StockAdjustment[] @relation("AdjustmentCreator")
   approvedStockAdjustments StockAdjustment[] @relation("AdjustmentApprover")
-  productionActivities ProductionActivity[]
+  productionActivities ProductionActivity[] @relation("ActivityCreator")
+  completedActivities ProductionActivity[] @relation("ActivityCompleter")
+  cancelledActivities ProductionActivity[] @relation("ActivityCanceller")
 }
 model Organization {
   id String @id @default(uuid()) @db.Uuid
@@ -436,6 +438,7 @@ model AccountingRecord {
   @@index([createdBy])
   productionEvent ProductionEvent?
   stockOperation StockOperation?
+  activities ProductionActivity[]
 }
 // A payment only settles sale/purchase obligations; its allocations share its status.
 model PaymentRecord {
@@ -731,6 +734,14 @@ model ProductionActivity {
   enterpriseId String? @db.Uuid
   plotId String? @db.Uuid
   status ActivityStatus @default(SCHEDULED)
+  workerName String? @db.VarChar(120)
+  notes String? @db.VarChar(1000)
+  costRecordId String? @db.Uuid
+  completedAt DateTime? @db.Timestamptz(6)
+  completedBy String? @db.Uuid
+  cancelledAt DateTime? @db.Timestamptz(6)
+  cancelledBy String? @db.Uuid
+  cancelReason String? @db.VarChar(500)
   requestHash String @db.VarChar(64)
   createdBy String @db.Uuid
   createdAt DateTime @default(now()) @db.Timestamptz(6)
@@ -739,7 +750,10 @@ model ProductionActivity {
   farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
   enterprise Enterprise? @relation(fields: [enterpriseId], references: [id], onDelete: Restrict)
   plot Plot? @relation(fields: [plotId], references: [id], onDelete: Restrict)
-  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  cost AccountingRecord? @relation(fields: [costRecordId], references: [id], onDelete: Restrict)
+  creator User @relation("ActivityCreator", fields: [createdBy], references: [id], onDelete: Restrict)
+  completer User? @relation("ActivityCompleter", fields: [completedBy], references: [id], onDelete: Restrict)
+  canceller User? @relation("ActivityCanceller", fields: [cancelledBy], references: [id], onDelete: Restrict)
   @@unique([id, farmId, tenantId])
   @@index([tenantId, farmId, status, dueOn, id])
   @@index([tenantId, farmId, createdAt, id])
@@ -747,4 +761,7 @@ model ProductionActivity {
   @@index([enterpriseId])
   @@index([plotId])
   @@index([createdBy])
+  @@index([costRecordId])
+  @@index([completedBy])
+  @@index([cancelledBy])
 }
