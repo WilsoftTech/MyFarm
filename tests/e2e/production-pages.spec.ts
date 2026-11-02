@@ -26,3 +26,11 @@ test("accounting pages send anonymous users to sign-in before rendering farm mon
     expect(response.headers()["cache-control"]).toContain("no-store");
   }
 });
+test("activity calendar and repeating pages send anonymous users to sign-in", async ({ page, request }) => {
+  for (const path of ["activities/calendar", "activities/calendar?month=2026-11", "activities/series", "activities/series/new", "activities/series/" + record]) {
+    await page.goto(`/farms/${farm}/${path}`);
+    await expect(page).toHaveURL(/\/sign-in\?reason=session-required/);
+    const response = await request.get(`/farms/${farm}/${path}`, { maxRedirects: 0 });
+    expect(response.status()).toBe(307); expect(response.headers()["cache-control"]).toContain("no-store");
+  }
+});

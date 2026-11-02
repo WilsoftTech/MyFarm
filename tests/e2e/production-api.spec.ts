@@ -51,3 +51,18 @@ test("crop and animal-type catalog reads require farm authorization and remain p
     }
   }
 });
+test("activity reads and writes deny anonymous callers without leaking data", async ({ request }) => {
+  for (const path of ["activities/capabilities", "activities/" + record, "activity-series", "activity-series/" + record]) {
+    const response = await request.get(`/api/v1/farms/${farm}/${path}`);
+    expect(response.status()).toBe(401); expect(response.headers()["cache-control"]).toContain("no-store");
+    expect((await response.json()).error).toBe("UNAUTHENTICATED");
+  }
+  for (const path of ["activities/" + record + "/complete", "activities/" + record + "/cancel", "activity-series", "activity-series/expand", "activity-series/" + record + "/change", "activity-series/" + record + "/stop"]) {
+    const url = `/api/v1/farms/${farm}/${path}`;
+    const response = await request.post(url, { headers: { origin: "http://127.0.0.1:3101" }, data: { requestId: record } });
+    expect(response.status()).toBe(401); expect(response.headers()["cache-control"]).toContain("no-store");
+    expect(await response.json()).toEqual({ error: "UNAUTHENTICATED", requestId: expect.any(String) });
+    const invalidOrigins: Record<string, string>[] = [{ origin: "https://untrusted.test" }, {}];
+    for (const headers of invalidOrigins) expect((await request.post(url, { headers, data: {} })).status()).toBe(403);
+  }
+});

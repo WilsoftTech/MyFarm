@@ -35,13 +35,17 @@ jobs:
       - run: npm test
       - run: npm run db:migrate
       - run: npm run test:integration
-      - name: Non-UTC stock and accounting verification
-        run: npm run test:integration -- tests/integration/harvest-service.test.ts tests/integration/poultry-production.test.ts tests/integration/stock-operations.test.ts tests/integration/stock-reconstruction.test.ts tests/integration/farm-accounting-service.test.ts
+      - name: Non-UTC stock, accounting and activity verification
+        run: npm run test:integration -- tests/integration/harvest-service.test.ts tests/integration/poultry-production.test.ts tests/integration/stock-operations.test.ts tests/integration/stock-reconstruction.test.ts tests/integration/farm-accounting-service.test.ts tests/integration/activity-service.test.ts tests/integration/activity-lifecycle.test.ts tests/integration/activity-recurrence.test.ts
         env:
           TZ: Africa/Nairobi
       - run: npx prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code
       - name: Stock recovery rehearsal
         run: node tests/support/phase05-recovery.mjs
+        env:
+          MYFARM_TEST_CONTAINER: ${{ job.services.postgres.id }}
+      - name: Activity recovery rehearsal
+        run: node tests/support/phase06-recovery.mjs
         env:
           MYFARM_TEST_CONTAINER: ${{ job.services.postgres.id }}
       - run: npm run build
