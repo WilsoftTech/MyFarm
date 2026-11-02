@@ -66,3 +66,8 @@ test("activity reads and writes deny anonymous callers without leaking data", as
     for (const headers of invalidOrigins) expect((await request.post(url, { headers, data: {} })).status()).toBe(403);
   }
 });
+test("the offline account route denies anonymous callers without leaking data", async ({ request }) => {
+  const response = await request.get("/api/v1/sync/account");
+  expect(response.status()).toBe(401); expect(response.headers()["cache-control"]).toContain("no-store");
+  expect((await response.json()).error).toBe("UNAUTHENTICATED");
+});

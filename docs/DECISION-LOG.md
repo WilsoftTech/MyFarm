@@ -460,3 +460,7 @@ APPROVED, owner 2026-11-03: offline photos are built in Phase 7. They attach to 
 ## D-P07-005 - Q16 lost entries
 
 APPROVED, owner 2026-11-03: request persistent storage, show unsent counts and last sync, warn clearly, and allow downloading unsent entries as a file. The file is not encrypted and the farmer is told so. MyFarm does not claim guaranteed recovery.
+
+## D-P07-006 - Complete Phase 7 and task commits
+
+AUTHORIZED by direct owner instruction 2026-11-03: "commit T001 and continue with T002-T013", committing after each task. This does not authorize pushes, deployment or hosted database changes.
