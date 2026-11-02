@@ -85,6 +85,7 @@ model User {
   stockOperations StockOperation[]
   stockAdjustments StockAdjustment[] @relation("AdjustmentCreator")
   approvedStockAdjustments StockAdjustment[] @relation("AdjustmentApprover")
+  productionActivities ProductionActivity[]
 }
 model Organization {
   id String @id @default(uuid()) @db.Uuid
@@ -152,6 +153,7 @@ model Farm {
   seasons Season[]
   accountingRecords AccountingRecord[]
   payments PaymentRecord[]
+  productionActivities ProductionActivity[]
   @@unique([id, tenantId])
   @@index([tenantId, createdAt, id])
   harvests Harvest[]
@@ -177,6 +179,7 @@ model Plot {
   farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
   cropCycles CropCycle[]
   accountingRecords AccountingRecord[]
+  productionActivities ProductionActivity[]
   @@unique([id, farmId, tenantId])
   @@unique([farmId, name])
   @@index([tenantId, farmId, createdAt, id])
@@ -235,6 +238,7 @@ model Enterprise {
   cropCycles CropCycle[]
   poultryBatches PoultryBatch[]
   accountingRecords AccountingRecord[]
+  productionActivities ProductionActivity[]
   @@unique([id, farmId, tenantId])
   @@index([tenantId, farmId, createdAt, id])
   @@index([farmId, tenantId])
@@ -696,4 +700,51 @@ model StockAdjustment {
   @@index([operationId, farmId, tenantId])
   @@index([createdBy])
   @@index([approvedBy])
+}
+
+// Phase 6 farm activities. Status is the stored lifecycle only: today, upcoming and missed derive from dueOn (D-P06-002).
+enum ActivityType {
+  PLANTING
+  IRRIGATION
+  WEEDING
+  SPRAYING
+  FERTILIZING
+  VACCINATION
+  FEEDING
+  HARVESTING
+  PRUNING
+  MILKING
+  CLEANING
+  INSPECTION
+}
+enum ActivityStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+}
+model ProductionActivity {
+  id String @id @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  type ActivityType
+  dueOn DateTime @db.Date
+  enterpriseId String? @db.Uuid
+  plotId String? @db.Uuid
+  status ActivityStatus @default(SCHEDULED)
+  requestHash String @db.VarChar(64)
+  createdBy String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  version Int @default(1)
+  farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  enterprise Enterprise? @relation(fields: [enterpriseId], references: [id], onDelete: Restrict)
+  plot Plot? @relation(fields: [plotId], references: [id], onDelete: Restrict)
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  @@unique([id, farmId, tenantId])
+  @@index([tenantId, farmId, status, dueOn, id])
+  @@index([tenantId, farmId, createdAt, id])
+  @@index([farmId, tenantId])
+  @@index([enterpriseId])
+  @@index([plotId])
+  @@index([createdBy])
 }

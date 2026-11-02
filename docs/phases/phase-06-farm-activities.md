@@ -2,15 +2,15 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - Phase 6 requirements against owner decisions D-P06-001 through D-P06-006.
-- Implementation status: PARTIALLY COMPLETE - 10% (1/10 verified tasks).
+- Implementation status: PARTIALLY COMPLETE - 20% (2/10 verified tasks).
 - Last reviewed: 2026-11-02 (Africa/Nairobi).
 - Related phase/task IDs: Phase 06; MYF-P06-T001 through MYF-P06-T010; D-P06-001 through D-P06-006.
-- Verified completed work: MYF-P06-T001 activity catalog contract, verified locally.
-- Remaining work/blockers: T002-T010 and all acceptance/exit gates. Attachments stay deferred under D-P04-005.
-- Evidence/report links: [T001 report](../reports/phase-06-t001-2026-11-02.md); [Phase 5 closeout](../reports/phase-05-closeout-2026-10-29.md).
+- Verified completed work: MYF-P06-T001 through MYF-P06-T002, verified locally.
+- Remaining work/blockers: T003-T010 and remaining acceptance/exit gates. Attachments stay deferred under D-P04-005.
+- Evidence/report links: [T002 report](../reports/phase-06-t002-2026-11-02.md); [Phase 5 closeout](../reports/phase-05-closeout-2026-10-29.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **PARTIALLY COMPLETE - 10% (1/10)**, local start authorized by D-P06-001. Specification date: 2026-10-08. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **PARTIALLY COMPLETE - 20% (2/10)**, authorized by D-P06-001 and D-P06-007. Specification date: 2026-10-08.
 
 ## A. Phase Overview
 
@@ -209,7 +209,7 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 ## O. Completion Checklist
 
 - [x] MYF-P06-T001 complete with [evidence](../reports/phase-06-t001-2026-11-02.md).
-- [ ] MYF-P06-T002 complete with evidence.
+- [x] MYF-P06-T002 complete with [evidence](../reports/phase-06-t002-2026-11-02.md).
 - [ ] MYF-P06-T003 complete with evidence.
 - [ ] MYF-P06-T004 complete with evidence.
 - [ ] MYF-P06-T005 complete with evidence.

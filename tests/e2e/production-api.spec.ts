@@ -13,7 +13,7 @@ test("closure commands require authentication, same-origin JSON and private fail
   }
 });
 test("production reads deny anonymous callers before query or ID validation", async ({ request }) => {
-  for (const resource of ["enterprises", "seasons", "crop-cycles", "poultry-batches"]) {
+  for (const resource of ["enterprises", "seasons", "crop-cycles", "poultry-batches", "activities"]) {
     for (const suffix of ["", "/" + record, "/bad", "?limit=no", "?tenantId=forged"]) {
       const response = await request.get(`/api/v1/farms/${farm}/${resource}${suffix}`);
       expect(response.status()).toBe(401);
@@ -23,14 +23,14 @@ test("production reads deny anonymous callers before query or ID validation", as
   }
 });
 test("production writes require a session and fail without leaking data", async ({ request }) => {
-  for (const resource of ["enterprises", "seasons", "crop-cycles", "poultry-batches"]) {
+  for (const resource of ["enterprises", "seasons", "crop-cycles", "poultry-batches", "activities"]) {
     const response = await request.post(`/api/v1/farms/${farm}/${resource}`, { headers: { origin: "http://127.0.0.1:3101" }, data: { requestId: record } });
     expect(response.status()).toBe(401); expect(response.headers()["cache-control"]).toContain("no-store");
     expect(await response.json()).toEqual({ error: "UNAUTHENTICATED", requestId: expect.any(String) });
   }
 });
 test("production writes reject cross-origin, missing-origin and malformed JSON", async ({ request }) => {
-  for (const resource of ["enterprises", "seasons", "crop-cycles", "poultry-batches"]) {
+  for (const resource of ["enterprises", "seasons", "crop-cycles", "poultry-batches", "activities"]) {
     const path = `/api/v1/farms/${farm}/${resource}`;
     const origins: Record<string, string>[] = [{ origin: "https://untrusted.test" }, {}];
     for (const headers of origins) {
