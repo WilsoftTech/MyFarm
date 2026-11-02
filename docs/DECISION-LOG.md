@@ -464,3 +464,7 @@ APPROVED, owner 2026-11-03: request persistent storage, show unsent counts and l
 ## D-P07-006 - Complete Phase 7 and task commits
 
 AUTHORIZED by direct owner instruction 2026-11-03: "commit T001 and continue with T002-T013", committing after each task. This does not authorize pushes, deployment or hosted database changes.
+
+## D-P07-007 - Sync persistence design
+
+ENGINEERING DECISION 2026-11-03, within D-P07-006, reversing proposals in the Phase 7 specification with reasons. No `MutationReceipt` table: existing receipts in `AuditEvent`, unique per tenant, request and action and held permanently, already give replay, and a check now refuses the same key on a different operation. No `ChangeLog` or tombstones: records are only appended or change status, so pull reuses the authorized list services and cannot skip a late commit. No `DeviceRegistration`: the device ID is a local hint and grants nothing, so it stays on the phone. Each has a concrete trigger to revisit: hard deletes, a need to sync much more than the bounded recent rows, or device-level revocation.
