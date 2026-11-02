@@ -4,6 +4,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import { readFileSync } from "node:fs";
 const secret = process.env.MYFARM_BROWSER_AUTH_SECRET;
 if (!secret) throw new Error("Fixture Auth secret required");
+const storedObjects = new Set();
 const server = createServer((request, response) => {
   response.setHeader("Content-Type", "application/json");
   if (request.url === "/health") { response.end('{"status":"ok"}'); return; }
@@ -19,6 +20,15 @@ const server = createServer((request, response) => {
     const account = Object.values(fixtures.accounts).find(value => value.subject === claims.sub);
     if (!account || claims.exp <= Date.now() / 1000) throw new Error("Expired fixture");
     if (request.method === "POST" && request.url.startsWith("/auth/v1/logout")) { response.writeHead(204); response.end(); return; }
+    if (request.method === "POST" && request.url.startsWith("/storage/v1/object/sign/")) { response.end(JSON.stringify({ signedURL: "/object/sign/fixture?token=fixture" })); return; }
+    if (request.method === "POST" && request.url.startsWith("/storage/v1/object/")) {
+      const key = request.url.slice("/storage/v1/object/".length);
+      if (storedObjects.has(key)) { response.writeHead(400); response.end(JSON.stringify({ statusCode: "409", error: "Duplicate", message: "The resource already exists" })); return; }
+      storedObjects.add(key);
+      request.resume();
+      request.on("end", () => response.end(JSON.stringify({ Key: key, Id: key })));
+      return;
+    }
     if (request.method === "GET" && request.url === "/auth/v1/user") {
       response.end(JSON.stringify({ id: account.subject, email: account.email, aud: "authenticated", role: "authenticated", app_metadata: {}, user_metadata: {}, created_at: "2026-10-18T00:00:00Z" })); return;
     }

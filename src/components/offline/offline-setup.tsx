@@ -14,9 +14,10 @@ export function OfflineSetup() {
       if (!setOfflineAccount(accountId, startedAt)) return;
       await navigator.serviceWorker.register("/sw.js");
       // Loaded on demand so ordinary signed-in pages do not carry the local database code.
-      const [{ localDatabase }, { pullCachedData }, { requestPersistentStorage }] = await Promise.all([import("@/modules/offline-first/client/local-database"), import("@/modules/offline-first/client/pull"), import("@/modules/offline-first/client/storage-status")]);
+      const [{ localDatabase }, { syncNow }, { requestPersistentStorage }] = await Promise.all([import("@/modules/offline-first/client/local-database"), import("@/modules/offline-first/client/sync-engine"), import("@/modules/offline-first/client/storage-status")]);
       await requestPersistentStorage();
-      await pullCachedData(localDatabase(accountId), () => accountGeneration() === startedAt);
+      // Sends anything left over from time offline, then refreshes saved copies.
+      await syncNow(localDatabase(accountId), () => accountGeneration() === startedAt);
     }
     prepare().catch(() => undefined);
   }, []);
