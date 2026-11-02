@@ -4,9 +4,11 @@ import { farmAccountingService } from "@/modules/farm-accounting/infrastructure/
 import { loadPage } from "@/app/farmer/guard";
 import { AccountingShell } from "@/components/accounting/shell";
 import { ReversalForm } from "@/components/accounting/reversal-form";
+import { RecordPhotos } from "@/components/offline/record-photos";
 import { counterpartyLabels, formatMoney, outstandingLabels, paymentActionLabels, recordKindLabels, recordStatusLabels, settledLabels, settlementLabels } from "@/components/accounting/labels";
 import { Button } from "@/components/ui/button";
 import { reverseAccountingAction } from "../../actions";
+import { recordPhotos } from "../../../activities/actions";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Money record" };
 const notices = { saved: "Record saved.", paid: "Payment saved.", reversed: "Record reversed. It stays in your history and no longer counts." } as const;
@@ -47,5 +49,6 @@ export default async function AccountingRecordPage({ params, searchParams }: { p
     {row.reversal ? <section aria-labelledby="reversalHeading" className="mt-6 rounded-2xl border border-border bg-white p-6"><h2 id="reversalHeading" className="text-xl font-semibold">Reversed</h2><p className="mt-2 break-words leading-7">Reason: {row.reversal.reason}</p><p className="text-sm">On <time dateTime={row.reversal.reversedAt}>{row.reversal.reversedAt.slice(0, 10)}</time></p></section>
       : postedPayments.length > 0 ? <p className="mt-6 rounded-2xl border border-border bg-white p-6 leading-7">To reverse this {recordKindLabels[row.kind].toLowerCase()}, first reverse each payment listed above.</p>
       : <ReversalForm label={"this " + recordKindLabels[row.kind].toLowerCase()} note="" submit={reverseAccountingAction.bind(null, farm.farmId, row.kind, row.recordId)} />}
+    <RecordPhotos farmId={farm.farmId} photos={await recordPhotos(farm.farmId, "ACCOUNTING_RECORD", row.recordId)} />
   </AccountingShell>;
 }

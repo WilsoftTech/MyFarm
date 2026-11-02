@@ -37,6 +37,15 @@ test("MYF-P07-AC003 entries saved offline send on reconnecting, with a photo aft
     const list = await context.request.get(`${base}/api/v1/farms/${farm}/photos?target=ACTIVITY&recordId=${activityId}`);
     expect((await list.json() as { items: unknown[] }).items).toHaveLength(1);
     expect(await inDatabase<unknown[]>(page, account, "photos")).toHaveLength(0);
+
+    await page.goto(`${base}/farms/${farm}/activities/${activityId}`);
+    await expect(page.getByRole("heading", { name: "Photos" })).toBeVisible();
+    await page.route("http://127.0.0.1:3211/**", route => route.fulfill({ status: 200, contentType: "image/jpeg", body: "" }));
+    const [view] = await Promise.all([page.waitForResponse(response => response.url().endsWith("/view")), page.getByRole("button", { name: "View photo 1" }).click()]);
+    expect(view.status()).toBe(200);
+    expect(view.headers()["cache-control"]).toContain("no-store");
+    const photoId = (await list.json() as { items: { photoId: string }[] }).items[0].photoId;
+    expect((await context.request.post(`${base}/api/v1/farms/${f.farms.b}/photos/${photoId}/view`, { headers: { origin: base }, data: { requestId: crypto.randomUUID() } })).status()).toBe(403);
   } finally { await server.stop(); await clearInventoryBrowser(f); }
 });
 

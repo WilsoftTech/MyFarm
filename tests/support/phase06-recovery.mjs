@@ -21,14 +21,18 @@ let created=false,connected=false;
 const snapshot=async db=>({rows:(await db.query(`SELECT a."dueOn"::text,a.status,a."workerName",a."completedBy",a."recurrenceId",a."cancelReason",r.amount::text AS cost,r.currency FROM "ProductionActivity" a LEFT JOIN "AccountingRecord" r ON r.id=a."costRecordId" WHERE a."tenantId"=$1 ORDER BY a."dueOn"`,[tenant])).rows,
 series:(await db.query(`SELECT frequency,"interval","startOn"::text,"stoppedFrom"::text,version FROM "ActivityRecurrence" WHERE "tenantId"=$1`,[tenant])).rows,
 audits:(await db.query(`SELECT count(*)::int AS n FROM "AuditEvent" WHERE "tenantId"=$1`,[tenant])).rows,
+photos:(await db.query(`SELECT "contentType","byteSize",sha256 FROM "RecordPhoto" WHERE "tenantId"=$1`,[tenant])).rows,
 grants:(await db.query(`SELECT has_table_privilege('myfarm_runtime','"ProductionActivity"','INSERT') AS insert,
 has_column_privilege('myfarm_runtime','"ProductionActivity"','status','UPDATE') AS finish,
 has_column_privilege('myfarm_runtime','"ProductionActivity"','dueOn','UPDATE') AS "rewriteDueOn",
 has_table_privilege('myfarm_runtime','"ProductionActivity"','DELETE') AS delete,
 has_table_privilege('authenticated','"ProductionActivity"','SELECT') AS browser,
-has_table_privilege('authenticated','"ActivityRecurrence"','SELECT') AS "browserSeries"`)).rows,
-policies:(await db.query("SELECT tablename,policyname,cmd,qual,with_check FROM pg_policies WHERE schemaname='public' AND tablename IN ('ProductionActivity','ActivityRecurrence') ORDER BY 1,2")).rows,
-rls:(await db.query("SELECT relname,relrowsecurity FROM pg_class WHERE relname IN ('ProductionActivity','ActivityRecurrence') ORDER BY 1")).rows});
+has_table_privilege('authenticated','"ActivityRecurrence"','SELECT') AS "browserSeries",
+has_table_privilege('myfarm_runtime','"RecordPhoto"','INSERT') AS "insertPhoto",
+has_table_privilege('myfarm_runtime','"RecordPhoto"','DELETE') AS "deletePhoto",
+has_table_privilege('authenticated','"RecordPhoto"','SELECT') AS "browserPhoto"`)).rows,
+policies:(await db.query("SELECT tablename,policyname,cmd,qual,with_check FROM pg_policies WHERE schemaname='public' AND tablename IN ('ProductionActivity','ActivityRecurrence','RecordPhoto') ORDER BY 1,2")).rows,
+rls:(await db.query("SELECT relname,relrowsecurity FROM pg_class WHERE relname IN ('ProductionActivity','ActivityRecurrence','RecordPhoto') ORDER BY 1")).rows});
 const activity=(status,dueOn,extra={})=>({id:randomUUID(),status,dueOn,workerName:null,completedAt:null,completedBy:null,cancelledAt:null,cancelledBy:null,cancelReason:null,costRecordId:null,...extra});
 await source.connect();
 try{
@@ -47,6 +51,7 @@ try{
   activity("SCHEDULED","2026-11-03"),
   activity("CANCELLED","2026-11-05",{cancelledAt:new Date("2026-11-02T10:00:00Z"),cancelledBy:user,cancelReason:"Series stopped"}),
  ])await source.query('INSERT INTO "ProductionActivity" (id,"tenantId","farmId",type,"dueOn",status,"workerName","completedAt","completedBy","cancelledAt","cancelledBy","cancelReason","costRecordId","recurrenceId","requestHash","createdBy") VALUES ($1,$2,$3,\'FEEDING\',$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,\'x\',$14)',[row.id,tenant,farm,row.dueOn,row.status,row.workerName,row.completedAt,row.completedBy,row.cancelledAt,row.cancelledBy,row.cancelReason,row.costRecordId,series,user]);
+ await source.query('INSERT INTO "RecordPhoto" (id,"tenantId","farmId","accountingRecordId","contentType","byteSize",sha256,"createdBy") VALUES ($1,$2,$3,$4,\'image/jpeg\',5,$5,$6)',[randomUUID(),tenant,farm,cost,"a".repeat(64),user]);
  await source.query('INSERT INTO "AuditEvent" (id,"tenantId","actorId",action,"targetId","requestId") VALUES ($1,$2,$3,\'ACTIVITY_SERIES_CREATED\',$4,$5)',[randomUUID(),tenant,user,series,randomUUID()]);
  await source.query("COMMIT");
  const before=await snapshot(source);if(before.rows.length!==3||before.rows[0].cost!=="150000.0000")throw new Error("Recovery fixture missing");
@@ -58,9 +63,9 @@ try{
  if(duplicate!=="23505")throw new Error("Restored one-occurrence-per-date key failed");
  const lifecycle=await restored.query(`UPDATE "ProductionActivity" SET status='COMPLETED' WHERE "tenantId"=$1 AND status='SCHEDULED'`,[tenant]).then(()=>"accepted",e=>e.code);
  if(lifecycle!=="23514")throw new Error("Restored lifecycle check failed");
- console.log("PASS: real dump/restore retains activities, series, cost links and audit receipts, the one-occurrence-per-date key, the lifecycle check, RLS and runtime/browser grants.");
+ console.log("PASS: real dump/restore retains activities, series, cost links, photo records and audit receipts, the one-occurrence-per-date key, the lifecycle check, RLS and runtime/browser grants.");
 }finally{
  if(connected)await restored.end();if(created)await source.query('DROP DATABASE "'+restoreName+'"');await source.query("ROLLBACK");
- await source.query("BEGIN");for(const table of ["ProductionActivity","ActivityRecurrence","AccountingRecord","AuditEvent","FarmMember","Farm","Farmer"])await source.query('DELETE FROM "'+table+'" WHERE "tenantId"=$1',[tenant]);
+ await source.query("BEGIN");for(const table of ["RecordPhoto","ProductionActivity","ActivityRecurrence","AccountingRecord","AuditEvent","FarmMember","Farm","Farmer"])await source.query('DELETE FROM "'+table+'" WHERE "tenantId"=$1',[tenant]);
  await source.query('DELETE FROM "Membership" WHERE "userId"=$1',[user]);await source.query('DELETE FROM "Organization" WHERE id=$1',[tenant]);await source.query('DELETE FROM "User" WHERE id=$1',[user]);await source.query("COMMIT");await source.end();
 }

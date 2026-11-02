@@ -1,5 +1,7 @@
 "use server";
 import { activityService, recurrenceService } from "@/modules/farm-activities/infrastructure/services";
+import { photoService } from "@/modules/offline-first/infrastructure/services";
+import type { PhotoTarget } from "@/modules/offline-first/domain/commands";
 import { RECURRING_ACTIVITY_TYPES } from "@/modules/farm-activities/domain/recurrence";
 import { farmAccountingService } from "@/modules/farm-accounting/infrastructure/services";
 import { cropCycleService } from "@/modules/enterprises-seasons/infrastructure/services";
@@ -78,4 +80,8 @@ export async function saveSeriesStop(farmId: string, seriesId: string, version: 
     await recurrenceService().stop(farmId, seriesId, { ...fields(input), expectedVersion: version });
     return "/farms/" + farmId + "/activities/series/" + seriesId;
   }, "This series was already stopped or changed. Reload to see the latest details.", "Choose a stop date that is today or later.");
+}
+/** Null rather than an error, so a photo problem can never stop the record itself from opening. */
+export async function recordPhotos(farmId: string, target: PhotoTarget, recordId: string) {
+  try { return await photoService().list(farmId, { target, recordId }); } catch { return null; }
 }
