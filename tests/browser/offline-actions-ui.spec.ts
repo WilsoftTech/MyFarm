@@ -121,9 +121,11 @@ test("MYF-P07-AC002 all eight actions work with the server stopped and survive a
     await expect(offline.getByRole("button", { name: "Record expense" })).toBeVisible();
     await offline.getByLabel("Choose a farm", { exact: true }).selectOption(farm);
     await expect(offline.getByText("Entries waiting to send").locator("..").getByText("6", { exact: true })).toBeVisible();
+    // Sending is attempted on opening, so an entry settles back to waiting with the server down. Its local version counts those attempts.
+    await expect.poll(async () => (await outbox(offline, account)).every(row => row.syncStatus === "PENDING"), { timeout: 20_000 }).toBe(true);
     const entries = await outbox(offline, account);
     expect(entries.map(row => row.operation).sort()).toEqual(["ATTACH_PHOTO", "CREATE_TASK", "RECORD_ACTIVITY", "RECORD_EXPENSE", "RECORD_HARVEST", "RECORD_INCOME"]);
-    for (const row of entries) expect(row).toMatchObject({ syncStatus: "PENDING", version: 1, deviceId: entries[0].deviceId, createdAt: expect.any(String) });
+    for (const row of entries) expect(row).toMatchObject({ syncStatus: "PENDING", version: expect.any(Number), deviceId: entries[0].deviceId, createdAt: expect.any(String) });
     const photo = entries.find(row => row.operation === "ATTACH_PHOTO"), parent = entries.find(row => row.operation === "RECORD_ACTIVITY");
     expect(photo?.dependsOn).toBe(parent?.clientMutationId);
     const stored = await photos(offline, account);
@@ -133,7 +135,7 @@ test("MYF-P07-AC002 all eight actions work with the server stopped and survive a
 
     await offline.getByRole("button", { name: "View records" }).click();
     await expect(offline.getByText("Saved copies from")).toBeVisible();
-    await expect(offline.getByText("Waiting to send", { exact: true })).toHaveCount(6);
+    await expect(offline.getByRole("region", { name: "Records" }).getByText("Waiting to send", { exact: true })).toHaveCount(6);
     await offline.close();
   } finally { await server.stop(); await clearInventoryBrowser(f); }
 });

@@ -63,7 +63,8 @@ export function SyncCenter({ db, online, onChanged, refreshKey }: { db: LocalDat
   useEffect(() => { void Promise.resolve().then(load).catch(() => undefined); }, [load, refreshKey]);
   useEffect(() => {
     if (!online) return;
-    void Promise.resolve().then(() => send(false));
+    // Opening or reconnecting is when a send is most likely to work, so it skips any retry wait. The timer respects it.
+    void Promise.resolve().then(() => send(true));
     const timer = setInterval(() => void send(false), 60_000);
     return () => clearInterval(timer);
   }, [online, send]);
