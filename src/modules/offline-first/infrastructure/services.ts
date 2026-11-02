@@ -13,6 +13,7 @@ import { PullService, PushService, type SyncCommandServices } from "../applicati
 import { photoRepository } from "./photo-repository";
 import { photoStorage } from "./photo-storage";
 import { pullSources } from "./pull-sources";
+import { receiptLookup } from "./receipts";
 
 export function syncCommandServices(): SyncCommandServices {
   return {
@@ -22,6 +23,7 @@ export function syncCommandServices(): SyncCommandServices {
     recordActivityDone: (farmId, input) => activityService().recordDone(farmId, input),
     completeActivity: (farmId, activityId, input) => activityService().complete(farmId, activityId, input),
     currentActivity: (farmId, activityId) => activityService().detail(farmId, activityId),
+    priorReceiptActions: (farmId, requestId) => receiptLookup(authorizationService(), { farmScopeForMember: input => registryRepository(database()).farmScopeForMember(input) }, database()).priorActions(farmId, requestId),
   };
 }
 export function pushService() { return new PushService(authorizationService(), syncCommandServices()); }
@@ -31,6 +33,6 @@ export function pullService() {
 export function photoService() {
   return new PhotoService(authorizationService(), { farmScopeForMember: input => registryRepository(database()).farmScopeForMember(input) }, {
     recordExists: (...args) => photoRepository(database()).recordExists(...args), photo: (...args) => photoRepository(database()).photo(...args),
-    photos: (...args) => photoRepository(database()).photos(...args), record: (...args) => photoRepository(database()).record(...args),
+    photos: (...args) => photoRepository(database()).photos(...args), record: (...args) => photoRepository(database()).record(...args), receiptActions: (...args) => photoRepository(database()).receiptActions(...args),
   }, async () => photoStorage(await supabaseServer(), process.env.SUPABASE_PRIVATE_BUCKET ?? "myfarm-private"));
 }

@@ -3,6 +3,7 @@ import type { RegistryAuthorization } from "@/modules/farmer-registry/applicatio
 import { parseProductionInput as parse } from "@/modules/enterprises-seasons/application/farm-access";
 import { decodePullCursor, encodePullCursor, isPullCursorExpired, nextPullPosition, PULL_LIMITS, PULL_SECTIONS, type PullPosition, type PullSection } from "../domain/commands";
 import { pullPositionSchema, pullQuerySchema, pushCommandSchema, pushRequestSchema, type PullPage, type PushCommand, type PushResponse } from "../contracts/commands";
+import { keyReusedByAnotherOperation } from "../domain/replay";
 import type { PushOutcome } from "../domain/sync-state";
 
 /** The existing services do the work, so their authorization, validation, receipts and atomic writes all still apply. */
@@ -12,6 +13,8 @@ export interface SyncCommandServices {
   scheduleActivity(farmId: string, input: unknown): Promise<{ activityId: string; version: number }>;
   recordActivityDone(farmId: string, input: unknown): Promise<{ activityId: string; version: number }>;
   completeActivity(farmId: string, activityId: string, input: unknown): Promise<{ activityId: string; version: number }>;
+  /** Receipts already held on this key, for the replay check. Requires access to the farm. */
+  priorReceiptActions(farmId: string, requestId: string): Promise<string[]>;
   /** What a stale edit is shown instead. */
   currentActivity(farmId: string, activityId: string): Promise<{ activityId: string; version: number; status: string }>;
 }
@@ -52,7 +55,11 @@ export class PushService {
       const parsed = pushCommandSchema.safeParse(raw);
       if (!parsed.success) { results.push({ clientMutationId: String(raw.clientMutationId ?? ""), outcome: { status: "INVALID" } }); continue; }
       const command = parsed.data;
-      try { results.push({ clientMutationId: command.clientMutationId, outcome: { status: "COMMITTED", result: await applySyncCommand(this.services, command) } }); }
+      try {
+        // A faulty client racing itself across operations could slip past this read; receipts still stop any repeat of each one.
+        if (keyReusedByAnotherOperation(command.operation, await this.services.priorReceiptActions(command.farmId, command.clientMutationId))) throw new FoundationError("CONFLICT");
+        results.push({ clientMutationId: command.clientMutationId, outcome: { status: "COMMITTED", result: await applySyncCommand(this.services, command) } });
+      }
       catch (error) {
         // A session that ended mid-batch fails the whole request. Anything already committed replays from its receipt.
         if (error instanceof FoundationError && error.code === "UNAUTHENTICATED") throw error;

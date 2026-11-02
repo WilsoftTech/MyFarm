@@ -22,6 +22,7 @@ export function photoRepository(db: PrismaClient): PhotoRepository {
       const rows = await db.recordPhoto.findMany({ where: { ...farmWhere(scope), ...targetColumn(target, recordId) }, orderBy: [{ createdAt: "desc" }, { id: "desc" }], take: 50 });
       return rows.map(view);
     },
+    async receiptActions(scope, requestId) { return (await db.auditEvent.findMany({ where: { tenantId: scope.tenantId, requestId }, select: { action: true } })).map(row => row.action); },
     record: (scope, command, byteSize) => db.$transaction(async tx => {
       await requireProductionWriteAccess(tx, scope);
       const where = farmWhere(scope), id = command.requestId;

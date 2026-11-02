@@ -4,6 +4,7 @@ import { idSchema } from "@/modules/engineering-foundation/contracts/identity";
 import { FoundationError } from "@/modules/engineering-foundation/domain/errors";
 import { photoListSchema, uploadPhotoSchema, type PhotoRepository, type PhotoStoragePort } from "../contracts/photos";
 import { photoProblem } from "../domain/commands";
+import { keyReusedByAnotherOperation } from "../domain/replay";
 
 const hex = (bytes: ArrayBuffer) => Array.from(new Uint8Array(bytes), value => value.toString(16).padStart(2, "0")).join("");
 
@@ -16,6 +17,7 @@ export class PhotoService {
     if (photoProblem(bytes, command.contentType)) throw new FoundationError("INVALID_INPUT");
     const digest = hex(await crypto.subtle.digest("SHA-256", bytes.slice().buffer));
     if (digest !== command.sha256) throw new FoundationError("INVALID_INPUT");
+    if (keyReusedByAnotherOperation("ATTACH_PHOTO", await this.repo.receiptActions(scope, command.requestId))) throw new FoundationError("CONFLICT");
     const existing = await this.repo.photo(scope, command.requestId);
     if (existing) {
       const { sha256, ...view } = existing;

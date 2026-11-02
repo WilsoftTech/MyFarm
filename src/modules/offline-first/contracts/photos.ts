@@ -15,5 +15,6 @@ export interface PhotoRepository {
   photo(scope: FarmScope, photoId: string): Promise<(PhotoView & { sha256: string }) | null>;
   photos(scope: FarmScope, target: PhotoTarget, recordId: string): Promise<PhotoView[]>;
   record(scope: ProductionWriteScope, command: UploadPhoto, byteSize: number): Promise<PhotoView>;
+  receiptActions(scope: FarmScope, requestId: string): Promise<string[]>;
 }
 export interface PhotoStoragePort { put(tenantId: string, objectId: string, bytes: Uint8Array, contentType: string): Promise<void> }

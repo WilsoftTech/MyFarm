@@ -5,6 +5,7 @@ import { PullService, PushService, applySyncCommand, type SyncCommandServices } 
 import { PhotoService } from "@/modules/offline-first/application/photos";
 import { photoRepository } from "@/modules/offline-first/infrastructure/photo-repository";
 import { pullSources } from "@/modules/offline-first/infrastructure/pull-sources";
+import { receiptLookup } from "@/modules/offline-first/infrastructure/receipts";
 import { registryRepository } from "@/modules/farmer-registry/infrastructure/repository";
 import { PULL_LIMITS, PULL_SECTIONS, encodePullCursor } from "@/modules/offline-first/domain/commands";
 import type { PullPage } from "@/modules/offline-first/contracts/commands";
@@ -23,6 +24,7 @@ const services = (m: Member): SyncCommandServices => ({
   recordActivityDone: (farmId, input) => m.activities.recordDone(farmId, input),
   completeActivity: (farmId, activityId, input) => m.activities.complete(farmId, activityId, input),
   currentActivity: (farmId, activityId) => m.activities.detail(farmId, activityId),
+  priorReceiptActions: (farmId, requestId) => receiptLookup(m.auth, registryRepository(f.runtime), f.runtime).priorActions(farmId, requestId),
 });
 const photos = (m: Member) => new PhotoService(m.auth, registryRepository(f.runtime), photoRepository(f.runtime), async () => ({ async put(tenantId, objectId, bytes) {
   if (storageDown) throw new Error("storage down");
@@ -248,5 +250,115 @@ describe("MYF-P07-AC003 push outcomes", () => {
     const { FoundationError } = await import("@/modules/engineering-foundation/domain/errors");
     await expect(new PushService({ account: async () => { throw new FoundationError("UNAUTHENTICATED"); } }, services(f.a)).push({ commands: [push("CREATE_TASK", {})] })).rejects.toMatchObject({ code: "UNAUTHENTICATED" });
     await expect(pusher(f.a).push({ commands: [] })).rejects.toMatchObject({ code: "INVALID_INPUT" });
+  });
+});
+
+describe("MYF-P07-AC004 exactly one effect", () => {
+  const pusher = (m: Member) => new PushService(m.auth, services(m));
+  const outcomeOf = async (m: Member, command: ReturnType<typeof push>) => (await pusher(m).push({ commands: [command] })).results[0].outcome;
+  const money = async (amount: string) => push("RECORD_EXPENSE", { categoryId: (await category("COST")).id, amount, currency: "UGX", occurredOn: "2026-11-01" });
+  const moneyCount = (amount: string) => f.owner.accountingRecord.count({ where: { tenantId: f.a.scope.tenantId, amount } });
+
+  it("the source's critical test: a lost acknowledgement and five racing retries leave one transaction", async () => {
+    const command = await money("707070");
+    const first = await outcomeOf(f.a, command);
+    expect(first.status).toBe("COMMITTED");
+    const retries = await Promise.all(Array.from({ length: 5 }, () => outcomeOf(f.a, command)));
+    for (const retry of retries) expect(retry).toEqual(first);
+    expect(await moneyCount("707070")).toBe(1);
+    expect(await f.owner.auditEvent.count({ where: { requestId: command.clientMutationId } })).toBe(1);
+  });
+  it("five racing first attempts also leave one transaction", async () => {
+    const command = await money("717171");
+    const outcomes = await Promise.all(Array.from({ length: 5 }, () => outcomeOf(f.a, command)));
+    expect(outcomes.every(row => row.status === "COMMITTED")).toBe(true);
+    expect(new Set(outcomes.map(row => JSON.stringify(row))).size).toBe(1);
+    expect(await moneyCount("717171")).toBe(1);
+  });
+  it.each([["CREATE_TASK", { type: "CLEANING", dueOn: "2026-12-01" }], ["RECORD_ACTIVITY", { type: "CLEANING", dueOn: "2026-11-01" }]] as const)("%s has one effect under racing retries", async (operation, payload) => {
+    const command = push(operation, payload);
+    const outcomes = await Promise.all(Array.from({ length: 4 }, () => outcomeOf(f.a, command)));
+    expect(outcomes.every(row => row.status === "COMMITTED")).toBe(true);
+    expect(await f.owner.auditEvent.count({ where: { requestId: command.clientMutationId } })).toBe(1);
+    const first = outcomes[0];
+    if (first.status !== "COMMITTED") throw new Error("expected a commit");
+    expect(await f.owner.productionActivity.count({ where: { id: String(first.result.activityId) } })).toBe(1);
+  });
+  it("a retry far beyond the support window still replays, because receipts are permanent", async () => {
+    const command = await money("727272");
+    const first = await outcomeOf(f.a, command);
+    await f.owner.auditEvent.updateMany({ where: { requestId: command.clientMutationId }, data: { occurredAt: new Date(Date.now() - 30 * 86_400_000) } });
+    expect(await outcomeOf(f.a, command)).toEqual(first);
+    expect(await moneyCount("727272")).toBe(1);
+  });
+  it("the same key with a different payload is rejected and the original stands", async () => {
+    const command = await money("737373");
+    await outcomeOf(f.a, command);
+    expect((await outcomeOf(f.a, { ...command, payload: { ...command.payload, amount: "737374" } })).status).toBe("CONFLICT");
+    expect(await moneyCount("737373")).toBe(1);
+    expect(await moneyCount("737374")).toBe(0);
+  });
+  it("the same key on another operation is rejected, with no second effect", async () => {
+    const command = await money("747474");
+    await outcomeOf(f.a, command);
+    const asTask = push("CREATE_TASK", { type: "CLEANING", dueOn: "2026-12-02" }, { clientMutationId: command.clientMutationId });
+    const asIncome = push("RECORD_INCOME", { categoryId: (await category("REVENUE")).id, amount: "747474", currency: "UGX", occurredOn: "2026-11-01" }, { clientMutationId: command.clientMutationId });
+    expect((await outcomeOf(f.a, asTask)).status).toBe("CONFLICT");
+    expect((await outcomeOf(f.a, asIncome)).status).toBe("CONFLICT");
+    expect(await f.owner.auditEvent.count({ where: { requestId: command.clientMutationId } })).toBe(1);
+    const photoKey = await f.a.activities.schedule(f.a.scope.farmId, f.command({ type: "CLEANING", enterpriseId: undefined, plotId: undefined }));
+    await expect(photos(f.a).upload(f.a.scope.farmId, { requestId: command.clientMutationId, target: "ACTIVITY", recordId: photoKey.activityId, contentType: "image/jpeg", sha256: sha(jpeg) }, jpeg)).rejects.toMatchObject({ code: "CONFLICT" });
+    expect(await f.owner.recordPhoto.count({ where: { id: command.clientMutationId } })).toBe(0);
+  });
+  it("two devices finishing one activity: one wins, the other is told, nothing is overwritten", async () => {
+    const task = await f.a.activities.schedule(f.a.scope.farmId, f.command({ type: "CLEANING", enterpriseId: undefined, plotId: undefined }));
+    const device = (workerName: string) => push("COMPLETE_ACTIVITY", { activityId: task.activityId, workerName }, { baseVersion: 1 });
+    const outcomes = await Promise.all([outcomeOf(f.a, device("Device one")), outcomeOf(f.a, device("Device two"))]);
+    expect(outcomes.map(row => row.status).sort()).toEqual(["COMMITTED", "CONFLICT"]);
+    const row = await f.a.activities.detail(f.a.scope.farmId, task.activityId);
+    expect(row.version).toBe(2);
+    expect(["Device one", "Device two"]).toContain(row.workerName);
+    expect(outcomes.find(outcome => outcome.status === "CONFLICT")).toMatchObject({ current: { version: 2, status: "COMPLETED" } });
+  });
+  it("two devices recording separate expenses keep both, in any order", async () => {
+    const [one, two] = [await money("757575"), await money("757575")];
+    await Promise.all([outcomeOf(f.a, one), outcomeOf(f.a, two)]);
+    expect(await moneyCount("757575")).toBe(2);
+  });
+  it("a member revoked while offline is denied with no effect, and the same entry goes through if access returns", async () => {
+    const command = await money("767676");
+    await f.owner.farmMember.updateMany({ where: { userId: f.a.scope.actorId }, data: { status: "REVOKED" } });
+    try {
+      expect((await outcomeOf(f.a, command)).status).toBe("DENIED");
+      expect(await moneyCount("767676")).toBe(0);
+    } finally { await f.owner.farmMember.updateMany({ where: { userId: f.a.scope.actorId }, data: { status: "ACTIVE" } }); }
+    expect((await outcomeOf(f.a, command)).status).toBe("COMMITTED");
+    expect(await moneyCount("767676")).toBe(1);
+  });
+  it("the same key in another account is a separate record and never replays the first account's", async () => {
+    const command = await money("777777");
+    const first = await outcomeOf(f.a, command);
+    const other = await outcomeOf(f.b, { ...command, farmId: f.b.scope.farmId });
+    if (first.status !== "COMMITTED" || other.status !== "COMMITTED") throw new Error("expected commits");
+    expect(other.result.recordId).not.toBe(first.result.recordId);
+    expect(await f.owner.accountingRecord.count({ where: { tenantId: f.b.scope.tenantId, amount: "777777" } })).toBe(1);
+    expect(await moneyCount("777777")).toBe(1);
+  });
+  it("pull pagination visits every row exactly once across pages", async () => {
+    const rows = Array.from({ length: 130 }, () => ({ id: id(), tenantId: f.b.scope.tenantId, farmId: f.b.scope.farmId, type: "CLEANING" as const, dueOn: new Date("2027-01-01Z"), requestHash: "x", createdBy: f.b.scope.actorId }));
+    await f.owner.productionActivity.createMany({ data: rows });
+    const pages = await walk(f.b);
+    const seen = pages.filter(page => page.section === "ACTIVITIES").flatMap(page => page.items.map(item => item.id));
+    expect(new Set(seen).size).toBe(seen.length);
+    for (const row of rows) expect(seen).toContain(row.id);
+    expect(pages.filter(page => page.section === "ACTIVITIES").length).toBeGreaterThan(1);
+    await f.owner.productionActivity.deleteMany({ where: { id: { in: rows.map(row => row.id) } } });
+  });
+  it("an expired cursor partway through tells the phone to restart, then a fresh pull completes", async () => {
+    const issued = new Date("2026-11-03T00:00:00Z");
+    const first = await puller(f.a, () => issued).pull();
+    if (first.status !== "OK" || !first.nextCursor) throw new Error("expected more pages");
+    expect(await puller(f.a, () => new Date(issued.getTime() + 25 * 3_600_000)).pull({ cursor: first.nextCursor })).toEqual({ status: "EXPIRED" });
+    expect((await puller(f.a, () => new Date(issued.getTime() + 25 * 3_600_000)).pull()).status).toBe("OK");
   });
 });
