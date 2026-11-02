@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { localSaveFailureLabels, storageSnapshotSchema, storageWarningLabels } from "@/modules/offline-first/contracts/storage";
 import { OFFLINE_STORES, OFFLINE_SUPPORT, STORAGE_WARNINGS, classifyLocalSaveError, offlineDatabaseName, serviceWorkerPolicy, storageHealth, type StorageSnapshot } from "@/modules/offline-first/domain/storage";
@@ -115,5 +116,17 @@ describe("storage snapshot contract", () => {
   });
   it.each([{ unsentEntries: -1 }, { unsentEntries: 1.5 }, { usageBytes: -1 }, { lastSyncAt: "yesterday" }, { accountId: "x" }])("rejects %j", overrides => {
     expect(storageSnapshotSchema.safeParse({ ...healthy, ...overrides }).success).toBe(false);
+  });
+});
+
+describe("service worker script", () => {
+  const worker = { addEventListener: () => undefined, location: { origin: "http://x" } } as unknown as { myfarmPolicy: typeof serviceWorkerPolicy };
+  new Function("self", "caches", readFileSync("public/sw.js", "utf8"))(worker, {});
+  it("applies the same caching rules as the domain policy", () => {
+    const paths = ["/", "/offline", "/offline/x", "/sign-in", "/workspace", "/farms/1/accounting", "/api/health", "/api/v1/sync/push", "/_next/static/a.js", "/_next/image", "/manifest.webmanifest", "/icon.svg", "/sw.js"];
+    for (const pathname of paths) for (const method of ["GET", "POST"]) for (const sameOrigin of [true, false]) for (const navigation of [true, false]) {
+      const request = { method, sameOrigin, pathname, navigation };
+      expect(worker.myfarmPolicy(request), JSON.stringify(request)).toBe(serviceWorkerPolicy(request));
+    }
   });
 });

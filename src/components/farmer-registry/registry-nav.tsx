@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { signOutAction } from "@/app/sign-in/actions";
+import { OfflineSetup } from "@/components/offline/offline-setup";
+import { SignOutForm } from "@/components/offline/sign-out-form";
 
 /** Signed-in navigation for registry pages; each page still authorizes its own data server-side. */
 export function RegistryNav() {
@@ -8,6 +8,8 @@ return <nav aria-label="Farm records" className="mb-8 flex flex-wrap items-cente
 <Link href="/farms" className="py-2 underline-offset-4 hover:underline">My farms</Link>
 <Link href="/farmer" className="py-2 underline-offset-4 hover:underline">My profile</Link>
 <Link href="/workspace" className="py-2 underline-offset-4 hover:underline">Workspace</Link>
-<form action={signOutAction} className="ml-auto"><Button variant="outline">Sign out</Button></form>
+<Link href="/offline" className="py-2 underline-offset-4 hover:underline">Offline work</Link>
+<OfflineSetup />
+<SignOutForm className="ml-auto" />
 </nav>;
 }

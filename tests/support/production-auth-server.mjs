@@ -18,6 +18,7 @@ const server = createServer((request, response) => {
     const fixtures = JSON.parse(readFileSync(".cache/production-browser-fixtures.json", "utf8"));
     const account = Object.values(fixtures.accounts).find(value => value.subject === claims.sub);
     if (!account || claims.exp <= Date.now() / 1000) throw new Error("Expired fixture");
+    if (request.method === "POST" && request.url.startsWith("/auth/v1/logout")) { response.writeHead(204); response.end(); return; }
     if (request.method === "GET" && request.url === "/auth/v1/user") {
       response.end(JSON.stringify({ id: account.subject, email: account.email, aud: "authenticated", role: "authenticated", app_metadata: {}, user_metadata: {}, created_at: "2026-10-18T00:00:00Z" })); return;
     }

@@ -3,7 +3,8 @@ import { redirect } from "next/navigation";
 import { authorizationService } from "@/modules/engineering-foundation/infrastructure/services";
 import { FoundationError } from "@/modules/engineering-foundation/domain/errors";
 import { Button } from "@/components/ui/button";
-import { signOutAction } from "../sign-in/actions";
+import { OfflineSetup } from "@/components/offline/offline-setup";
+import { SignOutForm } from "@/components/offline/sign-out-form";
 export const dynamic = "force-dynamic";
 export default async function WorkspacePage() {
 let overview;
@@ -13,7 +14,7 @@ if (error instanceof FoundationError && error.code === "UNAUTHENTICATED") redire
 if (error instanceof FoundationError && error.code === "FORBIDDEN") redirect("/forbidden");
 throw new FoundationError("UNAVAILABLE");
 }
-return <section><div className="flex flex-wrap items-start justify-between gap-5"><div><p className="text-sm text-primary">Your workspace</p><h1 className="mt-2 text-3xl font-bold">Welcome to MyFarm</h1></div><form action={signOutAction}><Button variant="outline">Sign out</Button></form></div>
+return <section><div className="flex flex-wrap items-start justify-between gap-5"><div><p className="text-sm text-primary">Your workspace</p><h1 className="mt-2 text-3xl font-bold">Welcome to MyFarm</h1></div><SignOutForm /><OfflineSetup /></div>
 <p className="mt-6 leading-7">Your account is verified. Choose an available workspace below.</p>
 <Button asChild className="mt-6"><Link href="/farmer">My farmer profile and farms</Link></Button>
 {overview.scopes.length === 0 ? <div className="mt-8 rounded-2xl border border-border bg-white p-6"><h2 className="font-semibold">No workspace assigned</h2><p className="mt-3 leading-7">Register as a farmer above to start your farm records, or ask the project owner to assign access.</p></div> :

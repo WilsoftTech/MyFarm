@@ -34,3 +34,13 @@ test("activity calendar and repeating pages send anonymous users to sign-in", as
     expect(response.status()).toBe(307); expect(response.headers()["cache-control"]).toContain("no-store");
   }
 });
+test("the offline shell is public, static and free of farm data", async ({ request }) => {
+  const response = await request.get("/offline", { maxRedirects: 0 });
+  expect(response.status()).toBe(200);
+  const html = await response.text();
+  expect(html).toContain("Offline work");
+  expect(html).not.toMatch(/farms\/[0-9a-f-]{36}/);
+  const worker = await request.get("/sw.js");
+  expect(worker.status()).toBe(200);
+  expect(worker.headers()["content-type"]).toContain("javascript");
+});

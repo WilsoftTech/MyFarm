@@ -36,4 +36,4 @@ const PROTECTED_PAGES = ["/workspace", "/admin", "/agent", "/farmer", "/farms"];
 function isProtectedPage(pathname: string) {
 return PROTECTED_PAGES.some(prefix => pathname === prefix || pathname.startsWith(prefix + "/"));
 }
-export const config = { matcher: ["/((?!_next/static|_next/image|favicon.ico|manifest.webmanifest|icon.svg|api/health).*)"] };
+export const config = { matcher: ["/((?!_next/static|_next/image|favicon.ico|manifest.webmanifest|icon.svg|sw.js|offline|api/health).*)"] };

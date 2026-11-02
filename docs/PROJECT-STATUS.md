@@ -4,13 +4,13 @@
 - Documentation review: REVIEWED - Phase 7 start, owner decisions and T001 evidence; historical checkpoints preserved.
 - Implementation status: REFERENCE ONLY - N/A (navigation and verified progress record).
 - Last reviewed: 2026-11-03 (Africa/Nairobi).
-- Related phase/task IDs: MYF-P07-T001 through MYF-P07-T002; D-P07-001 through D-P07-006.
-- Verified completed work: Phase 6 complete (10/10, hosted run 41524090703, hosted development schema applied); Phase 7 T001-T002 (2/13, 15.38%) verified locally.
-- Remaining work/blockers: Phase 7 T003-T013 and remaining acceptance/exit gates. P6-C2 to P6-C5 and production conditions remain. Pushes and hosted changes for Phase 7 are not authorized.
-- Evidence/report links: [T002 report](reports/phase-07-t002-2026-11-03.md); [Phase 7 plan](reports/phase-07-start-2026-11-03.md); [Phase 6 closeout](reports/phase-06-closeout-2026-11-03.md).
+- Related phase/task IDs: MYF-P07-T001 through MYF-P07-T003; D-P07-001 through D-P07-006.
+- Verified completed work: Phase 6 complete (10/10, hosted run 41524090703, hosted development schema applied); Phase 7 T001-T003 (3/13, 23.08%) verified locally.
+- Remaining work/blockers: Phase 7 T004-T013 and remaining acceptance/exit gates. P6-C2 to P6-C5 and production conditions remain. Pushes and hosted changes for Phase 7 are not authorized.
+- Evidence/report links: [T003 report](reports/phase-07-t003-2026-11-03.md); [Phase 7 plan](reports/phase-07-start-2026-11-03.md); [Phase 6 closeout](reports/phase-06-closeout-2026-11-03.md).
 <!-- MYFARM-STATUS-END -->
 
-Current checkpoint - **Phase 7 PARTIALLY COMPLETE - 15.38% (2/13)**. T002 adds the Dexie local database, storage health and safe local save layer. [T002 report](reports/phase-07-t002-2026-11-03.md). Next: MYF-P07-T003.
+Current checkpoint - **Phase 7 PARTIALLY COMPLETE - 23.08% (3/13)**. T003 adds the service worker, static offline shell and storage panel; the shell reopens with the server stopped. [T003 report](reports/phase-07-t003-2026-11-03.md). Next: MYF-P07-T004.
 
 Previous Phase 6 checkpoint - **Phase 6 COMPLETED - 100% (10/10), PASS WITH CONDITIONS - HOSTED CI VERIFIED**. Farmers can schedule, complete, cancel and repeat activities and see them in lists and a month calendar. Clean checkout and [hosted run 41524090703](https://github.com/WilsoftTech/MyFarm/actions/runs/41524090703) pass at 8d2e415: 867 unit/component, 233 integration, 96 non-UTC, 52 anonymous and 110 signed-in browser tests. The Phase 4, 5 and 6 schema was applied to hosted development on 2026-11-03 after a verified backup, and signed-in pages load there ([evidence](reports/phase-06-closeout-2026-11-03.md#hosted-application---2026-11-03)). Phase 7 is not started. [Phase 6 closeout](reports/phase-06-closeout-2026-11-03.md). Task evidence: [T001](reports/phase-06-t001-2026-11-02.md) to [T009](reports/phase-06-t009-2026-11-02.md).
 
@@ -40,7 +40,7 @@ Current phase: **Phase1 — COMPLETED — 100% (13/13), verdict PASS WITH CONDIT
 | 4 | [Farm Accounting Engine](phases/phase-04-farm-accounting.md) | COMPLETED - 100% (16/16), PASS WITH CONDITIONS - LOCAL VERIFICATION | T001-T016 and AC001-AC005 verified locally (records, payments, categories, links, gross margin, summary/export) | P4-C2 resolved 2026-11-03 (D-P06-010); P4-C3/C4; current hosted CI gate verified in Phase 5 | [Closeout](reports/phase-04-closeout-2026-10-26.md) |
 | 5 | [Harvest Production and Inventory](phases/phase-05-harvest-inventory.md) | COMPLETED - 100% (13/13), PASS WITH CONDITIONS - HOSTED CI VERIFIED | T001-T013 and AC001-AC004 verified locally and in GitHub CI | P5-C1 resolved 2026-11-03 (D-P06-010), P5-C2 scale, P5-C3 inherited production controls; Phase 6 not started | [Closeout](reports/phase-05-closeout-2026-10-29.md) |
 | 6 | [Production Activities and Farm Calendar](phases/phase-06-farm-activities.md) | COMPLETED - 100% (10/10), PASS WITH CONDITIONS - HOSTED CI VERIFIED | T001-T010 and AC001-AC003 verified locally and in GitHub CI; attachments deferred by owner | P6-C2 attachments; P6-C3 milking; P6-C4 corrections; P6-C5 expansion at scale; Phase 7 not started | [Phase 6 closeout](reports/phase-06-closeout-2026-11-03.md) |
-| 7 | [Offline First Architecture](phases/phase-07-offline-first.md) | PARTIALLY COMPLETE - 15.38% (2/13) | T001-T002 verified locally | T003-T013 and remaining acceptance/exit gates. Real-device measurement | [T002 report](reports/phase-07-t002-2026-11-03.md) |
+| 7 | [Offline First Architecture](phases/phase-07-offline-first.md) | PARTIALLY COMPLETE - 23.08% (3/13) | T001-T003 verified locally | T004-T013 and remaining acceptance/exit gates. Real-device measurement | [T003 report](reports/phase-07-t003-2026-11-03.md) |
 | 8 | [Farm Analytics and Profitability Engine](phases/phase-08-analytics-profitability.md) | NOT STARTED — 0% | None | All H tasks | None |
 | 9 | [Field Pilot and Product Validation](phases/phase-09-field-pilot.md) | NOT STARTED — 0% | None | All H tasks | None |
 | 10 | [Farm Intelligence Engine](phases/phase-10-farm-intelligence.md) | NOT STARTED — 0% | None | All H tasks | None |
