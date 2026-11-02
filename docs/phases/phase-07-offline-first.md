@@ -1,16 +1,16 @@
 # Phase 07 Offline First Architecture
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — T013 metadata/status scope and evidence-link relevance; historical and future-phase facts unchanged.
-- Implementation status: NOT STARTED — 0% (0/13 verified tasks).
-- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
-- Related phase/task IDs: Phase 07; MYF-P07-T001 through MYF-P07-T013; review session Phase01; Phase02 review session (MYF-P02-T001–T013).
-- Verified completed work: No tasks implemented or verified in this phase; status/provider applicability reviewed only.
-- Remaining work/blockers: All 13 tasks and their acceptance/exit gates pending; Phase01 completion and future phase authorization required.
-- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
+- Documentation review: REVIEWED - Phase 7 requirements against owner decisions D-P07-001 through D-P07-005.
+- Implementation status: PARTIALLY COMPLETE - 7.69% (1/13 verified tasks).
+- Last reviewed: 2026-11-03 (Africa/Nairobi).
+- Related phase/task IDs: Phase 07; MYF-P07-T001 through MYF-P07-T013; D-P07-001 through D-P07-005.
+- Verified completed work: MYF-P07-T001 offline storage contract, verified locally.
+- Remaining work/blockers: T002-T013 and all acceptance/exit gates.
+- Evidence/report links: [Phase 7 start and T001](../reports/phase-07-start-2026-11-03.md); [Phase 6 closeout](../reports/phase-06-closeout-2026-11-03.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **NOT STARTED**. Date: 2026-10-08. This is a specification, not implementation approval. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **PARTIALLY COMPLETE - 7.69% (1/13)**, local start authorized by D-P07-001. Specification date: 2026-10-08. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
@@ -22,7 +22,7 @@ Target users: Farmers on supported mobile/shared devices. Expected outcomes: K's
 
 Source: P0438–P0490 in [complete extract](../reports/source-extract.md). Examples are illustrative. Exclusions: later phase features and any application implementation during this assignment. Phase 1–6 prepare commands/IDs; full sync in 7. Offline writes cannot grant authority or guarantee current stock availability.
 
-Ambiguities: Q16 offline duration/browser/device/storage/receipt and tombstone retention/shared unlock/recovery. Resolve affected policy before dependent tasks; do not invent rules.
+Ambiguity Q16 is resolved by [D-P07-002, D-P07-003 and D-P07-005](../DECISION-LOG.md#d-p07-002---q16-support-limits); photos follow [D-P07-004](../DECISION-LOG.md#d-p07-004---photos-under-an-interim-rule). Tombstone and pull design stays with T010.
 
 | Requirement | Source | Capability |
 |---|---|---|
@@ -241,7 +241,7 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 
 ## O. Completion Checklist
 
-- [ ] MYF-P07-T001 complete with evidence.
+- [x] MYF-P07-T001 complete with [evidence](../reports/phase-07-start-2026-11-03.md).
 - [ ] MYF-P07-T002 complete with evidence.
 - [ ] MYF-P07-T003 complete with evidence.
 - [ ] MYF-P07-T004 complete with evidence.

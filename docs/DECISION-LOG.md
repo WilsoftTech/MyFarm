@@ -54,7 +54,7 @@ Q01 is **PARTIALLY RESOLVED**: user selected Rukungiri. Remaining components and
 | Q13 | Production/flock vs stock movements and atomic sale/harvest accounting links | Domain owner | 5 | One source event per effect and conservation fixtures |
 | Q14 | RESOLVED for Phase6 by owner 2026-11-02 ([D-P06-002](#d-p06-002---q14-missed-definition), [D-P06-003](#d-p06-003---q14-recurrence), [D-P06-004](#d-p06-004---q14-worker-and-notifications)): missed after the due date in Africa/Kampala; daily/weekly/monthly recurrence; free-text worker; no notifications | Product owner | 6 | Approved |
 | Q15 | RESOLVED for Phase6 by owner 2026-11-02 ([D-P06-005](#d-p06-005---q15-activity-cost-link)): link an existing same-farm expense or purchase; the activity holds no money | Accounting/product owner | 6 | Approved |
-| Q16 | Meaningful offline duration, device/storage limits, local unlock, sync retention/recovery | Product/security/engineering owner | 1/7 | Approve measured support envelope, tombstone/receipt window and explicit unsynced-loss policy |
+| Q16 | RESOLVED for Phase7 by owner 2026-11-03 ([D-P07-002](#d-p07-002---q16-support-limits), [D-P07-003](#d-p07-003---q16-shared-phones), [D-P07-005](#d-p07-005---q16-lost-entries)): 14 days and 500 unsent entries; per-account data with no PIN; warnings plus an unencrypted download. Real-device measurement stays open | Product/security/engineering owner | 1/7 | Approved; measurement pending |
 | Q17 | Metric denominators, overhead allocations, absent/zero values, snapshot freshness | Accounting/agricultural owner | 8 | Formula catalog and golden fixtures approved |
 | Q18 | Pilot cohort/window, active/retained definition, thresholds, support/cycle completion | Product/research owner | 9 | Prospective criteria then real cohort evidence |
 | Q19 | Rule mortality thresholds, percent vs points, data coverage, severity/suppression | Agronomic/product owner | 10 | Reviewed rules, comparison units and sparse-data behavior |
@@ -440,3 +440,23 @@ IMPLEMENTATION/AUDIT RECORD, 2026-11-03 (Africa/Nairobi), within D-P06-007 and D
 ## D-P06-010 - Hosted development schema application
 
 AUTHORIZED by direct owner instruction 2026-11-03: "now", answering when to apply the Phase 4, 5 and 6 schema to hosted development. Applied after a verified backup, resolving P6-C1, P4-C2 and P5-C1. This covers hosted development project sudqhluwsaijvjjcegpv only, not production or deployment. [Evidence](reports/phase-06-closeout-2026-11-03.md#hosted-application---2026-11-03).
+
+## D-P07-001 - Phase 7 local start authorization
+
+AUTHORIZED by direct owner instruction 2026-11-03: "commit and start next phase", after Phase 6 closed. Authorizes starting Phase 7 locally. It does not authorize pushes, deployment or hosted database changes. [Plan](reports/phase-07-start-2026-11-03.md).
+
+## D-P07-002 - Q16 support limits
+
+APPROVED, owner 2026-11-03: MyFarm supports 14 days offline and up to 500 unsent entries per device, warning as limits approach. Retry records are already permanent, so replay safety outlasts the limit. The limits must be measured on a real device.
+
+## D-P07-003 - Q16 shared phones
+
+APPROVED, owner 2026-11-03: each account's local data is separate and there is no device PIN. Sign-out clears cached farm data but keeps unsent entries, hidden until that account signs in again. Anyone holding a phone that is still signed in can see its cached data.
+
+## D-P07-004 - Photos under an interim rule
+
+APPROVED, owner 2026-11-03: offline photos are built in Phase 7. They attach to an activity or money record, are private to farm members, are images of at most 2 MB after compression, and are kept as long as the record. A full retention policy still comes later. This supersedes the D-P04-005 and D-P06-008 attachment deferral for these photos only.
+
+## D-P07-005 - Q16 lost entries
+
+APPROVED, owner 2026-11-03: request persistent storage, show unsent counts and last sync, warn clearly, and allow downloading unsent entries as a file. The file is not encrypted and the farmer is told so. MyFarm does not claim guaranteed recovery.

@@ -2,12 +2,12 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — T013 metadata/status scope and evidence-link relevance; historical and future-phase facts unchanged.
-- Implementation status: NOT STARTED — 0% (direct feature scope unimplemented).
-- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
-- Related phase/task IDs: Future phase architecture as referenced; Phase01 review session T001–T013; Phase02 review session (MYF-P02-T001–T013).
-- Verified completed work: Scope/status/provider applicability reviewed; no financial/offline/farm-domain runtime implementation verified.
-- Remaining work/blockers: Associated future tasks, business decisions and exit gates pending; no phase advancement.
-- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
+- Implementation status: PARTIALLY COMPLETE - Phase 7 T001 (1/13); the sections below remain the proposed design unless a task report says otherwise.
+- Last reviewed: 2026-11-03 (Africa/Nairobi), Phase 7 start.
+- Related phase/task IDs: MYF-P07-T001 through MYF-P07-T013; D-P07-001 through D-P07-005.
+- Verified completed work: T001 storage rules only; no client database, service worker or sync endpoint exists yet.
+- Remaining work/blockers: T002-T013 and real-device measurement.
+- Evidence/report links: [Phase 7 start and T001](../reports/phase-07-start-2026-11-03.md); [Phase 6 closeout](../reports/phase-06-closeout-2026-11-03.md).
 <!-- MYFARM-STATUS-END -->
 
 Offline farmer experience is mandatory by MVP Phase 8. Source P0456–P0479 requires expense/income/harvest/activity/task/photo recording and cached farm/record viewing; clientMutationId, deviceId, createdAt, updatedAt, syncStatus, version; six source states. Foundation prepares command boundaries, but complete sync is Phase 7.
@@ -50,3 +50,5 @@ Ask supported browser for persistence; denied permission is not a failure of all
 Local tenant/user partition and lock policy address shared phones. Logout protects cached access while preserving pending edits through explicit approved recovery; no accidental purge. Server rejects revoked scope on reconnect. SW updates/Dexie migrations must preserve pending outbox and support version skew.
 
 Test eight actions offline/reload, quota denial, crash during write/sync, duplicate/concurrent/lost-ack replay, two-device edits, clock skew, parent dependency, tombstones/expired cursors, revoked memberships and photo partial failures. Meaningful offline duration/row/media limits must be measured on approved devices. [API](api-design-standards.md), [financial integrity](financial-integrity.md) and [testing](testing-strategy.md) define authoritative boundaries. Browser limitations follow [MDN storage](https://developer.mozilla.org/en-US/docs/Web/API/Storage_API/Storage_quotas_and_eviction_criteria), checked 2026-10-08.
+
+Approved Q16 rules (D-P07-002 to D-P07-005): 14 days and 500 unsent entries per device, separate local data per account with no PIN, sign-out keeps unsent entries, and warnings plus an unencrypted download rather than any guarantee of recovery. Signed-in pages and API responses are never stored by the service worker; offline data lives only in the account's local database. [Plan](../reports/phase-07-start-2026-11-03.md).
