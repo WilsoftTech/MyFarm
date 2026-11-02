@@ -6,7 +6,7 @@
 - Last reviewed: 2026-11-03 (Africa/Nairobi), Phase 6 T010 audit.
 - Related phase/task IDs: Phase02 MYF-P02-T001–T013; later phases per roadmap.
 - Verified completed work: Farmer, FarmerProfile, Farm, Plot, FarmMember implemented; User/Organization reused; Address/Contact as columns; Document deferred (D-P02-003).
-- Remaining work/blockers: Hosted CI passes for Phase 6; hosted migrations/provisioning, scale and inherited production conditions remain separate gates.
+- Remaining work/blockers: Hosted CI passes for Phase 6 and hosted development has the schema (D-P06-010); scale and inherited production conditions remain separate gates.
 - Evidence/report links: [Current Phase 5 audit](../reports/phase-05-closeout-2026-10-29.md); [document review](../reports/phase-05-document-review-2026-10-29.md). Historical task evidence remains linked below.
 <!-- MYFARM-STATUS-END -->
 

@@ -6,7 +6,7 @@
 - Last reviewed: 2026-11-03 (Africa/Nairobi).
 - Related phase/task IDs: MYF-P06-T001 through MYF-P06-T010; MYF-P06-AC001 through MYF-P06-AC003; D-P06-001 through D-P06-009.
 - Verified completed work: T001-T010 and AC001-AC003 verified in a clean checkout and in GitHub-hosted CI at 8d2e415, with attachments deferred by owner acceptance.
-- Remaining work/blockers: No phase blocker. Conditions P6-C1 through P6-C5 and inherited production conditions remain. Phase 7 not started.
+- Remaining work/blockers: No phase blocker. P6-C1 is resolved; conditions P6-C2 through P6-C5 and inherited production conditions remain. Phase 7 not started.
 - Evidence/report links: [Phase specification](../phases/phase-06-farm-activities.md); [Project status](../PROJECT-STATUS.md); [Document review](phase-06-document-review-2026-11-03.md).
 <!-- MYFARM-STATUS-END -->
 
@@ -30,7 +30,7 @@ The specification's `FarmActivity` name was already used by an existing enum, so
 | 202611020002_activity_completion | 0b88cc64158712e25d5910a9c350cff677580ed3113829ea4b0abd56791199a4 |
 | 202611020003_activity_recurrence | 74f216d78f8008c6d05b1d0ff5f897a6f2d81982aed4f2c95689ff9d3946b097 |
 
-Applied only to disposable PostgreSQL 17 databases. **Not applied to hosted.** Rollback is restore or forward repair, not dropping activity history; the migration rollback test and the recovery rehearsal cover this.
+At closure these were applied only to disposable PostgreSQL 17 databases; they were applied to hosted development afterwards, as recorded below. Rollback is restore or forward repair, not dropping activity history; the migration rollback test and the recovery rehearsal cover this.
 
 ## Security review
 
@@ -80,7 +80,7 @@ Hosted Supabase, field use and real low-end devices are NOT RUN. All fixtures ar
 
 | Condition | Owner | Deadline |
 |---|---|---|
-| P6-C1: apply canonical Phase 4, 5 and 6 migrations and manifest policies to hosted development. Timing is not decided: the owner's reply to the timing question did not name one, so it is not treated as approval. | Project owner / engineering | Before hosted use of these workflows |
+| P6-C1: apply canonical Phase 4, 5 and 6 migrations and manifest policies to hosted development. **Resolved 2026-11-03**, see below. | Project owner / engineering | Done |
 | P6-C2: attachments stay deferred under D-P04-005 and D-P06-008. | Project owner | When the retention/export policy is approved |
 | P6-C3: milking is catalogued but unavailable, including its source recurrence. | Project owner | When a dairy workflow is approved |
 | P6-C4: a completed activity has no correction flow; a mistake stays visible. | Project owner | Review after field use (Phase 9) |
@@ -88,9 +88,9 @@ Hosted Supabase, field use and real low-end devices are NOT RUN. All fixtures ar
 
 Inherited: P5-C2 reconstruction performance and P5-C3 retention, export and abuse controls before real farmer data. Durable offline behavior remains Phase 7: open forms keep input in memory and disable saving while offline, and retries are safe through request IDs.
 
-### Hosted application steps for P6-C1
+### Hosted application steps planned for P6-C1
 
-Hosted development currently lacks every Phase 4, 5 and 6 table, based on a read-only table list on 2026-11-02. The runtime role could not read migration history. These steps need owner approval and cannot be run from the current setup, because the runtime role cannot change the schema, the direct database host resolves only to IPv6 and is unreachable from this machine, and the Supabase connector is not authorized.
+These were the steps planned at closure. The next section records how they were run.
 
 1. Take and verify a backup of project `sudqhluwsaijvjjcegpv`.
 2. From an owner-level connection on the `main` checkout, run `npx prisma migrate status` to confirm what is pending, then `npx prisma migrate deploy`.
@@ -100,3 +100,31 @@ Hosted development currently lacks every Phase 4, 5 and 6 table, based on a read
 ## Status-update evidence
 
 Each task has a commit and report, T001-T009 in order. T010 includes audit coverage `dac45f0`, fix `8d2e415` and this closeout. Progress: **10/10 = 100%**. Documentation-only commits after `8d2e415` do not change the application, schema or lockfile verified above. [Every-document review](phase-06-document-review-2026-11-03.md). Next allowed action: separately authorized hosted application, or owner authorization for Phase 7. No later phase is started automatically.
+
+## Hosted application - 2026-11-03
+
+Owner instruction: "now", answering when to apply the schema to hosted development (D-P06-010). Target: development project `sudqhluwsaijvjjcegpv` from `main` at `d4e9338`. This also resolves P4-C2 and P5-C1. No production system or deployment was changed.
+
+**Connection:** the direct database host still does not resolve from this machine, so the owner credential already configured as `DIRECT_URL` was used through the same project's session pooler, with TLS verified against the project CA. The Supabase connector was not used.
+
+**Backup:** full `pg_dump` taken first and stored in git-ignored `.cache/hosted-backups/`: `pre-phase-06-2026-11-02T21-25-07-318Z.dump`, 466,388 bytes, SHA-256 `0efd128c882a12f7a8c18f755220a4ba0e09ef5414dc6199e96514d793eaec07`. Restoring its public schema into a disposable PostgreSQL 17 container gave no errors, and all 17 public tables matched by row digest. The auth and storage schemas are in the dump, but their restore was not rehearsed. The file holds real account data, including auth tables, and exists only on this machine.
+
+**Applied:** `prisma migrate deploy` applied the 9 pending migrations (`202610250002_farm_accounting`, five `20261029` harvest and stock migrations, three `20261102` activity migrations). All 12 SQL files in `supabase/provisioning.json` then ran in order, ending with browser lockdown.
+
+| Check | Result |
+|---|---|
+| Data in the 16 existing tables, by row digest before and after | Unchanged |
+| New tables | 15 created; 0 rows except the seeded 17 categories and 3 payment methods |
+| Pending or unfinished migrations | None |
+| Browser-role grants on public tables | 0 before and after |
+| Tables without RLS | None |
+| Runtime role | Can log in; not superuser; no RLS bypass; can read every application table; cannot delete activities or money records, rewrite a due date or update stock movements |
+| Runtime policy writes, in a transaction rolled back afterwards | Series, activity, completion and store accepted; reopening a completed activity changed 0 rows; 0 rows kept |
+| Signed-in test account against hosted, production build on local host, mobile viewport | 12 farm, money, inventory, harvest, store, enterprise, poultry and activity pages returned 200 with no page errors |
+
+**Known differences, not caused by this change:**
+
+- Drift reports only the legacy `LivestockBatch` table and its two foreign keys. That empty table and its `202610240001_poultry_batches` history entry are deliberately preserved from Phase 3.
+- One checksum differs: `202610090001_farmer_registry`. The recorded value equals the local file with CRLF line endings, and the mismatch predates this change. This is open condition P2-C3.
+
+**Not verified:** Pages were only read, so no record was saved through the app against hosted, and accounts with several farms or other roles were not exercised. The hosted Auth configuration was not reviewed. The sign-in created one additional Auth session for the test account, which was left to expire because signing out revokes all of that account's sessions.

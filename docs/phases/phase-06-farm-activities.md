@@ -4,9 +4,9 @@
 - Documentation review: REVIEWED - Phase 6 requirements against owner decisions D-P06-001 through D-P06-009.
 - Implementation status: COMPLETED - 100% (10/10 verified tasks), PASS WITH CONDITIONS - HOSTED CI VERIFIED.
 - Last reviewed: 2026-11-03 (Africa/Nairobi).
-- Related phase/task IDs: Phase 06; MYF-P06-T001 through MYF-P06-T010; D-P06-001 through D-P06-009.
+- Related phase/task IDs: Phase 06; MYF-P06-T001 through MYF-P06-T010; D-P06-001 through D-P06-010.
 - Verified completed work: MYF-P06-T001 through MYF-P06-T010 and AC001-AC003, verified in a clean checkout and hosted CI at 8d2e415.
-- Remaining work/blockers: No phase blocker. Conditions P6-C1 through P6-C5 remain; attachments stay deferred by owner decision.
+- Remaining work/blockers: No phase blocker. P6-C1 resolved 2026-11-03; conditions P6-C2 through P6-C5 remain; attachments stay deferred by owner decision.
 - Evidence/report links: [Closeout](../reports/phase-06-closeout-2026-11-03.md); [Phase 5 closeout](../reports/phase-05-closeout-2026-10-29.md).
 <!-- MYFARM-STATUS-END -->
 

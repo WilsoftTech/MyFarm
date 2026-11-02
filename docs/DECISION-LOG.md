@@ -436,3 +436,7 @@ APPROVED, owner 2026-11-03 ("yes to all"), answering four questions. Accepted: t
 ## D-P06-009 - Verified Phase 6 closure
 
 IMPLEMENTATION/AUDIT RECORD, 2026-11-03 (Africa/Nairobi), within D-P06-007 and D-P06-008. T001-T010 and AC001-AC003 pass in a clean checkout and in [hosted run 41524090703](https://github.com/WilsoftTech/MyFarm/actions/runs/41524090703) at 8d2e415. Phase 6 is COMPLETED - 100% (10/10), PASS WITH CONDITIONS - HOSTED CI VERIFIED. No mandatory test is waived. Conditions P6-C1 to P6-C5 and inherited production conditions remain; see [closeout](reports/phase-06-closeout-2026-11-03.md). Phase 7 is not started.
+
+## D-P06-010 - Hosted development schema application
+
+AUTHORIZED by direct owner instruction 2026-11-03: "now", answering when to apply the Phase 4, 5 and 6 schema to hosted development. Applied after a verified backup, resolving P6-C1, P4-C2 and P5-C1. This covers hosted development project sudqhluwsaijvjjcegpv only, not production or deployment. [Evidence](reports/phase-06-closeout-2026-11-03.md#hosted-application---2026-11-03).

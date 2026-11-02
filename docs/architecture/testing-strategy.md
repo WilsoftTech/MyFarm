@@ -6,7 +6,7 @@
 - Last reviewed: 2026-11-03 (Africa/Nairobi), Phase 6 T010 audit.
 - Related phase/task IDs: Phase01 MYF-P01-T001–T013; Phase02 MYF-P02-T001–T013.
 - Verified completed work: Phase01 scope as previously verified; Phase02: farmer registry contracts/policies/migration/API/tests in this document's area verified (see the Phase 2 implementation section).
-- Remaining work/blockers: Hosted CI passes for Phase 6; hosted migrations/provisioning, scale and inherited production conditions remain separate gates.
+- Remaining work/blockers: Hosted CI passes for Phase 6 and hosted development has the schema (D-P06-010); scale and inherited production conditions remain separate gates.
 - Evidence/report links: [Current Phase 5 audit](../reports/phase-05-closeout-2026-10-29.md); [document review](../reports/phase-05-document-review-2026-10-29.md). Historical task evidence remains linked below.
 <!-- MYFARM-STATUS-END -->
 
