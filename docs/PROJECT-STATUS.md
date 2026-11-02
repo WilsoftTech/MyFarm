@@ -4,13 +4,13 @@
 - Documentation review: REVIEWED - Phase 6 start, T001 evidence and pre-start regression audit; historical checkpoints preserved.
 - Implementation status: REFERENCE ONLY - N/A (navigation and verified progress record).
 - Last reviewed: 2026-11-02 (Africa/Nairobi).
-- Related phase/task IDs: MYF-P06-T001 through MYF-P06-T005; D-P06-001 through D-P06-007.
-- Verified completed work: Phase 5 complete (13/13, hosted run 40783651036); Phase 6 T001-T005 (5/10, 50%) verified locally.
-- Remaining work/blockers: Phase 6 T006-T010 and remaining acceptance/exit gates. Hosted development lacks Phase 4/5/6 tables; hosted migration/provisioning needs separate authorization.
-- Evidence/report links: [T005 report](reports/phase-06-t005-2026-11-02.md); [Phase 5 audit](reports/phase-05-closeout-2026-10-29.md); [Phase 4 closeout](reports/phase-04-closeout-2026-10-26.md).
+- Related phase/task IDs: MYF-P06-T001 through MYF-P06-T006; D-P06-001 through D-P06-007.
+- Verified completed work: Phase 5 complete (13/13, hosted run 40783651036); Phase 6 T001-T006 (6/10, 60%) verified locally.
+- Remaining work/blockers: Phase 6 T007-T010 and remaining acceptance/exit gates. Hosted development lacks Phase 4/5/6 tables; hosted migration/provisioning needs separate authorization.
+- Evidence/report links: [T006 report](reports/phase-06-t006-2026-11-02.md); [Phase 5 audit](reports/phase-05-closeout-2026-10-29.md); [Phase 4 closeout](reports/phase-04-closeout-2026-10-26.md).
 <!-- MYFARM-STATUS-END -->
 
-Current checkpoint - **Phase 6 PARTIALLY COMPLETE - 50% (5/10)**. T005 adds completion, cancellation, worker, notes and accounting cost links with one-way lifecycle rules; not applied to hosted. [T005 report](reports/phase-06-t005-2026-11-02.md). Next: MYF-P06-T006. Earlier Phase 6 evidence: [T001](reports/phase-06-t001-2026-11-02.md) and later task reports.
+Current checkpoint - **Phase 6 PARTIALLY COMPLETE - 60% (6/10)**. T006 adds the today, upcoming, missed, completed and cancelled lists with completion and cancellation screens; MYF-P06-AC002 is verified locally except attachments, which stay deferred. [T006 report](reports/phase-06-t006-2026-11-02.md). Next: MYF-P06-T007. Earlier Phase 6 evidence: [T001](reports/phase-06-t001-2026-11-02.md) and later task reports.
 
 Previous Phase 5 checkpoint - **Phase 5 COMPLETED - 100% (13/13), PASS WITH CONDITIONS - HOSTED CI VERIFIED**. [Hosted run 40783651036](https://github.com/WilsoftTech/MyFarm/actions/runs/40783651036) and [closeout](reports/phase-05-closeout-2026-10-29.md). No Phase 6 start or hosted Supabase schema application.
 
@@ -37,7 +37,7 @@ Current phase: **Phase1 — COMPLETED — 100% (13/13), verdict PASS WITH CONDIT
 | 3 | [Enterprises Crops Livestock and Seasons](phases/phase-03-enterprises-seasons.md) | COMPLETED - 100% (13/13), PASS WITH CONDITIONS - LOCAL VERIFICATION | T001-T013 and AC001-AC004 verified locally; owner accepted L gate; hosted closure grants verified | Inherited production conditions; current hosted CI gate verified in Phase 5 | [Closeout](reports/phase-03-closeout-2026-10-25.md) |
 | 4 | [Farm Accounting Engine](phases/phase-04-farm-accounting.md) | COMPLETED - 100% (16/16), PASS WITH CONDITIONS - LOCAL VERIFICATION | T001-T016 and AC001-AC005 verified locally (records, payments, categories, links, gross margin, summary/export) | P4-C2 hosted schema/policy; P4-C3/C4; current hosted CI gate verified in Phase 5 | [Closeout](reports/phase-04-closeout-2026-10-26.md) |
 | 5 | [Harvest Production and Inventory](phases/phase-05-harvest-inventory.md) | COMPLETED - 100% (13/13), PASS WITH CONDITIONS - HOSTED CI VERIFIED | T001-T013 and AC001-AC004 verified locally and in GitHub CI | P5-C1 hosted schema/policies, P5-C2 scale, P5-C3 inherited production controls; Phase 6 not started | [Closeout](reports/phase-05-closeout-2026-10-29.md) |
-| 6 | [Production Activities and Farm Calendar](phases/phase-06-farm-activities.md) | PARTIALLY COMPLETE - 50% (5/10) | T001-T005 verified locally | T006-T010 and remaining acceptance/exit gates. | [T005 report](reports/phase-06-t005-2026-11-02.md) |
+| 6 | [Production Activities and Farm Calendar](phases/phase-06-farm-activities.md) | PARTIALLY COMPLETE - 60% (6/10) | T001-T006 verified locally | T007-T010 and remaining acceptance/exit gates. | [T006 report](reports/phase-06-t006-2026-11-02.md) |
 | 7 | [Offline First Architecture](phases/phase-07-offline-first.md) | NOT STARTED — 0% | None | All H tasks | None |
 | 8 | [Farm Analytics and Profitability Engine](phases/phase-08-analytics-profitability.md) | NOT STARTED — 0% | None | All H tasks | None |
 | 9 | [Field Pilot and Product Validation](phases/phase-09-field-pilot.md) | NOT STARTED — 0% | None | All H tasks | None |

@@ -2,15 +2,15 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - Phase 6 requirements against owner decisions D-P06-001 through D-P06-006.
-- Implementation status: PARTIALLY COMPLETE - 50% (5/10 verified tasks).
+- Implementation status: PARTIALLY COMPLETE - 60% (6/10 verified tasks).
 - Last reviewed: 2026-11-02 (Africa/Nairobi).
 - Related phase/task IDs: Phase 06; MYF-P06-T001 through MYF-P06-T010; D-P06-001 through D-P06-006.
-- Verified completed work: MYF-P06-T001 through MYF-P06-T005, verified locally.
-- Remaining work/blockers: T006-T010 and remaining acceptance/exit gates. Attachments stay deferred under D-P04-005.
-- Evidence/report links: [T005 report](../reports/phase-06-t005-2026-11-02.md); [Phase 5 closeout](../reports/phase-05-closeout-2026-10-29.md).
+- Verified completed work: MYF-P06-T001 through MYF-P06-T006, verified locally.
+- Remaining work/blockers: T007-T010 and remaining acceptance/exit gates. Attachments stay deferred under D-P04-005.
+- Evidence/report links: [T006 report](../reports/phase-06-t006-2026-11-02.md); [Phase 5 closeout](../reports/phase-05-closeout-2026-10-29.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **PARTIALLY COMPLETE - 50% (5/10)**, authorized by D-P06-001 and D-P06-007. Specification date: 2026-10-08.
+Status: **PARTIALLY COMPLETE - 60% (6/10)**, authorized by D-P06-001 and D-P06-007. Specification date: 2026-10-08.
 
 ## A. Phase Overview
 
@@ -213,7 +213,7 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 - [x] MYF-P06-T003 complete with [evidence](../reports/phase-06-t003-2026-11-02.md).
 - [x] MYF-P06-T004 complete with [evidence](../reports/phase-06-t004-2026-11-02.md).
 - [x] MYF-P06-T005 complete with [evidence](../reports/phase-06-t005-2026-11-02.md).
-- [ ] MYF-P06-T006 complete with evidence.
+- [x] MYF-P06-T006 complete with [evidence](../reports/phase-06-t006-2026-11-02.md).
 - [ ] MYF-P06-T007 complete with evidence.
 - [ ] MYF-P06-T008 complete with evidence.
 - [ ] MYF-P06-T009 complete with evidence.
