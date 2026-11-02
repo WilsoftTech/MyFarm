@@ -12,6 +12,10 @@ export class ActivityService {
     const { scope } = await authorizeProductionFarm(this.auth, this.farms, farmId);
     return this.present(await this.repo.schedule(scope, parse(scheduleActivitySchema, input)));
   }
+  async recordDone(farmId: unknown, input: unknown) {
+    const { scope } = await authorizeProductionFarm(this.auth, this.farms, farmId);
+    return this.present(await this.repo.recordDone(scope, parse(scheduleActivitySchema, input)));
+  }
   async complete(farmId: unknown, activityId: unknown, input: unknown) {
     const { scope } = await authorizeProductionFarm(this.auth, this.farms, farmId);
     return this.present(await this.repo.complete(scope, parse(idSchema, activityId), parse(completeActivitySchema, input)));

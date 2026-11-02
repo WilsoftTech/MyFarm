@@ -1,0 +1,72 @@
+import { FoundationError } from "@/modules/engineering-foundation/domain/errors";
+import type { RegistryAuthorization } from "@/modules/farmer-registry/application/registry";
+import { parseProductionInput as parse } from "@/modules/enterprises-seasons/application/farm-access";
+import { decodePullCursor, encodePullCursor, isPullCursorExpired, nextPullPosition, PULL_LIMITS, PULL_SECTIONS, type PullPosition, type PullSection } from "../domain/commands";
+import { pullPositionSchema, pullQuerySchema, type PullPage, type PushCommand } from "../contracts/commands";
+
+/** The existing services do the work, so their authorization, validation, receipts and atomic writes all still apply. */
+export interface SyncCommandServices {
+  recordTransaction(kind: "EXPENSE" | "INCOME", farmId: string, input: unknown): Promise<{ recordId: string; version: number }>;
+  recordHarvest(farmId: string, input: unknown): Promise<{ harvestId: string; version: number }>;
+  scheduleActivity(farmId: string, input: unknown): Promise<{ activityId: string; version: number }>;
+  recordActivityDone(farmId: string, input: unknown): Promise<{ activityId: string; version: number }>;
+  completeActivity(farmId: string, activityId: string, input: unknown): Promise<{ activityId: string; version: number }>;
+}
+/** requestId is always the command's own ID, whatever the payload says, so one intent cannot claim another's receipt. Photos upload separately. */
+export function applySyncCommand(services: SyncCommandServices, command: PushCommand): Promise<Record<string, unknown>> {
+  const input = { ...command.payload, requestId: command.clientMutationId };
+  switch (command.operation) {
+    case "RECORD_EXPENSE": return services.recordTransaction("EXPENSE", command.farmId, input).then(row => ({ recordId: row.recordId, version: row.version }));
+    case "RECORD_INCOME": return services.recordTransaction("INCOME", command.farmId, input).then(row => ({ recordId: row.recordId, version: row.version }));
+    case "RECORD_HARVEST": return services.recordHarvest(command.farmId, input).then(row => ({ harvestId: row.harvestId, version: row.version }));
+    case "CREATE_TASK": return services.scheduleActivity(command.farmId, input).then(row => ({ activityId: row.activityId, version: row.version }));
+    case "RECORD_ACTIVITY": return services.recordActivityDone(command.farmId, input).then(row => ({ activityId: row.activityId, version: row.version }));
+    case "COMPLETE_ACTIVITY": {
+      if (command.baseVersion === null) return Promise.reject(new FoundationError("INVALID_INPUT"));
+      const { activityId, ...details } = input as { activityId?: unknown } & Record<string, unknown>;
+      if (typeof activityId !== "string") return Promise.reject(new FoundationError("INVALID_INPUT"));
+      return services.completeActivity(command.farmId, activityId, { ...details, expectedVersion: command.baseVersion }).then(row => ({ activityId: row.activityId, version: row.version }));
+    }
+    default: return Promise.reject(new FoundationError("INVALID_INPUT"));
+  }
+}
+
+export interface PullSources {
+  farms(): Promise<{ farmId: string; name: string }[]>;
+  page(section: PullSection, farmId: string, cursor: string | null, limit: number): Promise<{ items: { id: string }[]; nextCursor: string | null }>;
+}
+/** Each page reuses the normal authorized lists. Records are only ever appended or change status, so no deletion markers are needed. */
+export class PullService {
+  constructor(private readonly auth: Pick<RegistryAuthorization, "account">, private readonly sources: PullSources, private readonly now: () => Date = () => new Date()) {}
+  /** An account with no farmer profile yet has nothing to cache, which is not an error. */
+  private farmList() {
+    return this.sources.farms().catch((error: unknown) => {
+      if (error instanceof FoundationError && error.code === "FORBIDDEN") return [];
+      throw error;
+    });
+  }
+  async pull(input: unknown = {}): Promise<PullPage> {
+    await this.auth.account();
+    const { cursor } = parse(pullQuerySchema, input);
+    const now = this.now();
+    let position: PullPosition = { snapshotId: crypto.randomUUID(), issuedAt: now.toISOString(), farmIndex: 0, sectionIndex: 0, pageCursor: null, taken: 0 };
+    if (cursor) {
+      position = parse(pullPositionSchema, decodePullCursor(cursor));
+      if (isPullCursorExpired(position, now)) return { status: "EXPIRED" };
+    }
+    const farms = (await this.farmList()).slice(0, PULL_LIMITS.maxFarms);
+    while (position.farmIndex < farms.length) {
+      const farm = farms[position.farmIndex], section = PULL_SECTIONS[position.sectionIndex];
+      try {
+        const page = await this.sources.page(section, farm.farmId, position.pageCursor, PULL_LIMITS.pageSize);
+        const next = nextPullPosition(position, page.nextCursor, page.items.length, farms.length);
+        return { status: "OK", snapshotId: position.snapshotId, farms, farmId: farm.farmId, section, items: page.items, nextCursor: next ? encodePullCursor(next) : null };
+      } catch (error) {
+        // Access can end during a pull: this farm is skipped and later reconciliation drops it.
+        if (!(error instanceof FoundationError) || error.code !== "FORBIDDEN") throw error;
+        position = { ...position, farmIndex: position.farmIndex + 1, sectionIndex: 0, pageCursor: null, taken: 0 };
+      }
+    }
+    return { status: "OK", snapshotId: position.snapshotId, farms, farmId: null, section: null, items: [], nextCursor: null };
+  }
+}

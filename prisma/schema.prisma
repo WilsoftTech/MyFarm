@@ -89,6 +89,7 @@ model User {
   completedActivities ProductionActivity[] @relation("ActivityCompleter")
   activityRecurrences ActivityRecurrence[]
   cancelledActivities ProductionActivity[] @relation("ActivityCanceller")
+  recordPhotos RecordPhoto[]
 }
 model Organization {
   id String @id @default(uuid()) @db.Uuid
@@ -158,6 +159,7 @@ model Farm {
   payments PaymentRecord[]
   productionActivities ProductionActivity[]
   activityRecurrences ActivityRecurrence[]
+  recordPhotos RecordPhoto[]
   @@unique([id, tenantId])
   @@index([tenantId, createdAt, id])
   harvests Harvest[]
@@ -443,6 +445,7 @@ model AccountingRecord {
   productionEvent ProductionEvent?
   stockOperation StockOperation?
   activities ProductionActivity[]
+  photos RecordPhoto[]
 }
 // A payment only settles sale/purchase obligations; its allocations share its status.
 model PaymentRecord {
@@ -757,6 +760,7 @@ model ProductionActivity {
   plot Plot? @relation(fields: [plotId], references: [id], onDelete: Restrict)
   cost AccountingRecord? @relation(fields: [costRecordId], references: [id], onDelete: Restrict)
   recurrence ActivityRecurrence? @relation(fields: [recurrenceId], references: [id], onDelete: Restrict)
+  photos RecordPhoto[]
   creator User @relation("ActivityCreator", fields: [createdBy], references: [id], onDelete: Restrict)
   completer User? @relation("ActivityCompleter", fields: [completedBy], references: [id], onDelete: Restrict)
   canceller User? @relation("ActivityCanceller", fields: [cancelledBy], references: [id], onDelete: Restrict)
@@ -813,5 +817,29 @@ model ActivityRecurrence {
   @@index([farmId, tenantId])
   @@index([enterpriseId])
   @@index([plotId])
+  @@index([createdBy])
+}
+
+// Phase 7 interim photo rule (D-P07-004). The ID is also the private object's name under the tenant's prefix.
+model RecordPhoto {
+  id String @id @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  activityId String? @db.Uuid
+  accountingRecordId String? @db.Uuid
+  contentType String @db.VarChar(40)
+  byteSize Int
+  sha256 String @db.Char(64)
+  createdBy String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  activity ProductionActivity? @relation(fields: [activityId], references: [id], onDelete: Restrict)
+  accountingRecord AccountingRecord? @relation(fields: [accountingRecordId], references: [id], onDelete: Restrict)
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  @@index([tenantId, farmId, activityId, createdAt])
+  @@index([tenantId, farmId, accountingRecordId, createdAt])
+  @@index([farmId, tenantId])
+  @@index([activityId])
+  @@index([accountingRecordId])
   @@index([createdBy])
 }

@@ -5,7 +5,7 @@ import { FoundationError } from "@/modules/engineering-foundation/domain/errors"
 import { claimCommandReceipt } from "@/modules/engineering-foundation/infrastructure/command-receipts";
 import { productionAfter, requireProductionWriteAccess } from "@/modules/enterprises-seasons/infrastructure/production-access";
 import type { FarmScope } from "@/modules/enterprises-seasons/domain/production";
-import type { ActivityRecord, ActivityRepository } from "../contracts/activity";
+import type { ActivityRecord, ActivityRepository, ScheduleActivity } from "../contracts/activity";
 import { assertActivityOpen, assertLinkableCost, monthRange, type ActivityBucket } from "../domain/activity";
 import { ACTIVITY_LABELS, activityCapabilities, assertActivityAllowed } from "../domain/catalog";
 
@@ -70,6 +70,24 @@ export function activityRepository(db: PrismaClient): ActivityRepository {
     if (result.count !== 1) throw new FoundationError("CONFLICT");
     return activityRecord(await tx.productionActivity.findFirstOrThrow({ where, include: activityInclude }));
   }, { isolationLevel: "ReadCommitted", timeout: 10_000 });
+  const create = (scope: Parameters<ActivityRepository["schedule"]>[0], command: ScheduleActivity, action: string, done: boolean) => db.$transaction(async tx => {
+    await requireProductionWriteAccess(tx, scope);
+    const id = crypto.randomUUID(), where = farmWhere(scope), hash = requestHash(command);
+    const replay = await claimCommandReceipt(tx, { actorId: scope.actorId, tenantId: scope.tenantId, requestId: command.requestId, action, targetId: id });
+    await requireProductionWriteAccess(tx, scope);
+    if (replay) {
+      const row = await tx.productionActivity.findFirst({ where: { ...where, id: replay, createdBy: scope.actorId, requestHash: hash }, include: activityInclude });
+      if (!row) throw new FoundationError("CONFLICT");
+      return activityRecord(row);
+    }
+    await enterpriseForActivity(tx, scope, command.type, command.enterpriseId, command.plotId);
+    await linkableCost(tx, scope, command.costRecordId);
+    const row = await tx.productionActivity.create({ data: { id, ...where, type: command.type, dueOn: calendarDate(command.dueOn), enterpriseId: command.enterpriseId, plotId: command.plotId,
+      workerName: command.workerName, notes: command.notes, costRecordId: command.costRecordId, requestHash: hash, createdBy: scope.actorId }, include: activityInclude });
+    if (!done) return activityRecord(row);
+    await tx.productionActivity.updateMany({ where: { ...where, id, status: "SCHEDULED", version: 1 }, data: { status: "COMPLETED", completedAt: new Date(), completedBy: scope.actorId, version: { increment: 1 } } });
+    return activityRecord(await tx.productionActivity.findFirstOrThrow({ where: { ...where, id }, include: activityInclude }));
+  }, { isolationLevel: "ReadCommitted", timeout: 10_000 });
   return {
     async activity(scope, id) { const row = await db.productionActivity.findFirst({ where: { ...farmWhere(scope), id }, include: activityInclude }); return row ? activityRecord(row) : null; },
     async activities(scope, { cursor, limit, bucket, month, recurrenceId }, today) {
@@ -91,22 +109,8 @@ export function activityRepository(db: PrismaClient): ActivityRepository {
       const enterprise = await db.enterprise.findFirst({ where: { ...farmWhere(scope), id: enterpriseId } });
       return enterprise ? activityCapabilities(enterprise.type) : null;
     },
-    schedule: (scope, command) => db.$transaction(async tx => {
-      await requireProductionWriteAccess(tx, scope);
-      const id = crypto.randomUUID(), where = farmWhere(scope), hash = requestHash(command);
-      const replay = await claimCommandReceipt(tx, { actorId: scope.actorId, tenantId: scope.tenantId, requestId: command.requestId, action: "ACTIVITY_SCHEDULED", targetId: id });
-      await requireProductionWriteAccess(tx, scope);
-      if (replay) {
-        const row = await tx.productionActivity.findFirst({ where: { ...where, id: replay, createdBy: scope.actorId, requestHash: hash }, include: activityInclude });
-        if (!row) throw new FoundationError("CONFLICT");
-        return activityRecord(row);
-      }
-      await enterpriseForActivity(tx, scope, command.type, command.enterpriseId, command.plotId);
-      await linkableCost(tx, scope, command.costRecordId);
-      const row = await tx.productionActivity.create({ data: { id, ...where, type: command.type, dueOn: calendarDate(command.dueOn), enterpriseId: command.enterpriseId, plotId: command.plotId,
-        workerName: command.workerName, notes: command.notes, costRecordId: command.costRecordId, requestHash: hash, createdBy: scope.actorId }, include: activityInclude });
-      return activityRecord(row);
-    }, { isolationLevel: "ReadCommitted", timeout: 10_000 }),
+    schedule: (scope, command) => create(scope, command, "ACTIVITY_SCHEDULED", false),
+    recordDone: (scope, command) => create(scope, command, "ACTIVITY_RECORDED_DONE", true),
     // Worker, notes and cost keep their scheduled values unless completion supplies new ones.
     complete: (scope, activityId, command) => finish(scope, activityId, command.requestId, command.expectedVersion, "ACTIVITY_COMPLETED", row => row.status === "COMPLETED" && row.completedBy === scope.actorId,
       { status: "COMPLETED", completedAt: new Date(), completedBy: scope.actorId, workerName: command.workerName, notes: command.notes, costRecordId: command.costRecordId }, command.costRecordId),

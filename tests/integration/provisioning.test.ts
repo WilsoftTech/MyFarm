@@ -161,7 +161,7 @@ expect(await as("authenticated", claimsA, read, [`${ids.orgB}/${randomUUID()}`])
 expect(await as("authenticated", claimsA, read, [`${ids.orgA}/../${randomUUID()}`])).toBe(false);
 expect(await as("authenticated", { sub: ids.userB, session_id: ids.expiredSession }, read, [`${ids.orgA}/${randomUUID()}`])).toBe(false);
 await expect(as("anon", claimsA, read, [`${ids.orgA}/${randomUUID()}`])).rejects.toThrow(/permission denied/);
-expect(await rows(fresh.client, `SELECT policyname FROM pg_policies WHERE schemaname = 'storage' AND tablename = 'objects'`)).toEqual([{ policyname: "myfarm_scoped_private_read" }]);
+expect(await rows(fresh.client, `SELECT policyname FROM pg_policies WHERE schemaname = 'storage' AND tablename = 'objects' ORDER BY 1`)).toEqual([{ policyname: "myfarm_scoped_private_insert" }, { policyname: "myfarm_scoped_private_read" }]);
 expect(await rows(fresh.client, `SELECT public FROM storage.buckets WHERE id = 'myfarm-private'`)).toEqual([{ public: false }]);
 });
 });

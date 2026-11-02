@@ -71,3 +71,17 @@ test("the offline account route denies anonymous callers without leaking data", 
   expect(response.status()).toBe(401); expect(response.headers()["cache-control"]).toContain("no-store");
   expect((await response.json()).error).toBe("UNAUTHENTICATED");
 });
+test("offline pull and photo routes deny anonymous callers without leaking data", async ({ request }) => {
+  for (const path of ["/api/v1/sync/pull", "/api/v1/sync/pull?cursor=forged", `/api/v1/farms/${farm}/photos?target=ACTIVITY&recordId=${record}`]) {
+    const response = await request.get(path);
+    expect(response.status()).toBe(401); expect(response.headers()["cache-control"]).toContain("no-store");
+    expect((await response.json()).error).toBe("UNAUTHENTICATED");
+  }
+  const origin = { origin: "http://127.0.0.1:3101" };
+  const view = await request.post(`/api/v1/farms/${farm}/photos/${record}/view`, { headers: origin, data: { requestId: record } });
+  expect(view.status()).toBe(401);
+  const upload = await request.post(`/api/v1/farms/${farm}/photos`, { headers: origin, multipart: { requestId: record, target: "ACTIVITY", recordId: record, sha256: "0".repeat(64), photo: { name: "a.jpg", mimeType: "image/jpeg", buffer: Buffer.from([0xff, 0xd8, 0xff]) } } });
+  expect(upload.status()).toBe(401);
+  const invalidOrigins: Record<string, string>[] = [{ origin: "https://untrusted.test" }, {}];
+  for (const headers of invalidOrigins) expect((await request.post(`/api/v1/farms/${farm}/photos`, { headers, multipart: { requestId: record } })).status()).toBe(403);
+});

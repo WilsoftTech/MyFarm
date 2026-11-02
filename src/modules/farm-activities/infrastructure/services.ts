@@ -10,7 +10,7 @@ import { recurrenceRepository } from "./recurrence-repository";
 export function activityService() {
   return new ActivityService(authorizationService(), { farmScopeForMember: input => registryRepository(database()).farmScopeForMember(input) }, {
     activity: (...args) => activityRepository(database()).activity(...args), activities: (...args) => activityRepository(database()).activities(...args),
-    complete: (...args) => activityRepository(database()).complete(...args), cancel: (...args) => activityRepository(database()).cancel(...args),
+    recordDone: (...args) => activityRepository(database()).recordDone(...args), complete: (...args) => activityRepository(database()).complete(...args), cancel: (...args) => activityRepository(database()).cancel(...args),
     capabilities: (...args) => activityRepository(database()).capabilities(...args), schedule: (...args) => activityRepository(database()).schedule(...args),
   });
 }

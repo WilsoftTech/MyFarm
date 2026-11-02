@@ -64,6 +64,8 @@ export interface ActivityRepository {
   activities(scope: FarmScope, page: ActivityPageInput, today: string): Promise<ProductionPage<ActivityRecord>>;
   capabilities(scope: FarmScope, enterpriseId: string | undefined): Promise<ActivityCapability[] | null>;
   schedule(scope: ProductionWriteScope, command: ScheduleActivity): Promise<ActivityRecord>;
+  /** One atomic step for work already done, so a retry can never leave it half recorded. */
+  recordDone(scope: ProductionWriteScope, command: ScheduleActivity): Promise<ActivityRecord>;
   complete(scope: ProductionWriteScope, activityId: string, command: CompleteActivity): Promise<ActivityRecord>;
   cancel(scope: ProductionWriteScope, activityId: string, command: CancelActivity): Promise<ActivityRecord>;
 }

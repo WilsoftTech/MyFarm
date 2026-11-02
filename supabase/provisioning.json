@@ -13,6 +13,7 @@
     "supabase/policies/farm-accounting-runtime.sql",
     "supabase/policies/harvest-inventory-runtime.sql",
     "supabase/policies/farm-activities-runtime.sql",
+    "supabase/policies/offline-photos-runtime.sql",
     "supabase/policies/browser-role-lockdown.sql"
   ]
 }

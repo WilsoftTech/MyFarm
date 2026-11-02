@@ -1,0 +1,34 @@
+import "server-only";
+import { authorizationService } from "@/modules/engineering-foundation/infrastructure/services";
+import { database } from "@/modules/engineering-foundation/infrastructure/database";
+import { supabaseServer } from "@/modules/engineering-foundation/infrastructure/supabase";
+import { registryRepository } from "@/modules/farmer-registry/infrastructure/repository";
+import { farmerRegistryService } from "@/modules/farmer-registry/infrastructure/services";
+import { cropCycleService, productionService } from "@/modules/enterprises-seasons/infrastructure/services";
+import { farmAccountingService } from "@/modules/farm-accounting/infrastructure/services";
+import { harvestService } from "@/modules/harvest-inventory/infrastructure/services";
+import { activityService } from "@/modules/farm-activities/infrastructure/services";
+import { PhotoService } from "../application/photos";
+import { PullService, type SyncCommandServices } from "../application/sync";
+import { photoRepository } from "./photo-repository";
+import { photoStorage } from "./photo-storage";
+import { pullSources } from "./pull-sources";
+
+export function syncCommandServices(): SyncCommandServices {
+  return {
+    recordTransaction: (kind, farmId, input) => farmAccountingService().recordTransaction(kind, farmId, input),
+    recordHarvest: (farmId, input) => harvestService().record(farmId, input),
+    scheduleActivity: (farmId, input) => activityService().schedule(farmId, input),
+    recordActivityDone: (farmId, input) => activityService().recordDone(farmId, input),
+    completeActivity: (farmId, activityId, input) => activityService().complete(farmId, activityId, input),
+  };
+}
+export function pullService() {
+  return new PullService(authorizationService(), pullSources({ registry: farmerRegistryService(), production: productionService(), crops: cropCycleService(), accounting: farmAccountingService(), harvest: harvestService(), activities: activityService() }));
+}
+export function photoService() {
+  return new PhotoService(authorizationService(), { farmScopeForMember: input => registryRepository(database()).farmScopeForMember(input) }, {
+    recordExists: (...args) => photoRepository(database()).recordExists(...args), photo: (...args) => photoRepository(database()).photo(...args),
+    photos: (...args) => photoRepository(database()).photos(...args), record: (...args) => photoRepository(database()).record(...args),
+  }, async () => photoStorage(await supabaseServer(), process.env.SUPABASE_PRIVATE_BUCKET ?? "myfarm-private"));
+}

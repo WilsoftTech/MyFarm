@@ -42,4 +42,4 @@ export const pullPositionSchema = z.object({ snapshotId: idSchema, issuedAt: z.i
 export const pullQuerySchema = z.object({ cursor: z.string().min(1).max(1000).optional() }).strict();
 export type PullPage =
   | { status: "EXPIRED" }
-  | { status: "OK"; snapshotId: string; farms: { farmId: string; name: string }[]; farmId: string | null; section: PullSection | null; items: Record<string, unknown>[]; nextCursor: string | null };
+  | { status: "OK"; snapshotId: string; farms: { farmId: string; name: string }[]; farmId: string | null; section: PullSection | null; items: { id: string }[]; nextCursor: string | null };
