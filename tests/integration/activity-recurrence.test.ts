@@ -64,6 +64,17 @@ describe("MYF-P06-AC003 expansion", () => {
       expect(await dueDates(row.recurrenceId)).toHaveLength(count);
     } finally { await f.owner.enterprise.update({ where: { id: f.a.poultry.id }, data: { status: "ACTIVE" } }); }
   });
+  it("still generates active series when more than a full batch of series is paused", async () => {
+    const paused = await f.owner.enterprise.create({ data: { tenantId: f.a.scope.tenantId, farmId: farmA(), name: "Paused flock", type: "POULTRY", createdBy: f.a.scope.actorId } });
+    const base = { tenantId: f.a.scope.tenantId, farmId: farmA(), type: "FEEDING" as const, frequency: "DAILY" as const, interval: 1, startOn: new Date("2026-11-02Z"), enterpriseId: paused.id, requestHash: "x", createdBy: f.a.scope.actorId };
+    await f.owner.activityRecurrence.createMany({ data: Array.from({ length: 60 }, () => ({ ...base, id: crypto.randomUUID() })) });
+    await f.owner.enterprise.update({ where: { id: paused.id }, data: { status: "CLOSED" } });
+    const active = await f.a.recurrences.create(farmA(), series());
+    f.setNow("2026-11-10T09:00:00Z");
+    await f.a.recurrences.expand(farmA());
+    expect((await dueDates(active.recurrenceId)).at(-1)).toBe("2026-12-10");
+    await f.owner.activityRecurrence.deleteMany({ where: { enterpriseId: paused.id } });
+  });
 });
 
 describe("MYF-P06-AC003 stopping and skipping", () => {

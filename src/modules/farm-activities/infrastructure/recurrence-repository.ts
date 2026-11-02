@@ -111,14 +111,15 @@ export function recurrenceRepository(db: PrismaClient): RecurrenceRepository {
     expand: (scope, today) => db.$transaction(async tx => {
       await requireProductionWriteAccess(tx, scope);
       const horizon = calendarDate(addDays(today, RECURRENCE_HORIZON_DAYS));
-      const due = await tx.activityRecurrence.findMany({ where: { ...farmWhere(scope), stoppedFrom: null, OR: [{ expandedThrough: null }, { expandedThrough: { lt: horizon } }] }, select: { id: true }, orderBy: [{ expandedThrough: { sort: "asc", nulls: "first" } }, { id: "asc" }], take: 50 });
+      // A paused series on a closed enterprise is left out, so it cannot crowd active series out of this bounded batch.
+      const due = await tx.activityRecurrence.findMany({ where: { ...farmWhere(scope), stoppedFrom: null, AND: [{ OR: [{ expandedThrough: null }, { expandedThrough: { lt: horizon } }] }, { OR: [{ enterpriseId: null }, { enterprise: { status: "ACTIVE" } }] }] }, select: { id: true }, orderBy: [{ expandedThrough: { sort: "asc", nulls: "first" } }, { id: "asc" }], take: 50 });
       let created = 0;
       for (const { id } of due) {
         if (created >= MAX_DATES_PER_EXPANSION) break;
         await lockSeries(tx, id);
         // Re-read after the lock: a stop or change may have committed while waiting.
         const series = await tx.activityRecurrence.findFirst({ where: { ...farmWhere(scope), id, stoppedFrom: null }, include });
-        if (series && (!series.enterprise || series.enterprise.status === "ACTIVE")) created += await expandSeries(tx, scope, series, today);
+        if (series) created += await expandSeries(tx, scope, series, today);
       }
       return { created };
     }, txOptions),
