@@ -1,7 +1,6 @@
 "use client";
 import { useEffect } from "react";
 import { accountGeneration, setOfflineAccount } from "@/modules/offline-first/client/account";
-import { requestPersistentStorage } from "@/modules/offline-first/client/storage-status";
 
 /** Signed-in pages prepare this phone for offline use. Failures only mean it stays unprepared; pages keep working. */
 export function OfflineSetup() {
@@ -14,7 +13,10 @@ export function OfflineSetup() {
       const { accountId } = await response.json() as { accountId: string };
       if (!setOfflineAccount(accountId, startedAt)) return;
       await navigator.serviceWorker.register("/sw.js");
+      // Loaded on demand so ordinary signed-in pages do not carry the local database code.
+      const [{ localDatabase }, { pullCachedData }, { requestPersistentStorage }] = await Promise.all([import("@/modules/offline-first/client/local-database"), import("@/modules/offline-first/client/pull"), import("@/modules/offline-first/client/storage-status")]);
       await requestPersistentStorage();
+      await pullCachedData(localDatabase(accountId), () => accountGeneration() === startedAt);
     }
     prepare().catch(() => undefined);
   }, []);

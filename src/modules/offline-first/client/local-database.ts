@@ -1,12 +1,11 @@
 import Dexie, { type Table } from "dexie";
 import { offlineDatabaseName, OFFLINE_STORES } from "../domain/storage";
-import type { CachedCatalog, CachedFarm, CachedRecord, LocalMeta, LocalPhoto, OutboxEntry } from "../domain/records";
+import type { CachedFarm, CachedRecord, LocalMeta, LocalPhoto, OutboxEntry } from "../domain/records";
 
 /** One database per account (D-P07-003). New schema versions must keep outbox and photos intact. */
 export class LocalDatabase extends Dexie {
   farms!: Table<CachedFarm, string>;
-  records!: Table<CachedRecord, [string, string]>;
-  catalogs!: Table<CachedCatalog, [string, string]>;
+  records!: Table<CachedRecord, [string, string, string]>;
   outbox!: Table<OutboxEntry, string>;
   photos!: Table<LocalPhoto, string>;
   meta!: Table<LocalMeta, string>;
@@ -14,8 +13,8 @@ export class LocalDatabase extends Dexie {
     super(offlineDatabaseName(accountId));
     this.version(1).stores({
       farms: "farmId",
-      records: "[section+id], farmId, [farmId+section], snapshotId",
-      catalogs: "[farmId+kind], farmId",
+      // Keyed by farm too: categories and payment methods are global, so the same ID appears under every farm.
+      records: "[farmId+section+id], farmId, snapshotId",
       outbox: "clientMutationId, syncStatus, createdAt, farmId, dependsOn",
       photos: "photoId, clientMutationId",
       meta: "key",

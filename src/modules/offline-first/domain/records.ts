@@ -31,5 +31,4 @@ export interface LocalPhoto { photoId: string; clientMutationId: string; blob: B
 export interface CachedFarm { farmId: string; name: string; cachedAt: string }
 /** A server record kept for reading offline. snapshotId marks which pull wrote it, so a finished pull can replace older rows. */
 export interface CachedRecord { section: string; id: string; farmId: string; snapshotId: string; data: Record<string, unknown> }
-export interface CachedCatalog { farmId: string; kind: string; items: unknown[]; cachedAt: string }
 export interface LocalMeta { key: string; value: string }

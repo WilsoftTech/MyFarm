@@ -58,7 +58,7 @@ export function offlineDatabaseName(accountId: string): string {
   return "myfarm-offline-" + accountId;
 }
 /** D-P07-003: sign-out clears cached farm data but keeps unsent work, hidden until that account signs in again. */
-export const OFFLINE_STORES = Object.freeze({ cached: Object.freeze(["farms", "records", "catalogs"] as const), unsent: Object.freeze(["outbox", "photos"] as const) });
+export const OFFLINE_STORES = Object.freeze({ cached: Object.freeze(["farms", "records"] as const), unsent: Object.freeze(["outbox", "photos"] as const) });
 
 export const OFFLINE_SHELL_PATH = "/offline";
 export type ServiceWorkerPolicy = "STATIC_CACHE" | "OFFLINE_SHELL" | "NETWORK_THEN_SHELL" | "NETWORK_ONLY";
