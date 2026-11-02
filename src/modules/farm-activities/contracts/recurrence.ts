@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { idSchema } from "@/modules/engineering-foundation/contracts/identity";
 import { isCalendarDate, type FarmScope } from "@/modules/enterprises-seasons/domain/production";
-import type { ProductionRecord } from "@/modules/enterprises-seasons/contracts/production";
+import type { ProductionPage, ProductionPageInput, ProductionRecord, ProductionWriteScope } from "@/modules/enterprises-seasons/contracts/production";
 import { RECURRENCE_FREQUENCIES, type RecurrenceFrequency } from "../domain/recurrence";
 import type { ActivityType } from "../domain/catalog";
 import { activityTypeSchema } from "./catalog";
@@ -46,4 +46,14 @@ export interface RecurrenceView extends FarmScope, ProductionRecord {
   workerName: string | null;
   notes: string | null;
   previousId: string | null;
+}
+
+/** Every query constrains both tenantId and farmId. Writes recheck membership and commit with their audit receipt. */
+export interface RecurrenceRepository {
+  recurrence(scope: FarmScope, id: string): Promise<RecurrenceView | null>;
+  recurrences(scope: FarmScope, page: ProductionPageInput): Promise<ProductionPage<RecurrenceView>>;
+  create(scope: ProductionWriteScope, command: CreateRecurrence, today: string): Promise<RecurrenceView>;
+  change(scope: ProductionWriteScope, id: string, command: ChangeRecurrence, today: string): Promise<RecurrenceView>;
+  stop(scope: ProductionWriteScope, id: string, command: StopRecurrence, today: string): Promise<RecurrenceView>;
+  expand(scope: ProductionWriteScope, today: string): Promise<{ created: number }>;
 }

@@ -87,6 +87,7 @@ model User {
   approvedStockAdjustments StockAdjustment[] @relation("AdjustmentApprover")
   productionActivities ProductionActivity[] @relation("ActivityCreator")
   completedActivities ProductionActivity[] @relation("ActivityCompleter")
+  activityRecurrences ActivityRecurrence[]
   cancelledActivities ProductionActivity[] @relation("ActivityCanceller")
 }
 model Organization {
@@ -156,6 +157,7 @@ model Farm {
   accountingRecords AccountingRecord[]
   payments PaymentRecord[]
   productionActivities ProductionActivity[]
+  activityRecurrences ActivityRecurrence[]
   @@unique([id, tenantId])
   @@index([tenantId, createdAt, id])
   harvests Harvest[]
@@ -182,6 +184,7 @@ model Plot {
   cropCycles CropCycle[]
   accountingRecords AccountingRecord[]
   productionActivities ProductionActivity[]
+  activityRecurrences ActivityRecurrence[]
   @@unique([id, farmId, tenantId])
   @@unique([farmId, name])
   @@index([tenantId, farmId, createdAt, id])
@@ -241,6 +244,7 @@ model Enterprise {
   poultryBatches PoultryBatch[]
   accountingRecords AccountingRecord[]
   productionActivities ProductionActivity[]
+  activityRecurrences ActivityRecurrence[]
   @@unique([id, farmId, tenantId])
   @@index([tenantId, farmId, createdAt, id])
   @@index([farmId, tenantId])
@@ -737,6 +741,7 @@ model ProductionActivity {
   workerName String? @db.VarChar(120)
   notes String? @db.VarChar(1000)
   costRecordId String? @db.Uuid
+  recurrenceId String? @db.Uuid
   completedAt DateTime? @db.Timestamptz(6)
   completedBy String? @db.Uuid
   cancelledAt DateTime? @db.Timestamptz(6)
@@ -751,10 +756,12 @@ model ProductionActivity {
   enterprise Enterprise? @relation(fields: [enterpriseId], references: [id], onDelete: Restrict)
   plot Plot? @relation(fields: [plotId], references: [id], onDelete: Restrict)
   cost AccountingRecord? @relation(fields: [costRecordId], references: [id], onDelete: Restrict)
+  recurrence ActivityRecurrence? @relation(fields: [recurrenceId], references: [id], onDelete: Restrict)
   creator User @relation("ActivityCreator", fields: [createdBy], references: [id], onDelete: Restrict)
   completer User? @relation("ActivityCompleter", fields: [completedBy], references: [id], onDelete: Restrict)
   canceller User? @relation("ActivityCanceller", fields: [cancelledBy], references: [id], onDelete: Restrict)
   @@unique([id, farmId, tenantId])
+  @@unique([recurrenceId, dueOn])
   @@index([tenantId, farmId, status, dueOn, id])
   @@index([tenantId, farmId, createdAt, id])
   @@index([farmId, tenantId])
@@ -764,4 +771,47 @@ model ProductionActivity {
   @@index([costRecordId])
   @@index([completedBy])
   @@index([cancelledBy])
+}
+
+// A series only generates ProductionActivity rows; each occurrence then has its own lifecycle (D-P06-003).
+enum RecurrenceFrequency {
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+model ActivityRecurrence {
+  id String @id @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  type ActivityType
+  frequency RecurrenceFrequency
+  interval Int
+  startOn DateTime @db.Date
+  endOn DateTime? @db.Date
+  stoppedFrom DateTime? @db.Date
+  expandedThrough DateTime? @db.Date
+  enterpriseId String? @db.Uuid
+  plotId String? @db.Uuid
+  workerName String? @db.VarChar(120)
+  notes String? @db.VarChar(1000)
+  previousId String? @unique @db.Uuid
+  requestHash String @db.VarChar(64)
+  createdBy String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  version Int @default(1)
+  farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  enterprise Enterprise? @relation(fields: [enterpriseId], references: [id], onDelete: Restrict)
+  plot Plot? @relation(fields: [plotId], references: [id], onDelete: Restrict)
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  previous ActivityRecurrence? @relation("RecurrenceChange", fields: [previousId], references: [id], onDelete: Restrict)
+  next ActivityRecurrence? @relation("RecurrenceChange")
+  occurrences ProductionActivity[]
+  @@unique([id, farmId, tenantId])
+  @@index([tenantId, farmId, createdAt, id])
+  @@index([tenantId, farmId, stoppedFrom, expandedThrough])
+  @@index([farmId, tenantId])
+  @@index([enterpriseId])
+  @@index([plotId])
+  @@index([createdBy])
 }

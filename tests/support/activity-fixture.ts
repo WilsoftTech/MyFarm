@@ -6,9 +6,11 @@ import { identityRepository } from "@/modules/engineering-foundation/infrastruct
 import { registryRepository } from "@/modules/farmer-registry/infrastructure/repository";
 import { ActivityService } from "@/modules/farm-activities/application/activity";
 import { activityRepository } from "@/modules/farm-activities/infrastructure/activity-repository";
+import { RecurrenceService } from "@/modules/farm-activities/application/recurrence";
+import { recurrenceRepository } from "@/modules/farm-activities/infrastructure/recurrence-repository";
 import { applyProviderSql, runSqlFile, supabaseEmulation } from "./provisioning";
 
-const FIXTURE_TABLES = ["ProductionActivity", "AccountingReversal", "PaymentAllocation", "PaymentRecord", "AccountingRecord", "Enterprise", "Plot", "FarmMember", "Farm", "AuditEvent"];
+const FIXTURE_TABLES = ["ProductionActivity", "ActivityRecurrence", "AccountingReversal", "PaymentAllocation", "PaymentRecord", "AccountingRecord", "Enterprise", "Plot", "FarmMember", "Farm", "AuditEvent"];
 
 export async function activityFixture() {
   const url = process.env.TEST_DATABASE_URL;
@@ -35,7 +37,7 @@ export async function activityFixture() {
     const poultry = await owner.enterprise.create({ data: { ...parent, name: "Layers", type: "POULTRY" } });
     const fish = await owner.enterprise.create({ data: { ...parent, name: "Tilapia", type: "FISH" } });
     const plot = await owner.plot.create({ data: { id: crypto.randomUUID(), ...parent, name: "Plot B" } });
-    return { scope, auth, crop, poultry, fish, plot, activities: new ActivityService(auth, registryRepository(runtime), activityRepository(runtime), () => now) };
+    return { scope, auth, crop, poultry, fish, plot, activities: new ActivityService(auth, registryRepository(runtime), activityRepository(runtime), () => now), recurrences: new RecurrenceService(auth, registryRepository(runtime), recurrenceRepository(runtime), () => now) };
   }
   const a = await member("Activity farm A");
   const b = await member("Activity farm B");

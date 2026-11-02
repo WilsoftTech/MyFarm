@@ -23,7 +23,7 @@ export const scheduleActivitySchema = activityDetailsSchema.extend({
 export const activityCapabilitiesSchema = z.object({ enterpriseId: optionalId }).strict();
 export const completeActivitySchema = activityDetailsSchema.extend({ requestId: idSchema, expectedVersion }).strict();
 export const cancelActivitySchema = z.object({ requestId: idSchema, expectedVersion, reason: optionalText(500), confirmed: z.literal(true) }).strict();
-export const activityPageSchema = productionPageSchema.extend({ bucket: z.enum(ACTIVITY_BUCKETS).optional() });
+export const activityPageSchema = productionPageSchema.extend({ bucket: z.enum(ACTIVITY_BUCKETS).optional(), recurrenceId: idSchema.optional() });
 
 export type ScheduleActivity = z.output<typeof scheduleActivitySchema>;
 export type CompleteActivity = z.output<typeof completeActivitySchema>;
@@ -46,6 +46,7 @@ export interface ActivityRecord extends FarmScope, ProductionRecord {
   workerName: string | null;
   notes: string | null;
   cost: ActivityCost | null;
+  recurrenceId: string | null;
   completedAt: string | null;
   completedBy: string | null;
   cancelledAt: string | null;

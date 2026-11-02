@@ -14,6 +14,7 @@ CREATE POLICY myfarm_server_create ON "ProductionActivity" FOR INSERT TO myfarm_
  AND ("enterpriseId" IS NULL OR EXISTS (SELECT 1 FROM "Enterprise" e WHERE e.id="ProductionActivity"."enterpriseId" AND e."farmId"="ProductionActivity"."farmId" AND e."tenantId"="ProductionActivity"."tenantId"))
  AND ("plotId" IS NULL OR EXISTS (SELECT 1 FROM "Plot" p WHERE p.id="ProductionActivity"."plotId" AND p."farmId"="ProductionActivity"."farmId" AND p."tenantId"="ProductionActivity"."tenantId"))
  AND ("costRecordId" IS NULL OR EXISTS (SELECT 1 FROM "AccountingRecord" r WHERE r.id="ProductionActivity"."costRecordId" AND r."farmId"="ProductionActivity"."farmId" AND r."tenantId"="ProductionActivity"."tenantId" AND r.kind IN ('EXPENSE','PURCHASE')))
+ AND ("recurrenceId" IS NULL OR EXISTS (SELECT 1 FROM "ActivityRecurrence" s WHERE s.id="ProductionActivity"."recurrenceId" AND s."farmId"="ProductionActivity"."farmId" AND s."tenantId"="ProductionActivity"."tenantId"))
 );
 -- Finishing is one-way: a completed or cancelled record leaves USING, so it cannot be reopened or rewritten.
 DROP POLICY IF EXISTS myfarm_server_finish ON "ProductionActivity";
@@ -23,4 +24,19 @@ CREATE POLICY myfarm_server_finish ON "ProductionActivity" FOR UPDATE TO myfarm_
  WHERE fm."farmId"="ProductionActivity"."farmId" AND fm."tenantId"="ProductionActivity"."tenantId" AND fm."userId"=COALESCE("ProductionActivity"."completedBy","ProductionActivity"."cancelledBy") AND fm.status='ACTIVE' AND m.status='ACTIVE' AND m.role='FARMER' AND u.status='ACTIVE')
  AND ("costRecordId" IS NULL OR EXISTS (SELECT 1 FROM "AccountingRecord" r WHERE r.id="ProductionActivity"."costRecordId" AND r."farmId"="ProductionActivity"."farmId" AND r."tenantId"="ProductionActivity"."tenantId" AND r.kind IN ('EXPENSE','PURCHASE')))
 );
+REVOKE ALL ON TABLE "ActivityRecurrence" FROM PUBLIC, anon, authenticated, myfarm_runtime;
+GRANT SELECT, INSERT ON TABLE "ActivityRecurrence" TO myfarm_runtime;
+GRANT UPDATE ("stoppedFrom", "expandedThrough", version, "updatedAt") ON "ActivityRecurrence" TO myfarm_runtime;
+DROP POLICY IF EXISTS myfarm_server_read ON "ActivityRecurrence";
+CREATE POLICY myfarm_server_read ON "ActivityRecurrence" FOR SELECT TO myfarm_runtime USING (true);
+DROP POLICY IF EXISTS myfarm_server_create ON "ActivityRecurrence";
+CREATE POLICY myfarm_server_create ON "ActivityRecurrence" FOR INSERT TO myfarm_runtime WITH CHECK (
+ EXISTS (SELECT 1 FROM "FarmMember" fm JOIN "Membership" m ON m."userId"=fm."userId" AND m."organizationId"=fm."tenantId" JOIN "User" u ON u.id=fm."userId"
+ WHERE fm."farmId"="ActivityRecurrence"."farmId" AND fm."tenantId"="ActivityRecurrence"."tenantId" AND fm."userId"="ActivityRecurrence"."createdBy" AND fm.status='ACTIVE' AND m.status='ACTIVE' AND m.role='FARMER' AND u.status='ACTIVE')
+ AND ("enterpriseId" IS NULL OR EXISTS (SELECT 1 FROM "Enterprise" e WHERE e.id="ActivityRecurrence"."enterpriseId" AND e."farmId"="ActivityRecurrence"."farmId" AND e."tenantId"="ActivityRecurrence"."tenantId"))
+ AND ("plotId" IS NULL OR EXISTS (SELECT 1 FROM "Plot" p WHERE p.id="ActivityRecurrence"."plotId" AND p."farmId"="ActivityRecurrence"."farmId" AND p."tenantId"="ActivityRecurrence"."tenantId"))
+);
+-- A stopped series leaves USING, so it cannot be restarted or generated further.
+DROP POLICY IF EXISTS myfarm_server_update ON "ActivityRecurrence";
+CREATE POLICY myfarm_server_update ON "ActivityRecurrence" FOR UPDATE TO myfarm_runtime USING ("stoppedFrom" IS NULL) WITH CHECK (true);
 COMMIT;

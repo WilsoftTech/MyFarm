@@ -17,7 +17,7 @@ type ActivityRow = Prisma.ProductionActivityGetPayload<{ include: typeof activit
 const instant = (value: Date | null) => value?.toISOString() ?? null;
 export const activityRecord = (r: ActivityRow): ActivityRecord => ({ activityId: r.id, tenantId: r.tenantId, farmId: r.farmId, type: r.type, typeLabel: ACTIVITY_LABELS[r.type],
   dueOn: r.dueOn.toISOString().slice(0, 10), status: r.status, enterpriseId: r.enterpriseId, enterpriseName: r.enterprise?.name ?? null, plotId: r.plotId, plotName: r.plot?.name ?? null,
-  workerName: r.workerName, notes: r.notes, cost: r.cost ? { recordId: r.cost.id, kind: r.cost.kind === "PURCHASE" ? "PURCHASE" : "EXPENSE", categoryName: r.cost.categoryName, amount: r.cost.amount.toString(), currency: r.cost.currency, occurredOn: r.cost.occurredOn.toISOString().slice(0, 10), reversed: r.cost.status === "REVERSED" } : null,
+  workerName: r.workerName, notes: r.notes, cost: r.cost ? { recordId: r.cost.id, kind: r.cost.kind === "PURCHASE" ? "PURCHASE" : "EXPENSE", categoryName: r.cost.categoryName, amount: r.cost.amount.toString(), currency: r.cost.currency, occurredOn: r.cost.occurredOn.toISOString().slice(0, 10), reversed: r.cost.status === "REVERSED" } : null, recurrenceId: r.recurrenceId,
   completedAt: instant(r.completedAt), completedBy: r.completedBy, cancelledAt: instant(r.cancelledAt), cancelledBy: r.cancelledBy, cancelReason: r.cancelReason,
   version: r.version, createdBy: r.createdBy, createdAt: r.createdAt.toISOString(), updatedAt: r.updatedAt.toISOString() });
 
@@ -68,8 +68,8 @@ export function activityRepository(db: PrismaClient): ActivityRepository {
   }, { isolationLevel: "ReadCommitted", timeout: 10_000 });
   return {
     async activity(scope, id) { const row = await db.productionActivity.findFirst({ where: { ...farmWhere(scope), id }, include: activityInclude }); return row ? activityRecord(row) : null; },
-    async activities(scope, { cursor, limit, bucket }, today) {
-      const where = farmWhere(scope);
+    async activities(scope, { cursor, limit, bucket, recurrenceId }, today) {
+      const where = { ...farmWhere(scope), ...(recurrenceId ? { recurrenceId } : {}) };
       if (!bucket) {
         const anchor = cursor ? productionAfter(await db.productionActivity.findFirst({ where: { ...where, id: cursor } })) : {};
         const rows = await db.productionActivity.findMany({ where: { ...where, ...anchor }, include: activityInclude, orderBy: [{ createdAt: "desc" }, { id: "desc" }], take: limit + 1 });

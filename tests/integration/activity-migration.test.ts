@@ -20,6 +20,7 @@ it("the activity migration rolls back atomically and preserves prior records", a
     await db.query("ROLLBACK");
     expect((await db.query("SELECT to_regclass('public.\"ProductionActivity\"') AS table")).rows[0].table).toBeNull();
     await db.query(sql);
+    for (const part of readdirSync("prisma/migrations").filter(p => /^\d/.test(p) && p > release).sort()) await db.query(readFileSync("prisma/migrations/" + part + "/migration.sql", "utf8"));
     expect((await db.query('SELECT id FROM "User"')).rows).toEqual([{ id: actor }]);
     expect((await db.query("SELECT relrowsecurity AS rls FROM pg_class WHERE oid='public.\"ProductionActivity\"'::regclass")).rows[0].rls).toBe(true);
   } finally { await db.end(); await admin.query('DROP DATABASE "' + name + '"'); await admin.end(); }
