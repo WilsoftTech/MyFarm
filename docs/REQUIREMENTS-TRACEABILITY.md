@@ -3,7 +3,7 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — T013 task-relevant content, status and evidence.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
+- Last reviewed: 2026-11-03 (Africa/Nairobi), Phase 6 T010 audit.
 - Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
 - Remaining work/blockers: Phase 3 COMPLETED - 100% (13/13), PASS WITH CONDITIONS - LOCAL VERIFICATION. T013 and all four ACs pass locally; the owner accepted the closeout and approved the two-table hosted closure policy, which is applied and verified. GitHub-hosted CI remains unverified under D-P03-004; inherited production gates remain. Phase 4 is NOT STARTED and requires separate authorization. [Closeout](reports/phase-03-closeout-2026-10-25.md).
@@ -74,9 +74,9 @@ Status date: 2026-10-08. Grouped explicit capabilities map to unique requirement
 
 | ID | Source | Requirement | Phase/task | Acceptance | Test expectation | Status |
 |---|---|---|---|---|---|---|
-| MYF-P06-R001 | P0396–P0408 | Include planting, irrigation, weeding, spraying, fertilizing, vaccination, feeding, harvesting, pruning, milking, inspection. | [Phase 6](phases/phase-06-farm-activities.md) / MYF-P06-T001, MYF-P06-T002, MYF-P06-T003 | MYF-P06-AC001: All activity catalog values retained; crop/poultry MVP behavior explicit. | Catalog and unsupported enterprise tests. | NOT STARTED |
-| MYF-P06-R002 | P0409–P0426 | Record farm/enterprise/plot/date/worker/cost/notes/attachments/status; show upcoming/today/completed/missed/cancelled. | [Phase 6](phases/phase-06-farm-activities.md) / MYF-P06-T004, MYF-P06-T005, MYF-P06-T006 | MYF-P06-AC002: Plot B fertilizer due tomorrow appears upcoming; completion records permitted worker/time. | Timezone/overdue/cancelled/foreign worker/private attachment tests. | NOT STARTED |
-| MYF-P06-R003 | P0427–P0436 | Recur feeding, milking, cleaning, vaccination and inspection. | [Phase 6](phases/phase-06-farm-activities.md) / MYF-P06-T007, MYF-P06-T008, MYF-P06-T009 | MYF-P06-AC003: Repeated expansion creates one occurrence; approved cancellation policy stops future entries. | Duplicate expansion, date boundaries, recurrence edits and offline replay. | NOT STARTED |
+| MYF-P06-R001 | P0396–P0408 | Include planting, irrigation, weeding, spraying, fertilizing, vaccination, feeding, harvesting, pruning, milking, inspection. | [Phase 6](phases/phase-06-farm-activities.md) / MYF-P06-T001, MYF-P06-T002, MYF-P06-T003 | MYF-P06-AC001: All activity catalog values retained; crop/poultry MVP behavior explicit. | Catalog and unsupported enterprise tests. | COMPLETED - local and hosted CI acceptance; AC001 PASS ([audit](reports/phase-06-closeout-2026-11-03.md)) |
+| MYF-P06-R002 | P0409–P0426 | Record farm/enterprise/plot/date/worker/cost/notes/attachments/status; show upcoming/today/completed/missed/cancelled. | [Phase 6](phases/phase-06-farm-activities.md) / MYF-P06-T004, MYF-P06-T005, MYF-P06-T006 | MYF-P06-AC002: Plot B fertilizer due tomorrow appears upcoming; completion records permitted worker/time. | Timezone/overdue/cancelled/foreign worker/private attachment tests. | COMPLETED - local and hosted CI acceptance; AC002 PASS, attachments deferred by owner (D-P06-008) ([audit](reports/phase-06-closeout-2026-11-03.md)) |
+| MYF-P06-R003 | P0427–P0436 | Recur feeding, milking, cleaning, vaccination and inspection. | [Phase 6](phases/phase-06-farm-activities.md) / MYF-P06-T007, MYF-P06-T008, MYF-P06-T009 | MYF-P06-AC003: Repeated expansion creates one occurrence; approved cancellation policy stops future entries. | Duplicate expansion, date boundaries, recurrence edits and offline replay. | COMPLETED - local and hosted CI acceptance; AC003 PASS, milking unavailable by owner decision (D-P06-008) ([audit](reports/phase-06-closeout-2026-11-03.md)) |
 
 ## Phase 07 Offline First Architecture
 

@@ -3,10 +3,10 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - Phase 5 task-relevant contracts, implementation, status and evidence; historical sections preserved.
 - Implementation status: Phase 1-4 accepted with documented conditions; Phase 5 T001-T013 verified locally and in hosted CI; deployment conditions remain. No whole-architecture completion percentage claimed.
-- Last reviewed: 2026-10-29 (Africa/Nairobi), Phase 5 T013 audit.
+- Last reviewed: 2026-11-03 (Africa/Nairobi), Phase 6 T010 audit.
 - Related phase/task IDs: Future phase architecture as referenced; Phase01 review session T001–T013; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Scope/status/provider applicability reviewed; no financial/offline/farm-domain runtime implementation verified.
-- Remaining work/blockers: Hosted CI passes for Phase 5; hosted migrations/provisioning, scale and inherited production conditions remain separate gates.
+- Remaining work/blockers: Hosted CI passes for Phase 6; hosted migrations/provisioning, scale and inherited production conditions remain separate gates.
 - Evidence/report links: [Current Phase 5 audit](../reports/phase-05-closeout-2026-10-29.md); [document review](../reports/phase-05-document-review-2026-10-29.md). Historical task evidence remains linked below.
 <!-- MYFARM-STATUS-END -->
 
@@ -45,3 +45,5 @@ Implemented locally under D-P04-002–010: exact numeric(20,4) money per ISO cur
 Stock-linked crop/egg/bird sales post their one stock effect and one sale atomically, reusing the accounting transaction writer. Payments do not add revenue or stock effects. Independent accounting reversal of linked sales is rejected; coordinated stock reversal first requires posted payments to be reversed, appends opposite stock entries and preserves originals. KG and whole bird/egg quantities remain exact; effective-date stock cannot be negative. Inventory valuation stays unavailable until Phase 8. [Audit and required hosted gate](../reports/phase-05-closeout-2026-10-29.md). Phase 5 closure is pending T013/hosted CI.
 
 Final Phase 5 audit: T001-T013 and the hosted quality workflow pass at f999449 ([run](https://github.com/WilsoftTech/MyFarm/actions/runs/40783651036)); [closeout](../reports/phase-05-closeout-2026-10-29.md). This supersedes the earlier pending-CI checkpoint, without claiming hosted Supabase application or later-phase implementation.
+
+Phase 6 activities link to an existing posted expense or purchase and store no money, so only the accounting record counts in totals and reversals show on the activity (D-P06-005). No activity command creates or changes an accounting record. Final Phase 6 audit: [hosted run 41524090703](https://github.com/WilsoftTech/MyFarm/actions/runs/41524090703); [closeout](../reports/phase-06-closeout-2026-11-03.md).

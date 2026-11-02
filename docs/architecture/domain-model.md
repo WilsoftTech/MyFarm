@@ -3,10 +3,10 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - Phase 5 task-relevant contracts, implementation, status and evidence; historical sections preserved.
 - Implementation status: Phase 1-4 accepted with documented conditions; Phase 5 T001-T013 verified locally and in hosted CI; deployment conditions remain. No whole-architecture completion percentage claimed.
-- Last reviewed: 2026-10-29 (Africa/Nairobi), Phase 5 T013 audit.
+- Last reviewed: 2026-11-03 (Africa/Nairobi), Phase 6 T010 audit.
 - Related phase/task IDs: Phase02 MYF-P02-T001–T013; later phases per roadmap.
 - Verified completed work: Farmer, FarmerProfile, Farm, Plot, FarmMember implemented; User/Organization reused; Address/Contact as columns; Document deferred (D-P02-003).
-- Remaining work/blockers: Hosted CI passes for Phase 5; hosted migrations/provisioning, scale and inherited production conditions remain separate gates.
+- Remaining work/blockers: Hosted CI passes for Phase 6; hosted migrations/provisioning, scale and inherited production conditions remain separate gates.
 - Evidence/report links: [Current Phase 5 audit](../reports/phase-05-closeout-2026-10-29.md); [document review](../reports/phase-05-document-review-2026-10-29.md). Historical task evidence remains linked below.
 <!-- MYFARM-STATUS-END -->
 
@@ -81,3 +81,5 @@ Strict harvest commands carry crop-cycle/crop/plot/storage references, date, gro
 Harvest, StorageLocation, InventoryItem, StockMovement, ProductionEvent, StockOperation and StockAdjustment are implemented. Movements are append-only; balances and current flocks derive from them. A stock-linked sale creates a single Phase 4 sale, with payments remaining settlement only. Corrections append opposite movements and coordinate financial reversal. Feed/medication usage is recorded with explicit units; no automatic supply consumption or bird decrement is inferred. [Audit and required hosted gate](../reports/phase-05-closeout-2026-10-29.md). Phase 5 closure is pending T013/hosted CI.
 
 Final Phase 5 audit: T001-T013 and the hosted quality workflow pass at f999449 ([run](https://github.com/WilsoftTech/MyFarm/actions/runs/40783651036)); [closeout](../reports/phase-05-closeout-2026-10-29.md). This supersedes the earlier pending-CI checkpoint, without claiming hosted Supabase application or later-phase implementation.
+
+Phase 6 implements the planned farm activity as `ProductionActivity`, with `ActivityRecurrence` generating its occurrences. Stored status is the lifecycle; today, upcoming and missed derive from the due date in Africa/Kampala. Workers are free text and attachments stay deferred (D-P06-004, D-P06-008). Final Phase 6 audit: [hosted run 41524090703](https://github.com/WilsoftTech/MyFarm/actions/runs/41524090703); [closeout](../reports/phase-06-closeout-2026-11-03.md).

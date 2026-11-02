@@ -423,8 +423,16 @@ APPROVED, owner 2026-11-02: an activity can link to an existing same-farm expens
 
 ## D-P06-006 - T001 activity catalog interpretation
 
-ENGINEERING INTERPRETATION awaiting owner review, 2026-11-02. The catalog keeps the 11 R001 values plus Cleaning from R003. Crop: planting, irrigation, weeding, spraying, fertilizing, harvesting, pruning, inspection. Poultry: vaccination, feeding, cleaning, inspection. Farm-level work may use every value except milking. Enterprise types without a workflow (D-P03-003) offer none. Milking stays in the catalog but is unavailable until a dairy workflow exists, so its R003 recurrence cannot be used in the MVP.
+APPROVED by owner 2026-11-03 under D-P06-008; first recorded as an engineering interpretation on 2026-11-02. The catalog keeps the 11 R001 values plus Cleaning from R003. Crop: planting, irrigation, weeding, spraying, fertilizing, harvesting, pruning, inspection. Poultry: vaccination, feeding, cleaning, inspection. Farm-level work may use every value except milking. Enterprise types without a workflow (D-P03-003) offer none. Milking stays in the catalog but is unavailable until a dairy workflow exists, so its R003 recurrence cannot be used in the MVP.
 
 ## D-P06-007 - Complete Phase 6 and task commits
 
-AUTHORIZED by direct owner instruction 2026-11-02: commit this work and continue with T002-T010, committing after each task. This does not authorize pushes, deployment or hosted database changes. D-P06-006 remains awaiting owner review and later tasks build on it.
+AUTHORIZED by direct owner instruction 2026-11-02: commit this work and continue with T002-T010, committing after each task. This does not authorize pushes, deployment or hosted database changes. D-P06-006 was then awaiting owner review; D-P06-008 records the outcome. A later owner instruction, "commit and push", authorized pushing the Phase 6 commits to origin/main; hosted database changes and deployment stay unauthorized.
+
+## D-P06-008 - Owner review of Phase 6 interpretations
+
+APPROVED, owner 2026-11-03 ("yes to all"), answering four questions. Accepted: the activity rules in D-P06-006, including milking being unavailable until a dairy workflow exists; attachments staying deferred under D-P04-005; no correction flow for a completed activity; and allowing completion before the due date. The fourth question asked when to apply the schema to hosted development. The reply names no time, so it is not recorded as approval of any hosted change, and that question stays open as P6-C1.
+
+## D-P06-009 - Verified Phase 6 closure
+
+IMPLEMENTATION/AUDIT RECORD, 2026-11-03 (Africa/Nairobi), within D-P06-007 and D-P06-008. T001-T010 and AC001-AC003 pass in a clean checkout and in [hosted run 41524090703](https://github.com/WilsoftTech/MyFarm/actions/runs/41524090703) at 8d2e415. Phase 6 is COMPLETED - 100% (10/10), PASS WITH CONDITIONS - HOSTED CI VERIFIED. No mandatory test is waived. Conditions P6-C1 to P6-C5 and inherited production conditions remain; see [closeout](reports/phase-06-closeout-2026-11-03.md). Phase 7 is not started.

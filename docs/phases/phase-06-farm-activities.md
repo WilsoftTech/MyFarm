@@ -1,16 +1,16 @@
 # Phase 06 Production Activities and Farm Calendar
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED - Phase 6 requirements against owner decisions D-P06-001 through D-P06-006.
-- Implementation status: PARTIALLY COMPLETE - 90% (9/10 verified tasks).
-- Last reviewed: 2026-11-02 (Africa/Nairobi).
-- Related phase/task IDs: Phase 06; MYF-P06-T001 through MYF-P06-T010; D-P06-001 through D-P06-006.
-- Verified completed work: MYF-P06-T001 through MYF-P06-T009, verified locally.
-- Remaining work/blockers: T010-T010 and remaining acceptance/exit gates. Attachments stay deferred under D-P04-005.
-- Evidence/report links: [T009 report](../reports/phase-06-t009-2026-11-02.md); [Phase 5 closeout](../reports/phase-05-closeout-2026-10-29.md).
+- Documentation review: REVIEWED - Phase 6 requirements against owner decisions D-P06-001 through D-P06-009.
+- Implementation status: COMPLETED - 100% (10/10 verified tasks), PASS WITH CONDITIONS - HOSTED CI VERIFIED.
+- Last reviewed: 2026-11-03 (Africa/Nairobi).
+- Related phase/task IDs: Phase 06; MYF-P06-T001 through MYF-P06-T010; D-P06-001 through D-P06-009.
+- Verified completed work: MYF-P06-T001 through MYF-P06-T010 and AC001-AC003, verified in a clean checkout and hosted CI at 8d2e415.
+- Remaining work/blockers: No phase blocker. Conditions P6-C1 through P6-C5 remain; attachments stay deferred by owner decision.
+- Evidence/report links: [Closeout](../reports/phase-06-closeout-2026-11-03.md); [Phase 5 closeout](../reports/phase-05-closeout-2026-10-29.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **PARTIALLY COMPLETE - 90% (9/10)**, authorized by D-P06-001 and D-P06-007. Specification date: 2026-10-08.
+Status: **COMPLETED - 100% (10/10), PASS WITH CONDITIONS - HOSTED CI VERIFIED**, authorized by D-P06-001 and D-P06-007. Specification date: 2026-10-08; sections below are the original specification, and the [closeout](../reports/phase-06-closeout-2026-11-03.md) records where implementation names and scope differ.
 
 ## A. Phase Overview
 
@@ -217,8 +217,8 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 - [x] MYF-P06-T007 complete with [evidence](../reports/phase-06-t007-2026-11-02.md).
 - [x] MYF-P06-T008 complete with [evidence](../reports/phase-06-t008-2026-11-02.md).
 - [x] MYF-P06-T009 complete with [evidence](../reports/phase-06-t009-2026-11-02.md).
-- [ ] MYF-P06-T010 complete with evidence.
-- [ ] Every K criterion verified.
-- [ ] Security/integrity audit, remediation and retest complete.
-- [ ] Applicable quality/E2E/integration/migration evidence recorded.
-- [ ] L gate approved; closeout/status updated from evidence.
+- [x] MYF-P06-T010 complete with [evidence](../reports/phase-06-closeout-2026-11-03.md).
+- [x] Every K criterion verified, with attachments deferred by owner under D-P06-008.
+- [x] Security/integrity audit, remediation and retest complete.
+- [x] Applicable quality/E2E/integration/migration evidence recorded.
+- [x] L gate approved; closeout/status updated from evidence.
