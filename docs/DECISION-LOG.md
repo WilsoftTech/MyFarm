@@ -48,14 +48,14 @@ Q01 is **PARTIALLY RESOLVED**: user selected Rukungiri. Remaining components and
 | Q07 | RESOLVED for Phase3 by owner 2026-10-09 ([D-P03-002](#d-p03-002--q07-seasons-and-crop-cycles)): seasons are farm-level labels and may overlap; one plot and one season per crop cycle; intercropping up to plot area (excess needs a reason); perennials have no expected end; closing is final, reopening deferred | Agricultural/product owner | 3 | Owner decision recorded; field validation still pending (Phase 9) |
 | Q08 | RESOLVED for Phase3 by owner 2026-10-09 ([D-P03-003](#d-p03-003--q08-units-and-enterprise-types)): planted area reuses the Phase2 AreaUnit (no conversions in Phase3); whole-number bird counts; six recordable enterprise types, workflows for CROP/POULTRY only; crops from a data catalog | Agricultural/domain owner | 3–5 | Owner decision recorded; unit conversions and rounding revisit in Phase4/5 |
 | Q09 | RESOLVED for Phase4 by owner 2026-10-25 ([D-P04-002](#d-p04-002--q09-basis-money-and-corrections)): accrual default with a labelled cash-basis view; any ISO 4217 currency stored with numeric(20,4), never aggregated or converted; tax out of scope; corrections append reversals. Display rounding and reporting periods remain open | Accounting/product owner | 4 | Owner decision recorded; golden fixtures in [T001](reports/phase-04-t001-2026-10-25.md) |
-| Q10 | DEFERRED by owner 2026-10-25 ([D-P04-004](#d-p04-004--q10-net-income-deferred)): overhead, depreciation and finance costs move to Phase 8; Phase 4 shows only figures labelled gross margin | Accounting/product owner | 4/8 | Treatment approved before Phase 8 net income; gross margin never labelled net profit |
+| Q10 | RESOLVED for Phase8 by owner 2026-11-03 ([D-P08-002](#d-p08-002---q10-recorded-surplus)): farm shows recorded surplus, shared costs are not allocated, and depreciation and finance are stated as not included; net income stays unbuilt. Earlier deferral: [D-P04-004](#d-p04-004--q10-net-income-deferred) | Accounting/product owner | 4/8 | Treatment approved before Phase 8 net income; gross margin never labelled net profit |
 | Q11 | RESOLVED for Phase4 by owner 2026-10-25 ([D-P04-003](#d-p04-003--q11-recognition-and-double-count-prevention)): a sale/purchase is the single revenue/cost event; payments only settle receivables/payables; standalone income/expense only for other items | Accounting/domain owner | 4 | Owner decision recorded; allocation invariants verified in [T001](reports/phase-04-t001-2026-10-25.md) |
-| Q12 | Inventory valuation, grade/storage, negative-stock exceptions and conversion | Accounting/agricultural owner | 5/8 | Costing policy approved or value unavailable; concurrency proof |
+| Q12 | Valuation RESOLVED for Phase8 by owner 2026-11-03 ([D-P08-004](#d-p08-004---q12-stock-value)): labelled estimate at last sale price, kept out of surplus. Formal costing not approved. Earlier parts: [D-P05-002](#d-p05-002---q12-quantities-storage-and-valuation) | Accounting/agricultural owner | 5/8 | Costing policy approved or value unavailable; concurrency proof |
 | Q13 | Production/flock vs stock movements and atomic sale/harvest accounting links | Domain owner | 5 | One source event per effect and conservation fixtures |
 | Q14 | RESOLVED for Phase6 by owner 2026-11-02 ([D-P06-002](#d-p06-002---q14-missed-definition), [D-P06-003](#d-p06-003---q14-recurrence), [D-P06-004](#d-p06-004---q14-worker-and-notifications)): missed after the due date in Africa/Kampala; daily/weekly/monthly recurrence; free-text worker; no notifications | Product owner | 6 | Approved |
 | Q15 | RESOLVED for Phase6 by owner 2026-11-02 ([D-P06-005](#d-p06-005---q15-activity-cost-link)): link an existing same-farm expense or purchase; the activity holds no money | Accounting/product owner | 6 | Approved |
 | Q16 | RESOLVED for Phase7 by owner 2026-11-03 ([D-P07-002](#d-p07-002---q16-support-limits), [D-P07-003](#d-p07-003---q16-shared-phones), [D-P07-005](#d-p07-005---q16-lost-entries)): 14 days and 500 unsent entries; per-account data with no PIN; warnings plus an unencrypted download. Real-device measurement stays open | Product/security/engineering owner | 1/7 | Approved; measurement pending |
-| Q17 | Metric denominators, overhead allocations, absent/zero values, snapshot freshness | Accounting/agricultural owner | 8 | Formula catalog and golden fixtures approved |
+| Q17 | RESOLVED for Phase8 by owner 2026-11-03 ([D-P08-005](#d-p08-005---q17-crop-formulas) to [D-P08-008](#d-p08-008---q17-season-scope-and-freshness)); the formula catalog and golden fixtures remain to be approved at T004 | Accounting/agricultural owner | 8 | Formula catalog and golden fixtures approved |
 | Q18 | Pilot cohort/window, active/retained definition, thresholds, support/cycle completion | Product/research owner | 9 | Prospective criteria then real cohort evidence |
 | Q19 | Rule mortality thresholds, percent vs points, data coverage, severity/suppression | Agronomic/product owner | 10 | Reviewed rules, comparison units and sparse-data behavior |
 | Q20 | AI provider/cost, data processing/retention, knowledge licenses and groundedness criteria | Product/security/AI owner | 11 | Approved tool contracts, consent/provider policy and adversarial evaluation |
@@ -472,3 +472,39 @@ ENGINEERING DECISION 2026-11-03, within D-P07-006, reversing proposals in the Ph
 ## D-P07-008 - Phase 7 implementation record
 
 IMPLEMENTATION/AUDIT RECORD, 2026-11-03 (Africa/Nairobi), within D-P07-006. T001-T013 and AC001-AC004 pass from a clean checkout at 30f2aaf. Recommended verdict: PASS WITH CONDITIONS - LOCAL VERIFICATION, awaiting owner acceptance. The approved duration has not been measured on a real device and hosted CI has not run, because nothing has been pushed. No hosted database or deployment changed. See [closeout](reports/phase-07-closeout-2026-11-03.md).
+
+## D-P07-009 - Phase 7 owner acceptance and hosted CI repair
+
+APPROVED, owner 2026-11-03 (Africa/Nairobi), selecting "Accept, push fix, start (Recommended)". Phase 7 is accepted as PASS WITH CONDITIONS, with P7-C1 and P7-C3 to P7-C6 still open. The owner had pushed the Phase 7 commits, and hosted run [41585234003](https://github.com/WilsoftTech/MyFarm/actions/runs/41585234003) at 2c7714b failed: 145 of 146 signed-in browser tests passed, and D-P07-003 on desktop timed out after 120 seconds. The downloaded trace shows every assertion passed by 15 seconds. The rest was spent in `server.stop()`, which waited on `exit` with no limit while `next start` handled SIGTERM by waiting for connections the open page held. Windows `kill()` is immediate, so local audits could not see it. Fix 0298f20 stops the test server with SIGKILL and skips one that has already exited; no assertion changed. The owner authorized pushing this fix. Whether P7-C2 is resolved depends on the hosted run at 0298f20.
+
+## D-P08-001 - Phase 8 start and task commits
+
+AUTHORIZED, owner 2026-11-03: "proceed to next phase", then "Commit per task, no push (Recommended)". Phase 8 starts locally with one commit per verified task. This does not authorize further pushes, deployment or hosted database changes.
+
+## D-P08-002 - Q10 recorded surplus
+
+APPROVED, owner 2026-11-03, selecting "Recorded surplus, no split (Recommended)". Each enterprise shows gross margin as defined by D-P04-008. The farm shows **recorded surplus**: all recognized revenue minus all recognized costs, including those linked to no enterprise, so overhead cannot disappear. Shared costs are shown separately and are not allocated to enterprises. Screens state that depreciation and loan costs are not included. Nothing is labelled net profit, and net income stays unbuilt. The source's "Margin" is recorded surplus divided by revenue.
+
+## D-P08-003 - Optional batch link on costs
+
+APPROVED, owner 2026-11-03, selecting "Add optional batch link (Recommended)". Expenses and purchases gain an optional poultry batch, online and offline, through an additive schema change. This enables cost per bird and previous-batch trends. Older or unlinked costs show as not linked to a batch, and that batch's cost figures say they may be incomplete. Hosted use needs a separate owner step.
+
+## D-P08-004 - Q12 stock value
+
+APPROVED, owner 2026-11-03, selecting "Estimate at last sale price (Recommended)". Stock value is the quantity in stock multiplied by that item's most recent sale price that has not been reversed, labelled as an estimate with the sale date, in that sale's currency. It is not available for an item never sold. It is kept out of surplus and margin, so unsold stock never counts as earnings. This is not a costing method.
+
+## D-P08-005 - Q17 crop formulas
+
+APPROVED, owner 2026-11-03, selecting "Convert to acres; net kg (Recommended)". All area converts to acres with exact factors (1 acre = 4,046.8564224 square metres; 1 hectare = 10,000 square metres), adding each crop cycle's planted area once. Yield per acre uses gross harvested kg. Cost per kg and break-even price (costs divided by kg) use kg after recorded loss. A cycle still active is labelled "so far".
+
+## D-P08-006 - Q17 bird formulas
+
+APPROVED, owner 2026-11-03, selecting "Birds started (Recommended)". Birds started is the batch's starting quantity plus later bird purchases. Mortality rate, cost per bird and revenue per bird all divide by it. An active batch is labelled "so far".
+
+## D-P08-007 - Q17 missing values and trends
+
+APPROVED, owner 2026-11-03, selecting "Not available, like with like (Recommended)". A zero or missing denominator or baseline shows "Not available" with a plain reason, never 0. Trends compare only the same crop in an earlier season, or the same animal type's earlier batch, in the same currency and unit. Percentages round half-up to one decimal (100,000 to 118,000 is +18%). A trend warns when either side has unlinked costs.
+
+## D-P08-008 - Q17 season scope and freshness
+
+APPROVED, owner 2026-11-03, selecting "Linked records, live (Recommended)". A season view counts only records linked to that season and shows the amount linked to no season, so nothing is guessed from dates or counted twice. It defaults to the latest active season, and a date-range view stays available. Figures are calculated live from records with an as-of time, so the proposed `MetricSnapshot` and `ReportDefinition` tables are not built. With no connection the dashboard says it needs a connection and points to offline work. Entries not yet sent are not counted.

@@ -101,7 +101,7 @@ export const paymentMethodReleaseSchema = z.object({
 export type CategoryReleaseInput = z.output<typeof categoryReleaseSchema>;
 
 /** Report filters (D-P04-010): inclusive dates, either end open; accrual unless the cash view is chosen. */
-const reportDate = z.union([z.literal(""), date]).optional().transform(value => value || undefined);
+export const reportDate = z.union([z.literal(""), date]).optional().transform(value => value || undefined);
 export const reportQuerySchema = z.object({
   basis: z.enum(RECOGNITION_BASES).default("ACCRUAL"),
   from: reportDate,

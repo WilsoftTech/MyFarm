@@ -40,7 +40,7 @@ describe("crop-cycle link rule (P04-T007, D-P04-007)", () => {
   });
 });
 
-const event = (overrides: Partial<RecognitionEvent>): RecognitionEvent => ({ basis: "ACCRUAL", effect: "COST", recordId: id(), kind: "EXPENSE", paymentId: null, amount: "1", currency: "UGX", recognizedOn: "2027-03-10", enterpriseId: null, categoryId: null, categoryName: null, ...overrides });
+const event = (overrides: Partial<RecognitionEvent>): RecognitionEvent => ({ basis: "ACCRUAL", effect: "COST", recordId: id(), kind: "EXPENSE", paymentId: null, amount: "1", currency: "UGX", recognizedOn: "2027-03-10", enterpriseId: null, seasonId: null, categoryId: null, categoryName: null, ...overrides });
 
 describe("report scope (P04-T010, D-P04-010)", () => {
   it("filters inclusive calendar dates with open ends and rejects reversed or impossible ranges", () => {

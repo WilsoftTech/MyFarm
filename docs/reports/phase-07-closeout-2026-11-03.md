@@ -103,6 +103,10 @@ Browser journeys create real disconnection by stopping a dedicated app server, b
 
 Known limits: a phone must connect once while signed in before offline work is possible. Saved copies are the newest 200 rows per section, so older records are online only. Completion time on an offline task is when the server accepted it, because client clocks are not trusted; the due date carries the farmer's date. `LOCAL_ONLY` is defined but entries do not rest in it. The downloaded copy leaves out photos. The reused-key check reads before writing, so a faulty client racing itself across different operations could slip past it, while each operation's own receipt still stops repeats. The Web Locks API prevents double sending between tabs; browsers without it rely on leases and receipts, which were not separately exercised.
 
+## After this report
+
+The owner pushed these commits and accepted the phase with its conditions on 2026-11-03 (D-P07-009). Hosted run 41585234003 at 2c7714b failed: one test hung while stopping its test server on Linux, after all its assertions had passed. The fix is 0298f20, and P7-C2 depends on the hosted run at that commit. The statements below that nothing was pushed and that hosted CI had not run describe the moment this report was written.
+
 ## Status-update evidence
 
 Each of T001-T012 has a commit and report, T013 adds fix `30f2aaf` and this closeout. Progress: **13/13 = 100%**. Nothing in Phase 7 has been pushed, and `2886978` from Phase 6 is also local. [Every-document review](phase-07-document-review-2026-11-03.md). Next allowed actions: owner acceptance, a push to run hosted CI, hosted application of the photo schema, or authorization for Phase 8. No later phase is started automatically.

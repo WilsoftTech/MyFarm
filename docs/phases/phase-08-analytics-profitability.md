@@ -1,16 +1,16 @@
 # Phase 08 Farm Analytics and Profitability Engine
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — T013 metadata/status scope and evidence-link relevance; historical and future-phase facts unchanged.
-- Implementation status: NOT STARTED — 0% (0/13 verified tasks).
-- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
-- Related phase/task IDs: Phase 08; MYF-P08-T001 through MYF-P08-T013; review session Phase01; Phase02 review session (MYF-P02-T001–T013).
-- Verified completed work: No tasks implemented or verified in this phase; status/provider applicability reviewed only.
-- Remaining work/blockers: All 13 tasks and their acceptance/exit gates pending; Phase01 completion and future phase authorization required.
-- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
+- Documentation review: REVIEWED - requirements, Q10, Q12 and Q17 against owner decisions.
+- Implementation status: PARTIALLY COMPLETE - 7.69% (1/13 verified tasks).
+- Last reviewed: 2026-11-03 (Africa/Nairobi).
+- Related phase/task IDs: Phase 08; MYF-P08-T001 through MYF-P08-T013; D-P08-001 through D-P08-008.
+- Verified completed work: T001 dashboard rules with unit tests.
+- Remaining work/blockers: T002-T013 and all acceptance and exit gates. Labour and input cost groups need owner approval at T004.
+- Evidence/report links: [Phase 8 start and T001](../reports/phase-08-start-2026-11-03.md); [Decisions](../DECISION-LOG.md#d-p08-001---phase-8-start-and-task-commits).
 <!-- MYFARM-STATUS-END -->
 
-Status: **NOT STARTED**. Date: 2026-10-08. This is a specification, not implementation approval. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **PARTIALLY COMPLETE**, authorized by D-P08-001. Specification date: 2026-10-08. Where owner decisions D-P08-002 to D-P08-008 differ from the proposals below, the decisions govern; in particular, the F tables are not built (D-P08-008). Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
@@ -241,7 +241,7 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 
 ## O. Completion Checklist
 
-- [ ] MYF-P08-T001 complete with evidence.
+- [x] MYF-P08-T001 complete with [evidence](../reports/phase-08-start-2026-11-03.md).
 - [ ] MYF-P08-T002 complete with evidence.
 - [ ] MYF-P08-T003 complete with evidence.
 - [ ] MYF-P08-T004 complete with evidence.
