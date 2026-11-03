@@ -1,0 +1,66 @@
+import { describe, expect, it, vi } from "vitest";
+import { FarmProfitabilityService } from "@/modules/analytics-profitability/application/profitability";
+import type { DashboardSeasons } from "@/modules/analytics-profitability/contracts/profitability";
+import type { RegistryAuthorization } from "@/modules/farmer-registry/application/registry";
+import type { ProductionFarmAccess } from "@/modules/enterprises-seasons/application/farm-access";
+import { FoundationError } from "@/modules/engineering-foundation/domain/errors";
+
+const id = () => crypto.randomUUID();
+const actorId = id(), farmId = id(), tenantId = id(), scope = { tenantId, farmId, actorId }, active = id(), closed = id();
+const now = new Date("2027-12-31T09:00:00.000Z");
+const season = (seasonId: string, status: "ACTIVE" | "CLOSED", startDate: string) => ({ seasonId, label: startDate, status, startDate, endDate: null });
+function fixture() {
+  const authorization: RegistryAuthorization = {
+    account: vi.fn(async () => ({ id: actorId, authSubject: id(), status: "ACTIVE" as const })),
+    scope: vi.fn(async () => ({ actorId, organizationId: tenantId, role: "FARMER" as const })),
+  };
+  const farms: ProductionFarmAccess = { farmScopeForMember: vi.fn(async () => ({ farmId, tenantId, name: "Farm" })) };
+  const reports = { reportSources: vi.fn(async () => ({ records: [
+    { recordId: id(), kind: "EXPENSE" as const, amount: "70", currency: "UGX", occurredOn: "2027-03-10", status: "POSTED" as const, seasonId: active },
+    { recordId: id(), kind: "EXPENSE" as const, amount: "30", currency: "UGX", occurredOn: "2027-03-11", status: "POSTED" as const },
+  ], payments: [], enterprises: [] })) };
+  const seasons: DashboardSeasons = {
+    seasons: vi.fn(async () => [season(closed, "CLOSED", "2027-06-01"), season(active, "ACTIVE", "2027-03-01")]),
+    season: vi.fn(async () => null),
+  };
+  return { service: new FarmProfitabilityService(authorization, farms, reports, seasons, () => now), authorization, farms, reports, seasons };
+}
+
+describe("farm dashboard service (P08-T002)", () => {
+  it("derives the scope from authorization and labels the view", async () => {
+    const { service, reports } = fixture();
+    expect(await service.dashboard(farmId)).toMatchObject({ basis: "ACCRUAL", asOf: now.toISOString(), season: { seasonId: active }, currencies: [{ expenses: "70" }], notLinkedToSeason: [{ currency: "UGX", revenue: "0", costs: "30" }] });
+    expect(reports.reportSources).toHaveBeenCalledWith(scope, { basis: "ACCRUAL", from: undefined, to: undefined });
+  });
+  it("uses no season when dates or all records are chosen", async () => {
+    const { service } = fixture();
+    for (const input of [{ seasonId: "all" }, { from: "2027-01-01" }]) expect(await service.dashboard(farmId, input)).toMatchObject({ season: null, currencies: [{ expenses: "100" }], notLinkedToSeason: [] });
+  });
+  it("finds a chosen season past the listed ones, under the same farm scope", async () => {
+    const { service, seasons } = fixture(), older = id();
+    vi.mocked(seasons.season).mockResolvedValue(season(older, "CLOSED", "2001-01-01"));
+    expect((await service.dashboard(farmId, { seasonId: older })).season?.seasonId).toBe(older);
+    expect(seasons.season).toHaveBeenCalledWith(scope, older);
+  });
+  it("authenticates and authorizes before parsing filters or reading anything", async () => {
+    for (const reason of ["unauthenticated", "farm", "role"]) {
+      const { service, authorization, farms, reports, seasons } = fixture();
+      if (reason === "unauthenticated") vi.mocked(authorization.account).mockRejectedValue(new FoundationError("UNAUTHENTICATED"));
+      if (reason === "farm") vi.mocked(farms.farmScopeForMember).mockResolvedValue(null);
+      if (reason === "role") vi.mocked(authorization.scope).mockRejectedValue(new FoundationError("FORBIDDEN"));
+      await expect(service.dashboard(farmId, { basis: "NET" })).rejects.toMatchObject({ code: reason === "unauthenticated" ? "UNAUTHENTICATED" : "FORBIDDEN" });
+      expect(reports.reportSources).not.toHaveBeenCalled();
+      expect(seasons.seasons).not.toHaveBeenCalled();
+    }
+  });
+  it("refuses a season it cannot find without reading any money", async () => {
+    const { service, reports } = fixture();
+    await expect(service.dashboard(farmId, { seasonId: id() })).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(reports.reportSources).not.toHaveBeenCalled();
+  });
+  it("rejects invalid filters before reading", async () => {
+    const { service, reports } = fixture();
+    for (const input of [{ basis: "NET" }, { tenantId: id() }, { seasonId: active, from: "2027-01-01" }]) await expect(service.dashboard(farmId, input)).rejects.toMatchObject({ code: "INVALID_INPUT" });
+    expect(reports.reportSources).not.toHaveBeenCalled();
+  });
+});

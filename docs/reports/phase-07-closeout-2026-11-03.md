@@ -105,7 +105,7 @@ Known limits: a phone must connect once while signed in before offline work is p
 
 ## After this report
 
-The owner pushed these commits and accepted the phase with its conditions on 2026-11-03 (D-P07-009). Hosted run 41585234003 at 2c7714b failed: one test hung while stopping its test server on Linux, after all its assertions had passed. The fix is 0298f20, and P7-C2 depends on the hosted run at that commit. The statements below that nothing was pushed and that hosted CI had not run describe the moment this report was written.
+The owner pushed these commits and accepted the phase with its conditions on 2026-11-03 (D-P07-009). Hosted run 41585234003 at 2c7714b failed: one test hung while stopping its test server on Linux, after all its assertions had passed. The fix is 0298f20, and hosted run [41589795797](https://github.com/WilsoftTech/MyFarm/actions/runs/41589795797) at that commit passed every suite, so P7-C2 is resolved. The statements below that nothing was pushed and that hosted CI had not run describe the moment this report was written.
 
 ## Status-update evidence
 

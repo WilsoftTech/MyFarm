@@ -128,10 +128,11 @@ describe("season scope (D-P08-008)", () => {
 
 describe("dashboard filters", () => {
   const season = id();
-  it("defaults to accrual and accepts one season or a date range", () => {
+  it("defaults to accrual and accepts one season, all records, or all records within dates", () => {
     expect(dashboardQuerySchema.parse({})).toEqual({ basis: "ACCRUAL" });
     expect(dashboardQuerySchema.parse({ basis: "CASH", seasonId: season })).toEqual({ basis: "CASH", seasonId: season });
     expect(dashboardQuerySchema.parse({ from: "2027-01-01", to: "2027-12-31", seasonId: "" })).toEqual({ basis: "ACCRUAL", from: "2027-01-01", to: "2027-12-31" });
+    expect(dashboardQuerySchema.parse({ seasonId: "all", from: "2027-01-01", to: "" })).toEqual({ basis: "ACCRUAL", seasonId: "all", from: "2027-01-01" });
   });
   it.each([
     [{ seasonId: season, from: "2027-01-01" }], [{ seasonId: "not-an-id" }], [{ from: "2027-02-30" }], [{ from: "2027-03-01", to: "2027-02-01" }], [{ basis: "PROFIT" }],
