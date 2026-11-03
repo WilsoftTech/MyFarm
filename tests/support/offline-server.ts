@@ -21,7 +21,8 @@ export function offlineServer(port: number) {
       const running = child;
       child = null;
       if (!running) return;
-      await new Promise<void>(resolve => { running.once("exit", () => resolve()); running.kill(); });
+      // SIGKILL, as Windows always does: on Linux, next start's SIGTERM shutdown waits for connections an open page still holds.
+      if (running.exitCode === null && running.signalCode === null) await new Promise<void>(resolve => { running.once("exit", () => resolve()); running.kill("SIGKILL"); });
       for (let i = 0; i < 40; i++) {
         try { await fetch(baseURL + "/api/health"); } catch { return; }
         await new Promise(resolve => setTimeout(resolve, 100));
