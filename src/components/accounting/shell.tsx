@@ -12,6 +12,7 @@ export function AccountingShell({ farm, title, children }: { farm: { farmId: str
       <Link href={base} className="inline-flex min-h-12 items-center py-2 underline underline-offset-4">Money records</Link>
       <Link href={base + "/summary"} className="inline-flex min-h-12 items-center py-2 underline underline-offset-4">Summary</Link>
       <Link href={base + "/gross-margin"} className="inline-flex min-h-12 items-center py-2 underline underline-offset-4">Gross margin</Link>
+      <Link href={base + "/how-the-farm-is-doing"} className="inline-flex min-h-12 items-center py-2 underline underline-offset-4">How the farm is doing</Link>
       {(Object.keys(recordKindSlugs) as RecordKindSlug[]).map(slug => <Link key={slug} href={base + "/new/" + slug} className="inline-flex min-h-12 items-center py-2 underline underline-offset-4">{"Add " + recordKindLabels[recordKindSlugs[slug]].toLowerCase()}</Link>)}
     </nav>
     {children}

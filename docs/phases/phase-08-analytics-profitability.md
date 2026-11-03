@@ -2,11 +2,11 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - requirements, Q10, Q12 and Q17 against owner decisions.
-- Implementation status: PARTIALLY COMPLETE - 15.38% (2/13 verified tasks).
+- Implementation status: PARTIALLY COMPLETE - 23.08% (3/13 verified tasks).
 - Last reviewed: 2026-11-03 (Africa/Nairobi).
 - Related phase/task IDs: Phase 08; MYF-P08-T001 through MYF-P08-T013; D-P08-001 through D-P08-008.
-- Verified completed work: T001 dashboard rules; T002 authorized service and endpoint.
-- Remaining work/blockers: T003-T013 and all acceptance and exit gates. Labour and input cost groups need owner approval at T004.
+- Verified completed work: T001 dashboard rules; T002 authorized service and endpoint; T003 screen and AC001 locally.
+- Remaining work/blockers: T004-T013 and remaining acceptance and exit gates. Labour and input cost groups need owner approval at T004.
 - Evidence/report links: [Phase 8 start and T001](../reports/phase-08-start-2026-11-03.md); [Decisions](../DECISION-LOG.md#d-p08-001---phase-8-start-and-task-commits).
 <!-- MYFARM-STATUS-END -->
 
@@ -243,7 +243,7 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 
 - [x] MYF-P08-T001 complete with [evidence](../reports/phase-08-start-2026-11-03.md).
 - [x] MYF-P08-T002 complete with [evidence](../reports/phase-08-t002-2026-11-03.md).
-- [ ] MYF-P08-T003 complete with evidence.
+- [x] MYF-P08-T003 complete with [evidence](../reports/phase-08-t003-2026-11-03.md).
 - [ ] MYF-P08-T004 complete with evidence.
 - [ ] MYF-P08-T005 complete with evidence.
 - [ ] MYF-P08-T006 complete with evidence.

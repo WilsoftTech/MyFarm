@@ -94,6 +94,7 @@ export function OfflineApp() {
   const onChanged = useCallback(() => { void refresh(); }, [refresh]);
   return <section className="space-y-6"><div><p className="text-sm text-primary">Farm work without signal</p><h1 className="mt-2 text-3xl font-bold">Offline work</h1></div>
     <p role="status" className="rounded-xl border p-4 font-semibold">{online ? "You are connected." : "You are offline. Entries are saved on this phone until you reconnect."}</p>
+    <p>How the farm is doing needs a connection, because it adds up what MyFarm has received. Entries waiting on this phone are counted once they are sent.</p>
     {state.status === "loading" && <p role="status">Opening your saved work…</p>}
     {state.status === "no-account" && <p>Sign in while connected to get this phone ready for offline work. <a className="underline" href="/sign-in">Sign in</a></p>}
     {state.status === "blocked" && <p role="alert">This browser is not allowing MyFarm to store data, which can happen in private browsing. You can still use MyFarm while connected.</p>}
