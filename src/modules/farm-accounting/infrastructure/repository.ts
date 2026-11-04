@@ -4,7 +4,7 @@ import { FoundationError } from "@/modules/engineering-foundation/domain/errors"
 import { claimCommandReceipt } from "@/modules/engineering-foundation/infrastructure/command-receipts";
 import type { FarmScope } from "@/modules/enterprises-seasons/domain/production";
 import { productionAfter, requireProductionWriteAccess } from "@/modules/enterprises-seasons/infrastructure/production-access";
-import type { AccountingRecordView, FarmAccountingRepository, PaymentView, RecordPayment, RecordSale, RecordExpense, ReversalView, ReverseAccountingRecord } from "../contracts/accounting";
+import type { AccountingRecordView, FarmAccountingRepository, PaymentView, RecordPayment, RecordPurchase, RecordSale, RecordExpense, ReversalView, ReverseAccountingRecord } from "../contracts/accounting";
 import { assertAccountingRecord, assertPaymentAllocation, assertReversal, obligationBalance, OBLIGATION_KINDS, type AccountingRecordKind, type AccountingStatus, type AllocationRecord, type ObligationKind, type ObligationReference } from "../domain/accounting";
 import { categoryHistory } from "../domain/catalog";
 import { moneyString, moneyUnits } from "../domain/money";
@@ -21,7 +21,7 @@ async function lockObligations(tx: Prisma.TransactionClient, ids: readonly strin
 }
 
 const recordInclude = { reversal: true, category: { select: { id: true, kind: true, name: true, active: true } },
-  plot: { select: { name: true } }, enterprise: { select: { name: true } }, season: { select: { label: true } }, allocations: { include: { payment: { select: { status: true, paidOn: true, createdAt: true } } } } } satisfies Prisma.AccountingRecordInclude;
+  plot: { select: { name: true } }, enterprise: { select: { name: true } }, season: { select: { label: true } }, batch: { select: { batchLabel: true } }, allocations: { include: { payment: { select: { status: true, paidOn: true, createdAt: true } } } } } satisfies Prisma.AccountingRecordInclude;
 type RecordRow = Prisma.AccountingRecordGetPayload<{ include: typeof recordInclude }>;
 const paymentInclude = { reversal: true, allocations: true } satisfies Prisma.PaymentRecordInclude;
 type PaymentRow = Prisma.PaymentRecordGetPayload<{ include: typeof paymentInclude }>;
@@ -37,6 +37,7 @@ const recordView = (row: RecordRow): AccountingRecordView => ({
   recordId: row.id, tenantId: row.tenantId, farmId: row.farmId, kind: row.kind, categoryId: row.categoryId, categoryName: row.categoryName,
   category: categoryHistory(row, row.category),
   plotName: row.plot?.name ?? null, enterpriseName: row.enterprise?.name ?? null, seasonLabel: row.season?.label ?? null,
+  batchId: row.batchId, batchLabel: row.batch?.batchLabel ?? null,
   amount: money(row.amount), currency: row.currency, occurredOn: day(row.occurredOn), counterparty: row.counterparty, paymentMethodId: row.paymentMethodId,
   plotId: row.plotId, enterpriseId: row.enterpriseId, seasonId: row.seasonId, status: row.status, reversal: reversalView(row.reversal),
   balance: isObligation(row.kind) ? obligationBalance(obligation(row), allocations(row)) : null,
@@ -50,17 +51,31 @@ const paymentView = (row: PaymentRow): PaymentView => ({
   allocations: row.allocations.map(a => ({ obligationId: a.obligationId, amount: money(a.amount) })).sort((a, b) => a.obligationId.localeCompare(b.obligationId)),
   version: row.version, createdBy: row.createdBy, createdAt: row.createdAt.toISOString(), updatedAt: row.updatedAt.toISOString(),
 });
+type TransactionCommand = RecordExpense | RecordSale | RecordPurchase;
+const batchOf = (command: TransactionCommand) => "batchId" in command ? command.batchId : undefined;
+/**
+ * A cost on a batch belongs to that batch's enterprise, so the enterprise's gross margin stays whole. Normalized
+ * before the receipt check, so a retry compares like with like. Another farm's batch looks the same as a missing one.
+ */
+async function withBatchEnterprise<C extends TransactionCommand>(tx: Prisma.TransactionClient, scope: FarmScope, command: C): Promise<C> {
+  const batchId = batchOf(command);
+  if (!batchId) return command;
+  const batch = await tx.poultryBatch.findFirst({ where: { ...scoped(scope), id: batchId }, select: { enterpriseId: true } });
+  if (!batch) throw new FoundationError("FORBIDDEN");
+  if (command.enterpriseId && command.enterpriseId !== batch.enterpriseId) throw new FoundationError("INVALID_INPUT");
+  return { ...command, enterpriseId: batch.enterpriseId };
+}
 const record = (db: Reader, scope: FarmScope, id: string) => db.accountingRecord.findFirst({ where: { ...scoped(scope), id }, include: recordInclude });
 const payment = (db: Reader, scope: FarmScope, id: string) => db.paymentRecord.findFirst({ where: { ...scoped(scope), id }, include: paymentInclude });
 
 /** A retry replays only the identical normalized command by the same actor on the same farm. */
-function assertRecordReplay(row: RecordRow | null, kind: AccountingRecordKind, command: RecordExpense | RecordSale, actorId: string): AccountingRecordView {
+function assertRecordReplay(row: RecordRow | null, kind: AccountingRecordKind, command: TransactionCommand, actorId: string): AccountingRecordView {
   if (!row || row.createdBy !== actorId || row.kind !== kind) throw new FoundationError("CONFLICT");
   const result = recordView(row);
   const method = "paymentMethodId" in command ? command.paymentMethodId ?? null : null;
   if (result.categoryId !== command.categoryId || result.amount !== command.amount || result.currency !== command.currency || result.occurredOn !== command.occurredOn ||
     result.counterparty !== (command.counterparty ?? null) || result.paymentMethodId !== method || result.plotId !== (command.plotId ?? null) ||
-    result.enterpriseId !== (command.enterpriseId ?? null) || result.seasonId !== (command.seasonId ?? null)) throw new FoundationError("CONFLICT");
+    result.enterpriseId !== (command.enterpriseId ?? null) || result.seasonId !== (command.seasonId ?? null) || result.batchId !== (batchOf(command) ?? null)) throw new FoundationError("CONFLICT");
   return result;
 }
 function assertPaymentReplay(row: PaymentRow | null, command: RecordPayment, actorId: string): PaymentView {
@@ -98,8 +113,8 @@ export function farmAccountingRepository(db: PrismaClient): FarmAccountingReposi
     async payment(scope, id) { const row = await payment(db, scope, id); return row ? paymentView(row) : null; },
 
     recordTransaction: (scope, kind, input) => db.$transaction(async tx => {
-      const command = input as RecordExpense | RecordSale;
       await requireProductionWriteAccess(tx, scope);
+      const command = await withBatchEnterprise(tx, scope, input as TransactionCommand);
       const id = crypto.randomUUID();
       const replay = await claimCommandReceipt(tx, { actorId: scope.actorId, tenantId: scope.tenantId, requestId: command.requestId, action: "ACCOUNTING_" + kind + "_RECORDED", targetId: id });
       await requireProductionWriteAccess(tx, scope);
@@ -152,7 +167,7 @@ export function farmAccountingRepository(db: PrismaClient): FarmAccountingReposi
 }
 
 /** Shared transaction writer for single stock/financial source events. Caller owns receipt and commit. */
-export async function createAccountingRecord(tx: Prisma.TransactionClient, scope: import("@/modules/enterprises-seasons/contracts/production").ProductionWriteScope, kind: AccountingRecordKind, command: RecordExpense | RecordSale, id: string) {
+export async function createAccountingRecord(tx: Prisma.TransactionClient, scope: import("@/modules/enterprises-seasons/contracts/production").ProductionWriteScope, kind: AccountingRecordKind, command: TransactionCommand, id: string) {
   await requireProductionWriteAccess(tx, scope);
       const where = scoped(scope);
       const methodId = "paymentMethodId" in command ? command.paymentMethodId : undefined;
@@ -171,7 +186,7 @@ export async function createAccountingRecord(tx: Prisma.TransactionClient, scope
         where: { ...where, enterpriseId: enterprise.id, ...(command.plotId ? { plotId: command.plotId } : {}), ...(command.seasonId ? { seasonId: command.seasonId } : {}) },
         select: { id: true, tenantId: true, farmId: true, enterpriseId: true, seasonId: true, plotId: true }, take: 1,
       })).map(cycle => ({ cycleId: cycle.id, tenantId: cycle.tenantId, farmId: cycle.farmId, enterpriseId: cycle.enterpriseId, seasonId: cycle.seasonId, plotId: cycle.plotId })) : [];
-      assertAccountingRecord(scope, { ...command, kind, paymentMethodId: methodId }, {
+      assertAccountingRecord(scope, { ...command, kind, paymentMethodId: methodId, batchId: batchOf(command) }, {
         category: { categoryId: category.id, kind: category.kind, active: category.active },
         paymentMethod: method ? { paymentMethodId: method.id, active: method.active } : undefined,
         plot: plot ? { ...where, plotId: plot.id } : undefined,
@@ -181,7 +196,7 @@ export async function createAccountingRecord(tx: Prisma.TransactionClient, scope
       });
       const row = await tx.accountingRecord.create({ data: {
         id, ...where, kind, categoryId: category.id, categoryName: category.name, amount: command.amount, currency: command.currency, occurredOn: date(command.occurredOn),
-        counterparty: command.counterparty, paymentMethodId: methodId, plotId: command.plotId, enterpriseId: command.enterpriseId, seasonId: command.seasonId, createdBy: scope.actorId,
+        counterparty: command.counterparty, paymentMethodId: methodId, plotId: command.plotId, enterpriseId: command.enterpriseId, seasonId: command.seasonId, batchId: batchOf(command), createdBy: scope.actorId,
       }, include: recordInclude });
       return recordView(row);
 }

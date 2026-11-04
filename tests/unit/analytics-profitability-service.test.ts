@@ -23,7 +23,8 @@ function fixture() {
     seasons: vi.fn(async () => [season(closed, "CLOSED", "2027-06-01"), season(active, "ACTIVE", "2027-03-01")]),
     season: vi.fn(async () => null),
   };
-  return { service: new FarmProfitabilityService(authorization, farms, reports, seasons, () => now), authorization, farms, reports, seasons };
+  const facts = { facts: vi.fn(async () => ({ cycles: [], enterprises: [], batches: [], items: [], costGroups: [] })) };
+  return { service: new FarmProfitabilityService(authorization, farms, reports, seasons, facts, () => now), authorization, farms, reports, seasons, facts };
 }
 
 describe("farm dashboard service (P08-T002)", () => {
@@ -52,6 +53,22 @@ describe("farm dashboard service (P08-T002)", () => {
       expect(reports.reportSources).not.toHaveBeenCalled();
       expect(seasons.seasons).not.toHaveBeenCalled();
     }
+  });
+  it("metrics authorizes and validates before reading anything, and uses the same scope", async () => {
+    for (const reason of ["unauthenticated", "farm", "role"]) {
+      const { service, authorization, farms, reports, facts } = fixture();
+      if (reason === "unauthenticated") vi.mocked(authorization.account).mockRejectedValue(new FoundationError("UNAUTHENTICATED"));
+      if (reason === "farm") vi.mocked(farms.farmScopeForMember).mockResolvedValue(null);
+      if (reason === "role") vi.mocked(authorization.scope).mockRejectedValue(new FoundationError("FORBIDDEN"));
+      await expect(service.metrics(farmId, { basis: "NET" })).rejects.toMatchObject({ code: reason === "unauthenticated" ? "UNAUTHENTICATED" : "FORBIDDEN" });
+      expect(reports.reportSources).not.toHaveBeenCalled();
+      expect(facts.facts).not.toHaveBeenCalled();
+    }
+    const { service, facts } = fixture();
+    await service.metrics(farmId);
+    expect(facts.facts).toHaveBeenCalledWith(scope, active);
+    await service.metrics(farmId, { seasonId: "all" });
+    expect(facts.facts).toHaveBeenLastCalledWith(scope, null);
   });
   it("refuses a season it cannot find without reading any money", async () => {
     const { service, reports } = fixture();

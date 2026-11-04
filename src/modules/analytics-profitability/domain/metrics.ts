@@ -1,7 +1,8 @@
+import { FoundationError } from "@/modules/engineering-foundation/domain/errors";
 import type { RecognitionEvent } from "@/modules/farm-accounting/domain/accounting";
 import { moneyString, moneyUnits } from "@/modules/farm-accounting/domain/money";
 import type { AreaUnit } from "@/modules/farmer-registry/domain/rules";
-import { quantityString, quantityUnits } from "@/modules/harvest-inventory/domain/harvest";
+import { quantityString } from "@/modules/harvest-inventory/domain/harvest";
 import { available, percentString, ratioString, unavailable, type MetricValue } from "./metric";
 
 /**
@@ -17,6 +18,13 @@ const MONEY_SCALE = 10_000n, QUANTITY_SCALE = 1_000_000n, HUNDREDTHS = 100n;
 const AREA_SIZE: Record<AreaUnit, bigint> = { ACRE: 40_468_564_224n, HECTARE: 100_000_000_000n, SQUARE_METRE: 10_000_000n };
 const ACRE_SIZE = AREA_SIZE.ACRE * QUANTITY_SCALE;
 
+
+/** Totals can pass the limits of one stored quantity, so facts keep their exact digits without that limit. */
+function factUnits(value: string): bigint {
+  if (!/^\d{1,100}(?:\.\d{1,6})?$/.test(value)) throw new FoundationError("INVALID_INPUT");
+  const [whole, fraction = ""] = value.split(".");
+  return BigInt(whole) * QUANTITY_SCALE + BigInt(fraction.padEnd(6, "0"));
+}
 
 interface Sums { revenue: bigint; costs: bigint }
 function sumsByCurrency(events: readonly RecognitionEvent[]): Map<string, Sums> {
@@ -61,9 +69,9 @@ export function cropMetrics(cycles: readonly CropCycleFacts[], events: readonly 
   const byEnterprise = new Map<string, CropCycleFacts[]>();
   for (const cycle of cycles) byEnterprise.set(cycle.enterpriseId, [...(byEnterprise.get(cycle.enterpriseId) ?? []), cycle]);
   return [...byEnterprise.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([enterpriseId, rows]) => {
-    const area = rows.reduce((total, row) => total + quantityUnits(row.areaPlanted) * AREA_SIZE[row.areaUnit], 0n);
-    const harvested = rows.reduce((total, row) => total + quantityUnits(row.harvestedKg), 0n);
-    const lost = rows.reduce((total, row) => total + quantityUnits(row.lostKg), 0n);
+    const area = rows.reduce((total, row) => total + factUnits(row.areaPlanted) * AREA_SIZE[row.areaUnit], 0n);
+    const harvested = rows.reduce((total, row) => total + factUnits(row.harvestedKg), 0n);
+    const lost = rows.reduce((total, row) => total + factUnits(row.lostKg), 0n);
     const kept = harvested > lost ? harvested - lost : 0n;
     const crops = new Set(rows.map(row => row.cropId));
     const blocked = view === "DATE_RANGE" ? "DATE_RANGE" as const : crops.size > 1 ? "MORE_THAN_ONE_CROP" as const : null;
@@ -108,7 +116,7 @@ export interface BatchMetrics { batchId: string; label: string; enterpriseId: st
 /** Whole-life figures for each batch; `events` must not be narrowed by season or dates, and carry each record's batch. */
 export function batchMetrics(batches: readonly BatchFacts[], events: readonly RecognitionEvent[]): BatchMetrics[] {
   return batches.map(batch => {
-    const started = BigInt(batch.startingQuantity) * QUANTITY_SCALE + quantityUnits(batch.birdsPurchased), deaths = quantityUnits(batch.deaths);
+    const started = BigInt(batch.startingQuantity) * QUANTITY_SCALE + factUnits(batch.birdsPurchased), deaths = factUnits(batch.deaths);
     const notLinked = new Map<string, bigint>();
     for (const event of events) if (event.enterpriseId === batch.enterpriseId && event.effect === "COST" && !event.batchId) notLinked.set(event.currency, (notLinked.get(event.currency) ?? 0n) + moneyUnits(event.amount));
     const linked = sumsByCurrency(events.filter(event => event.batchId === batch.batchId));
@@ -153,12 +161,12 @@ export interface StockValue { items: StockValueLine[]; totals: { currency: strin
  */
 export function stockValue(items: readonly StockItemFacts[]): StockValue {
   const totals = new Map<string, bigint>();
-  const lines = items.filter(item => quantityUnits(item.quantity) > 0n).map((item): StockValueLine => {
-    const sale = item.lastSale, sold = sale ? quantityUnits(sale.quantity) : 0n;
+  const lines = items.filter(item => factUnits(item.quantity) > 0n).map((item): StockValueLine => {
+    const sale = item.lastSale, sold = sale ? factUnits(sale.quantity) : 0n;
     if (!sale || sold === 0n) return { itemId: item.itemId, name: item.name, unit: item.unit, quantity: item.quantity, pricePerUnit: unavailable("NEVER_SOLD"), estimate: unavailable("NEVER_SOLD"), currency: null, soldOn: null };
     const amount = moneyUnits(sale.amount), divisor = 2n * sold * MONEY_SCALE;
     // In exact hundredths, so a very large estimate cannot pass the limits of a stored amount.
-    const hundredths = (amount * quantityUnits(item.quantity) * HUNDREDTHS * 2n + sold * MONEY_SCALE) / divisor;
+    const hundredths = (amount * factUnits(item.quantity) * HUNDREDTHS * 2n + sold * MONEY_SCALE) / divisor;
     totals.set(sale.currency, (totals.get(sale.currency) ?? 0n) + hundredths);
     return { itemId: item.itemId, name: item.name, unit: item.unit, quantity: item.quantity, pricePerUnit: available(ratioString(amount * QUANTITY_SCALE, sold * MONEY_SCALE, MONEY_PER_UNIT_DECIMALS)), estimate: available(ratioString(hundredths, HUNDREDTHS, MONEY_PER_UNIT_DECIMALS)), currency: sale.currency, soldOn: sale.soldOn };
   }).sort((a, b) => a.name.localeCompare(b.name) || a.itemId.localeCompare(b.itemId));

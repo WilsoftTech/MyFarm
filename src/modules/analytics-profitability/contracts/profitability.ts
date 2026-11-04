@@ -3,7 +3,8 @@ import { idSchema } from "@/modules/engineering-foundation/contracts/identity";
 import { reportDate } from "@/modules/farm-accounting/contracts/accounting";
 import { RECOGNITION_BASES } from "@/modules/farm-accounting/domain/accounting";
 import type { FarmScope } from "@/modules/enterprises-seasons/domain/production";
-import type { CurrencyDashboard, UnlinkedAmounts } from "../domain/profitability";
+import type { BatchFacts, BatchMetrics, CostGroup, CostGroupTotals, CropCycleFacts, CropMetrics, StockItemFacts, StockValue } from "../domain/metrics";
+import type { CurrencyDashboard, EnterpriseName, UnlinkedAmounts } from "../domain/profitability";
 
 /** The filter value for "not one season": every record, or the chosen dates. */
 export const ALL_RECORDS = "all";
@@ -44,3 +45,23 @@ export interface DashboardSeasons {
   seasons(scope: FarmScope): Promise<DashboardSeason[]>;
   season(scope: FarmScope, seasonId: string): Promise<DashboardSeason | null>;
 }
+
+/** R002 figures for the same view as the dashboard. Batch figures cover a batch's whole life, and stock is as of now. */
+export interface MetricsView extends Pick<DashboardView, "basis" | "season" | "from" | "to" | "asOf"> {
+  crops: (CropMetrics & { enterpriseName: string })[];
+  batches: BatchMetrics[];
+  costGroups: CostGroupTotals[];
+  stock: StockValue;
+}
+/** Everything the formulas divide by, read fresh. Reversed harvests, losses, deaths, purchases and sales are already left out. */
+export interface MetricFacts {
+  cycles: CropCycleFacts[];
+  enterprises: EnterpriseName[];
+  batches: BatchFacts[];
+  items: StockItemFacts[];
+  costGroups: { categoryId: string; group: CostGroup }[];
+}
+/** Limits on what one screen reads; a farm is not expected to reach them. */
+export const MAX_METRIC_BATCHES = 100, MAX_METRIC_ITEMS = 200;
+/** Read port. Constrains tenant AND farm. Cycles are of one season, or of every season when none is given. */
+export interface MetricFactsRepository { facts(scope: FarmScope, seasonId: string | null): Promise<MetricFacts> }

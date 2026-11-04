@@ -11,11 +11,12 @@ const scoped = (scope: FarmScope) => ({ tenantId: scope.tenantId, farmId: scope.
 const money = (value: Prisma.Decimal) => moneyString(moneyUnits(value.toFixed(4)));
 const day = (value: Date) => value.toISOString().slice(0, 10);
 const dates = ({ from, to }: ReportQuery) => from || to ? { ...(from ? { gte: new Date(from + "T00:00:00.000Z") } : {}), ...(to ? { lte: new Date(to + "T00:00:00.000Z") } : {}) } : undefined;
-const recordSelect = { id: true, kind: true, amount: true, currency: true, occurredOn: true, status: true, enterpriseId: true, seasonId: true, categoryId: true, categoryName: true } satisfies Prisma.AccountingRecordSelect;
+const recordSelect = { id: true, kind: true, amount: true, currency: true, occurredOn: true, status: true, enterpriseId: true, seasonId: true, batchId: true, categoryId: true, categoryName: true, productionEvent: { select: { batchId: true } }, stockOperation: { select: { item: { select: { batchId: true } } } } } satisfies Prisma.AccountingRecordSelect;
 type RecordRow = Prisma.AccountingRecordGetPayload<{ select: typeof recordSelect }>;
 const recognition = (row: RecordRow): RecognitionRecord => ({
   recordId: row.id, kind: row.kind, amount: money(row.amount), currency: row.currency, occurredOn: day(row.occurredOn), status: row.status,
-  enterpriseId: row.enterpriseId, seasonId: row.seasonId, categoryId: row.categoryId, categoryName: row.categoryName,
+  enterpriseId: row.enterpriseId, // A cost names its batch; a sale reaches its batch through its stock event (D-P08-003).
+  batchId: row.batchId ?? row.productionEvent?.batchId ?? row.stockOperation?.item?.batchId ?? null, seasonId: row.seasonId, categoryId: row.categoryId, categoryName: row.categoryName,
 });
 
 /**

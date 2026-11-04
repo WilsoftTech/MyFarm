@@ -16,6 +16,7 @@ import { FarmReportService } from "@/modules/farm-accounting/application/reporti
 import { farmAccountingRepository } from "@/modules/farm-accounting/infrastructure/repository";
 import { farmReportRepository } from "@/modules/farm-accounting/infrastructure/report-repository";
 import { FarmProfitabilityService } from "@/modules/analytics-profitability/application/profitability";
+import { metricFactsRepository } from "@/modules/analytics-profitability/infrastructure/metric-facts-repository";
 import { dashboardSeasonRepository } from "@/modules/analytics-profitability/infrastructure/repository";
 import { applyProviderSql, runSqlFile, supabaseEmulation } from "../support/provisioning";
 
@@ -34,7 +35,7 @@ const cycles = (who: Who) => new CropCycleService(auth(who), registryRepository(
 const accounts = (who: Who = "a") => new FarmAccountingService(auth(who), registryRepository(runtime), farmAccountingRepository(runtime));
 const now = new Date("2027-12-31T09:00:00.000Z");
 const reports = (who: Who = "a") => new FarmReportService(auth(who), registryRepository(runtime), farmReportRepository(runtime), () => now);
-const dashboards = (who: Who = "a") => new FarmProfitabilityService(auth(who), registryRepository(runtime), farmReportRepository(runtime), dashboardSeasonRepository(runtime), () => now);
+const dashboards = (who: Who = "a") => new FarmProfitabilityService(auth(who), registryRepository(runtime), farmReportRepository(runtime), dashboardSeasonRepository(runtime), metricFactsRepository(runtime), () => now);
 const maizeCrop = "f4030005-0000-4000-8000-000000000001";
 const seed = { feed: "f4040002-0000-4000-8000-000000000112", fertilizer: "f4040002-0000-4000-8000-000000000111", rent: "f4040002-0000-4000-8000-000000000105", cropSales: "f4040002-0000-4000-8000-000000000204", eggSales: "f4040002-0000-4000-8000-000000000202", otherIncome: "f4040002-0000-4000-8000-000000000201" };
 let tenantA: string, tenantB: string, farm: string, empty: string, farmB: string, maize: string, bananas: string, poultry: string, season: string, otherSeason: string, closedSeason: string, foreignSeason: string, plot: string;

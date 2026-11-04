@@ -30,7 +30,9 @@ export const DEFAULT_RECOGNITION_BASIS: RecognitionBasis = "ACCRUAL";
 export const MAX_PAYMENT_ALLOCATIONS = 50;
 
 /** Optional analytical links; the farm itself is always the owner. Activity links arrive in Phase 6. */
-export interface AccountingLinks { plotId?: string; enterpriseId?: string; seasonId?: string }
+export interface AccountingLinks { plotId?: string; enterpriseId?: string; seasonId?: string; batchId?: string }
+/** Only costs name a batch; a sale reaches its batch through its stock event (D-P08-003). */
+export const BATCH_LINK_KINDS: readonly AccountingRecordKind[] = ["EXPENSE", "PURCHASE"];
 export interface AccountingRecordFields extends AccountingLinks, Money {
   kind: AccountingRecordKind;
   categoryId: string;
@@ -102,6 +104,7 @@ function assertPaymentMethod(id: string | undefined, method: PaymentMethodRefere
 export function assertAccountingRecord(scope: FarmScope, fields: AccountingRecordFields, parents: AccountingRecordParents): void {
   if (!ACCOUNTING_RECORD_KINDS.includes(fields.kind)) throw new FoundationError("INVALID_INPUT");
   assertMoney(fields);
+  if (fields.batchId !== undefined && !BATCH_LINK_KINDS.includes(fields.kind)) throw new FoundationError("INVALID_INPUT");
   if (!isCalendarDate(fields.occurredOn)) throw new FoundationError("INVALID_INPUT");
   if (parents.category.categoryId !== fields.categoryId || parents.category.kind !== RECORD_CATEGORY_KIND[fields.kind]) throw new FoundationError("INVALID_INPUT");
   if (!parents.category.active) throw new FoundationError("CONFLICT");

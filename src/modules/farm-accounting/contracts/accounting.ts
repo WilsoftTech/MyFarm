@@ -35,11 +35,12 @@ const recordBase = accountingLinksSchema.extend({
   counterparty: optionalText(120),
 });
 /** Income and expenses are settled when recorded, so they may name how they were paid. */
-export const recordExpenseSchema = recordBase.extend({ paymentMethodId: optionalId }).strict();
-export const recordIncomeSchema = recordExpenseSchema;
+export const recordIncomeSchema = recordBase.extend({ paymentMethodId: optionalId }).strict();
+/** A cost may also name its poultry batch (D-P08-003). Offline entries saved before this field simply lack it. */
+export const recordExpenseSchema = recordBase.extend({ paymentMethodId: optionalId, batchId: optionalId }).strict();
 /** Sales and purchases open a receivable/payable; payments are recorded separately and settle it. */
 export const recordSaleSchema = recordBase.strict();
-export const recordPurchaseSchema = recordSaleSchema;
+export const recordPurchaseSchema = recordBase.extend({ batchId: optionalId }).strict();
 
 export const paymentAllocationSchema = z.object({ obligationId: idSchema, amount: amountSchema }).strict();
 export const recordPaymentSchema = z.object({
@@ -145,6 +146,9 @@ export interface AccountingRecordView extends FarmScope, ProductionRecord {
   plotId: string | null;
   enterpriseId: string | null;
   seasonId: string | null;
+  batchId: string | null;
+  /** Current label of the linked batch, for display only. */
+  batchLabel: string | null;
   status: AccountingStatus;
   reversal: ReversalView | null;
   /** Receivable (SALE) or payable (PURCHASE) derived from allocations; null for income/expense. */

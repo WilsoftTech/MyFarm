@@ -5,8 +5,8 @@
 - Implementation status: REFERENCE ONLY - N/A (navigation and verified progress record).
 - Last reviewed: 2026-11-04 (Africa/Nairobi).
 - Related phase/task IDs: MYF-P08-T001; D-P07-009; D-P08-001 through D-P08-008.
-- Verified completed work: Phase 7 accepted with conditions (D-P07-009); hosted CI passes at 0298f20. Phase 8 T001-T004 (4/13): dashboard screen, AC001 verified locally, approved formula catalog with metric rules and additive migration.
-- Remaining work/blockers: Phase 8 T005-T013. P7-C1 and P7-C3 to P7-C6 stay open. Migration 202611040001 is not applied to hosted. Pushes and hosted changes for Phase 8 are not authorized.
+- Verified completed work: Phase 7 accepted with conditions (D-P07-009); hosted CI passes at 0298f20. Phase 8 T001-T005 (5/13): metrics service and endpoint, server-side batch link; AC001 verified locally.
+- Remaining work/blockers: Phase 8 T006-T013. P7-C1 and P7-C3 to P7-C6 stay open. Migration 202611040001 is not applied to hosted. Pushes and hosted changes for Phase 8 are not authorized.
 - Evidence/report links: [Phase 8 start and T001](reports/phase-08-start-2026-11-03.md); [Project status](PROJECT-STATUS.md).
 <!-- MYFARM-STATUS-END -->
 
