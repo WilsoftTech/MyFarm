@@ -5,6 +5,7 @@ import { loadPage } from "@/app/farmer/guard";
 import { AccountingShell } from "@/components/accounting/shell";
 import { ReportFilters, ReportLabelsNote } from "@/components/accounting/report-parts";
 import { FarmDashboard } from "@/components/analytics/dashboard";
+import { FarmMetrics } from "@/components/analytics/metrics";
 import { Select } from "@/components/ui/select";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "How the farm is doing" };
@@ -14,7 +15,8 @@ export default async function HowTheFarmIsDoingPage({ params, searchParams }: { 
   const farm = await loadPage(() => productionService().farmContext(farmId));
   const input = { basis: search.basis, seasonId: search.seasonId, from: search.from, to: search.to };
   const valid = dashboardQuerySchema.safeParse(Object.fromEntries(Object.entries(input).filter(([, value]) => value !== undefined)));
-  const view = await loadPage(() => farmProfitabilityService().dashboard(farmId, valid.success ? valid.data : {}));
+  const filters = valid.success ? valid.data : {};
+  const [view, metrics] = await loadPage(() => Promise.all([farmProfitabilityService().dashboard(farmId, filters), farmProfitabilityService().metrics(farmId, filters)]));
   const base = "/farms/" + farm.farmId + "/accounting";
   return <AccountingShell farm={farm} title="How the farm is doing">
     <p className="mb-5 max-w-3xl leading-7">This adds up the money records on this farm. It does not include wear on tools and equipment or the cost of loans, because MyFarm does not record those yet, so it is not your full profit. Stock you have not sold is not counted.</p>
@@ -28,5 +30,6 @@ export default async function HowTheFarmIsDoingPage({ params, searchParams }: { 
     <p className="mb-2 leading-7">{view.season ? "Showing season " + view.season.label + ": only records linked to it." : "Showing records from every season."}</p>
     <ReportLabelsNote labels={view} />
     <FarmDashboard view={view} moneyPath={base} />
+    <FarmMetrics view={metrics} />
   </AccountingShell>;
 }

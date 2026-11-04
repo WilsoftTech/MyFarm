@@ -47,6 +47,7 @@ async function sourceFarm(context: BrowserContext) {
 const figure = (page: Page, label: string) => page.locator("dt", { hasText: new RegExp("^" + label + "$") }).first().locator("+ dd");
 test.beforeEach(async ({ context }) => {
   fixtures = readProductionBrowserFixtures();
+  await clearInventoryBrowser(fixtures);
   for (const table of ["AccountingReversal", "PaymentAllocation", "PaymentRecord", "AccountingRecord", "CropCycle", "PoultryBatch", "Enterprise", "Season", "Plot"]) await query(`DELETE FROM "${table}" WHERE "tenantId" = ANY($1::uuid[])`, [Object.values(fixtures.tenants)]);
   await query('UPDATE auth.sessions SET not_after=NULL WHERE id=ANY($1::uuid[])', [Object.values(fixtures.sessions)]);
   await query('UPDATE "FarmMember" SET status=\'ACTIVE\' WHERE "userId"=$1', [fixtures.users.a]);
@@ -189,4 +190,137 @@ test("D-P08-008 with no connection it points to offline work, and unsent entries
     await expect(page.getByText("All your entries have been sent.")).toBeVisible({ timeout: 20_000 });
     expect(BigInt(await spent()) - (before === "none" ? 0n : BigInt(before))).toBe(878787n);
   } finally { await server.stop(); await clearInventoryBrowser(f); }
+});
+
+const metric = (scope: Page | ReturnType<Page["locator"]>, label: string) => scope.locator("dt", { hasText: label }).first().locator("+ dd");
+const animal = "f4030008-0000-4000-8000-000000000004";
+async function batch(context: BrowserContext, name: string, startingQuantity = 100) {
+  const enterpriseId = await enterprise(context, name + " flock", "POULTRY");
+  const created = await create(context, "poultry-batches", { enterpriseId, animalTypeId: animal, batchLabel: name, startingQuantity, acquisitionDate: "2027-03-01", purpose: "EGGS" }, z.object({ batch: z.object({ batchId: z.uuid() }) }));
+  return { enterpriseId, batchId: created.batch.batchId };
+}
+const store = async (context: BrowserContext) => (await create(context, "storage-locations", { name: "Store " + id().slice(0, 8) }, z.object({ location: z.object({ storageLocationId: z.uuid() }) }))).location.storageLocationId;
+
+test("MYF-P08-AC002 the approved crop and bird examples show on screen, with stock as an estimate", async ({ page, context }) => {
+  const s = await season(context, "2027A"), hill = await plot(context), maize = await enterprise(context, "Maize", "CROP"), storageLocationId = await store(context);
+  const cycle = await create(context, "crop-cycles", { enterpriseId: maize, seasonId: s, plotId: hill, cropId: seed.maize, areaPlanted: "3", areaUnit: "ACRE", plantingDate: "2027-03-02" }, z.object({ cycle: z.object({ cycleId: z.uuid() }) }));
+  await money(context, "expenses", seed.fertilizer, "2100000", "2027-03-10", { enterpriseId: maize, seasonId: s });
+  const harvest = await create(context, "harvests", { cropCycleId: cycle.cycle.cycleId, cropId: seed.maize, plotId: hill, storageLocationId, harvestDate: "2027-07-01", quantity: "4000", unit: "KG", lossQuantity: "250" }, z.object({ harvest: z.object({ itemId: z.uuid() }) }));
+  const flock = await batch(context, "Batch 1");
+  for (const [type, quantity] of [["PURCHASE", "5"], ["MORTALITY", "3"]]) await create(context, "poultry-production", { batchId: flock.batchId, locationId: storageLocationId, type, quantity, unit: "BIRD", occurredOn: "2027-04-01" }, z.object({}).loose());
+  await money(context, "expenses", seed.feed, "525000", "2027-04-02", { batchId: flock.batchId });
+
+  await page.goto(url(fixtures.farms.a));
+  const crop = page.getByRole("list", { name: "Crop figures" }).getByRole("listitem");
+  await expect(crop.getByRole("heading")).toHaveText("Maize");
+  await expect(crop).toContainText("3 acres");
+  await expect(crop).toContainText("So far");
+  await expect(metric(crop, "Kept after loss")).toHaveText("3,750 kg");
+  await expect(metric(crop, "Yield per acre")).toHaveText("1,333.33 kg");
+  await expect(metric(crop, "Cost per acre")).toHaveText("UGX 700,000");
+  await expect(metric(crop, "Cost per kg, the price to break even")).toHaveText("UGX 560");
+  const bird = page.getByRole("list", { name: "Batch figures" }).getByRole("listitem");
+  await expect(metric(bird, "Birds started")).toHaveText("105");
+  await expect(metric(bird, "Mortality rate")).toHaveText("2.9%");
+  await expect(metric(bird, "Cost per bird")).toHaveText("UGX 5,000");
+  await expect(page.getByRole("list", { name: "Stock value" })).toContainText("Not available: not sold yet.");
+  const before = await figure(page, "Recorded surplus").textContent();
+
+  await create(context, "stock-operations", { itemId: harvest.harvest.itemId, locationId: storageLocationId, type: "SALE", quantity: "100", unit: "KG", occurredOn: "2027-08-01", reason: "Sold", sale: { categoryId: seed.cropSales, amount: "120000", currency: "UGX" } }, z.object({}).loose());
+  await page.reload();
+  const line = page.getByRole("list", { name: "Stock value" }).getByRole("listitem").filter({ hasText: "3,650 kg in stock" });
+  await expect(metric(line, "Estimated value")).toHaveText("UGX 4,380,000");
+  await expect(line).toContainText("2027-08-01");
+  // Only the 120,000 sale itself moves the surplus; the unsold stock's estimate does not.
+  expect(before).toBe("UGX -2,100,000");
+  await expect(figure(page, "Recorded surplus")).toHaveText("UGX -1,980,000");
+  await noSideScroll(page);
+});
+
+test("D-P08-010 a second crop and a date range each say why there is no per-acre figure", async ({ page, context }) => {
+  const s = await season(context, "2027A"), hill = await plot(context), mixed = await enterprise(context, "Vegetables", "CROP");
+  await create(context, "crop-cycles", { enterpriseId: mixed, seasonId: s, plotId: hill, cropId: seed.maize, areaPlanted: "1", areaUnit: "ACRE", plantingDate: "2027-03-02" }, z.object({}).loose());
+  await money(context, "expenses", seed.fertilizer, "1000", "2027-03-10", { enterpriseId: mixed, seasonId: s });
+  await page.goto(url(fixtures.farms.a));
+  const crop = page.getByRole("list", { name: "Crop figures" }).getByRole("listitem");
+  await expect(metric(crop, "Cost per kg, the price to break even")).toContainText("Not available: no harvest to count yet.");
+  await expect(metric(crop, "Cost per acre")).toHaveText("UGX 1,000");
+  await create(context, "crop-cycles", { enterpriseId: mixed, seasonId: s, plotId: hill, cropId: "f4030005-0000-4000-8000-000000000002", areaPlanted: "1", areaUnit: "ACRE", plantingDate: "2027-03-02" }, z.object({}).loose());
+  await page.reload();
+  await expect(metric(crop, "Cost per acre")).toContainText("Not available: this enterprise has more than one crop.");
+  await expect(figure(page, "Money spent")).toHaveText("UGX 1,000");
+  await page.goto(url(fixtures.farms.a, "?seasonId=all&from=2027-01-01&to=2027-12-31"));
+  await expect(metric(crop, "Cost per acre")).toContainText("Not available for chosen dates.");
+  await noSideScroll(page);
+});
+
+test("D-P08-003 a purchase names its batch on the form, and unlinked costs are called out", async ({ page, context }) => {
+  const one = await batch(context, "Batch 1", 10), farm = fixtures.farms.a;
+  await money(context, "expenses", seed.feed, "4000", "2027-04-01", { enterpriseId: one.enterpriseId });
+  await page.goto(`/farms/${farm}/accounting/new/purchase`);
+  await page.getByLabel("Category", { exact: true }).selectOption({ label: "Feed" });
+  await page.getByLabel("Amount", { exact: true }).fill("50000");
+  await page.getByLabel("Date", { exact: true }).fill("2027-04-02");
+  await page.getByLabel(/Poultry batch/).selectOption({ label: "Batch 1" });
+  await page.getByRole("button", { name: "Save purchase" }).click();
+  await expect(page.getByRole("heading", { name: "Purchase: UGX 50,000" })).toBeVisible();
+  await expect(page.locator("dt", { hasText: "Poultry batch" }).locator("+ dd")).toHaveText("Batch 1");
+  await expect(page.locator("dt", { hasText: "Enterprise" }).locator("+ dd")).toHaveText("Batch 1 flock");
+
+  await page.goto(url(farm));
+  const bird = page.getByRole("list", { name: "Batch figures" }).getByRole("listitem");
+  await expect(metric(bird, "Cost per bird")).toHaveText("UGX 5,000");
+  await expect(bird).toContainText("UGX 4,000 of this enterprise's costs are not linked to a batch, so cost per bird may be too low.");
+});
+
+test("an expense with no batch keeps working, and income has no batch field", async ({ page }) => {
+  const farm = fixtures.farms.a;
+  await page.goto(`/farms/${farm}/accounting/new/income`);
+  await expect(page.getByRole("button", { name: "Save other income" })).toBeVisible();
+  await expect(page.getByLabel(/Poultry batch/)).toHaveCount(0);
+  await page.goto(`/farms/${farm}/accounting/new/expense`);
+  await page.getByLabel("Category", { exact: true }).selectOption({ label: "Feed" });
+  await page.getByLabel("Amount", { exact: true }).fill("700");
+  await page.getByLabel("Date", { exact: true }).fill("2027-04-02");
+  await page.getByRole("button", { name: "Save expense" }).click();
+  await expect(page.getByRole("heading", { name: "Expense: UGX 700" })).toBeVisible();
+  await expect(page.locator("dt", { hasText: "Poultry batch" }).locator("+ dd")).toHaveText("Not linked");
+});
+
+test("D-P08-003 an expense saved offline with a batch sends once and counts for that batch", async ({ page, context }) => {
+  test.setTimeout(120_000);
+  const one = await batch(context, "Offline batch", 10);
+  const f = await prepareInventoryBrowser(), server = offlineServer(3103), base = server.baseURL, farm = f.farms.a;
+  await server.start();
+  try {
+    await prepared(context, page, base, f);
+    await openOffline(page, base, farm);
+    await server.stop();
+    await page.getByRole("button", { name: "Record expense" }).click();
+    await page.getByLabel("What was it for?", { exact: true }).selectOption({ index: 1 });
+    await page.getByLabel("Amount", { exact: true }).fill("20000");
+    await page.getByLabel(/Poultry batch/).selectOption({ label: "Offline batch" });
+    await page.getByRole("button", { name: "Save expense" }).click();
+    await expect(page.getByText("Saved on this phone. It will send when you reconnect.")).toBeVisible();
+    await server.start();
+    await page.getByRole("button", { name: "Send now" }).click();
+    await expect(page.getByText("All your entries have been sent.")).toBeVisible({ timeout: 20_000 });
+    const response = await context.request.get(`${base}/api/v1/farms/${farm}/profitability/metrics`);
+    expect(response.status()).toBe(200);
+    const body = z.object({ metrics: z.object({ batches: z.array(z.object({ batchId: z.string(), currencies: z.array(z.object({ costs: z.string(), costPerBird: z.object({ value: z.string() }) })) })) }) }).parse(await response.json());
+    expect(body.metrics.batches.find(row => row.batchId === one.batchId)?.currencies[0]).toMatchObject({ costs: "20000", costPerBird: { value: "2000" } });
+  } finally { await server.stop(); await clearInventoryBrowser(f); }
+});
+
+test("the metrics endpoint denies another farmer, a guessed season and an ended session", async ({ context }) => {
+  const farm = fixtures.farms.a, api = (query = "") => context.request.get(`/api/v1/farms/${farm}/profitability/metrics${query}`);
+  const own = await api();
+  expect(own.status()).toBe(200);
+  expect(own.headers()["cache-control"]).toContain("no-store");
+  expect((await api(`?seasonId=${id()}`)).status()).toBe(403);
+  expect((await api(`?tenantId=${id()}`)).status()).toBe(400);
+  for (const who of ["b", "admin"] as const) { await identity(context, who); expect((await api()).status()).toBe(403); }
+  await identity(context, "a");
+  await query("UPDATE auth.sessions SET not_after=now() - interval '1 hour' WHERE id=$1", [fixtures.sessions.a]);
+  expect((await api()).status()).toBe(401);
 });

@@ -34,6 +34,7 @@ export default async function AccountingRecordPage({ params, searchParams }: { p
       <div><dt className="text-sm text-foreground/70">Enterprise</dt><dd className="mt-1 break-words font-semibold">{row.enterpriseId ? <Link className="underline" href={"/farms/" + farm.farmId + "/enterprises/" + row.enterpriseId}>{row.enterpriseName}</Link> : "Not linked"}</dd></div>
       <div><dt className="text-sm text-foreground/70">Season</dt><dd className="mt-1 break-words font-semibold">{row.seasonId ? <Link className="underline" href={"/farms/" + farm.farmId + "/seasons/" + row.seasonId}>{row.seasonLabel}</Link> : "Not linked"}</dd></div>
       <div><dt className="text-sm text-foreground/70">Plot</dt><dd className="mt-1 break-words font-semibold">{row.plotName ?? "Not linked"}</dd></div>
+      {(row.kind === "EXPENSE" || row.kind === "PURCHASE") && <div><dt className="text-sm text-foreground/70">Poultry batch</dt><dd className="mt-1 break-words font-semibold">{row.batchLabel ?? "Not linked"}</dd></div>}
     </dl>
     {obligation && row.balance && <section aria-labelledby="balanceHeading" className="mt-6 rounded-2xl border border-border bg-white p-6">
       <h2 id="balanceHeading" className="text-xl font-semibold">{obligation === "SALE" ? "Money for this sale" : "Payments for this purchase"}</h2>

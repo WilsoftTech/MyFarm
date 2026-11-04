@@ -15,9 +15,10 @@ const unavailableText: Record<UnavailableReason, string> = {
 };
 
 /** A figure, or the plain reason it cannot be worked out (D-P08-007). Never a 0 standing in for "unknown". */
-export function PercentValue({ metric }: { metric: MetricValue }) {
-  return metric.status === "AVAILABLE" ? <>{metric.value}%</> : <span className="text-sm font-normal">{unavailableText[metric.reason]}</span>;
+export function MetricText({ metric, format }: { metric: MetricValue; format: (value: string) => string }) {
+  return metric.status === "AVAILABLE" ? <>{format(metric.value)}</> : <span className="text-sm font-normal">{unavailableText[metric.reason]}</span>;
 }
+const percent = (value: string) => value + "%";
 
 function Figure({ label, children }: { label: string; children: React.ReactNode }) {
   return <div className="rounded-xl border border-border p-4"><dt className="text-sm text-foreground/70">{label}</dt><dd className="mt-1 break-words text-xl font-semibold">{children}</dd></div>;
@@ -31,7 +32,7 @@ function CurrencySection({ currency }: { currency: CurrencyDashboard }) {
       <Figure label="Money earned">{formatMoney(currency.revenue, code)}</Figure>
       <Figure label="Money spent">{formatMoney(currency.expenses, code)}</Figure>
       <Figure label="Recorded surplus">{formatMoney(currency.recordedSurplus, code)}</Figure>
-      <Figure label="Margin"><PercentValue metric={currency.surplusMargin} /></Figure>
+      <Figure label="Margin"><MetricText metric={currency.surplusMargin} format={percent} /></Figure>
     </dl>
     <p className="mt-3 text-sm leading-6 text-foreground/75">Recorded surplus is money earned minus money spent. Margin is how much of each 100 earned is left.</p>
     <h3 className="mt-6 text-lg font-semibold">Compare enterprises</h3>
@@ -42,7 +43,7 @@ function CurrencySection({ currency }: { currency: CurrencyDashboard }) {
           <dt>Money from it</dt><dd className="text-right">{formatMoney(line.revenue, code)}</dd>
           <dt>Its costs</dt><dd className="text-right">{formatMoney(line.directCosts, code)}</dd>
           <dt className="font-semibold">Gross margin</dt><dd className="text-right font-semibold">{formatMoney(line.grossMargin, code)}</dd>
-          <dt>Margin</dt><dd className="text-right"><PercentValue metric={line.marginPercent} /></dd>
+          <dt>Margin</dt><dd className="text-right"><MetricText metric={line.marginPercent} format={percent} /></dd>
         </dl>
       </li>)}</ul>}
     <p className="mt-4 leading-7">All enterprises together: gross margin {formatMoney(currency.allEnterprises.grossMargin, code)}.</p>

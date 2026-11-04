@@ -31,7 +31,10 @@ export const paymentActionLabels: Record<ObligationKind, string> = { SALE: "Reco
  * Display only: groups the whole part of an exact decimal string ("150000.5" → "UGX 150,000.5").
  * No arithmetic happens here; amounts come from the server already canonical.
  */
+export function formatNumber(value: string): string {
+  const [whole, fraction] = value.split(".");
+  return whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (fraction ? "." + fraction : "");
+}
 export function formatMoney(amount: string, currency: string): string {
-  const [whole, fraction] = amount.split(".");
-  return currency + " " + whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + (fraction ? "." + fraction : "");
+  return currency + " " + formatNumber(amount);
 }

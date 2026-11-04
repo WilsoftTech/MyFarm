@@ -17,7 +17,7 @@ export async function recordTransactionAction(farmId: string, kind: AccountingRe
     const row = await farmAccountingService().recordTransaction(kind, farmId, input);
     return base(row.farmId) + "/records/" + row.recordId + "?saved=1";
   }, "This record was not saved because these details were already used for a different record. Reload the page and enter it again.",
-  "Check the details. Enter the amount as digits only (no commas), a three-letter currency such as UGX, a real date and an active category. If you link a crop enterprise with a season or plot, they must match one of its crop cycles.");
+  "Check the details. Enter the amount as digits only (no commas), a three-letter currency such as UGX, a real date and an active category. If you link a crop enterprise with a season or plot, they must match one of its crop cycles. If you choose a poultry batch, any enterprise you choose must be that batch's own.");
 }
 
 export async function settleRecordAction(farmId: string, recordId: string, input: unknown) {

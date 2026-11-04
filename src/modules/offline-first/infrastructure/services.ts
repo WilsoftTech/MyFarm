@@ -4,7 +4,7 @@ import { database } from "@/modules/engineering-foundation/infrastructure/databa
 import { supabaseServer } from "@/modules/engineering-foundation/infrastructure/supabase";
 import { registryRepository } from "@/modules/farmer-registry/infrastructure/repository";
 import { farmerRegistryService } from "@/modules/farmer-registry/infrastructure/services";
-import { cropCycleService, productionService } from "@/modules/enterprises-seasons/infrastructure/services";
+import { cropCycleService, poultryBatchService, productionService } from "@/modules/enterprises-seasons/infrastructure/services";
 import { farmAccountingService } from "@/modules/farm-accounting/infrastructure/services";
 import { harvestService } from "@/modules/harvest-inventory/infrastructure/services";
 import { activityService } from "@/modules/farm-activities/infrastructure/services";
@@ -28,7 +28,7 @@ export function syncCommandServices(): SyncCommandServices {
 }
 export function pushService() { return new PushService(authorizationService(), syncCommandServices()); }
 export function pullService() {
-  return new PullService(authorizationService(), pullSources({ registry: farmerRegistryService(), production: productionService(), crops: cropCycleService(), accounting: farmAccountingService(), harvest: harvestService(), activities: activityService() }));
+  return new PullService(authorizationService(), pullSources({ registry: farmerRegistryService(), production: productionService(), crops: cropCycleService(), poultry: poultryBatchService(), accounting: farmAccountingService(), harvest: harvestService(), activities: activityService() }));
 }
 export function photoService() {
   return new PhotoService(authorizationService(), { farmScopeForMember: input => registryRepository(database()).farmScopeForMember(input) }, {

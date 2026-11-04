@@ -39,10 +39,10 @@ export function photoProblem(bytes: Uint8Array, declaredType: string): "EMPTY" |
 
 /** Bounds cached data on low-cost phones. Older records stay available online. */
 export const PULL_LIMITS = Object.freeze({ pageSize: 50, maxRowsPerSection: 200, maxFarms: 50, cursorHours: 24 });
-export const PULL_SECTIONS = ["ENTERPRISES", "PLOTS", "CROP_CYCLES", "STORES", "COST_CATEGORIES", "REVENUE_CATEGORIES", "PAYMENT_METHODS", "ACCOUNTING_RECORDS", "HARVESTS", "ACTIVITIES"] as const;
+export const PULL_SECTIONS = ["ENTERPRISES", "PLOTS", "CROP_CYCLES", "STORES", "COST_CATEGORIES", "REVENUE_CATEGORIES", "PAYMENT_METHODS", "ACCOUNTING_RECORDS", "HARVESTS", "ACTIVITIES", "POULTRY_BATCHES"] as const;
 export type PullSection = typeof PULL_SECTIONS[number];
 /** Reference choices the entry forms need; the rest are records for reading. */
-export const CATALOG_SECTIONS: readonly PullSection[] = Object.freeze(["ENTERPRISES", "PLOTS", "CROP_CYCLES", "STORES", "COST_CATEGORIES", "REVENUE_CATEGORIES", "PAYMENT_METHODS"] as const);
+export const CATALOG_SECTIONS: readonly PullSection[] = Object.freeze(["ENTERPRISES", "PLOTS", "CROP_CYCLES", "STORES", "COST_CATEGORIES", "REVENUE_CATEGORIES", "PAYMENT_METHODS", "POULTRY_BATCHES"] as const);
 
 export interface PullPosition { snapshotId: string; issuedAt: string; farmIndex: number; sectionIndex: number; pageCursor: string | null; taken: number }
 /** A cursor grants nothing: every page is authorized again, so a forged one can only reach what the account may already read. */

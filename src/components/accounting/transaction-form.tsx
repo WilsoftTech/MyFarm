@@ -3,8 +3,8 @@ import { useRef } from "react";
 import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { recordExpenseSchema, recordSaleSchema, type RecordExpense } from "@/modules/farm-accounting/contracts/accounting";
-import type { AccountingRecordKind } from "@/modules/farm-accounting/domain/accounting";
+import { recordExpenseSchema, recordIncomeSchema, recordPurchaseSchema, recordSaleSchema, type RecordExpense } from "@/modules/farm-accounting/contracts/accounting";
+import { BATCH_LINK_KINDS, type AccountingRecordKind } from "@/modules/farm-accounting/domain/accounting";
 import type { CommandSubmit } from "@/modules/engineering-foundation/contracts/command-result";
 import { Field, focusFirstInvalid } from "@/components/farmer-registry/field";
 import { Input } from "@/components/ui/input";
@@ -25,9 +25,9 @@ export interface LinkChoices { pages: Record<AccountingChoiceKind, ChoicePage>; 
 
 /** Expense/income may name how they were paid; sales/purchases are settled later by payments. Links are optional (R003). */
 export function TransactionForm({ kind, categories, paymentMethods, links, submit }: { kind: AccountingRecordKind; categories: CatalogOption[]; paymentMethods: CatalogOption[]; links?: LinkChoices; submit: CommandSubmit }) {
-  const state = useProductionSubmit(submit), form = useRef<HTMLFormElement>(null), withMethod = settledWhenRecorded(kind);
-  const resolver = zodResolver(withMethod ? recordExpenseSchema : recordSaleSchema) as Resolver<Values, unknown, RecordExpense>;
-  const defaults: Values = { requestId: state.initialRequestId, categoryId: "", amount: "", currency: "UGX", occurredOn: "", counterparty: "", plotId: "", enterpriseId: "", seasonId: "", ...(withMethod ? { paymentMethodId: "" } : {}) };
+  const state = useProductionSubmit(submit), form = useRef<HTMLFormElement>(null), withMethod = settledWhenRecorded(kind), withBatch = BATCH_LINK_KINDS.includes(kind);
+  const resolver = zodResolver({ EXPENSE: recordExpenseSchema, INCOME: recordIncomeSchema, SALE: recordSaleSchema, PURCHASE: recordPurchaseSchema }[kind]) as unknown as Resolver<Values, unknown, RecordExpense>;
+  const defaults: Values = { requestId: state.initialRequestId, categoryId: "", amount: "", currency: "UGX", occurredOn: "", counterparty: "", plotId: "", enterpriseId: "", seasonId: "", ...(withBatch ? { batchId: "" } : {}), ...(withMethod ? { paymentMethodId: "" } : {}) };
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<Values, unknown, RecordExpense>({ resolver, shouldFocusError: false, defaultValues: defaults });
   const label = recordKindLabels[kind].toLowerCase();
   if (categories.length === 0) return <div className="space-y-4 leading-7"><h2 className="text-xl font-semibold">No categories are available</h2><p>There are no {kind === "SALE" || kind === "INCOME" ? "income" : "spending"} categories to choose from. Ask farm support to check the category list.</p></div>;
@@ -47,6 +47,7 @@ export function TransactionForm({ kind, categories, paymentMethods, links, submi
       <ChoiceField id="recordEnterprise" label="Enterprise" optional kind="enterprises" initial={links.pages.enterprises} control={register("enterpriseId")} error={errors.enterpriseId ? "Choose an enterprise or leave it empty." : undefined} online={state.online} load={links.load} />
       <ChoiceField id="recordSeason" label="Season" optional kind="seasons" initial={links.pages.seasons} control={register("seasonId")} error={errors.seasonId ? "Choose a season or leave it empty." : undefined} online={state.online} load={links.load} />
       <ChoiceField id="recordPlot" label="Plot" optional kind="plots" initial={links.pages.plots} control={register("plotId")} error={errors.plotId ? "Choose a plot or leave it empty." : undefined} online={state.online} load={links.load} />
+      {withBatch && <ChoiceField hint="If this cost was for one batch, choose it. It then counts towards that batch's cost per bird, under the batch's own enterprise." id="recordBatch" label="Poultry batch" optional kind="batches" initial={links.pages.batches} control={register("batchId")} error={errors.batchId ? "Choose a batch or leave it empty." : undefined} online={state.online} load={links.load} />}
     </fieldset>}
     <ProductionFormFeedback online={state.online} saving={isSubmitting} message={state.message} />
     <Button type="submit" disabled={isSubmitting || !state.online} className="w-full sm:w-auto">{isSubmitting ? "Saving…" : "Save " + label}</Button>

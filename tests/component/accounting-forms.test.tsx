@@ -124,8 +124,25 @@ describe("accounting display helpers (P04-T003)", () => {
 });
 
 describe("record links (P04-T009)", () => {
-  const maize = id(), season = id(), plot = id(), later = id();
-  const pages = { enterprises: { items: [{ id: maize, label: "Maize — Crops" }, { id: id(), label: "Old flock — Poultry (closed)" }], nextCursor: "next" }, seasons: { items: [{ id: season, label: "2027A" }], nextCursor: null }, plots: { items: [{ id: plot, label: "Plot 1" }], nextCursor: null } };
+  const maize = id(), season = id(), plot = id(), later = id(), batch = id();
+  const pages = { enterprises: { items: [{ id: maize, label: "Maize — Crops" }, { id: id(), label: "Old flock — Poultry (closed)" }], nextCursor: "next" }, seasons: { items: [{ id: season, label: "2027A" }], nextCursor: null }, plots: { items: [{ id: plot, label: "Plot 1" }], nextCursor: null }, batches: { items: [{ id: batch, label: "Batch 1" }], nextCursor: null } };
+  it("offers a poultry batch on costs only, and sends it (D-P08-003)", async () => {
+    const submit = vi.fn(failed);
+    const { unmount } = render(<TransactionForm kind="EXPENSE" categories={costCategories} paymentMethods={methods} links={{ pages, load: vi.fn() }} submit={submit} />);
+    await fillExpense();
+    await userEvent.selectOptions(screen.getByLabelText(/Poultry batch/), batch);
+    await saveExpense();
+    await waitFor(() => expect(submit).toHaveBeenCalled());
+    expect(submit.mock.calls[0][0]).toMatchObject({ batchId: batch });
+    unmount();
+    for (const kind of ["INCOME", "SALE"] as const) {
+      const form = render(<TransactionForm kind={kind} categories={costCategories} paymentMethods={methods} links={{ pages, load: vi.fn() }} submit={failed} />);
+      expect(screen.queryByLabelText(/Poultry batch/)).toBeNull();
+      form.unmount();
+    }
+    render(<TransactionForm kind="PURCHASE" categories={costCategories} paymentMethods={methods} links={{ pages, load: vi.fn() }} submit={failed} />);
+    expect(screen.getByLabelText(/Poultry batch/)).toBeTruthy();
+  });
   it("sends optional links, leaves blanks unlinked and loads later enterprises without losing the draft", async () => {
     const load = vi.fn(async () => ({ ok: true as const, page: { items: [{ id: later, label: "Beans — Crops" }], nextCursor: null } }));
     const submit = vi.fn(failed); render(<TransactionForm kind="EXPENSE" categories={costCategories} paymentMethods={methods} links={{ pages, load }} submit={submit} />);

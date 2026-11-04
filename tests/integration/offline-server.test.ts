@@ -1,3 +1,5 @@
+import { PoultryBatchService } from "@/modules/enterprises-seasons/application/poultry-batch";
+import { poultryBatchRepository } from "@/modules/enterprises-seasons/infrastructure/poultry-batch-repository";
 import { createHash } from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { activityFixture } from "../support/activity-fixture";
@@ -30,7 +32,7 @@ const photos = (m: Member) => new PhotoService(m.auth, registryRepository(f.runt
   if (storageDown) throw new Error("storage down");
   storedObjects.set(tenantId + "/" + objectId, bytes);
 } }));
-const puller = (m: Member, now?: () => Date) => new PullService(m.auth, pullSources({ registry: m.registryService, production: m.production, crops: m.crops, accounting: m.accounting, harvest: m.harvest, activities: m.activities }), now);
+const puller = (m: Member, now?: () => Date) => new PullService(m.auth, pullSources({ registry: m.registryService, production: m.production, crops: m.crops, poultry: new PoultryBatchService(m.auth, registryRepository(f.runtime), poultryBatchRepository(f.runtime)), accounting: m.accounting, harvest: m.harvest, activities: m.activities }), now);
 const walk = async (m: Member) => {
   const pages: Extract<PullPage, { status: "OK" }>[] = [];
   let cursor: string | null = null;

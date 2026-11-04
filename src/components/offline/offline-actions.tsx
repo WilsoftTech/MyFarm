@@ -27,6 +27,7 @@ function MoneyForm({ db, farmId, records, kind, onSaved }: { db: LocalDatabase; 
     { name: "paymentMethodId", label: "How was it paid?", optional: true, choices: choices(records.PAYMENT_METHODS, named, data => data.active !== false) },
     { name: "counterparty", label: expense ? "Paid to" : "Received from", optional: true },
     { name: "enterpriseId", label: "Enterprise", optional: true, choices: choices(records.ENTERPRISES, named, data => data.status === "ACTIVE") }, { name: "plotId", label: "Plot", optional: true, choices: choices(records.PLOTS, named) },
+    ...(expense ? [{ name: "batchId", label: "Poultry batch", optional: true, choices: choices(records.POULTRY_BATCHES, data => String(data.batchLabel ?? ""), data => data.status === "ACTIVE") }] : []),
   ];
   return <EntryForm key={kind} title={"Record " + OPERATION_LABELS[kind].toLowerCase()} submitLabel={"Save " + OPERATION_LABELS[kind].toLowerCase()} fields={fields} onSaved={onSaved} onSubmit={values => enqueueCommand(db, kind, farmId, blankToUndefined(values))} />;
 }
