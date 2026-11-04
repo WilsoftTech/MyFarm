@@ -361,6 +361,7 @@ model PoultryBatch {
   productionEvents ProductionEvent[]
   inventoryItems InventoryItem[]
   openingMovements StockMovement[]
+  costRecords AccountingRecord[]
   @@unique([id, farmId, tenantId])
 }
 enum AccountingRecordKind {
@@ -368,6 +369,11 @@ enum AccountingRecordKind {
   INCOME
   PURCHASE
   SALE
+}
+// D-P08-009: which reported cost group a cost category belongs to. Reference data, set by reviewed release.
+enum CostGroup {
+  LABOUR
+  INPUT
 }
 enum TransactionCategoryKind {
   COST
@@ -387,6 +393,7 @@ model TransactionCategory {
   kind TransactionCategoryKind
   name String @db.VarChar(120)
   active Boolean @default(true)
+  costGroup CostGroup?
   createdAt DateTime @default(now()) @db.Timestamptz(6)
   records AccountingRecord[]
   @@unique([kind, name])
@@ -419,6 +426,8 @@ model AccountingRecord {
   plotId String? @db.Uuid
   enterpriseId String? @db.Uuid
   seasonId String? @db.Uuid
+  // D-P08-003: optional, on expenses and purchases only. Sales trace to a batch through their stock event.
+  batchId String? @db.Uuid
   status AccountingStatus @default(POSTED)
   version Int @default(1)
   createdBy String @db.Uuid
@@ -430,6 +439,7 @@ model AccountingRecord {
   plot Plot? @relation(fields: [plotId], references: [id], onDelete: Restrict)
   enterprise Enterprise? @relation(fields: [enterpriseId], references: [id], onDelete: Restrict)
   season Season? @relation(fields: [seasonId], references: [id], onDelete: Restrict)
+  batch PoultryBatch? @relation(fields: [batchId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
   creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
   allocations PaymentAllocation[]
   reversal AccountingReversal?
@@ -441,6 +451,7 @@ model AccountingRecord {
   @@index([plotId])
   @@index([enterpriseId])
   @@index([seasonId])
+  @@index([batchId, farmId, tenantId])
   @@index([createdBy])
   productionEvent ProductionEvent?
   stockOperation StockOperation?

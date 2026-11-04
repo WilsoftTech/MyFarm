@@ -203,6 +203,7 @@ export interface RecognitionRecord extends Money {
   /** Report attribution (R004/R005); omitted means unassigned. */
   enterpriseId?: string | null;
   seasonId?: string | null;
+  batchId?: string | null;
   categoryId?: string;
   categoryName?: string;
 }
@@ -218,6 +219,7 @@ export interface RecognitionEvent extends Money {
   recognizedOn: string;
   enterpriseId: string | null;
   seasonId: string | null;
+  batchId: string | null;
   categoryId: string | null;
   categoryName: string | null;
 }
@@ -237,7 +239,7 @@ export function recognizedEvents(basis: RecognitionBasis, records: readonly Reco
   }
   const event = (record: RecognitionRecord, amount: string, recognizedOn: string, paymentId: string | null): RecognitionEvent => ({
     basis, effect: RECORD_CATEGORY_KIND[record.kind], recordId: record.recordId, kind: record.kind, paymentId, amount, currency: record.currency, recognizedOn,
-    enterpriseId: record.enterpriseId ?? null, seasonId: record.seasonId ?? null, categoryId: record.categoryId ?? null, categoryName: record.categoryName ?? null,
+    enterpriseId: record.enterpriseId ?? null, seasonId: record.seasonId ?? null, batchId: record.batchId ?? null, categoryId: record.categoryId ?? null, categoryName: record.categoryName ?? null,
   });
   const events: RecognitionEvent[] = [];
   for (const record of records) {

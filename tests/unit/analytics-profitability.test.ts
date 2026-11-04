@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { recognizedEvents, type RecognitionBasis, type RecognitionPayment, type RecognitionRecord } from "@/modules/farm-accounting/domain/accounting";
 import { grossMargin } from "@/modules/farm-accounting/domain/reporting";
 import { dashboardQuerySchema } from "@/modules/analytics-profitability/contracts/profitability";
-import { percentString } from "@/modules/analytics-profitability/domain/metric";
+import { percentString, ratioString } from "@/modules/analytics-profitability/domain/metric";
 import { farmDashboard, latestActiveSeason, seasonEvents, type EnterpriseName } from "@/modules/analytics-profitability/domain/profitability";
 
 const id = () => crypto.randomUUID();
@@ -27,6 +27,12 @@ describe("percentages (D-P08-007)", () => {
   });
   it("stays exact beyond the range of a binary number", () => {
     expect(percentString(9_007_199_254_740_993n * 10_000n, 9_007_199_254_740_993n * 30_000n)).toBe("33.3");
+  });
+});
+
+describe("display rounding (D-P08-011)", () => {
+  it.each([[1333333333n, 1000000n, 2, "1333.33"], [5n, 1000n, 2, "0.01"], [4n, 1000n, 2, "0"], [-5n, 1000n, 2, "-0.01"], [-4n, 1000n, 2, "0"], [7n, 2n, 0, "4"], [2000n, 1n, 2, "2000"], [1n, 2n, 2, "0.5"]])("%s / %s to %s places is %s", (numerator, denominator, decimals, expected) => {
+    expect(ratioString(numerator, denominator, decimals)).toBe(expected);
   });
 });
 

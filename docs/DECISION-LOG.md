@@ -55,7 +55,7 @@ Q01 is **PARTIALLY RESOLVED**: user selected Rukungiri. Remaining components and
 | Q14 | RESOLVED for Phase6 by owner 2026-11-02 ([D-P06-002](#d-p06-002---q14-missed-definition), [D-P06-003](#d-p06-003---q14-recurrence), [D-P06-004](#d-p06-004---q14-worker-and-notifications)): missed after the due date in Africa/Kampala; daily/weekly/monthly recurrence; free-text worker; no notifications | Product owner | 6 | Approved |
 | Q15 | RESOLVED for Phase6 by owner 2026-11-02 ([D-P06-005](#d-p06-005---q15-activity-cost-link)): link an existing same-farm expense or purchase; the activity holds no money | Accounting/product owner | 6 | Approved |
 | Q16 | RESOLVED for Phase7 by owner 2026-11-03 ([D-P07-002](#d-p07-002---q16-support-limits), [D-P07-003](#d-p07-003---q16-shared-phones), [D-P07-005](#d-p07-005---q16-lost-entries)): 14 days and 500 unsent entries; per-account data with no PIN; warnings plus an unencrypted download. Real-device measurement stays open | Product/security/engineering owner | 1/7 | Approved; measurement pending |
-| Q17 | RESOLVED for Phase8 by owner 2026-11-03 ([D-P08-005](#d-p08-005---q17-crop-formulas) to [D-P08-008](#d-p08-008---q17-season-scope-and-freshness)); the formula catalog and golden fixtures remain to be approved at T004 | Accounting/agricultural owner | 8 | Formula catalog and golden fixtures approved |
+| Q17 | RESOLVED for Phase8 by owner 2026-11-03 and 2026-11-04 ([D-P08-005](#d-p08-005---q17-crop-formulas) to [D-P08-011](#d-p08-011---q17-formula-catalog)); [formula catalog](architecture/metric-formulas.md) and golden fixtures approved | Accounting/agricultural owner | 8 | Formula catalog and golden fixtures approved |
 | Q18 | Pilot cohort/window, active/retained definition, thresholds, support/cycle completion | Product/research owner | 9 | Prospective criteria then real cohort evidence |
 | Q19 | Rule mortality thresholds, percent vs points, data coverage, severity/suppression | Agronomic/product owner | 10 | Reviewed rules, comparison units and sparse-data behavior |
 | Q20 | AI provider/cost, data processing/retention, knowledge licenses and groundedness criteria | Product/security/AI owner | 11 | Approved tool contracts, consent/provider policy and adversarial evaluation |
@@ -508,3 +508,15 @@ APPROVED, owner 2026-11-03, selecting "Not available, like with like (Recommende
 ## D-P08-008 - Q17 season scope and freshness
 
 APPROVED, owner 2026-11-03, selecting "Linked records, live (Recommended)". A season view counts only records linked to that season and shows the amount linked to no season, so nothing is guessed from dates or counted twice. It defaults to the latest active season, and a date-range view stays available. Figures are calculated live from records with an as-of time, so the proposed `MetricSnapshot` and `ReportDefinition` tables are not built. With no connection the dashboard says it needs a connection and points to offline work. Entries not yet sent are not counted.
+
+## D-P08-009 - Labour and input cost groups
+
+APPROVED, owner 2026-11-04, selecting "Labour + 6 inputs (Recommended)". Labour is Labour. Inputs are Seeds, Feed, Fertilizer, Veterinary, Medication and Pesticides. Transport, Fuel, Equipment, Rent, Utilities and Packaging belong to neither group and still count as costs everywhere else. Groups are stored on the category as reference data, changed only by reviewed release.
+
+## D-P08-010 - Enterprises with more than one crop
+
+APPROVED, owner 2026-11-04, selecting "Not available, say why (Recommended)". When an enterprise has more than one crop in the view, per-acre and per-kg figures show "Not available" with that reason, because costs link to the enterprise and season rather than to one crop. Gross margin still shows.
+
+## D-P08-011 - Q17 formula catalog
+
+APPROVED, owner 2026-11-04, selecting "Approve as listed (Recommended)". The [formula catalog](architecture/metric-formulas.md) and its worked examples are approved and are the test fixtures. Figures are calculated exactly and rounded only for display. Money per unit and kg per acre show up to two decimals, rounded half-up. Cost per kg and break-even price are one calculation, shown as one figure with both names. No accountant or agronomist has reviewed the catalog, so that review stays open for the field pilot.

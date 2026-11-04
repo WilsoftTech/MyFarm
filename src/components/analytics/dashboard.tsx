@@ -4,7 +4,15 @@ import type { MetricValue, UnavailableReason } from "@/modules/analytics-profita
 import type { CurrencyDashboard } from "@/modules/analytics-profitability/domain/profitability";
 import { formatMoney } from "@/components/accounting/labels";
 
-const unavailableText: Record<UnavailableReason, string> = { NO_REVENUE: "Not available: no money earned yet." };
+const unavailableText: Record<UnavailableReason, string> = {
+  NO_REVENUE: "Not available: no money earned yet.",
+  NO_AREA: "Not available: no planted area recorded.",
+  NO_HARVEST: "Not available: no harvest to count yet.",
+  MORE_THAN_ONE_CROP: "Not available: this enterprise has more than one crop.",
+  DATE_RANGE: "Not available for chosen dates. Choose a season or all records.",
+  NO_BIRDS: "Not available: no birds recorded in this batch.",
+  NEVER_SOLD: "Not available: not sold yet.",
+};
 
 /** A figure, or the plain reason it cannot be worked out (D-P08-007). Never a 0 standing in for "unknown". */
 export function PercentValue({ metric }: { metric: MetricValue }) {

@@ -3,10 +3,10 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - Phase 8 start; source roadmap order unchanged.
 - Implementation status: REFERENCE ONLY - N/A (navigation and verified progress record).
-- Last reviewed: 2026-11-03 (Africa/Nairobi).
+- Last reviewed: 2026-11-04 (Africa/Nairobi).
 - Related phase/task IDs: MYF-P08-T001; D-P07-009; D-P08-001 through D-P08-008.
-- Verified completed work: Phase 7 accepted with conditions (D-P07-009); hosted CI passes at 0298f20. Phase 8 T001-T003 (3/13): dashboard screen; MYF-P08-AC001 verified locally.
-- Remaining work/blockers: Phase 8 T004-T013; T004 needs owner approval of cost groups and the formula catalog. P7-C1 and P7-C3 to P7-C6 stay open. Pushes and hosted changes for Phase 8 are not authorized.
+- Verified completed work: Phase 7 accepted with conditions (D-P07-009); hosted CI passes at 0298f20. Phase 8 T001-T004 (4/13): dashboard screen, AC001 verified locally, approved formula catalog with metric rules and additive migration.
+- Remaining work/blockers: Phase 8 T005-T013. P7-C1 and P7-C3 to P7-C6 stay open. Migration 202611040001 is not applied to hosted. Pushes and hosted changes for Phase 8 are not authorized.
 - Evidence/report links: [Phase 8 start and T001](reports/phase-08-start-2026-11-03.md); [Project status](PROJECT-STATUS.md).
 <!-- MYFARM-STATUS-END -->
 
