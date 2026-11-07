@@ -194,9 +194,9 @@ test("D-P08-008 with no connection it points to offline work, and unsent entries
 
 const metric = (scope: Page | ReturnType<Page["locator"]>, label: string) => scope.locator("dt", { hasText: label }).first().locator("+ dd");
 const animal = "f4030008-0000-4000-8000-000000000004";
-async function batch(context: BrowserContext, name: string, startingQuantity = 100) {
+async function batch(context: BrowserContext, name: string, startingQuantity = 100, acquisitionDate = "2027-03-01") {
   const enterpriseId = await enterprise(context, name + " flock", "POULTRY");
-  const created = await create(context, "poultry-batches", { enterpriseId, animalTypeId: animal, batchLabel: name, startingQuantity, acquisitionDate: "2027-03-01", purpose: "EGGS" }, z.object({ batch: z.object({ batchId: z.uuid() }) }));
+  const created = await create(context, "poultry-batches", { enterpriseId, animalTypeId: animal, batchLabel: name, startingQuantity, acquisitionDate, purpose: "EGGS" }, z.object({ batch: z.object({ batchId: z.uuid() }) }));
   return { enterpriseId, batchId: created.batch.batchId };
 }
 const store = async (context: BrowserContext) => (await create(context, "storage-locations", { name: "Store " + id().slice(0, 8) }, z.object({ location: z.object({ storageLocationId: z.uuid() }) }))).location.storageLocationId;
@@ -235,6 +235,38 @@ test("MYF-P08-AC002 the approved crop and bird examples show on screen, with sto
   expect(before).toBe("UGX -2,100,000");
   await expect(figure(page, "Recorded surplus")).toHaveText("UGX -1,980,000");
   await noSideScroll(page);
+});
+
+test("MYF-P08-AC003 trends show +18% against the earlier season and the previous batch, and say when there is nothing to compare", async ({ page, context }) => {
+  const earlier = await season(context, "2026B", "2026-09-01"), current = await season(context, "2027A"), hill = await plot(context), maize = await enterprise(context, "Maize", "CROP");
+  for (const [seasonId, plantingDate] of [[earlier, "2026-09-02"], [current, "2027-03-02"]]) await create(context, "crop-cycles", { enterpriseId: maize, seasonId, plotId: hill, cropId: seed.maize, areaPlanted: "1", areaUnit: "ACRE", plantingDate }, z.object({}).loose());
+  await money(context, "expenses", seed.fertilizer, "100000", "2026-09-10", { enterpriseId: maize, seasonId: earlier });
+  await money(context, "expenses", seed.fertilizer, "118000", "2027-03-10", { enterpriseId: maize, seasonId: current });
+  const first = await batch(context, "Batch 1", 100, "2027-01-01"), second = await batch(context, "Batch 2", 100, "2027-06-01");
+  await money(context, "expenses", seed.feed, "100000", "2027-01-10", { batchId: first.batchId });
+  await money(context, "expenses", seed.feed, "118000", "2027-06-10", { batchId: second.batchId });
+
+  await page.goto(url(fixtures.farms.a));
+  await expect(page.getByRole("heading", { name: "Compared with before" })).toBeVisible();
+  const crop = page.getByRole("list", { name: "Crop trends" }).getByRole("listitem");
+  await expect(crop).toContainText("2027A compared with 2026B");
+  await expect(metric(crop, "Fertilizer")).toContainText("UGX 100,000");
+  await expect(metric(crop, "Fertilizer")).toContainText("UGX 118,000");
+  await expect(metric(crop, "Fertilizer")).toContainText("Change: +18%");
+  await expect(metric(crop, "Cost per acre")).toContainText("Change: +18%");
+  const batches = page.getByRole("list", { name: "Batch trends" }).getByRole("listitem");
+  const newest = batches.filter({ hasText: "Batch 2" });
+  await expect(newest).toContainText("compared with Batch 1");
+  await expect(metric(newest, "Feed")).toContainText("Change: +18%");
+  await expect(metric(newest, "Cost per bird")).toContainText("UGX 1,180");
+  await expect(batches.filter({ hasText: "Batch 1" }).filter({ hasNotText: "Batch 2" })).toContainText("Not available: no earlier batch of these birds.");
+  await noSideScroll(page);
+
+  await page.goto(url(fixtures.farms.a, "?seasonId=" + earlier));
+  await expect(page.getByRole("list", { name: "Crop trends" })).toContainText("Not available: no earlier season grew this crop.");
+  await page.goto(url(fixtures.farms.a, "?seasonId=all"));
+  await expect(page.getByText("Choose a season above to compare its crops with an earlier season.")).toBeVisible();
+  await expect(metric(page.getByRole("list", { name: "Batch trends" }).getByRole("listitem").filter({ hasText: "Batch 2" }), "Feed")).toContainText("+18%");
 });
 
 test("D-P08-010 a second crop and a date range each say why there is no per-acre figure", async ({ page, context }) => {
@@ -312,8 +344,8 @@ test("D-P08-003 an expense saved offline with a batch sends once and counts for 
   } finally { await server.stop(); await clearInventoryBrowser(f); }
 });
 
-test("the metrics endpoint denies another farmer, a guessed season and an ended session", async ({ context }) => {
-  const farm = fixtures.farms.a, api = (query = "") => context.request.get(`/api/v1/farms/${farm}/profitability/metrics${query}`);
+for (const endpoint of ["metrics", "trends"]) test(`the ${endpoint} endpoint denies another farmer, a guessed season and an ended session`, async ({ context }) => {
+  const farm = fixtures.farms.a, api = (query = "") => context.request.get(`/api/v1/farms/${farm}/profitability/${endpoint}${query}`);
   const own = await api();
   expect(own.status()).toBe(200);
   expect(own.headers()["cache-control"]).toContain("no-store");

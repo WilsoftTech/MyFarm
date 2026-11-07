@@ -6,6 +6,7 @@ import { AccountingShell } from "@/components/accounting/shell";
 import { ReportFilters, ReportLabelsNote } from "@/components/accounting/report-parts";
 import { FarmDashboard } from "@/components/analytics/dashboard";
 import { FarmMetrics } from "@/components/analytics/metrics";
+import { FarmTrends } from "@/components/analytics/trends";
 import { Select } from "@/components/ui/select";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "How the farm is doing" };
@@ -16,7 +17,8 @@ export default async function HowTheFarmIsDoingPage({ params, searchParams }: { 
   const input = { basis: search.basis, seasonId: search.seasonId, from: search.from, to: search.to };
   const valid = dashboardQuerySchema.safeParse(Object.fromEntries(Object.entries(input).filter(([, value]) => value !== undefined)));
   const filters = valid.success ? valid.data : {};
-  const [view, metrics] = await loadPage(() => Promise.all([farmProfitabilityService().dashboard(farmId, filters), farmProfitabilityService().metrics(farmId, filters)]));
+  const service = farmProfitabilityService();
+  const [view, metrics, trends] = await loadPage(() => Promise.all([service.dashboard(farmId, filters), service.metrics(farmId, filters), service.trends(farmId, filters)]));
   const base = "/farms/" + farm.farmId + "/accounting";
   return <AccountingShell farm={farm} title="How the farm is doing">
     <p className="mb-5 max-w-3xl leading-7">This adds up the money records on this farm. It does not include wear on tools and equipment or the cost of loans, because MyFarm does not record those yet, so it is not your full profit. Stock you have not sold is not counted.</p>
@@ -31,5 +33,6 @@ export default async function HowTheFarmIsDoingPage({ params, searchParams }: { 
     <ReportLabelsNote labels={view} />
     <FarmDashboard view={view} moneyPath={base} />
     <FarmMetrics view={metrics} />
+    <FarmTrends view={trends} />
   </AccountingShell>;
 }
