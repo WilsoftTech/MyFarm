@@ -3,9 +3,9 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - owner-approved Q17 catalog.
 - Implementation status: REFERENCE ONLY - N/A (approved rules; progress is in the phase specification).
-- Last reviewed: 2026-11-04 (Africa/Nairobi).
-- Related phase/task IDs: MYF-P08-R002, MYF-P08-AC002; D-P08-002 through D-P08-011.
-- Verified completed work: Worked examples are unit test fixtures in `tests/unit/analytics-metrics.test.ts`.
+- Last reviewed: 2026-11-07 (Africa/Nairobi).
+- Related phase/task IDs: MYF-P08-R002, MYF-P08-R003, MYF-P08-AC002, MYF-P08-AC003; D-P08-002 through D-P08-011.
+- Verified completed work: Worked examples are unit test fixtures in `tests/unit/analytics-metrics.test.ts` and `tests/unit/analytics-trends.test.ts`.
 - Remaining work/blockers: No accountant or agronomist has reviewed this catalog; that remains open for the Phase 9 field pilot.
 - Evidence/report links: [Decisions](../DECISION-LOG.md#d-p08-011---q17-formula-catalog); [Phase specification](../phases/phase-08-analytics-profitability.md).
 <!-- MYFARM-STATUS-END -->
@@ -74,3 +74,23 @@ Example: 100 started, 5 bought, 3 died and 525,000 UGX of costs gives 2.9% morta
 | Stock value (estimate) | Quantity in stock × the item's most recent sale price that has not been reversed |
 
 Labelled an estimate with the sale date, in that sale's currency, and not available for an item never sold. It is kept out of surplus and margin, so unsold stock never counts as earnings. Totals add the rounded lines per currency. This is not a costing method.
+
+## Trends
+
+A trend states how a figure moved; it never explains why (that is later work). It compares like with like only (D-P08-007).
+
+| Compared | Against |
+|---|---|
+| One crop in the chosen season | The most recent earlier season, by start date, that grew the same crop |
+| One poultry batch | The most recent earlier batch of the same animal type, by acquisition date |
+
+- **Change** = (now − earlier) ÷ earlier, as a percentage, rounded half-up to 1 decimal, with its sign. It is worked out from the exact figures, never from rounded ones.
+- **No baseline:** an earlier figure that is 0 or not available gives "Not available", never 0 or infinite. A current figure that is not available gives its own reason.
+- **Crop figures:** costs, cost per acre, revenue per acre, cost per kg and yield per acre, plus one line per cost category. A crop's side adds every enterprise growing it that season. If either side's enterprise also grew another crop that season, the trend is not available (D-P08-010).
+- **Batch figures:** costs, cost per bird and revenue per bird, plus one line per cost category. Two batches started on the same day are not earlier than each other.
+- **Warnings:** costs that could belong to either side but are not linked to it are shown, so a misleading comparison is visible. Either side still open is labelled "so far".
+- **Currencies** are compared separately and never converted.
+
+Example: feed 100,000 → 118,000 UGX is +18%.
+
+The choice of "most recent earlier" season and batch, and the same-day rule, are engineering choices within D-P08-007.

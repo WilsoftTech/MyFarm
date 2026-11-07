@@ -2,7 +2,7 @@
  * The shape of every calculated figure (R002, D-P08-007): a value, or a stated reason it cannot be
  * calculated. A missing or zero denominator is never shown as 0.
  */
-export const UNAVAILABLE_REASONS = ["NO_REVENUE", "NO_AREA", "NO_HARVEST", "MORE_THAN_ONE_CROP", "DATE_RANGE", "NO_BIRDS", "NEVER_SOLD"] as const;
+export const UNAVAILABLE_REASONS = ["NO_REVENUE", "NO_AREA", "NO_HARVEST", "MORE_THAN_ONE_CROP", "DATE_RANGE", "NO_BIRDS", "NEVER_SOLD", "NO_EARLIER_SEASON", "NO_EARLIER_BATCH", "NO_BASELINE"] as const;
 export type UnavailableReason = typeof UNAVAILABLE_REASONS[number];
 export type MetricValue = { status: "AVAILABLE"; value: string } | { status: "UNAVAILABLE"; reason: UnavailableReason };
 

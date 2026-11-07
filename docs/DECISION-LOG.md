@@ -520,3 +520,7 @@ APPROVED, owner 2026-11-04, selecting "Not available, say why (Recommended)". Wh
 ## D-P08-011 - Q17 formula catalog
 
 APPROVED, owner 2026-11-04, selecting "Approve as listed (Recommended)". The [formula catalog](architecture/metric-formulas.md) and its worked examples are approved and are the test fixtures. Figures are calculated exactly and rounded only for display. Money per unit and kg per acre show up to two decimals, rounded half-up. Cost per kg and break-even price are one calculation, shown as one figure with both names. No accountant or agronomist has reviewed the catalog, so that review stays open for the field pilot.
+
+## D-P08-012 - Finish and push Phase 8
+
+AUTHORIZED, owner 2026-11-07: "complete phase 8. and push it". Work continues from T007 with one commit per verified task, and the Phase 8 commits may be pushed to `origin/main` so hosted CI can run. This does not authorize applying migration `202611040001` or any runtime policy to the hosted database, or any deployment change; those stay separate owner steps.

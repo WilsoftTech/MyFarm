@@ -10,14 +10,14 @@ import { available, percentString, ratioString, unavailable, type MetricValue } 
  * docs/architecture/metric-formulas.md). Figures are calculated exactly and rounded once, only for display:
  * money per unit and kg per acre to 2 decimals, percentages to 1. Amounts in different currencies are never combined.
  */
-const MONEY_PER_UNIT_DECIMALS = 2;
+export const MONEY_PER_UNIT_DECIMALS = 2;
 /** Money amounts are in 0.0001 units and quantities in 0.000001 units. */
-const MONEY_SCALE = 10_000n, QUANTITY_SCALE = 1_000_000n, HUNDREDTHS = 100n;
+export const MONEY_SCALE = 10_000n, QUANTITY_SCALE = 1_000_000n;
+const HUNDREDTHS = 100n;
 
 /** Exact sizes in ten-millionths of a square metre: 1 acre is exactly 4,046.8564224 square metres. */
 const AREA_SIZE: Record<AreaUnit, bigint> = { ACRE: 40_468_564_224n, HECTARE: 100_000_000_000n, SQUARE_METRE: 10_000_000n };
-const ACRE_SIZE = AREA_SIZE.ACRE * QUANTITY_SCALE;
-
+export const ACRE_SIZE = AREA_SIZE.ACRE * QUANTITY_SCALE;
 
 /** Totals can pass the limits of one stored quantity, so facts keep their exact digits without that limit. */
 function factUnits(value: string): bigint {
@@ -27,7 +27,7 @@ function factUnits(value: string): bigint {
 }
 
 interface Sums { revenue: bigint; costs: bigint }
-function sumsByCurrency(events: readonly RecognitionEvent[]): Map<string, Sums> {
+export function sumsByCurrency(events: readonly RecognitionEvent[]): Map<string, Sums> {
   const totals = new Map<string, Sums>();
   for (const event of events) {
     const sums = totals.get(event.currency) ?? { revenue: 0n, costs: 0n };
@@ -49,6 +49,13 @@ export interface CropCycleFacts {
   harvestedKg: string;
   lostKg: string;
 }
+/** Exact totals of some cycles: area in the units ACRE_SIZE is measured in, and kg in QUANTITY_SCALE units. Loss cannot pass the harvest. */
+export function cropTotals(rows: readonly CropCycleFacts[]) {
+  const area = rows.reduce((total, row) => total + factUnits(row.areaPlanted) * AREA_SIZE[row.areaUnit], 0n);
+  const harvested = rows.reduce((total, row) => total + factUnits(row.harvestedKg), 0n);
+  const lost = rows.reduce((total, row) => total + factUnits(row.lostKg), 0n);
+  return { area, harvested, kept: harvested > lost ? harvested - lost : 0n };
+}
 /** Per-area and per-kg figures need a season or all records: a date range holds part of a cycle's costs but all of its acres. */
 export type MetricView = "SEASON" | "ALL_RECORDS" | "DATE_RANGE";
 export interface CropCurrencyMetrics { currency: string; costs: string; revenue: string; costPerAcre: MetricValue; revenuePerAcre: MetricValue; costPerKg: MetricValue }
@@ -69,10 +76,7 @@ export function cropMetrics(cycles: readonly CropCycleFacts[], events: readonly 
   const byEnterprise = new Map<string, CropCycleFacts[]>();
   for (const cycle of cycles) byEnterprise.set(cycle.enterpriseId, [...(byEnterprise.get(cycle.enterpriseId) ?? []), cycle]);
   return [...byEnterprise.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([enterpriseId, rows]) => {
-    const area = rows.reduce((total, row) => total + factUnits(row.areaPlanted) * AREA_SIZE[row.areaUnit], 0n);
-    const harvested = rows.reduce((total, row) => total + factUnits(row.harvestedKg), 0n);
-    const lost = rows.reduce((total, row) => total + factUnits(row.lostKg), 0n);
-    const kept = harvested > lost ? harvested - lost : 0n;
+    const { area, harvested, kept } = cropTotals(rows);
     const crops = new Set(rows.map(row => row.cropId));
     const blocked = view === "DATE_RANGE" ? "DATE_RANGE" as const : crops.size > 1 ? "MORE_THAN_ONE_CROP" as const : null;
     const perAcre = (units: bigint, scale: bigint) => blocked ? unavailable(blocked) : area === 0n ? unavailable("NO_AREA") : available(ratioString(units * ACRE_SIZE, area * scale, MONEY_PER_UNIT_DECIMALS));
@@ -113,10 +117,15 @@ export interface BatchCurrencyMetrics {
 }
 export interface BatchMetrics { batchId: string; label: string; enterpriseId: string; animalTypeName: string; soFar: boolean; birdsStarted: string; deaths: string; mortalityRate: MetricValue; currencies: BatchCurrencyMetrics[] }
 
+/** Starting quantity plus later purchases, in QUANTITY_SCALE units (D-P08-006). */
+export function birdsStarted(batch: BatchFacts): bigint {
+  return BigInt(batch.startingQuantity) * QUANTITY_SCALE + factUnits(batch.birdsPurchased);
+}
+
 /** Whole-life figures for each batch; `events` must not be narrowed by season or dates, and carry each record's batch. */
 export function batchMetrics(batches: readonly BatchFacts[], events: readonly RecognitionEvent[]): BatchMetrics[] {
   return batches.map(batch => {
-    const started = BigInt(batch.startingQuantity) * QUANTITY_SCALE + factUnits(batch.birdsPurchased), deaths = factUnits(batch.deaths);
+    const started = birdsStarted(batch), deaths = factUnits(batch.deaths);
     const notLinked = new Map<string, bigint>();
     for (const event of events) if (event.enterpriseId === batch.enterpriseId && event.effect === "COST" && !event.batchId) notLinked.set(event.currency, (notLinked.get(event.currency) ?? 0n) + moneyUnits(event.amount));
     const linked = sumsByCurrency(events.filter(event => event.batchId === batch.batchId));

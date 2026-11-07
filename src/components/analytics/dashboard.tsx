@@ -12,6 +12,9 @@ const unavailableText: Record<UnavailableReason, string> = {
   DATE_RANGE: "Not available for chosen dates. Choose a season or all records.",
   NO_BIRDS: "Not available: no birds recorded in this batch.",
   NEVER_SOLD: "Not available: not sold yet.",
+  NO_EARLIER_SEASON: "Not available: no earlier season grew this crop.",
+  NO_EARLIER_BATCH: "Not available: no earlier batch of these birds.",
+  NO_BASELINE: "Not available: nothing earlier to compare with.",
 };
 
 /** A figure, or the plain reason it cannot be worked out (D-P08-007). Never a 0 standing in for "unknown". */
