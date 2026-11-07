@@ -4,12 +4,13 @@ import { authorizeProductionFarm, parseProductionInput as parse, type Production
 import type { FarmReportRepository } from "@/modules/farm-accounting/contracts/accounting";
 import { recognizedEvents } from "@/modules/farm-accounting/domain/accounting";
 import { eventsInScope } from "@/modules/farm-accounting/domain/reporting";
-import { ALL_RECORDS, dashboardQuerySchema, type DashboardSeasons, type DashboardView, type MetricFactsRepository, type MetricsView, type TrendsView } from "../contracts/profitability";
+import { ALL_RECORDS, dashboardQuerySchema, type DashboardSeasons, type DashboardView, type MetricFactsRepository, type FarmScreen, type MetricsView, type TrendsView } from "../contracts/profitability";
 import { batchMetrics, costGroupTotals, cropMetrics, stockValue, type CostGroup } from "../domain/metrics";
 import { farmDashboard, latestActiveSeason, seasonEvents } from "../domain/profitability";
+import { reconcile } from "../domain/reconcile";
 import { batchTrends, cropTrends } from "../domain/trends";
 
-/** R001 to R003: authorize the farm first; figures are calculated from source records on every request (D-P08-008). */
+/** R001 to R004: authorize the farm first; figures are calculated from source records on every request (D-P08-008). */
 export class FarmProfitabilityService {
   constructor(private readonly authorization: RegistryAuthorization, private readonly farms: ProductionFarmAccess, private readonly reports: Pick<FarmReportRepository, "reportSources">, private readonly seasons: DashboardSeasons, private readonly facts: MetricFactsRepository, private readonly now: () => Date = () => new Date()) {}
 
@@ -70,5 +71,14 @@ export class FarmProfitabilityService {
       crops: season ? cropTrends(facts.cycles, events, known, season.seasonId) : [],
       batches: batchTrends(facts.batches, events),
     };
+  }
+
+  /**
+   * R004: everything "How the farm is doing" shows, for one view, with the check that it adds up (L gate).
+   * Each part authorizes and validates before it reads, so a denied or invalid request reads nothing.
+   */
+  async farmScreen(farmId: unknown, input: unknown = {}): Promise<FarmScreen> {
+    const [dashboard, metrics, trends] = await Promise.all([this.dashboard(farmId, input), this.metrics(farmId, input), this.trends(farmId, input)]);
+    return { dashboard, metrics, trends, reconciliation: reconcile(dashboard.currencies, metrics.costGroups, metrics.crops) };
   }
 }

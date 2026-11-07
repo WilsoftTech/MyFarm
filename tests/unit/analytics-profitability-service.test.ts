@@ -95,6 +95,18 @@ describe("farm dashboard service (P08-T002)", () => {
     expect((await service.trends(farmId, { seasonId: oldest })).crops).toMatchObject([{ season: { seasonId: oldest }, unavailable: "NO_EARLIER_SEASON" }]);
     expect((await service.trends(farmId, { seasonId: active })).crops).toMatchObject([{ earlierSeason: null }]);
   });
+  it("the farm screen gives every part for one view with its reconciliation, and a denied farm reads nothing (P08-T011)", async () => {
+    const { service, farms, reports, facts } = fixture();
+    const screen = await service.farmScreen(farmId);
+    expect(screen.dashboard.currencies).toMatchObject([{ expenses: "70" }]);
+    expect(screen.metrics.costGroups).toEqual([{ currency: "UGX", labour: "0", inputs: "0", other: "70" }]);
+    expect(screen.reconciliation).toEqual({ reconciled: true, checked: 4, failures: [] });
+    vi.mocked(farms.farmScopeForMember).mockResolvedValue(null);
+    vi.mocked(reports.reportSources).mockClear(); vi.mocked(facts.facts).mockClear();
+    await expect(service.farmScreen(farmId)).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(reports.reportSources).not.toHaveBeenCalled();
+    expect(facts.facts).not.toHaveBeenCalled();
+  });
   it("refuses a season it cannot find without reading any money", async () => {
     const { service, reports } = fixture();
     await expect(service.dashboard(farmId, { seasonId: id() })).rejects.toMatchObject({ code: "FORBIDDEN" });

@@ -4,6 +4,7 @@ import { reportDate } from "@/modules/farm-accounting/contracts/accounting";
 import { RECOGNITION_BASES } from "@/modules/farm-accounting/domain/accounting";
 import type { FarmScope } from "@/modules/enterprises-seasons/domain/production";
 import type { BatchMetrics, CostGroup, CostGroupTotals, CropMetrics, StockItemFacts, StockValue } from "../domain/metrics";
+import type { Reconciliation } from "../domain/reconcile";
 import type { BatchTrend, CropTrend, TrendBatchFacts, TrendCycleFacts } from "../domain/trends";
 import type { CurrencyDashboard, EnterpriseName, UnlinkedAmounts } from "../domain/profitability";
 
@@ -79,3 +80,6 @@ export interface TrendsView extends Pick<DashboardView, "basis" | "season" | "fr
   crops: CropTrend[];
   batches: BatchTrend[];
 }
+
+/** R004: one view of the farm screen, and whether its figures add up. A failed check is shown, never hidden or corrected. */
+export interface FarmScreen { dashboard: DashboardView; metrics: MetricsView; trends: TrendsView; reconciliation: Reconciliation }

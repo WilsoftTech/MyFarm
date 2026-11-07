@@ -3,14 +3,16 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - Phase 8 start and T001 evidence; historical checkpoints preserved.
 - Implementation status: REFERENCE ONLY - N/A (navigation and verified progress record).
-- Last reviewed: 2026-11-07 (Africa/Nairobi).
-- Related phase/task IDs: MYF-P08-T001 through MYF-P08-T010; D-P07-009; D-P08-001 through D-P08-011.
-- Verified completed work: Phase 7 accepted with conditions (D-P07-009); hosted CI passes at 0298f20. Phase 8 T001-T010 (10/13): reconciliation checks and MVP scope guard; AC001-AC003 verified locally.
-- Remaining work/blockers: Phase 8 T011-T013. P7-C1 and P7-C3 to P7-C6 stay open. Migration 202611040001 is not applied to hosted. The owner authorized pushing Phase 8 on 2026-11-07 (D-P08-012); hosted database changes are not authorized.
+- Last reviewed: 2026-11-08 (Africa/Nairobi).
+- Related phase/task IDs: MYF-P08-T001 through MYF-P08-T011; D-P07-009; D-P08-001 through D-P08-011.
+- Verified completed work: Phase 7 accepted with conditions (D-P07-009); hosted CI passes at 0298f20. Phase 8 T001-T011 (11/13): farm screen service and offline journey regression; AC001-AC003 verified locally.
+- Remaining work/blockers: Phase 8 T012-T013. P7-C1 and P7-C3 to P7-C6 stay open. Migration 202611040001 is not applied to hosted. The owner authorized pushing Phase 8 on 2026-11-07 (D-P08-012); hosted database changes are not authorized.
 - Evidence/report links: [Phase 8 start and T001](reports/phase-08-start-2026-11-03.md); [Phase 7 closeout](reports/phase-07-closeout-2026-11-03.md).
 <!-- MYFARM-STATUS-END -->
 
-Current checkpoint - **Phase 8 PARTIALLY COMPLETE - 76.92% (10/13)**. T010 adds checks that the farm screen's figures add up, a guard that AI, marketplace, payments and lending are absent, and the register of gates 0 to 8. Next: MYF-P08-T011. [Evidence](reports/phase-08-t010-2026-11-07.md).
+Current checkpoint - **Phase 8 PARTIALLY COMPLETE - 84.62% (11/13)**. T011 adds the farm screen service with reconciliation, and a regression that replays offline money and harvest entries, with lost replies and an interrupted batch, then checks every figure. 1145 unit/component and 318 integration tests pass. Next: MYF-P08-T012. [Evidence](reports/phase-08-t011-2026-11-08.md).
+
+Previous checkpoint (T010, 10/13): T010 adds checks that the farm screen's figures add up, a guard that AI, marketplace, payments and lending are absent, and the register of gates 0 to 8. Next: MYF-P08-T011. [Evidence](reports/phase-08-t010-2026-11-07.md).
 
 Previous checkpoint (T009, 9/13): T009 shows "Compared with before" on the farm screen; AC003 is verified locally on desktop and mobile. 1127 unit/component, 60 anonymous and 173 of 174 signed-in browser tests pass; the one failure is a Phase 7 offline race found and fixed in the next commit. Next: MYF-P08-T010. [Evidence](reports/phase-08-t009-2026-11-07.md).
 
@@ -51,7 +53,7 @@ Current phase: **Phase1 — COMPLETED — 100% (13/13), verdict PASS WITH CONDIT
 | 5 | [Harvest Production and Inventory](phases/phase-05-harvest-inventory.md) | COMPLETED - 100% (13/13), PASS WITH CONDITIONS - HOSTED CI VERIFIED | T001-T013 and AC001-AC004 verified locally and in GitHub CI | P5-C1 resolved 2026-11-03 (D-P06-010), P5-C2 scale, P5-C3 inherited production controls; Phase 6 not started | [Closeout](reports/phase-05-closeout-2026-10-29.md) |
 | 6 | [Production Activities and Farm Calendar](phases/phase-06-farm-activities.md) | COMPLETED - 100% (10/10), PASS WITH CONDITIONS - HOSTED CI VERIFIED | T001-T010 and AC001-AC003 verified locally and in GitHub CI; attachments deferred by owner | P6-C2 attachments; P6-C3 milking; P6-C4 corrections; P6-C5 expansion at scale; Phase 7 not started | [Phase 6 closeout](reports/phase-06-closeout-2026-11-03.md) |
 | 7 | [Offline First Architecture](phases/phase-07-offline-first.md) | COMPLETED - 100% (13/13), PASS WITH CONDITIONS - LOCAL VERIFICATION, owner accepted 2026-11-03 (D-P07-009) | T001-T013 and AC001-AC004 verified from a clean checkout | P7-C1 real-device measurement; P7-C2 resolved (hosted run 41589795797 at 0298f20); P7-C3 hosted photo schema; P7-C4 to P7-C6 | [Phase 7 closeout](reports/phase-07-closeout-2026-11-03.md) |
-| 8 | [Farm Analytics and Profitability Engine](phases/phase-08-analytics-profitability.md) | PARTIALLY COMPLETE - 76.92% (10/13) | T001-T010; AC001-AC003 locally | T011-T013; AC004 | [Start and T001](reports/phase-08-start-2026-11-03.md), [T002](reports/phase-08-t002-2026-11-03.md), [T003](reports/phase-08-t003-2026-11-03.md), [T004](reports/phase-08-t004-2026-11-04.md), [T005](reports/phase-08-t005-2026-11-04.md), [T006](reports/phase-08-t006-2026-11-05.md), [T007](reports/phase-08-t007-2026-11-07.md), [T008](reports/phase-08-t008-2026-11-07.md), [T009](reports/phase-08-t009-2026-11-07.md), [T010](reports/phase-08-t010-2026-11-07.md) |
+| 8 | [Farm Analytics and Profitability Engine](phases/phase-08-analytics-profitability.md) | PARTIALLY COMPLETE - 84.62% (11/13) | T001-T011; AC001-AC003 locally | T012-T013; AC004 | [Start and T001](reports/phase-08-start-2026-11-03.md), [T002](reports/phase-08-t002-2026-11-03.md), [T003](reports/phase-08-t003-2026-11-03.md), [T004](reports/phase-08-t004-2026-11-04.md), [T005](reports/phase-08-t005-2026-11-04.md), [T006](reports/phase-08-t006-2026-11-05.md), [T007](reports/phase-08-t007-2026-11-07.md), [T008](reports/phase-08-t008-2026-11-07.md), [T009](reports/phase-08-t009-2026-11-07.md), [T010](reports/phase-08-t010-2026-11-07.md), [T011](reports/phase-08-t011-2026-11-08.md) |
 | 9 | [Field Pilot and Product Validation](phases/phase-09-field-pilot.md) | NOT STARTED — 0% | None | All H tasks | None |
 | 10 | [Farm Intelligence Engine](phases/phase-10-farm-intelligence.md) | NOT STARTED — 0% | None | All H tasks | None |
 | 11 | [AI Farm Assistant](phases/phase-11-ai-assistant.md) | NOT STARTED — 0% | None | All H tasks | None |
