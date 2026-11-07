@@ -35,8 +35,8 @@ jobs:
       - run: npm test
       - run: npm run db:migrate
       - run: npm run test:integration
-      - name: Non-UTC stock, accounting and activity verification
-        run: npm run test:integration -- tests/integration/harvest-service.test.ts tests/integration/poultry-production.test.ts tests/integration/stock-operations.test.ts tests/integration/stock-reconstruction.test.ts tests/integration/farm-accounting-service.test.ts tests/integration/activity-service.test.ts tests/integration/activity-lifecycle.test.ts tests/integration/activity-recurrence.test.ts tests/integration/offline-server.test.ts
+      - name: Non-UTC stock, accounting, activity and analytics verification
+        run: npm run test:integration -- tests/integration/harvest-service.test.ts tests/integration/poultry-production.test.ts tests/integration/stock-operations.test.ts tests/integration/stock-reconstruction.test.ts tests/integration/farm-accounting-service.test.ts tests/integration/activity-service.test.ts tests/integration/activity-lifecycle.test.ts tests/integration/activity-recurrence.test.ts tests/integration/offline-server.test.ts tests/integration/analytics-profitability.test.ts tests/integration/analytics-metrics.test.ts tests/integration/analytics-trends.test.ts tests/integration/mvp-journey.test.ts
         env:
           TZ: Africa/Nairobi
       - run: npx prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code
