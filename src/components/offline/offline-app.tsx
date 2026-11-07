@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/farmer-registry/field";
 import { Select } from "@/components/ui/select";
@@ -58,12 +58,17 @@ function CachedRecords({ db, farmId, records, entries, lastSyncAt, onSaved }: { 
 
 function OfflineWork({ db, online, onChanged, health, refreshKey }: { db: LocalDatabase; online: boolean; onChanged: () => void; health: StorageHealth; refreshKey: number }) {
   const [farms, setFarms] = useState<CachedFarm[]>([]), [farmId, setFarmId] = useState(""), [records, setRecords] = useState<FarmRecords>({}), [outbox, setOutbox] = useState<OutboxEntry[]>([]), [action, setAction] = useState<OfflineAction | "records" | null>(null), [loaded, setLoaded] = useState(false);
+  // Loads overlap (opening, a send attempt, a farm change). Only the newest may apply, or a load that started
+  // before the farmer chose a farm could finish later and put the earlier farm back.
+  const newest = useRef(0);
   const load = useCallback(async () => {
+    const ticket = ++newest.current;
     const rows = await db.farms.toArray();
     const chosen = rows.some(row => row.farmId === farmId) ? farmId : rows[0]?.farmId ?? "";
     const [cached, entries] = chosen ? await Promise.all([db.records.where("farmId").equals(chosen).toArray(), db.outbox.where("farmId").equals(chosen).toArray()]) : [[] as CachedRecord[], [] as OutboxEntry[]];
     const grouped: FarmRecords = {};
     for (const row of cached) (grouped[row.section] ??= []).push(row);
+    if (ticket !== newest.current) return;
     setFarms(rows); setFarmId(chosen); setRecords(grouped); setOutbox(entries.filter(row => row.syncStatus !== "SYNCED")); setLoaded(true);
   }, [db, farmId]);
   useEffect(() => { void Promise.resolve().then(load).catch(() => undefined); }, [load, refreshKey]);
