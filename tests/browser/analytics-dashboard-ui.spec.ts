@@ -4,7 +4,7 @@ import { z } from "zod";
 import { readProductionBrowserFixtures, type ProductionBrowserFixtures } from "../support/production-browser-fixtures";
 import { clearInventoryBrowser, prepareInventoryBrowser } from "../support/inventory-browser";
 import { offlineServer } from "../support/offline-server";
-import { openOffline, prepared, recordExpense } from "../support/offline-browser";
+import { expenseCount, openOffline, prepared, recordExpense } from "../support/offline-browser";
 const id = () => crypto.randomUUID();
 const origin = { origin: "http://127.0.0.1:3102" };
 const seed = { fertilizer: "f4040002-0000-4000-8000-000000000111", feed: "f4040002-0000-4000-8000-000000000112", rent: "f4040002-0000-4000-8000-000000000105", cropSales: "f4040002-0000-4000-8000-000000000204", eggSales: "f4040002-0000-4000-8000-000000000202", otherIncome: "f4040002-0000-4000-8000-000000000201", maize: "f4030005-0000-4000-8000-000000000001" };
@@ -341,6 +341,56 @@ test("D-P08-003 an expense saved offline with a batch sends once and counts for 
     expect(response.status()).toBe(200);
     const body = z.object({ metrics: z.object({ batches: z.array(z.object({ batchId: z.string(), currencies: z.array(z.object({ costs: z.string(), costPerBird: z.object({ value: z.string() }) })) })) }) }).parse(await response.json());
     expect(body.metrics.batches.find(row => row.batchId === one.batchId)?.currencies[0]).toMatchObject({ costs: "20000", costPerBird: { value: "2000" } });
+  } finally { await server.stop(); await clearInventoryBrowser(f); }
+});
+
+test("MYF-P08-AC004 the source farmer journey: entries made offline send once, and the farm screen adds up", async ({ page, context }) => {
+  test.setTimeout(150_000);
+  const s = await season(context, "2026A", "2026-03-01"), hill = await plot(context), maize = await enterprise(context, "Maize", "CROP"), storeName = "Journey store " + id().slice(0, 8);
+  await create(context, "storage-locations", { name: storeName }, z.object({}).loose());
+  await create(context, "crop-cycles", { enterpriseId: maize, seasonId: s, plotId: hill, cropId: seed.maize, areaPlanted: "3", areaUnit: "ACRE", plantingDate: "2026-03-02" }, z.object({}).loose());
+  const f = await prepareInventoryBrowser(), server = offlineServer(3103), base = server.baseURL, farm = f.farms.a;
+  await server.start();
+  try {
+    await prepared(context, page, base, f);
+    await openOffline(page, base, farm);
+    await server.stop();
+    await page.getByRole("button", { name: "Record expense" }).click();
+    await page.getByLabel("What was it for?", { exact: true }).selectOption({ label: "Fertilizer" });
+    await page.getByLabel("Amount", { exact: true }).fill("2100000");
+    await page.getByLabel(/^Enterprise/).selectOption({ label: "Maize" });
+    await page.getByRole("button", { name: "Save expense" }).click();
+    await expect(page.getByText("Saved on this phone. It will send when you reconnect.")).toBeVisible();
+    await page.getByRole("button", { name: "Record harvest" }).click();
+    await page.getByLabel("Crop cycle", { exact: true }).selectOption({ index: 1 });
+    await page.getByLabel("Store", { exact: true }).selectOption({ label: storeName });
+    await page.getByLabel("Harvested kilograms", { exact: true }).fill("4000");
+    await page.getByLabel("Initial loss in kilograms", { exact: true }).fill("250");
+    await page.getByRole("button", { name: "Save harvest" }).click();
+    await expect(page.getByText("Saved on this phone. It will send when you reconnect.")).toBeVisible();
+
+    // Reconnect, with the first send cut off after the server has the batch: the retry must not double anything.
+    await server.start();
+    let cut = false;
+    await page.route("**/api/v1/sync/push", async route => { if (cut) return route.continue(); cut = true; await route.fetch(); await route.abort(); });
+    await page.getByRole("button", { name: "Send now" }).click();
+    await expect.poll(() => cut).toBe(true);
+    await page.getByRole("button", { name: "Send now" }).click();
+    await expect(page.getByText("All your entries have been sent.")).toBeVisible({ timeout: 20_000 });
+    await page.unroute("**/api/v1/sync/push");
+    expect(await expenseCount(context, base, farm, "2100000")).toBe(1);
+
+    await page.goto(base + url(farm, "?seasonId=all"));
+    await expect(figure(page, "Recorded surplus")).toHaveText("UGX -2,100,000");
+    await expect(page.getByRole("heading", { name: "These figures do not add up" })).toHaveCount(0);
+    const crop = page.getByRole("list", { name: "Crop figures" }).getByRole("listitem");
+    await expect(metric(crop, "Kept after loss")).toHaveText("3,750 kg");
+    await expect(metric(crop, "Yield per acre")).toHaveText("1,333.33 kg");
+    await expect(metric(crop, "Cost per acre")).toHaveText("UGX 700,000");
+    await expect(metric(crop, "Cost per kg, the price to break even")).toHaveText("UGX 560");
+    await noSideScroll(page);
+    // The MVP stops before field testing: later-phase screens do not exist.
+    for (const path of ["/assistant", "/marketplace", "/wallet", "/loans"]) expect((await page.goto(base + path))?.status()).toBe(404);
   } finally { await server.stop(); await clearInventoryBrowser(f); }
 });
 
