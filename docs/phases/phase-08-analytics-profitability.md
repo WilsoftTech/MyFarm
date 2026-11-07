@@ -2,15 +2,15 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - requirements, Q10, Q12 and Q17 against owner decisions.
-- Implementation status: PARTIALLY COMPLETE - 92.31% (12/13 verified tasks).
+- Implementation status: COMPLETED - 100% (13/13 verified tasks), PASS WITH CONDITIONS - LOCAL VERIFICATION, awaiting owner acceptance.
 - Last reviewed: 2026-11-08 (Africa/Nairobi).
-- Related phase/task IDs: Phase 08; MYF-P08-T001 through MYF-P08-T013; D-P08-001 through D-P08-008.
-- Verified completed work: T001 dashboard rules; T002 authorized service and endpoint; T003 screen and AC001 locally; T004 approved formula catalog, metric rules and additive migration; T005: metrics service and endpoint, server-side batch link; AC001 verified locally. T006: metric screens and batch link on forms; AC002 verified locally. T007: trend rules with golden fixtures. T008: trends service and endpoint. T009: trends on screen; AC003 verified locally. T010: reconciliation checks, MVP scope guard and gate register. T011: farm screen service and offline journey regression. T012: reconciliation on screen and the source farmer journey; AC004 verified locally.
-- Remaining work/blockers: T013 phase audit and exit gate.
-- Evidence/report links: [Phase 8 start and T001](../reports/phase-08-start-2026-11-03.md); [Decisions](../DECISION-LOG.md#d-p08-001---phase-8-start-and-task-commits).
+- Related phase/task IDs: Phase 08; MYF-P08-T001 through MYF-P08-T013; D-P08-001 through D-P08-013.
+- Verified completed work: T001 dashboard rules; T002 authorized service and endpoint; T003 screen and AC001 locally; T004 approved formula catalog, metric rules and additive migration; T005: metrics service and endpoint, server-side batch link; AC001 verified locally. T006: metric screens and batch link on forms; AC002 verified locally. T007: trend rules with golden fixtures. T008: trends service and endpoint. T009: trends on screen; AC003 verified locally. T010: reconciliation checks, MVP scope guard and gate register. T011: farm screen service and offline journey regression. T012: reconciliation on screen and the source farmer journey; AC004 verified locally. T013: clean-checkout audit; AC001-AC004 PASS locally.
+- Remaining work/blockers: Owner acceptance of conditions P8-C1 to P8-C5, notably the hosted schema step; hosted CI on the pushed commits.
+- Evidence/report links: [Closeout](../reports/phase-08-closeout-2026-11-08.md); [Phase 8 start and T001](../reports/phase-08-start-2026-11-03.md); [Decisions](../DECISION-LOG.md#d-p08-001---phase-8-start-and-task-commits).
 <!-- MYFARM-STATUS-END -->
 
-Status: **PARTIALLY COMPLETE**, authorized by D-P08-001. Specification date: 2026-10-08. Where owner decisions D-P08-002 to D-P08-008 differ from the proposals below, the decisions govern; in particular, the F tables are not built (D-P08-008). Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **COMPLETED, PASS WITH CONDITIONS - LOCAL VERIFICATION**, awaiting owner acceptance ([closeout](../reports/phase-08-closeout-2026-11-08.md)); authorized by D-P08-001 and D-P08-012. Specification date: 2026-10-08. Where owner decisions D-P08-002 to D-P08-008 differ from the proposals below, the decisions govern; in particular, the F tables are not built (D-P08-008). Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
@@ -253,8 +253,8 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 - [x] MYF-P08-T010 complete with [evidence](../reports/phase-08-t010-2026-11-07.md).
 - [x] MYF-P08-T011 complete with [evidence](../reports/phase-08-t011-2026-11-08.md).
 - [x] MYF-P08-T012 complete with [evidence](../reports/phase-08-t012-2026-11-08.md).
-- [ ] MYF-P08-T013 complete with evidence.
-- [ ] Every K criterion verified.
-- [ ] Security/integrity audit, remediation and retest complete.
-- [ ] Applicable quality/E2E/integration/migration evidence recorded.
-- [ ] L gate approved; closeout/status updated from evidence.
+- [x] MYF-P08-T013 complete with [evidence](../reports/phase-08-closeout-2026-11-08.md).
+- [x] Every K criterion verified (locally; see closeout).
+- [x] Security/integrity audit, remediation and retest complete.
+- [x] Applicable quality/E2E/integration/migration evidence recorded.
+- [ ] L gate approved by the owner (pending); closeout/status updated from evidence.

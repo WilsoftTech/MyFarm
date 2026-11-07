@@ -1,9 +1,9 @@
-# Requirements traceability
+COMPLETED locally, awaiting owner acceptance; AC004 PASS locally; Phase 0 gate rests on owner acceptance, not farmer evidence ([audit](reports/phase-08-closeout-2026-11-08.md)) |COMPLETED locally, awaiting owner acceptance; AC003 PASS locally ([audit](reports/phase-08-closeout-2026-11-08.md)) |COMPLETED locally, awaiting owner acceptance; AC002 PASS locally ([audit](reports/phase-08-closeout-2026-11-08.md)) |COMPLETED locally, awaiting owner acceptance; AC001 PASS locally ([audit](reports/phase-08-closeout-2026-11-08.md)) |# Requirements traceability
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — T013 task-relevant content, status and evidence.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-11-03 (Africa/Nairobi), Phase 7 T013 audit.
+- Last reviewed: 2026-11-08 (Africa/Nairobi), Phase 8 T013 audit.
 - Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
 - Remaining work/blockers: Phase 3 COMPLETED - 100% (13/13), PASS WITH CONDITIONS - LOCAL VERIFICATION. T013 and all four ACs pass locally; the owner accepted the closeout and approved the two-table hosted closure policy, which is applied and verified. GitHub-hosted CI remains unverified under D-P03-004; inherited production gates remain. Phase 4 is NOT STARTED and requires separate authorization. [Closeout](reports/phase-03-closeout-2026-10-25.md).

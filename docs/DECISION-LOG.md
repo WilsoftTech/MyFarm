@@ -524,3 +524,7 @@ APPROVED, owner 2026-11-04, selecting "Approve as listed (Recommended)". The [fo
 ## D-P08-012 - Finish and push Phase 8
 
 AUTHORIZED, owner 2026-11-07: "complete phase 8. and push it". Work continues from T007 with one commit per verified task, and the Phase 8 commits may be pushed to `origin/main` so hosted CI can run. This does not authorize applying migration `202611040001` or any runtime policy to the hosted database, or any deployment change; those stay separate owner steps.
+
+## D-P08-013 - Phase 8 closeout recommendation
+
+PROPOSED, engineering agent 2026-11-08, AWAITING OWNER ACCEPTANCE. Phase 8 is recommended as PASS WITH CONDITIONS - LOCAL VERIFICATION: T001-T013 and AC001-AC004 pass from a clean checkout of af8defd on a fresh database ([closeout](reports/phase-08-closeout-2026-11-08.md)). Conditions P8-C1 (hosted schema step, needed before hosted use of this code) to P8-C5 need the owner's acceptance. The commits are pushed under D-P08-012 so hosted CI can run; that does not apply anything to the hosted database.

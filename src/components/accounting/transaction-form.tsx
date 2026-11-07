@@ -26,6 +26,8 @@ export interface LinkChoices { pages: Record<AccountingChoiceKind, ChoicePage>; 
 /** Expense/income may name how they were paid; sales/purchases are settled later by payments. Links are optional (R003). */
 export function TransactionForm({ kind, categories, paymentMethods, links, submit }: { kind: AccountingRecordKind; categories: CatalogOption[]; paymentMethods: CatalogOption[]; links?: LinkChoices; submit: CommandSubmit }) {
   const state = useProductionSubmit(submit), form = useRef<HTMLFormElement>(null), withMethod = settledWhenRecorded(kind), withBatch = BATCH_LINK_KINDS.includes(kind);
+  // The four schemas share the form's fields but differ in output type, so the chosen one is typed as the widest.
+  // This only shapes form hints: the server validates every command against its own schema again.
   const resolver = zodResolver({ EXPENSE: recordExpenseSchema, INCOME: recordIncomeSchema, SALE: recordSaleSchema, PURCHASE: recordPurchaseSchema }[kind]) as unknown as Resolver<Values, unknown, RecordExpense>;
   const defaults: Values = { requestId: state.initialRequestId, categoryId: "", amount: "", currency: "UGX", occurredOn: "", counterparty: "", plotId: "", enterpriseId: "", seasonId: "", ...(withBatch ? { batchId: "" } : {}), ...(withMethod ? { paymentMethodId: "" } : {}) };
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<Values, unknown, RecordExpense>({ resolver, shouldFocusError: false, defaultValues: defaults });
