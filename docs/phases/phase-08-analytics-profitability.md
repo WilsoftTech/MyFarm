@@ -2,11 +2,11 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - requirements, Q10, Q12 and Q17 against owner decisions.
-- Implementation status: PARTIALLY COMPLETE - 69.23% (9/13 verified tasks).
+- Implementation status: PARTIALLY COMPLETE - 76.92% (10/13 verified tasks).
 - Last reviewed: 2026-11-07 (Africa/Nairobi).
 - Related phase/task IDs: Phase 08; MYF-P08-T001 through MYF-P08-T013; D-P08-001 through D-P08-008.
-- Verified completed work: T001 dashboard rules; T002 authorized service and endpoint; T003 screen and AC001 locally; T004 approved formula catalog, metric rules and additive migration; T005: metrics service and endpoint, server-side batch link; AC001 verified locally. T006: metric screens and batch link on forms; AC002 verified locally. T007: trend rules with golden fixtures. T008: trends service and endpoint. T009: trends on screen; AC003 verified locally.
-- Remaining work/blockers: T010-T013 and remaining acceptance and exit gates.
+- Verified completed work: T001 dashboard rules; T002 authorized service and endpoint; T003 screen and AC001 locally; T004 approved formula catalog, metric rules and additive migration; T005: metrics service and endpoint, server-side batch link; AC001 verified locally. T006: metric screens and batch link on forms; AC002 verified locally. T007: trend rules with golden fixtures. T008: trends service and endpoint. T009: trends on screen; AC003 verified locally. T010: reconciliation checks, MVP scope guard and gate register.
+- Remaining work/blockers: T011-T013 and remaining acceptance and exit gates.
 - Evidence/report links: [Phase 8 start and T001](../reports/phase-08-start-2026-11-03.md); [Decisions](../DECISION-LOG.md#d-p08-001---phase-8-start-and-task-commits).
 <!-- MYFARM-STATUS-END -->
 
@@ -250,7 +250,7 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 - [x] MYF-P08-T007 complete with [evidence](../reports/phase-08-t007-2026-11-07.md).
 - [x] MYF-P08-T008 complete with [evidence](../reports/phase-08-t008-2026-11-07.md).
 - [x] MYF-P08-T009 complete with [evidence](../reports/phase-08-t009-2026-11-07.md).
-- [ ] MYF-P08-T010 complete with evidence.
+- [x] MYF-P08-T010 complete with [evidence](../reports/phase-08-t010-2026-11-07.md).
 - [ ] MYF-P08-T011 complete with evidence.
 - [ ] MYF-P08-T012 complete with evidence.
 - [ ] MYF-P08-T013 complete with evidence.
