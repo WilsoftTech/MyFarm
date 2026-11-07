@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { FarmProfitabilityService } from "@/modules/analytics-profitability/application/profitability";
-import type { DashboardSeasons } from "@/modules/analytics-profitability/contracts/profitability";
+import type { DashboardSeasons, MetricFacts, MetricFactsRepository } from "@/modules/analytics-profitability/contracts/profitability";
 import type { RegistryAuthorization } from "@/modules/farmer-registry/application/registry";
 import type { ProductionFarmAccess } from "@/modules/enterprises-seasons/application/farm-access";
 import { FoundationError } from "@/modules/engineering-foundation/domain/errors";
@@ -23,7 +23,7 @@ function fixture() {
     seasons: vi.fn(async () => [season(closed, "CLOSED", "2027-06-01"), season(active, "ACTIVE", "2027-03-01")]),
     season: vi.fn(async () => null),
   };
-  const facts = { facts: vi.fn(async () => ({ cycles: [], enterprises: [], batches: [], items: [], costGroups: [] })) };
+  const facts: MetricFactsRepository = { facts: vi.fn(async (): Promise<MetricFacts> => ({ cycles: [], enterprises: [], batches: [], items: [], costGroups: [] })) };
   return { service: new FarmProfitabilityService(authorization, farms, reports, seasons, facts, () => now), authorization, farms, reports, seasons, facts };
 }
 
@@ -69,6 +69,31 @@ describe("farm dashboard service (P08-T002)", () => {
     expect(facts.facts).toHaveBeenCalledWith(scope, active);
     await service.metrics(farmId, { seasonId: "all" });
     expect(facts.facts).toHaveBeenLastCalledWith(scope, null);
+  });
+  it("trends authorize and validate before reading anything, and read every season's facts (P08-T008)", async () => {
+    for (const reason of ["unauthenticated", "farm", "role", "filter"]) {
+      const { service, authorization, farms, reports, facts } = fixture();
+      if (reason === "unauthenticated") vi.mocked(authorization.account).mockRejectedValue(new FoundationError("UNAUTHENTICATED"));
+      if (reason === "farm") vi.mocked(farms.farmScopeForMember).mockResolvedValue(null);
+      if (reason === "role") vi.mocked(authorization.scope).mockRejectedValue(new FoundationError("FORBIDDEN"));
+      await expect(service.trends(farmId, { basis: reason === "filter" ? "NET" : "ACCRUAL", ...(reason === "filter" ? {} : { tenantId: id() }) })).rejects.toMatchObject({ code: reason === "unauthenticated" ? "UNAUTHENTICATED" : reason === "filter" ? "INVALID_INPUT" : "FORBIDDEN" });
+      expect(reports.reportSources).not.toHaveBeenCalled();
+      expect(facts.facts).not.toHaveBeenCalled();
+    }
+    const { service, facts, reports } = fixture();
+    expect(await service.trends(farmId)).toMatchObject({ season: { seasonId: active }, cropsNeedSeason: false, crops: [], batches: [], asOf: now.toISOString() });
+    expect(facts.facts).toHaveBeenCalledWith(scope, null);
+    expect(reports.reportSources).toHaveBeenCalledWith(scope, { basis: "ACCRUAL", from: undefined, to: undefined });
+    expect(await service.trends(farmId, { from: "2027-01-01" })).toMatchObject({ season: null, cropsNeedSeason: true, crops: [] });
+    expect(reports.reportSources).toHaveBeenLastCalledWith(scope, { basis: "ACCRUAL", from: undefined, to: undefined });
+  });
+  it("trends compare a season opened past the listed ones with the listed seasons before it", async () => {
+    const { service, seasons, facts } = fixture(), oldest = id(), maize = id();
+    vi.mocked(seasons.season).mockResolvedValue(season(oldest, "CLOSED", "2020-01-01"));
+    const cycle = (seasonId: string) => ({ cycleId: id(), seasonId, enterpriseId: id(), cropId: maize, cropName: "Maize", areaPlanted: "1", areaUnit: "ACRE" as const, status: "CLOSED" as const, harvestedKg: "10", lostKg: "0" });
+    vi.mocked(facts.facts).mockResolvedValue({ cycles: [cycle(oldest), cycle(active)], enterprises: [], batches: [], items: [], costGroups: [] });
+    expect((await service.trends(farmId, { seasonId: oldest })).crops).toMatchObject([{ season: { seasonId: oldest }, unavailable: "NO_EARLIER_SEASON" }]);
+    expect((await service.trends(farmId, { seasonId: active })).crops).toMatchObject([{ earlierSeason: null }]);
   });
   it("refuses a season it cannot find without reading any money", async () => {
     const { service, reports } = fixture();

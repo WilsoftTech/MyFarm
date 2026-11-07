@@ -3,7 +3,8 @@ import { idSchema } from "@/modules/engineering-foundation/contracts/identity";
 import { reportDate } from "@/modules/farm-accounting/contracts/accounting";
 import { RECOGNITION_BASES } from "@/modules/farm-accounting/domain/accounting";
 import type { FarmScope } from "@/modules/enterprises-seasons/domain/production";
-import type { BatchFacts, BatchMetrics, CostGroup, CostGroupTotals, CropCycleFacts, CropMetrics, StockItemFacts, StockValue } from "../domain/metrics";
+import type { BatchMetrics, CostGroup, CostGroupTotals, CropMetrics, StockItemFacts, StockValue } from "../domain/metrics";
+import type { BatchTrend, CropTrend, TrendBatchFacts, TrendCycleFacts } from "../domain/trends";
 import type { CurrencyDashboard, EnterpriseName, UnlinkedAmounts } from "../domain/profitability";
 
 /** The filter value for "not one season": every record, or the chosen dates. */
@@ -55,9 +56,11 @@ export interface MetricsView extends Pick<DashboardView, "basis" | "season" | "f
 }
 /** Everything the formulas divide by, read fresh. Reversed harvests, losses, deaths, purchases and sales are already left out. */
 export interface MetricFacts {
-  cycles: CropCycleFacts[];
+  /** Each carries its season, so trends can find an earlier one. */
+  cycles: TrendCycleFacts[];
   enterprises: EnterpriseName[];
-  batches: BatchFacts[];
+  /** Newest first; each carries its animal type and acquisition date, so trends can find the previous batch. */
+  batches: TrendBatchFacts[];
   items: StockItemFacts[];
   costGroups: { categoryId: string; group: CostGroup }[];
 }
@@ -65,3 +68,14 @@ export interface MetricFacts {
 export const MAX_METRIC_BATCHES = 100, MAX_METRIC_ITEMS = 200;
 /** Read port. Constrains tenant AND farm. Cycles are of one season, or of every season when none is given. */
 export interface MetricFactsRepository { facts(scope: FarmScope, seasonId: string | null): Promise<MetricFacts> }
+
+/**
+ * R003 trends for the same filters (D-P08-007). Crops compare one season with an earlier one, so they need a season
+ * view; batches compare whole lives, whichever season or dates are shown. Figures are calculated when asked for.
+ */
+export interface TrendsView extends Pick<DashboardView, "basis" | "season" | "from" | "to" | "asOf"> {
+  /** True when no season is shown, so crop trends are left out until one is chosen. */
+  cropsNeedSeason: boolean;
+  crops: CropTrend[];
+  batches: BatchTrend[];
+}

@@ -4,11 +4,12 @@ import { authorizeProductionFarm, parseProductionInput as parse, type Production
 import type { FarmReportRepository } from "@/modules/farm-accounting/contracts/accounting";
 import { recognizedEvents } from "@/modules/farm-accounting/domain/accounting";
 import { eventsInScope } from "@/modules/farm-accounting/domain/reporting";
-import { ALL_RECORDS, dashboardQuerySchema, type DashboardSeasons, type DashboardView, type MetricFactsRepository, type MetricsView } from "../contracts/profitability";
+import { ALL_RECORDS, dashboardQuerySchema, type DashboardSeasons, type DashboardView, type MetricFactsRepository, type MetricsView, type TrendsView } from "../contracts/profitability";
 import { batchMetrics, costGroupTotals, cropMetrics, stockValue, type CostGroup } from "../domain/metrics";
 import { farmDashboard, latestActiveSeason, seasonEvents } from "../domain/profitability";
+import { batchTrends, cropTrends } from "../domain/trends";
 
-/** R001 and R002: authorize the farm first; figures are calculated from source records on every request (D-P08-008). */
+/** R001 to R003: authorize the farm first; figures are calculated from source records on every request (D-P08-008). */
 export class FarmProfitabilityService {
   constructor(private readonly authorization: RegistryAuthorization, private readonly farms: ProductionFarmAccess, private readonly reports: Pick<FarmReportRepository, "reportSources">, private readonly seasons: DashboardSeasons, private readonly facts: MetricFactsRepository, private readonly now: () => Date = () => new Date()) {}
 
@@ -52,6 +53,22 @@ export class FarmProfitabilityService {
       batches: batchMetrics(facts.batches, whole),
       costGroups: costGroupTotals(events, new Map<string, CostGroup>(facts.costGroups.map(row => [row.categoryId, row.group]))),
       stock: stockValue(facts.items),
+    };
+  }
+
+  /** R003: how figures moved against the same crop's earlier season or the same animal's previous batch (D-P08-007). */
+  async trends(farmId: unknown, input: unknown = {}): Promise<TrendsView> {
+    const { scope, query, seasons, season } = await this.view(farmId, input);
+    // Every record in the view's basis: each side of a trend picks its own season or batch from them.
+    const sources = await this.reports.reportSources(scope, { basis: query.basis, from: undefined, to: undefined });
+    const events = recognizedEvents(query.basis, sources.records, sources.payments);
+    const facts = await this.facts.facts(scope, null);
+    // A season opened by its ID past the listed ones still compares with the listed seasons before it.
+    const known = season && !seasons.some(row => row.seasonId === season.seasonId) ? [...seasons, season] : seasons;
+    return {
+      basis: query.basis, season, from: query.from ?? null, to: query.to ?? null, asOf: this.now().toISOString(), cropsNeedSeason: !season,
+      crops: season ? cropTrends(facts.cycles, events, known, season.seasonId) : [],
+      batches: batchTrends(facts.batches, events),
     };
   }
 }
