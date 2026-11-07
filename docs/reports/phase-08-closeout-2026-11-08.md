@@ -2,11 +2,11 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - Phase 8 requirements, implementation, security and verification evidence.
-- Implementation status: COMPLETED - 100% (13/13 verified tasks), PASS WITH CONDITIONS - LOCAL VERIFICATION, hosted CI pending at push, awaiting owner acceptance.
+- Implementation status: COMPLETED - 100% (13/13 verified tasks), PASS WITH CONDITIONS - HOSTED CI VERIFIED, awaiting owner acceptance.
 - Last reviewed: 2026-11-08 (Africa/Nairobi).
 - Related phase/task IDs: MYF-P08-T001 through MYF-P08-T013; MYF-P08-AC001 through MYF-P08-AC004; D-P08-001 through D-P08-013.
-- Verified completed work: T001-T013 and AC001-AC004 verified from a clean checkout of af8defd on a fresh database.
-- Remaining work/blockers: Hosted CI on the pushed commits; owner acceptance of the conditions below, notably the hosted schema step. Phase 9 not started.
+- Verified completed work: T001-T013 and AC001-AC004 verified from a clean checkout of af8defd on a fresh database, and by hosted CI run 42415795028 at 430dd8a.
+- Remaining work/blockers: Owner acceptance of the conditions below, notably the hosted schema step. Phase 9 not started.
 - Evidence/report links: [Phase specification](../phases/phase-08-analytics-profitability.md); [Plan and T001](phase-08-start-2026-11-03.md); [Formula catalog](../architecture/metric-formulas.md); [Document review](phase-08-document-review-2026-11-08.md); [Project status](../PROJECT-STATUS.md).
 <!-- MYFARM-STATUS-END -->
 
@@ -70,7 +70,7 @@ Clean clone of `af8defd`, no `.env.local`, fresh PostgreSQL 17 container, Window
 | Signed-in desktop and mobile suite | PASS, 176 tests |
 | `npm audit --omit=dev` | PASS, 0 vulnerabilities (the full tree including dev tools reports 9 moderate) |
 | `actionlint` on `quality.yml` | PASS |
-| GitHub-hosted CI | Runs on push under D-P08-012; result recorded below |
+| GitHub-hosted CI, run [42415795028](https://github.com/WilsoftTech/MyFarm/actions/runs/42415795028) at 430dd8a | PASS: 1145 unit/component, 318 integration, 180 non-UTC, 60 anonymous and 176 signed-in browser tests, drift and recovery rehearsals |
 
 The CI workflow's non-UTC step now includes the four Phase 8 integration suites.
 
@@ -88,7 +88,7 @@ The CI workflow's non-UTC step now includes the four Phase 8 integration suites.
 
 ## Limitations, deferred work and verdict
 
-**Recommended verdict: PASS WITH CONDITIONS - LOCAL VERIFICATION, pending hosted CI.** All 13 tasks and four acceptance criteria pass from a clean checkout, and no mandatory test is waived. The conditions below need owner acceptance. This closes the MVP build, not a production release.
+**Recommended verdict: PASS WITH CONDITIONS - HOSTED CI VERIFIED.** All 13 tasks and four acceptance criteria pass from a clean checkout, and no mandatory test is waived. The conditions below need owner acceptance. This closes the MVP build, not a production release.
 
 | Condition | Owner | Deadline |
 |---|---|---|
@@ -100,6 +100,10 @@ The CI workflow's non-UTC step now includes the four Phase 8 integration suites.
 
 Open conditions from earlier phases carry forward unchanged, including P7-C1 (real-device measurement) and P7-C3 (hosted photo schema).
 
+## After the push
+
+Under D-P08-012 the commits were pushed (0298f20..430dd8a). Hosted run [42415795028](https://github.com/WilsoftTech/MyFarm/actions/runs/42415795028) at 430dd8a passed every step with the same counts as the local audit. No GitHub deployment was created; the Vercel and Render check suites have never run on this repository. Nothing was applied to the hosted database, so P8-C1 stands.
+
 ## Status-update evidence
 
-Each of T001-T012 has a commit and report; T013 adds fix add2d13, the CI change af8defd, this closeout and the [document review](phase-08-document-review-2026-11-08.md). Progress: **13/13 = 100%**. Next allowed actions: hosted CI result, owner acceptance, the hosted schema step, or authorization for Phase 9. No later phase is started automatically.
+Each of T001-T012 has a commit and report; T013 adds fix add2d13, the CI change af8defd, this closeout and the [document review](phase-08-document-review-2026-11-08.md). Progress: **13/13 = 100%**. Next allowed actions: owner acceptance, the hosted schema step, or authorization for Phase 9. No later phase is started automatically.
