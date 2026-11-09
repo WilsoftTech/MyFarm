@@ -9,6 +9,7 @@ return <nav aria-label="Farm records" className="mb-8 flex flex-wrap items-cente
 <Link href="/farmer" className="py-2 underline-offset-4 hover:underline">My profile</Link>
 <Link href="/workspace" className="py-2 underline-offset-4 hover:underline">Workspace</Link>
 <Link href="/offline" className="py-2 underline-offset-4 hover:underline">Offline work</Link>
+<Link href="/pilot" className="py-2 underline-offset-4 hover:underline">Pilot</Link>
 <OfflineSetup />
 <SignOutForm className="ml-auto" />
 </nav>;

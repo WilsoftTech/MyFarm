@@ -32,7 +32,7 @@ return redirect;
 }
 return response;
 }
-const PROTECTED_PAGES = ["/workspace", "/admin", "/agent", "/farmer", "/farms"];
+const PROTECTED_PAGES = ["/workspace", "/admin", "/agent", "/farmer", "/farms", "/pilot"];
 function isProtectedPage(pathname: string) {
 return PROTECTED_PAGES.some(prefix => pathname === prefix || pathname.startsWith(prefix + "/"));
 }
