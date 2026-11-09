@@ -6,7 +6,7 @@
 - Last reviewed: 2026-11-08 (Africa/Nairobi).
 - Related phase/task IDs: MYF-P08-T001 through MYF-P08-T013; MYF-P08-AC001 through MYF-P08-AC004; D-P08-001 through D-P08-013.
 - Verified completed work: T001-T013 and AC001-AC004 verified from a clean checkout of af8defd on a fresh database, and by hosted CI run 42415795028 at 430dd8a.
-- Remaining work/blockers: Conditions P8-C1 to P8-C5 below stay open, notably the hosted schema step. Phase 9 not started.
+- Remaining work/blockers: P8-C2 (accountant and agronomist sign-off) stays open; P8-C1, C3, C4 and C5 resolved 2026-11-09. Phase 9 not started.
 - Evidence/report links: [Phase specification](../phases/phase-08-analytics-profitability.md); [Plan and T001](phase-08-start-2026-11-03.md); [Formula catalog](../architecture/metric-formulas.md); [Document review](phase-08-document-review-2026-11-08.md); [Project status](../PROJECT-STATUS.md).
 <!-- MYFARM-STATUS-END -->
 
@@ -107,6 +107,29 @@ Under D-P08-012 the commits were pushed (0298f20..430dd8a). Hosted run [42415795
 The docs-only push 2a8a423 then failed hosted run [42416834117](https://github.com/WilsoftTech/MyFarm/actions/runs/42416834117) on one Phase 7 test, `MYF-P07-AC003 entries saved offline send on reconnecting`, on desktop and mobile, with identical application code. The test read the phone's outbox as soon as "Could not reach MyFarm" showed, but that message can still be on screen from the send made when the page opened, so the test could read it while the new send still held its entries. A test-only fix waits for the send to settle; the spec then passed 40 of 40 runs locally. The application was not changed.
 
 The owner approved the closeout on 2026-11-09 (D-P08-014).
+
+## Conditions after acceptance - 2026-11-09
+
+The owner asked to implement P8-C1 to P8-C5 and answered the open choices (D-P08-015 to D-P08-017).
+
+| Condition | State | Evidence |
+|---|---|---|
+| P8-C1 hosted schema | **RESOLVED** | See below. Also applies the Phase 7 photo schema (P7-C3) |
+| P8-C2 accountant and agronomist review | **OPEN**, review pack ready | [Review pack](phase-08-formula-review-pack-2026-11-09.md). Needs named reviewers to sign; no review can be claimed without them |
+| P8-C3 season on offline money entries | **RESOLVED** (D-P08-016) | Phones cache the farm's seasons in a new `SEASONS` pull section, added last. The offline expense and income forms offer an optional season, blank by default. Tested in the pull service, the push contract and the browser journey, where an expense saved offline with season 2026A counts in that season's view |
+| P8-C4 scale | **RESOLVED** | The farm screen authorizes once and reads the farm's records and facts once instead of three times, and a test proves it gives exactly what the three endpoints give in five views. Trends look for an earlier season among all of the farm's seasons, and a batch cut off by the 100-batch limit still serves as the baseline; both are tested on the database with 100 extra seasons and batches |
+| P8-C5 engineering choices | **RESOLVED** (D-P08-017) | Owner approved them as built |
+
+**Hosted application (P8-C1, D-P08-015).** Target: development project `sudqhluwsaijvjjcegpv`, owner credential through the session pooler, TLS verified against the project CA. Before: PostgreSQL 17.11, 32 public tables, 76 rows, 17 finished migrations ending at `202611020003_activity_recurrence`.
+
+- **Backup:** full `pg_dump` in git-ignored `.cache/hosted-backups/pre-phase-08-2026-11-09T19-46-47-301Z.dump`, 611,402 bytes, SHA-256 `31897e2e91d1e83822e6102fead237815aba4b9de72d99331289a20c7ed06d3a`. Its public schema restored into a disposable PostgreSQL 17 container with no errors, and all 32 tables matched the live database by row digest. It holds real account data and exists only on this machine.
+- **Applied:** `prisma migrate deploy` applied `202611030001_record_photos` and `202611040001_metric_links`; all 13 SQL files in `supabase/provisioning.json` then ran.
+- **After:** 19 migrations, none unfinished. One new table, `RecordPhoto`, empty. `AccountingRecord.batchId` and `TransactionCategory.costGroup` exist, with the 7 cost groups seeded. Every other table is unchanged by row digest; `TransactionCategory` differs only by the new column, checked by digest without it. Browser roles hold no grants on public tables; every table has RLS. The runtime role logs in, is not superuser, does not bypass RLS, can read money records and photos, and cannot delete money records.
+- **Application check:** the real services ran read-only against hosted as its one member, through the restricted runtime role and the app's own TLS connection. Money records list, the farm screen loads and reconciles in four views, all three profitability services load, cost groups, photos and seasons are readable, and another farm is refused: 6 of 6.
+
+**Not verified on hosted:** no browser sign-in, because the hosted account's password is not stored here. No record was saved through the app, and no photo was uploaded to Supabase Storage, so P7-C3's real storage upload stays unproven. The pooler's own link to the database still does not report TLS (Phase 1 condition C4).
+
+**Verification of the code changes:** 1148 unit/component, 322 integration, 184 non-UTC and 60 anonymous browser tests pass. In the signed-in suite 175 of 176 passed; the one failure was `net::ERR_NO_BUFFER_SPACE` opening a page, a Windows socket limit hit while the hosted check ran alongside. That spec and the analytics spec then passed 40 of 40.
 
 ## Status-update evidence
 

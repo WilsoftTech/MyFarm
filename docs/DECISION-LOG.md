@@ -532,3 +532,15 @@ PROPOSED, engineering agent 2026-11-08, AWAITING OWNER ACCEPTANCE. Phase 8 is re
 ## D-P08-014 - Phase 8 owner acceptance
 
 APPROVED, owner 2026-11-09: "approved", in reply to the Phase 8 closeout. Phase 8 is accepted as PASS WITH CONDITIONS - HOSTED CI VERIFIED ([closeout](reports/phase-08-closeout-2026-11-08.md)), with P8-C1 to P8-C5 open. This does not authorize applying migration `202611040001` to the hosted database (P8-C1) or starting Phase 9; each needs its own instruction. Hosted run 42416834117 on the docs-only commit 2a8a423 failed on a timing assumption in a Phase 7 browser test; the test now waits for the send to settle, with no application change.
+
+## D-P08-015 - Hosted schema for Phases 7 and 8
+
+AUTHORIZED, owner 2026-11-09: "IMPLEMENT P8-C1-C5", then "Apply both, with backup (Recommended)". Prisma applies pending migrations in order, so P8-C1 also applies the Phase 7 photo migration (P7-C3). Apply `202611030001_record_photos` and `202611040001_metric_links` to hosted development and rerun the full `supabase/provisioning.json` list, after a full backup whose restore is checked. No production system or deployment change.
+
+## D-P08-016 - Season on offline money entries (P8-C3)
+
+APPROVED, owner 2026-11-09, selecting "Optional, blank by default (Recommended)". Phones cache the farm's seasons, and the offline expense and income forms offer an optional season that starts blank. Left blank, the entry is "not linked to a season", as online, so nothing is guessed (D-P08-008). The seasons section is added last to the pull list, so cursors already on phones keep their meaning.
+
+## D-P08-017 - Trend and warning choices (P8-C5)
+
+APPROVED, owner 2026-11-09, selecting "Most recent earlier (Recommended)" and "Accept all as built (Recommended)". A crop is compared with the most recent earlier season that grew it, whatever time of year; two batches started on the same day are not compared; crop trends need a season and are not shown for a date range; the reconciliation warning keeps its wording. These are no longer engineering choices awaiting review. The accountant and agronomist review (P8-C2) may still raise them.

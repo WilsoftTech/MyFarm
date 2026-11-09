@@ -4,9 +4,9 @@
 - Documentation review: REVIEWED - requirements, Q10, Q12 and Q17 against owner decisions.
 - Implementation status: COMPLETED - 100% (13/13 verified tasks), PASS WITH CONDITIONS - HOSTED CI VERIFIED, owner accepted 2026-11-09 (D-P08-014).
 - Last reviewed: 2026-11-08 (Africa/Nairobi).
-- Related phase/task IDs: Phase 08; MYF-P08-T001 through MYF-P08-T013; D-P08-001 through D-P08-013.
+- Related phase/task IDs: Phase 08; MYF-P08-T001 through MYF-P08-T013; D-P08-001 through D-P08-017.
 - Verified completed work: T001 dashboard rules; T002 authorized service and endpoint; T003 screen and AC001 locally; T004 approved formula catalog, metric rules and additive migration; T005: metrics service and endpoint, server-side batch link; AC001 verified locally. T006: metric screens and batch link on forms; AC002 verified locally. T007: trend rules with golden fixtures. T008: trends service and endpoint. T009: trends on screen; AC003 verified locally. T010: reconciliation checks, MVP scope guard and gate register. T011: farm screen service and offline journey regression. T012: reconciliation on screen and the source farmer journey; AC004 verified locally. T013: clean-checkout audit; AC001-AC004 PASS locally.
-- Remaining work/blockers: Conditions P8-C1 to P8-C5 stay open, notably the hosted schema step. Hosted CI passed (run 42415795028).
+- Remaining work/blockers: P8-C2 (accountant and agronomist sign-off) stays open; P8-C1, C3, C4 and C5 resolved 2026-11-09 (D-P08-015 to D-P08-017). Hosted CI passed (run 42415795028).
 - Evidence/report links: [Closeout](../reports/phase-08-closeout-2026-11-08.md); [Phase 8 start and T001](../reports/phase-08-start-2026-11-03.md); [Decisions](../DECISION-LOG.md#d-p08-001---phase-8-start-and-task-commits).
 <!-- MYFARM-STATUS-END -->
 

@@ -3,10 +3,10 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - owner-approved Q17 catalog.
 - Implementation status: REFERENCE ONLY - N/A (approved rules; progress is in the phase specification).
-- Last reviewed: 2026-11-07 (Africa/Nairobi).
+- Last reviewed: 2026-11-09 (Africa/Nairobi).
 - Related phase/task IDs: MYF-P08-R002, MYF-P08-R003, MYF-P08-AC002, MYF-P08-AC003; D-P08-002 through D-P08-011.
 - Verified completed work: Worked examples are unit test fixtures in `tests/unit/analytics-metrics.test.ts` and `tests/unit/analytics-trends.test.ts`.
-- Remaining work/blockers: No accountant or agronomist has reviewed this catalog; that remains open for the Phase 9 field pilot.
+- Remaining work/blockers: No accountant or agronomist has reviewed this catalog yet; the [review pack](../reports/phase-08-formula-review-pack-2026-11-09.md) is ready for them (P8-C2).
 - Evidence/report links: [Decisions](../DECISION-LOG.md#d-p08-011---q17-formula-catalog); [Phase specification](../phases/phase-08-analytics-profitability.md).
 <!-- MYFARM-STATUS-END -->
 
@@ -48,7 +48,7 @@ For one crop in an enterprise, in a season or across all records.
 | Yield per acre | Gross harvested kg ÷ acres |
 | Cost per kg, also the break-even price | Linked costs ÷ kg after recorded loss |
 
-Not available when the enterprise has more than one crop in the view (D-P08-010), or in a date-range view. A date range holds only part of a cycle's costs but all of its acres, so the result would mislead; this is an engineering choice within D-P08-007. A cycle still active is labelled "so far".
+Not available when the enterprise has more than one crop in the view (D-P08-010), or in a date-range view. A date range holds only part of a cycle's costs but all of its acres, so the result would mislead (D-P08-007, approved again in D-P08-017). A cycle still active is labelled "so far".
 
 Example: 2,100,000 UGX, 3 acres, 4,000 kg gross and 250 kg lost gives 700,000 UGX per acre, 1,333.33 kg per acre and 560 UGX per kg.
 
@@ -93,4 +93,4 @@ A trend states how a figure moved; it never explains why (that is later work). I
 
 Example: feed 100,000 → 118,000 UGX is +18%.
 
-The choice of "most recent earlier" season and batch, and the same-day rule, are engineering choices within D-P08-007.
+The choice of "most recent earlier" season and batch, the same-day rule and season-only crop trends were approved by the owner on 2026-11-09 (D-P08-017). A crop's earlier season is looked up among all of the farm's seasons, and a batch cut off by the screen's 100-batch limit still serves as the previous batch (P8-C4). The [review pack](../reports/phase-08-formula-review-pack-2026-11-09.md) asks an accountant and an agronomist to confirm all of this (P8-C2).

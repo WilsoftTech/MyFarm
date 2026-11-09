@@ -107,6 +107,8 @@ Known limits: a phone must connect once while signed in before offline work is p
 
 The owner pushed these commits and accepted the phase with its conditions on 2026-11-03 (D-P07-009). Hosted run 41585234003 at 2c7714b failed: one test hung while stopping its test server on Linux, after all its assertions had passed. The fix is 0298f20, and hosted run [41589795797](https://github.com/WilsoftTech/MyFarm/actions/runs/41589795797) at that commit passed every suite, so P7-C2 is resolved. The statements below that nothing was pushed and that hosted CI had not run describe the moment this report was written.
 
+**2026-11-09:** the photo migration `202611030001_record_photos` and `offline-photos-runtime.sql` were applied to hosted development with the Phase 8 schema, after a verified backup (D-P08-015). P7-C3's schema part is done; a real upload to Supabase Storage has still not been tried. [Evidence](phase-08-closeout-2026-11-08.md#conditions-after-acceptance---2026-11-09).
+
 ## Status-update evidence
 
 Each of T001-T012 has a commit and report, T013 adds fix `30f2aaf` and this closeout. Progress: **13/13 = 100%**. Nothing in Phase 7 has been pushed, and `2886978` from Phase 6 is also local. [Every-document review](phase-07-document-review-2026-11-03.md). Next allowed actions: owner acceptance, a push to run hosted CI, hosted application of the photo schema, or authorization for Phase 8. No later phase is started automatically.
