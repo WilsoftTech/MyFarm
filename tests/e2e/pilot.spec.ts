@@ -23,3 +23,13 @@ test("pilot API routes deny anonymous callers and cross-origin writes without le
     expect((await request.post(path, { headers: { origin: "https://untrusted.test" }, data: { requestId: record } })).status()).toBe(403);
   }
 });
+test("pilot evidence routes deny anonymous callers and cross-origin writes (P09-T006)", async ({ page, request }) => {
+  const base = `/api/v1/scopes/${scope}/pilot/cohorts/${cohort}`;
+  expect((await request.get(base + "/evidence")).status()).toBe(401);
+  for (const path of ["/observations", "/findings", "/findings/" + record + "/close", "/reviews"]) {
+    expect((await request.post(base + path, { headers: origin, data: { requestId: record } })).status()).toBe(401);
+    expect((await request.post(base + path, { headers: { origin: "https://untrusted.test" }, data: { requestId: record } })).status()).toBe(403);
+  }
+  await page.goto(`/admin/pilot/${cohort}/evidence?scope=${scope}`);
+  await expect(page).toHaveURL(/\/sign-in\?reason=session-required/);
+});

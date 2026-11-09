@@ -17,7 +17,7 @@ async function identity(context: BrowserContext, who: "a" | "b" | "admin") {
 const noSideScroll = async (page: Page) => expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 const day = (offset: number) => new Date(Date.now() + 3 * 3_600_000 + offset * 86_400_000).toISOString().slice(0, 10);
 async function clearPilot() {
-  for (const table of ["SupportIncident", "PilotPrompt", "PilotParticipation", "PilotCohort"]) await query(`DELETE FROM "${table}" WHERE "tenantId" = $1::uuid`, [staffOrg]);
+  for (const table of ["PilotFindingEvidence", "PilotFinding", "PilotObservation", "PilotReview", "SupportIncident", "PilotPrompt", "PilotParticipation", "PilotCohort"]) await query(`DELETE FROM "${table}" WHERE "tenantId" = $1::uuid`, [staffOrg]);
   await query('DELETE FROM "PilotUsageEvent" WHERE "tenantId" = ANY($1::uuid[])', [Object.values(fixtures.tenants)]);
 }
 
@@ -136,4 +136,59 @@ test("a wrong code is refused plainly and joins nothing", async ({ page, context
   await page.getByRole("button", { name: "Join the pilot" }).click();
   await expect(page.getByText("That code was not accepted. Check it with the MyFarm team, and tick the box to agree.")).toBeVisible();
   expect((await query('SELECT count(*)::int AS n FROM "PilotParticipation" WHERE "userId" = $1', [fixtures.users.a])).rows[0].n).toBe(0);
+});
+
+test("MYF-P09-AC002 staff record what they see, write findings on it, and decide only what the evidence allows", async ({ page, context }) => {
+  test.setTimeout(120_000);
+  const { PILOT_CONSENT_VERSION } = await import("../../src/modules/field-pilot/domain/consent");
+  // A cohort that started 10 weeks ago, so the week-8 check has been judged.
+  const created = await context.request.post(`/api/v1/scopes/${staffOrg}/pilot/cohorts`, { headers: origin, data: { requestId: id(), name: "Evidence season", startOn: day(-70), endOn: day(40) } });
+  expect(created.status()).toBe(201);
+  const { cohort } = await created.json() as { cohort: { cohortId: string; code: string } };
+  await identity(context, "a");
+  expect((await context.request.post("/api/v1/pilot/participations", { headers: origin, data: { requestId: id(), code: cohort.code, consentVersion: PILOT_CONSENT_VERSION, agreed: true } })).status()).toBe(201);
+
+  await identity(context, "admin");
+  await page.goto(`/admin/pilot/${cohort.cohortId}?scope=${staffOrg}`);
+  await page.getByRole("link", { name: "Observations and decision" }).click();
+  await expect(page.getByText(/Downloads do not count as evidence\./)).toBeVisible();
+  const observe = page.getByRole("form", { name: "Record an observation" });
+  await observe.getByLabel(/^Farmer/).selectOption({ label: "P-01" });
+  await observe.getByLabel("What happened").selectOption({ label: "Words not understood" });
+  await observe.getByLabel("What you saw").fill("Asked what 'category' means; understood 'What did you spend money on?'");
+  await observe.getByRole("button", { name: "Record observation" }).click();
+  await expect(page.getByText("Observation recorded.")).toBeVisible();
+  // The form starts afresh after a save, so the next observation is not silently about the same farmer.
+  await expect(page.getByRole("form", { name: "Record an observation" }).getByLabel(/^Farmer/)).toHaveValue("");
+  await page.getByRole("form", { name: "Record an observation" }).getByLabel("What you saw").fill("Several farmers asked for the Luganda words");
+  await page.getByRole("form", { name: "Record an observation" }).getByRole("button", { name: "Record observation" }).click();
+  await expect(page.getByRole("list", { name: "Observations" }).getByRole("listitem")).toHaveCount(2);
+
+  const finding = page.getByRole("form", { name: "Write a finding" });
+  await finding.getByLabel("Finding").fill("Farmers do not understand 'category'");
+  await finding.getByRole("checkbox", { name: /P-01/ }).check();
+  await finding.getByRole("button", { name: "Save finding" }).click();
+  await expect(page.getByText("Finding saved.")).toBeVisible();
+  await expect(page.getByRole("list", { name: "Findings" })).toContainText("1 observation, " + day(0));
+
+  // Nobody has continued unprompted, so GO is not offered; the server would refuse it anyway.
+  const decide = page.getByRole("form", { name: "Record a decision" });
+  await expect(page.getByText(/Week 8 check: 0 of 1 farmers kept using MyFarm without a reminder\. That is less than half\./)).toBeVisible();
+  await expect(decide.getByLabel("Go: farmers are continuing on their own")).toHaveCount(0);
+  await decide.getByLabel("No go: farmers are not continuing on their own").check();
+  await decide.getByLabel("Why").fill("Week 8: nobody continued without a reminder");
+  await decide.getByRole("button", { name: "Record decision" }).click();
+  await expect(page.getByText("Decision recorded.")).toBeVisible();
+  await expect(page.getByRole("list", { name: "Decisions" })).toContainText("Recorded with 0 of 1 continuing unprompted at week 8.");
+  expect((await context.request.post(`/api/v1/scopes/${staffOrg}/pilot/cohorts/${cohort.cohortId}/reviews`, { headers: origin, data: { requestId: id(), decision: "GO", reason: "Forced" } })).status()).toBe(409);
+  await noSideScroll(page);
+
+  // The farmer leaves: what was seen about them stops being evidence (D-P09-009).
+  await identity(context, "a");
+  const [mine] = (await (await context.request.get("/api/v1/pilot/participations")).json() as { participations: { participationId: string; version: number; status: string }[] }).participations.filter(row => row.status === "ENROLLED");
+  expect((await context.request.post(`/api/v1/pilot/participations/${mine.participationId}/withdraw`, { headers: origin, data: { requestId: id(), expectedVersion: mine.version, confirmed: true } })).status()).toBe(200);
+  await identity(context, "admin");
+  await page.reload();
+  await expect(page.getByRole("list", { name: "Observations" }).getByRole("listitem")).toHaveCount(1);
+  await expect(page.getByRole("list", { name: "Findings" })).toContainText("No evidence left: the farmers it was about have left the pilot.");
 });

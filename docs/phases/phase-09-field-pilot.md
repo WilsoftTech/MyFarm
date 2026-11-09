@@ -2,12 +2,12 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - requirements and Q18 against owner decisions.
-- Implementation status: PARTIALLY COMPLETE - 71.43% (5/7 verified tasks).
+- Implementation status: PARTIALLY COMPLETE - 85.71% (6/7 verified tasks).
 - Last reviewed: 2026-11-10 (Africa/Nairobi).
 - Related phase/task IDs: Phase 09; MYF-P09-T001 through MYF-P09-T007; D-P09-001 through D-P09-009.
-- Verified completed work: T001 pilot measure rules, contracts, additive migration and runtime policy. T002 services, usage log and API. T003 screens; AC001 verified locally. T004 observation, finding and decision rules with migration. T005 evidence service and API.
-- Remaining work/blockers: T006-T007. The exit gate needs a real pilot, and no real farmer joins until the pilot-start checklist is cleared (D-P09-005).
-- Evidence/report links: [Plan](../reports/phase-09-start-2026-11-09.md); [T001](../reports/phase-09-t001-2026-11-09.md); [T002](../reports/phase-09-t002-2026-11-10.md); [T003](../reports/phase-09-t003-2026-11-10.md); [T004](../reports/phase-09-t004-2026-11-10.md); [T005](../reports/phase-09-t005-2026-11-10.md); [Decisions](../DECISION-LOG.md#d-p09-001---phase-9-start-commits-and-pushes).
+- Verified completed work: T001 pilot measure rules, contracts, additive migration and runtime policy. T002 services, usage log and API. T003 screens; AC001 verified locally. T004 observation, finding and decision rules with migration. T005 evidence service and API. T006 observations and decision screen; AC002 verified locally.
+- Remaining work/blockers: T007. The exit gate needs a real pilot, and no real farmer joins until the pilot-start checklist is cleared (D-P09-005).
+- Evidence/report links: [Plan](../reports/phase-09-start-2026-11-09.md); [T001](../reports/phase-09-t001-2026-11-09.md); [T002](../reports/phase-09-t002-2026-11-10.md); [T003](../reports/phase-09-t003-2026-11-10.md); [T004](../reports/phase-09-t004-2026-11-10.md); [T005](../reports/phase-09-t005-2026-11-10.md); [T006](../reports/phase-09-t006-2026-11-10.md); [Decisions](../DECISION-LOG.md#d-p09-001---phase-9-start-commits-and-pushes).
 <!-- MYFARM-STATUS-END -->
 
 Status: **PARTIALLY COMPLETE**, authorized by D-P09-001. Specification date: 2026-10-08. Q18 is answered prospectively by D-P09-002 to D-P09-004; where owner decisions differ from the proposals below, the decisions govern. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
@@ -180,7 +180,7 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 - [x] MYF-P09-T003 complete with [evidence](../reports/phase-09-t003-2026-11-10.md).
 - [x] MYF-P09-T004 complete with [evidence](../reports/phase-09-t004-2026-11-10.md).
 - [x] MYF-P09-T005 complete with [evidence](../reports/phase-09-t005-2026-11-10.md).
-- [ ] MYF-P09-T006 complete with evidence.
+- [x] MYF-P09-T006 complete with [evidence](../reports/phase-09-t006-2026-11-10.md).
 - [ ] MYF-P09-T007 complete with evidence.
 - [ ] Every K criterion verified.
 - [ ] Security/integrity audit, remediation and retest complete.

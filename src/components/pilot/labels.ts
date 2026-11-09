@@ -1,3 +1,4 @@
+import type { ObservationKind, ObservedScreen, ReviewDecision } from "@/modules/field-pilot/domain/evidence";
 import type { PROMPT_CHANNELS, SUPPORT_CATEGORIES } from "@/modules/field-pilot/contracts/pilot";
 import type { PilotValue, SupportSeverity } from "@/modules/field-pilot/domain/measures";
 
@@ -9,3 +10,7 @@ const reasons: Record<Extract<PilotValue, { status: "UNAVAILABLE" }>["reason"], 
 export function pilotValue(value: PilotValue, suffix = "%"): string {
   return value.status === "AVAILABLE" ? value.value + suffix : reasons[value.reason];
 }
+
+export const screenLabels: Record<ObservedScreen, string> = { EXPENSE_FORM: "Expense form", INCOME_FORM: "Income form", SALE_OR_PURCHASE_FORM: "Sale or purchase form", HARVEST_FORM: "Harvest form", ACTIVITY_FORM: "Activity form", STOCK: "Stock", OFFLINE_WORK: "Offline work", FARM_FIGURES: "How the farm is doing", SIGN_IN: "Signing in", OTHER: "Other" };
+export const kindLabels: Record<ObservationKind, string> = { HESITATION: "Hesitated", CONFUSION: "Confused", ERROR: "Made a mistake", WORKAROUND: "Found a way around", WORDING: "Words not understood", POSITIVE: "Went well" };
+export const decisionLabels: Record<ReviewDecision, string> = { CONTINUE: "Continue the pilot", GO: "Go: farmers are continuing on their own", NO_GO: "No go: farmers are not continuing on their own" };
