@@ -16,8 +16,9 @@ export function OfflineSetup() {
       // Loaded on demand so ordinary signed-in pages do not carry the local database code.
       const [{ localDatabase }, { syncNow }, { requestPersistentStorage }] = await Promise.all([import("@/modules/offline-first/client/local-database"), import("@/modules/offline-first/client/sync-engine"), import("@/modules/offline-first/client/storage-status")]);
       await requestPersistentStorage();
-      // Sends anything left over from time offline, then refreshes saved copies.
-      await syncNow(localDatabase(accountId), () => accountGeneration() === startedAt);
+      // Sends anything left over from time offline, then refreshes saved copies. Opening a signed-in page is when a send
+      // is most likely to work, so, like opening Offline work, it skips any retry wait left from earlier failures.
+      await syncNow(localDatabase(accountId), () => accountGeneration() === startedAt, true);
     }
     prepare().catch(() => undefined);
   }, []);
