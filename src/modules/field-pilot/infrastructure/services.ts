@@ -1,7 +1,9 @@
 import "server-only";
 import { authorizationService } from "@/modules/engineering-foundation/infrastructure/services";
 import { database } from "@/modules/engineering-foundation/infrastructure/database";
+import { PilotEvidenceService } from "../application/evidence";
 import { FieldPilotService } from "../application/pilot";
+import { evidenceRepository } from "./evidence-repository";
 import { pilotRepository } from "./pilot-repository";
 
 export function fieldPilotService() {
@@ -23,5 +25,22 @@ export function fieldPilotService() {
     openIncident: (scope, cohortId, input) => db().openIncident(scope, cohortId, input),
     resolveIncident: (scope, cohortId, input) => db().resolveIncident(scope, cohortId, input),
     recordPaperConsent: (scope, cohortId, input) => db().recordPaperConsent(scope, cohortId, input),
+  });
+}
+
+export function pilotEvidenceService() {
+  const pilots = () => pilotRepository(database()), evidence = () => evidenceRepository(database());
+  return new PilotEvidenceService(authorizationService(), {
+    cohort: (scope, cohortId) => pilots().cohort(scope, cohortId),
+    facts: (scope, cohortId) => pilots().facts(scope, cohortId),
+  }, {
+    observations: (scope, cohortId) => evidence().observations(scope, cohortId),
+    participantStates: (scope, cohortId) => evidence().participantStates(scope, cohortId),
+    findings: (scope, cohortId) => evidence().findings(scope, cohortId),
+    reviews: (scope, cohortId) => evidence().reviews(scope, cohortId),
+    recordObservation: (scope, cohortId, input) => evidence().recordObservation(scope, cohortId, input),
+    createFinding: (scope, cohortId, input) => evidence().createFinding(scope, cohortId, input),
+    closeFinding: (scope, cohortId, input) => evidence().closeFinding(scope, cohortId, input),
+    recordReview: (scope, cohortId, input) => evidence().recordReview(scope, cohortId, input),
   });
 }
