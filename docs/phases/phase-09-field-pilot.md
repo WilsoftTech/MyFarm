@@ -2,15 +2,15 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - requirements and Q18 against owner decisions.
-- Implementation status: PARTIALLY COMPLETE - 85.71% (6/7 verified tasks).
+- Implementation status: COMPLETED - 100% (7/7 verified tasks); EXIT GATE NOT MET - the real pilot has not run.
 - Last reviewed: 2026-11-10 (Africa/Nairobi).
-- Related phase/task IDs: Phase 09; MYF-P09-T001 through MYF-P09-T007; D-P09-001 through D-P09-009.
-- Verified completed work: T001 pilot measure rules, contracts, additive migration and runtime policy. T002 services, usage log and API. T003 screens; AC001 verified locally. T004 observation, finding and decision rules with migration. T005 evidence service and API. T006 observations and decision screen; AC002 verified locally.
-- Remaining work/blockers: T007. The exit gate needs a real pilot, and no real farmer joins until the pilot-start checklist is cleared (D-P09-005).
-- Evidence/report links: [Plan](../reports/phase-09-start-2026-11-09.md); [T001](../reports/phase-09-t001-2026-11-09.md); [T002](../reports/phase-09-t002-2026-11-10.md); [T003](../reports/phase-09-t003-2026-11-10.md); [T004](../reports/phase-09-t004-2026-11-10.md); [T005](../reports/phase-09-t005-2026-11-10.md); [T006](../reports/phase-09-t006-2026-11-10.md); [Decisions](../DECISION-LOG.md#d-p09-001---phase-9-start-commits-and-pushes).
+- Related phase/task IDs: Phase 09; MYF-P09-T001 through MYF-P09-T007; D-P09-001 through D-P09-010.
+- Verified completed work: T001 pilot measure rules, contracts, additive migration and runtime policy. T002 services, usage log and API. T003 screens; AC001 verified locally. T004 observation, finding and decision rules with migration. T005 evidence service and API. T006 observations and decision screen; AC002 verified locally. T007 clean-checkout audit.
+- Remaining work/blockers: The exit gate needs recurring voluntary use by real farmers; the pilot waits for the pilot-start checklist (D-P09-005, closeout). Phase 10 must not start. The exit gate needs a real pilot, and no real farmer joins until the pilot-start checklist is cleared (D-P09-005).
+- Evidence/report links: [Closeout](../reports/phase-09-closeout-2026-11-10.md); [Plan](../reports/phase-09-start-2026-11-09.md); [T001](../reports/phase-09-t001-2026-11-09.md); [T002](../reports/phase-09-t002-2026-11-10.md); [T003](../reports/phase-09-t003-2026-11-10.md); [T004](../reports/phase-09-t004-2026-11-10.md); [T005](../reports/phase-09-t005-2026-11-10.md); [T006](../reports/phase-09-t006-2026-11-10.md); [Decisions](../DECISION-LOG.md#d-p09-001---phase-9-start-commits-and-pushes).
 <!-- MYFARM-STATUS-END -->
 
-Status: **PARTIALLY COMPLETE**, authorized by D-P09-001. Specification date: 2026-10-08. Q18 is answered prospectively by D-P09-002 to D-P09-004; where owner decisions differ from the proposals below, the decisions govern. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **IMPLEMENTATION COMPLETE, EXIT GATE PENDING THE REAL PILOT** ([closeout](../reports/phase-09-closeout-2026-11-10.md), D-P09-010 proposed); authorized by D-P09-001. Specification date: 2026-10-08. Q18 is answered prospectively by D-P09-002 to D-P09-004; where owner decisions differ from the proposals below, the decisions govern. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
@@ -181,8 +181,8 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 - [x] MYF-P09-T004 complete with [evidence](../reports/phase-09-t004-2026-11-10.md).
 - [x] MYF-P09-T005 complete with [evidence](../reports/phase-09-t005-2026-11-10.md).
 - [x] MYF-P09-T006 complete with [evidence](../reports/phase-09-t006-2026-11-10.md).
-- [ ] MYF-P09-T007 complete with evidence.
-- [ ] Every K criterion verified.
-- [ ] Security/integrity audit, remediation and retest complete.
-- [ ] Applicable quality/E2E/integration/migration evidence recorded.
-- [ ] L gate approved; closeout/status updated from evidence.
+- [x] MYF-P09-T007 complete with [evidence](../reports/phase-09-closeout-2026-11-10.md).
+- [x] Every K criterion verified (locally; see closeout).
+- [x] Security/integrity audit, remediation and retest complete.
+- [x] Applicable quality/E2E/integration/migration evidence recorded.
+- [ ] L gate: NOT MET until the real pilot shows recurring voluntary use; closeout/status updated from evidence.

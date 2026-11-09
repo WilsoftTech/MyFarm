@@ -580,3 +580,7 @@ APPROVED, owner 2026-11-09, selecting "Server-side, counted once (Recommended)".
 ## D-P09-009 - Withdrawal
 
 APPROVED, owner 2026-11-09, selecting "Excluded from every measure (Recommended)". From the moment a farmer withdraws, none of their activity counts in any measure, past or future, and their pseudonym disappears from staff views. Their own farm records are untouched.
+
+## D-P09-010 - Phase 9 status after the build
+
+PROPOSED, engineering agent 2026-11-10, AWAITING OWNER ACCEPTANCE. The Phase 9 software is complete: T001-T007 and AC001-AC002 pass from a clean checkout ([closeout](reports/phase-09-closeout-2026-11-10.md)). The exit gate, recurring unforced use by real farmers (P0566), is **not met**, because no real farmer has used the pilot; the tools exist and the evidence does not. Recommended status: implementation complete, exit gate pending the real pilot. Phase 9 stays open and Phase 10 must not start (P0569). The pilot may start only after the checklist in D-P09-005 and the closeout is cleared.

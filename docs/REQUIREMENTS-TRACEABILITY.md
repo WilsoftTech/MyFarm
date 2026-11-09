@@ -3,7 +3,7 @@ COMPLETED, hosted CI verified, owner accepted 2026-11-09; AC004 PASS locally; Ph
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED — T013 task-relevant content, status and evidence.
 - Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-11-08 (Africa/Nairobi), Phase 8 T013 audit.
+- Last reviewed: 2026-11-10 (Africa/Nairobi), Phase 9 T007 audit.
 - Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
 - Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
 - Remaining work/blockers: Phase 3 COMPLETED - 100% (13/13), PASS WITH CONDITIONS - LOCAL VERIFICATION. T013 and all four ACs pass locally; the owner accepted the closeout and approved the two-table hosted closure policy, which is applied and verified. GitHub-hosted CI remains unverified under D-P03-004; inherited production gates remain. Phase 4 is NOT STARTED and requires separate authorization. [Closeout](reports/phase-03-closeout-2026-10-25.md).
@@ -100,8 +100,8 @@ Status date: 2026-10-08. Grouped explicit capabilities map to unique requirement
 
 | ID | Source | Requirement | Phase/task | Acceptance | Test expectation | Status |
 |---|---|---|---|---|---|---|
-| MYF-P09-R001 | P0541–P0554 | Freeze major features; measure onboarded/active farmers, records/week, expenses, harvests, tasks, offline transactions, sync failures, support and completed cycles. | [Phase 9](phases/phase-09-field-pilot.md) / MYF-P09-T001, MYF-P09-T002, MYF-P09-T003 | MYF-P09-AC001: Ten metrics have defined numerator/denominator and events reconcile without retry inflation. | Consent exclusion, event dedupe, cohort and complete-cycle definitions. | NOT STARTED |
-| MYF-P09-R002 | P0555–P0566 | Observe hesitation, test understandable expense wording and prove recurring voluntary use. | [Phase 9](phases/phase-09-field-pilot.md) / MYF-P09-T004, MYF-P09-T005, MYF-P09-T006 | MYF-P09-AC002: Dated evidence supports recurring-use gate; findings link to observations, not downloads. | Evidence review, opt-out removal and go/no-go audit. | NOT STARTED |
+| MYF-P09-R001 | P0541–P0554 | Freeze major features; measure onboarded/active farmers, records/week, expenses, harvests, tasks, offline transactions, sync failures, support and completed cycles. | [Phase 9](phases/phase-09-field-pilot.md) / MYF-P09-T001, MYF-P09-T002, MYF-P09-T003 | MYF-P09-AC001: Ten metrics have defined numerator/denominator and events reconcile without retry inflation. | Consent exclusion, event dedupe, cohort and complete-cycle definitions. | IMPLEMENTED locally; AC001 PASS locally; real pilot not run, so the exit gate is not met ([audit](reports/phase-09-closeout-2026-11-10.md)) |
+| MYF-P09-R002 | P0555–P0566 | Observe hesitation, test understandable expense wording and prove recurring voluntary use. | [Phase 9](phases/phase-09-field-pilot.md) / MYF-P09-T004, MYF-P09-T005, MYF-P09-T006 | MYF-P09-AC002: Dated evidence supports recurring-use gate; findings link to observations, not downloads. | Evidence review, opt-out removal and go/no-go audit. | IMPLEMENTED locally; AC002 PASS locally; real pilot not run, so the exit gate is not met ([audit](reports/phase-09-closeout-2026-11-10.md)) |
 
 ## Phase 10 Farm Intelligence Engine
 
