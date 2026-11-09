@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { idSchema } from "@/modules/engineering-foundation/contracts/identity";
 import { isCalendarDate } from "@/modules/enterprises-seasons/domain/production";
-import { SUPPORT_SEVERITIES, type PilotMeasures } from "../domain/measures";
+import { SUPPORT_SEVERITIES, type PilotFacts, type PilotMeasures } from "../domain/measures";
 import { PILOT_CONSENT_VERSION } from "../domain/consent";
 
 /**
@@ -47,4 +47,31 @@ export type SupportIncidentInput = z.output<typeof supportIncidentSchema>;
 export interface MyParticipation { participationId: string; cohortName: string; pseudonym: string; status: "ENROLLED" | "WITHDRAWN"; enrolledOn: string; version: number }
 export interface CohortSummary { cohortId: string; name: string; code: string; startOn: string; endOn: string; status: "ACTIVE" | "CLOSED"; joined: number }
 /** The staff view: measures and pseudonyms only (D-P09-007). Never names, phone numbers, money or records. */
-export interface CohortView { cohort: CohortSummary; asOf: string; today: string; measures: PilotMeasures; paperConsentMissing: string[] }
+export interface CohortView { cohort: CohortSummary; asOf: string; today: string; measures: PilotMeasures; participants: StaffParticipant[]; incidents: IncidentView[] }
+
+/** Staff act for one ORGANIZATION as ADMIN; the server derives both from the session and the chosen scope. */
+export interface StaffScope { actorId: string; organizationId: string }
+export interface CohortForJoining { cohortId: string; tenantId: string; name: string; status: "ACTIVE" | "CLOSED"; consentVersion: string; startOn: string; endOn: string }
+export interface IncidentView { incidentId: string; pseudonym: string | null; openedOn: string; category: typeof SUPPORT_CATEGORIES[number]; severity: typeof SUPPORT_SEVERITIES[number]; summary: string; status: "OPEN" | "RESOLVED"; resolvedOn: string | null; version: number }
+export interface StaffParticipant { participationId: string; pseudonym: string; enrolledOn: string; paperConsent: boolean; version: number }
+/** Everything the measures need for one cohort; withdrawn participations are included so the rules can leave them out. */
+export type CohortFacts = Omit<PilotFacts, "today">;
+
+/** Write and read port. Every staff method constrains the cohort to the staff organization. */
+export interface PilotRepository {
+  isActiveFarmer(userId: string): Promise<boolean>;
+  createCohort(scope: StaffScope, input: CreateCohort & { code: string; consentVersion: string }): Promise<CohortSummary>;
+  cohorts(scope: StaffScope): Promise<CohortSummary[]>;
+  cohort(scope: StaffScope, cohortId: string): Promise<CohortSummary | null>;
+  cohortByCode(code: string): Promise<CohortForJoining | null>;
+  join(input: { userId: string; cohort: CohortForJoining; requestId: string; enrolledOn: string }): Promise<MyParticipation>;
+  myParticipations(userId: string): Promise<MyParticipation[]>;
+  withdraw(input: { userId: string; participationId: string; requestId: string; expectedVersion: number }): Promise<MyParticipation>;
+  facts(scope: StaffScope, cohortId: string): Promise<CohortFacts>;
+  participants(scope: StaffScope, cohortId: string): Promise<StaffParticipant[]>;
+  incidents(scope: StaffScope, cohortId: string): Promise<IncidentView[]>;
+  recordPrompt(scope: StaffScope, cohortId: string, input: z.output<typeof promptSchema>): Promise<{ promptId: string }>;
+  openIncident(scope: StaffScope, cohortId: string, input: SupportIncidentInput): Promise<IncidentView>;
+  resolveIncident(scope: StaffScope, cohortId: string, input: z.output<typeof resolveIncidentSchema>): Promise<IncidentView>;
+  recordPaperConsent(scope: StaffScope, cohortId: string, input: z.output<typeof paperConsentSchema>): Promise<StaffParticipant>;
+}

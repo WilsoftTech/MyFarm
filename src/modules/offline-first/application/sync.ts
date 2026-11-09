@@ -18,6 +18,12 @@ export interface SyncCommandServices {
   /** What a stale edit is shown instead. */
   currentActivity(farmId: string, activityId: string): Promise<{ activityId: string; version: number; status: string }>;
 }
+/**
+ * Optional pilot measure (D-P09-008): what reached the server from a phone, once per entry. It never fails a sync;
+ * an implementation records its own errors and returns.
+ */
+export interface PushUsageLog { record(actorId: string, entries: { farmId: string; requestId: string; operation: string; outcome: "COMMITTED" | "REFUSED" }[]): Promise<void> }
+
 /** requestId is always the command's own ID, whatever the payload says, so one intent cannot claim another's receipt. Photos upload separately. */
 export function applySyncCommand(services: SyncCommandServices, command: PushCommand): Promise<Record<string, unknown>> {
   const input = { ...command.payload, requestId: command.clientMutationId };
@@ -40,7 +46,7 @@ export function applySyncCommand(services: SyncCommandServices, command: PushCom
 const OUTCOMES: Partial<Record<FoundationError["code"], PushOutcome>> = { CONFLICT: { status: "CONFLICT" }, INVALID_INPUT: { status: "INVALID" }, FORBIDDEN: { status: "DENIED" } };
 /** Each command stands alone, so one refusal does not undo another's committed effect. Order is kept so parents go first. */
 export class PushService {
-  constructor(private readonly auth: Pick<RegistryAuthorization, "account">, private readonly services: SyncCommandServices) {}
+  constructor(private readonly auth: Pick<RegistryAuthorization, "account">, private readonly services: SyncCommandServices, private readonly usage?: PushUsageLog) {}
   private async conflictDetails(command: PushCommand): Promise<PushOutcome> {
     const activityId = command.payload.activityId;
     if (command.operation !== "COMPLETE_ACTIVITY" || typeof activityId !== "string") return { status: "CONFLICT" };
@@ -48,9 +54,10 @@ export class PushService {
     catch { return { status: "CONFLICT" }; }
   }
   async push(input: unknown): Promise<PushResponse> {
-    await this.auth.account();
+    const account = await this.auth.account();
     const { commands } = parse(pushRequestSchema, input);
     const results: PushResponse["results"] = [];
+    const logged: Parameters<PushUsageLog["record"]>[1] = [];
     for (const raw of commands) {
       const parsed = pushCommandSchema.safeParse(raw);
       if (!parsed.success) { results.push({ clientMutationId: String(raw.clientMutationId ?? ""), outcome: { status: "INVALID" } }); continue; }
@@ -59,14 +66,18 @@ export class PushService {
         // A faulty client racing itself across operations could slip past this read; receipts still stop any repeat of each one.
         if (keyReusedByAnotherOperation(command.operation, await this.services.priorReceiptActions(command.farmId, command.clientMutationId))) throw new FoundationError("CONFLICT");
         results.push({ clientMutationId: command.clientMutationId, outcome: { status: "COMMITTED", result: await applySyncCommand(this.services, command) } });
+        logged.push({ farmId: command.farmId, requestId: command.clientMutationId, operation: command.operation, outcome: "COMMITTED" });
       }
       catch (error) {
         // A session that ended mid-batch fails the whole request. Anything already committed replays from its receipt.
         if (error instanceof FoundationError && error.code === "UNAUTHENTICATED") throw error;
         const outcome = error instanceof FoundationError ? OUTCOMES[error.code] : undefined;
         results.push({ clientMutationId: command.clientMutationId, outcome: outcome?.status === "CONFLICT" ? await this.conflictDetails(command) : outcome ?? { status: "RETRYABLE" } });
+        // Refused means the server said no; a passing failure will be retried and is not counted.
+        if (outcome) logged.push({ farmId: command.farmId, requestId: command.clientMutationId, operation: command.operation, outcome: "REFUSED" });
       }
     }
+    if (this.usage && logged.length > 0) await this.usage.record(account.id, logged);
     return { results };
   }
 }

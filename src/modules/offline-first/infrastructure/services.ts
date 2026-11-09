@@ -14,6 +14,7 @@ import { photoRepository } from "./photo-repository";
 import { photoStorage } from "./photo-storage";
 import { pullSources } from "./pull-sources";
 import { receiptLookup } from "./receipts";
+import { pilotUsageLog } from "@/modules/field-pilot/infrastructure/usage-log";
 
 export function syncCommandServices(): SyncCommandServices {
   return {
@@ -26,7 +27,12 @@ export function syncCommandServices(): SyncCommandServices {
     priorReceiptActions: (farmId, requestId) => receiptLookup(authorizationService(), { farmScopeForMember: input => registryRepository(database()).farmScopeForMember(input) }, database()).priorActions(farmId, requestId),
   };
 }
-export function pushService() { return new PushService(authorizationService(), syncCommandServices()); }
+export function pushService() {
+  return new PushService(authorizationService(), syncCommandServices(), {
+    // D-P09-008: the pilot counts what reached the server from phones; built only when a push has entries.
+    record: (actorId, entries) => pilotUsageLog(database(), { farmScopeForMember: input => registryRepository(database()).farmScopeForMember(input) }).record(actorId, entries),
+  });
+}
 export function pullService() {
   return new PullService(authorizationService(), pullSources({ registry: farmerRegistryService(), production: productionService(), crops: cropCycleService(), poultry: poultryBatchService(), accounting: farmAccountingService(), harvest: harvestService(), activities: activityService() }));
 }
