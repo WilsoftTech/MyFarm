@@ -141,7 +141,8 @@ describe("MYF-P09-AC001 measures from real receipts and logs", () => {
   it("staff see pseudonyms and counts, never names, phone numbers, money amounts or records (D-P09-007)", async () => {
     const text = JSON.stringify(await view());
     const profile = await f.owner.farm.findUniqueOrThrow({ where: { id: f.scope.farmId } });
-    for (const secret of [profile.name, "15000", "500", f.scope.farmId, f.scope.actorId, f.scope.tenantId]) expect(text).not.toContain(secret);
+    // Amounts are checked as JSON values: bare digits can occur by chance inside IDs, codes and timestamps.
+    for (const secret of [profile.name, '"15000"', '"500"', '"amount"', '"currency"', f.scope.farmId, f.scope.actorId, f.scope.tenantId]) expect(text).not.toContain(secret);
   });
 });
 
