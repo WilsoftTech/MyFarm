@@ -1,16 +1,16 @@
 # Phase 09 Field Pilot and Product Validation
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — T013 metadata/status scope and evidence-link relevance; historical and future-phase facts unchanged.
-- Implementation status: NOT STARTED — 0% (0/7 verified tasks).
-- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
-- Related phase/task IDs: Phase 09; MYF-P09-T001 through MYF-P09-T007; review session Phase01; Phase02 review session (MYF-P02-T001–T013).
-- Verified completed work: No tasks implemented or verified in this phase; status/provider applicability reviewed only.
-- Remaining work/blockers: All 7 tasks and their acceptance/exit gates pending; Phase01 completion and future phase authorization required.
-- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
+- Documentation review: REVIEWED - requirements and Q18 against owner decisions.
+- Implementation status: PARTIALLY COMPLETE - 14.29% (1/7 verified tasks).
+- Last reviewed: 2026-11-09 (Africa/Nairobi).
+- Related phase/task IDs: Phase 09; MYF-P09-T001 through MYF-P09-T007; D-P09-001 through D-P09-009.
+- Verified completed work: T001 pilot measure rules, contracts, additive migration and runtime policy.
+- Remaining work/blockers: T002-T007. The exit gate needs a real pilot, and no real farmer joins until the pilot-start checklist is cleared (D-P09-005).
+- Evidence/report links: [Plan](../reports/phase-09-start-2026-11-09.md); [T001](../reports/phase-09-t001-2026-11-09.md); [Decisions](../DECISION-LOG.md#d-p09-001---phase-9-start-commits-and-pushes).
 <!-- MYFARM-STATUS-END -->
 
-Status: **NOT STARTED**. Date: 2026-10-08. This is a specification, not implementation approval. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **PARTIALLY COMPLETE**, authorized by D-P09-001. Specification date: 2026-10-08. Q18 is answered prospectively by D-P09-002 to D-P09-004; where owner decisions differ from the proposals below, the decisions govern. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
@@ -175,7 +175,7 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 
 ## O. Completion Checklist
 
-- [ ] MYF-P09-T001 complete with evidence.
+- [x] MYF-P09-T001 complete with [evidence](../reports/phase-09-t001-2026-11-09.md).
 - [ ] MYF-P09-T002 complete with evidence.
 - [ ] MYF-P09-T003 complete with evidence.
 - [ ] MYF-P09-T004 complete with evidence.

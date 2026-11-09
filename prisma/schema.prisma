@@ -90,6 +90,12 @@ model User {
   activityRecurrences ActivityRecurrence[]
   cancelledActivities ProductionActivity[] @relation("ActivityCanceller")
   recordPhotos RecordPhoto[]
+  pilotCohorts PilotCohort[]
+  pilotParticipations PilotParticipation[] @relation("PilotParticipant")
+  pilotConsentsRecorded PilotParticipation[] @relation("PilotPaperConsent")
+  pilotUsage PilotUsageEvent[]
+  pilotPrompts PilotPrompt[]
+  supportIncidents SupportIncident[]
 }
 model Organization {
   id String @id @default(uuid()) @db.Uuid
@@ -101,6 +107,8 @@ model Organization {
   farmer Farmer?
   farms Farm[]
   plots Plot[]
+  pilotCohorts PilotCohort[]
+  pilotUsage PilotUsageEvent[]
 }
 // Phase2 registry (Q05: one farmer per user, owned by one PERSONAL organization).
 model Farmer {
@@ -852,5 +860,149 @@ model RecordPhoto {
   @@index([farmId, tenantId])
   @@index([activityId])
   @@index([accountingRecordId])
+  @@index([createdBy])
+}
+
+// Phase 9 field pilot (D-P09-001 to D-P09-009). A cohort belongs to the organization running it; a participation is a
+// farmer's consented link to it under a pseudonym. Staff see measures and pseudonyms only (D-P09-007).
+enum PilotParticipationStatus {
+  ENROLLED
+  WITHDRAWN
+}
+enum PilotUsageKind {
+  OFFLINE_COMMITTED
+  SYNC_REFUSED
+}
+enum PilotPromptChannel {
+  CALL
+  SMS
+  VISIT
+  OTHER
+}
+enum SupportSeverity {
+  LOW
+  MEDIUM
+  HIGH
+}
+enum SupportStatus {
+  OPEN
+  RESOLVED
+}
+enum SupportCategory {
+  SIGN_IN
+  SYNC
+  DATA_ENTRY
+  UNDERSTANDING
+  DEVICE
+  OTHER
+}
+model PilotCohort {
+  id String @id @default(uuid()) @db.Uuid
+  tenantId String @db.Uuid
+  name String @db.VarChar(120)
+  // The code staff hand to farmers; it grants nothing but the chance to consent.
+  code String @unique @db.VarChar(12)
+  consentVersion String @db.VarChar(40)
+  startOn DateTime @db.Date
+  endOn DateTime @db.Date
+  status ProductionStatus @default(ACTIVE)
+  version Int @default(1)
+  requestId String @db.Uuid
+  createdBy String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  tenant Organization @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  participations PilotParticipation[]
+  prompts PilotPrompt[]
+  incidents SupportIncident[]
+  @@unique([id, tenantId])
+  @@unique([tenantId, requestId])
+  @@index([tenantId, createdAt, id])
+  @@index([createdBy])
+}
+model PilotParticipation {
+  id String @id @default(uuid()) @db.Uuid
+  cohortId String @db.Uuid
+  tenantId String @db.Uuid
+  userId String @db.Uuid
+  pseudonym String @db.VarChar(12)
+  status PilotParticipationStatus @default(ENROLLED)
+  consentVersion String @db.VarChar(40)
+  enrolledOn DateTime @db.Date
+  enrolledAt DateTime @default(now()) @db.Timestamptz(6)
+  withdrawnAt DateTime? @db.Timestamptz(6)
+  paperConsentRef String? @db.VarChar(60)
+  paperConsentBy String? @db.Uuid
+  version Int @default(1)
+  requestId String @db.Uuid
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  cohort PilotCohort @relation(fields: [cohortId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  user User @relation("PilotParticipant", fields: [userId], references: [id], onDelete: Restrict)
+  paperConsentRecorder User? @relation("PilotPaperConsent", fields: [paperConsentBy], references: [id], onDelete: Restrict)
+  prompts PilotPrompt[]
+  incidents SupportIncident[]
+  @@unique([cohortId, userId])
+  @@unique([cohortId, pseudonym])
+  @@unique([id, tenantId])
+  @@index([userId])
+  @@index([paperConsentBy])
+}
+// Written by the push service, once per entry: what reached the server from a phone (D-P09-008).
+model PilotUsageEvent {
+  id String @id @default(uuid()) @db.Uuid
+  tenantId String @db.Uuid
+  actorId String @db.Uuid
+  kind PilotUsageKind
+  operation String @db.VarChar(40)
+  requestId String @db.Uuid
+  occurredAt DateTime @default(now()) @db.Timestamptz(6)
+  tenant Organization @relation(fields: [tenantId], references: [id], onDelete: Restrict)
+  actor User @relation(fields: [actorId], references: [id], onDelete: Restrict)
+  @@unique([tenantId, requestId, kind])
+  @@index([actorId, occurredAt])
+}
+// A staff reminder: the farmer's activity that week does not count as voluntary (D-P09-004).
+model PilotPrompt {
+  id String @id @default(uuid()) @db.Uuid
+  cohortId String @db.Uuid
+  tenantId String @db.Uuid
+  participationId String @db.Uuid
+  promptedOn DateTime @db.Date
+  channel PilotPromptChannel
+  requestId String @db.Uuid
+  createdBy String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  cohort PilotCohort @relation(fields: [cohortId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  participation PilotParticipation @relation(fields: [participationId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  @@unique([tenantId, requestId])
+  @@index([cohortId, promptedOn])
+  @@index([participationId, tenantId])
+  @@index([createdBy])
+}
+model SupportIncident {
+  id String @id @default(uuid()) @db.Uuid
+  cohortId String @db.Uuid
+  tenantId String @db.Uuid
+  participationId String? @db.Uuid
+  openedOn DateTime @db.Date
+  category SupportCategory
+  severity SupportSeverity
+  // No names or phone numbers: the form says so, and the pseudonym identifies the farmer.
+  summary String @db.VarChar(500)
+  status SupportStatus @default(OPEN)
+  resolvedOn DateTime? @db.Date
+  version Int @default(1)
+  requestId String @db.Uuid
+  createdBy String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  cohort PilotCohort @relation(fields: [cohortId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  participation PilotParticipation? @relation(fields: [participationId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  @@unique([tenantId, requestId])
+  @@index([cohortId, openedOn])
+  @@index([participationId, tenantId])
   @@index([createdBy])
 }
