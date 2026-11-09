@@ -528,3 +528,7 @@ AUTHORIZED, owner 2026-11-07: "complete phase 8. and push it". Work continues fr
 ## D-P08-013 - Phase 8 closeout recommendation
 
 PROPOSED, engineering agent 2026-11-08, AWAITING OWNER ACCEPTANCE. Phase 8 is recommended as PASS WITH CONDITIONS - LOCAL VERIFICATION: T001-T013 and AC001-AC004 pass from a clean checkout of af8defd on a fresh database ([closeout](reports/phase-08-closeout-2026-11-08.md)). Conditions P8-C1 (hosted schema step, needed before hosted use of this code) to P8-C5 need the owner's acceptance. The commits were pushed under D-P08-012 (0298f20..430dd8a), and hosted run [42415795028](https://github.com/WilsoftTech/MyFarm/actions/runs/42415795028) passed, so the recommendation is now PASS WITH CONDITIONS - HOSTED CI VERIFIED. Nothing was applied to the hosted database.
+
+## D-P08-014 - Phase 8 owner acceptance
+
+APPROVED, owner 2026-11-09: "approved", in reply to the Phase 8 closeout. Phase 8 is accepted as PASS WITH CONDITIONS - HOSTED CI VERIFIED ([closeout](reports/phase-08-closeout-2026-11-08.md)), with P8-C1 to P8-C5 open. This does not authorize applying migration `202611040001` to the hosted database (P8-C1) or starting Phase 9; each needs its own instruction. Hosted run 42416834117 on the docs-only commit 2a8a423 failed on a timing assumption in a Phase 7 browser test; the test now waits for the send to settle, with no application change.

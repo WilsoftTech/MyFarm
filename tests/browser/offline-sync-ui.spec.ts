@@ -25,7 +25,8 @@ test("MYF-P07-AC003 entries saved offline send on reconnecting, with a photo aft
     await page.getByRole("button", { name: "Send now" }).click();
     await expect(page.getByText("Could not reach MyFarm. Your entries are safe on this phone")).toBeVisible();
     await expect(page.getByText("Waiting to send", { exact: true })).toHaveCount(3);
-    expect((await outbox(page, account)).every(row => row.syncStatus === "PENDING" && row.leaseUntil === null)).toBe(true);
+    // The message and counts can still be on screen from the send made on opening, so wait for this send to settle.
+    await expect.poll(async () => (await outbox(page, account)).every(row => row.syncStatus === "PENDING" && row.leaseUntil === null), { timeout: 20_000 }).toBe(true);
 
     await server.start();
     await page.getByRole("button", { name: "Send now" }).click();

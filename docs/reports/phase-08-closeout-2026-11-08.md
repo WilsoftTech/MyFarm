@@ -2,11 +2,11 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - Phase 8 requirements, implementation, security and verification evidence.
-- Implementation status: COMPLETED - 100% (13/13 verified tasks), PASS WITH CONDITIONS - HOSTED CI VERIFIED, awaiting owner acceptance.
+- Implementation status: COMPLETED - 100% (13/13 verified tasks), PASS WITH CONDITIONS - HOSTED CI VERIFIED, owner accepted 2026-11-09 (D-P08-014).
 - Last reviewed: 2026-11-08 (Africa/Nairobi).
 - Related phase/task IDs: MYF-P08-T001 through MYF-P08-T013; MYF-P08-AC001 through MYF-P08-AC004; D-P08-001 through D-P08-013.
 - Verified completed work: T001-T013 and AC001-AC004 verified from a clean checkout of af8defd on a fresh database, and by hosted CI run 42415795028 at 430dd8a.
-- Remaining work/blockers: Owner acceptance of the conditions below, notably the hosted schema step. Phase 9 not started.
+- Remaining work/blockers: Conditions P8-C1 to P8-C5 below stay open, notably the hosted schema step. Phase 9 not started.
 - Evidence/report links: [Phase specification](../phases/phase-08-analytics-profitability.md); [Plan and T001](phase-08-start-2026-11-03.md); [Formula catalog](../architecture/metric-formulas.md); [Document review](phase-08-document-review-2026-11-08.md); [Project status](../PROJECT-STATUS.md).
 <!-- MYFARM-STATUS-END -->
 
@@ -104,6 +104,10 @@ Open conditions from earlier phases carry forward unchanged, including P7-C1 (re
 
 Under D-P08-012 the commits were pushed (0298f20..430dd8a). Hosted run [42415795028](https://github.com/WilsoftTech/MyFarm/actions/runs/42415795028) at 430dd8a passed every step with the same counts as the local audit. No GitHub deployment was created; the Vercel and Render check suites have never run on this repository. Nothing was applied to the hosted database, so P8-C1 stands.
 
+The docs-only push 2a8a423 then failed hosted run [42416834117](https://github.com/WilsoftTech/MyFarm/actions/runs/42416834117) on one Phase 7 test, `MYF-P07-AC003 entries saved offline send on reconnecting`, on desktop and mobile, with identical application code. The test read the phone's outbox as soon as "Could not reach MyFarm" showed, but that message can still be on screen from the send made when the page opened, so the test could read it while the new send still held its entries. A test-only fix waits for the send to settle; the spec then passed 40 of 40 runs locally. The application was not changed.
+
+The owner approved the closeout on 2026-11-09 (D-P08-014).
+
 ## Status-update evidence
 
-Each of T001-T012 has a commit and report; T013 adds fix add2d13, the CI change af8defd, this closeout and the [document review](phase-08-document-review-2026-11-08.md). Progress: **13/13 = 100%**. Next allowed actions: owner acceptance, the hosted schema step, or authorization for Phase 9. No later phase is started automatically.
+Each of T001-T012 has a commit and report; T013 adds fix add2d13, the CI change af8defd, this closeout and the [document review](phase-08-document-review-2026-11-08.md). Progress: **13/13 = 100%**. Next allowed actions: the hosted schema step, or authorization for Phase 9. No later phase is started automatically.
