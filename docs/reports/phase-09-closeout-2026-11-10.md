@@ -65,7 +65,7 @@ Clean clone, no `.env.local`, fresh PostgreSQL 17 container, Windows. Logs are i
 | Signed-in desktop and mobile suite | PASS, 182 tests |
 | `npm audit --omit=dev` | PASS, 0 vulnerabilities |
 | `actionlint` on `quality.yml` | PASS |
-| GitHub-hosted CI | T001, T004, T005 and fix 3a09e32 passed; T002 and T003 failed on the Phase 7 timing defect fixed in 3a09e32. The final run is recorded after the push |
+| GitHub-hosted CI | PASS at c8cda29, [run 42716201821](https://github.com/WilsoftTech/MyFarm/actions/runs/42716201821); every push since fix 3a09e32 passed. T002 and T003 had failed on the Phase 7 timing defect that 3a09e32 fixed |
 
 The CI non-UTC step now includes the two pilot service suites.
 
