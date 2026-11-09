@@ -56,7 +56,7 @@ Q01 is **PARTIALLY RESOLVED**: user selected Rukungiri. Remaining components and
 | Q15 | RESOLVED for Phase6 by owner 2026-11-02 ([D-P06-005](#d-p06-005---q15-activity-cost-link)): link an existing same-farm expense or purchase; the activity holds no money | Accounting/product owner | 6 | Approved |
 | Q16 | RESOLVED for Phase7 by owner 2026-11-03 ([D-P07-002](#d-p07-002---q16-support-limits), [D-P07-003](#d-p07-003---q16-shared-phones), [D-P07-005](#d-p07-005---q16-lost-entries)): 14 days and 500 unsent entries; per-account data with no PIN; warnings plus an unencrypted download. Real-device measurement stays open | Product/security/engineering owner | 1/7 | Approved; measurement pending |
 | Q17 | RESOLVED for Phase8 by owner 2026-11-03 and 2026-11-04 ([D-P08-005](#d-p08-005---q17-crop-formulas) to [D-P08-011](#d-p08-011---q17-formula-catalog)); [formula catalog](architecture/metric-formulas.md) and golden fixtures approved | Accounting/agricultural owner | 8 | Formula catalog and golden fixtures approved |
-| Q18 | Pilot cohort/window, active/retained definition, thresholds, support/cycle completion | Product/research owner | 9 | Prospective criteria then real cohort evidence |
+| Q18 | RESOLVED prospectively by owner 2026-11-09 ([D-P09-002](#d-p09-002---q18-cohort-and-window) to [D-P09-004](#d-p09-004---q18-gono-go-threshold)): about 25 farmers for one season; active = one record a week, retained = 3 of 4 weeks; 50% retained voluntarily at week 8. Real cohort evidence still pending | Product/research owner | 9 | Prospective criteria then real cohort evidence |
 | Q19 | Rule mortality thresholds, percent vs points, data coverage, severity/suppression | Agronomic/product owner | 10 | Reviewed rules, comparison units and sparse-data behavior |
 | Q20 | AI provider/cost, data processing/retention, knowledge licenses and groundedness criteria | Product/security/AI owner | 11 | Approved tool contracts, consent/provider policy and adversarial evaluation |
 | Q21 | Speech/language accuracy, confirmation/accessibility, audio retention/offline provider | Product/AI/privacy owner | 12 | Measured language support and exact-payload confirmation |
@@ -544,3 +544,39 @@ APPROVED, owner 2026-11-09, selecting "Optional, blank by default (Recommended)"
 ## D-P08-017 - Trend and warning choices (P8-C5)
 
 APPROVED, owner 2026-11-09, selecting "Most recent earlier (Recommended)" and "Accept all as built (Recommended)". A crop is compared with the most recent earlier season that grew it, whatever time of year; two batches started on the same day are not compared; crop trends need a season and are not shown for a date range; the reconciliation warning keeps its wording. These are no longer engineering choices awaiting review. The accountant and agronomist review (P8-C2) may still raise them.
+
+## D-P09-001 - Phase 9 start, commits and pushes
+
+AUTHORIZED, owner 2026-11-09: "commit push and proceed to next phase", then "Build tools now, gate real farmers (Recommended)". Phase 9 software is built with one commit per verified task, and the commits may be pushed to `origin/main`. **No real farmer is enrolled** until the pilot-start checklist is cleared: P7-C4 retention and export policy, P7-C6, P4-C4 and P5-C3 abuse and rate controls, Phase 1 C4 production sign-in and TLS settings, and P7-C1 real-phone measurement; P8-C2 before the pilot relies on the figures. Hosted database changes and deployment still need their own instruction.
+
+## D-P09-002 - Q18 cohort and window
+
+APPROVED, owner 2026-11-09, selecting "~25 farmers, one season (Recommended)". About 25 consenting farmers, crop and poultry mixed, followed for one main season of about 16 weeks so that complete production cycles can be observed.
+
+## D-P09-003 - Q18 active and retained
+
+APPROVED, owner 2026-11-09, selecting "1 record/week; 3 of 4 weeks (Recommended)". An active week is one in which the farmer saved at least one record, counted once by its server receipt so retries never inflate it. A farmer is retained in a week when active in at least 3 of the last 4 weeks.
+
+## D-P09-004 - Q18 go/no-go threshold
+
+APPROVED, owner 2026-11-09, selecting "50% retained at week 8 (Recommended)". The recurring-use gate passes when at least half of onboarded farmers are retained voluntarily at week 8 and again at the end of the window. Staff prompts are logged, and a week in which staff prompted a farmer does not count as voluntary for that farmer.
+
+## D-P09-005 - Pilot-start gate
+
+APPROVED, owner 2026-11-09, as part of D-P09-001: the conditions listed there must be cleared before any real farmer joins. This is the Phase 9 pilot-start checklist.
+
+## D-P09-006 - Enrolment and consent
+
+APPROVED, owner 2026-11-09, selecting "Farmer joins in-app with a code (Recommended)". Pilot staff give a farmer the cohort's code; the signed-in farmer reads plain consent text and joins, and can withdraw at any time in the app. Staff record the paper consent reference.
+
+## D-P09-007 - What pilot staff see
+
+APPROVED, owner 2026-11-09, selecting "Aggregates and pseudonyms (Recommended)". ADMIN members of the organization running the cohort see the measures for the cohort and, per participant, only a pseudonym with weekly activity counts. They never see names, phone numbers, money amounts or farm records; ADMIN still has no automatic farm-data access.
+
+## D-P09-008 - Offline and sync measures
+
+APPROVED, owner 2026-11-09, selecting "Server-side, counted once (Recommended)". The push service logs each entry it commits from a phone and each it refuses, once per entry. Attempts that never reached the server are not counted, and reports say so. The sync contract does not change.
+
+## D-P09-009 - Withdrawal
+
+APPROVED, owner 2026-11-09, selecting "Excluded from every measure (Recommended)". From the moment a farmer withdraws, none of their activity counts in any measure, past or future, and their pseudonym disappears from staff views. Their own farm records are untouched.
