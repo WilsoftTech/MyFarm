@@ -165,6 +165,14 @@ describe("MYF-P07-AC002 cached data pull", () => {
     expect(pages.find(page => page.section === "ACTIVITIES")?.items.length).toBeGreaterThan(0);
     expect(JSON.stringify(pages)).not.toContain("requestHash");
   });
+  it("carries the farm's seasons for the offline money forms, and never another farm's (D-P08-016)", async () => {
+    const own = await f.owner.season.create({ data: { tenantId: f.a.scope.tenantId, farmId: f.a.scope.farmId, label: "Offline season", startDate: new Date("2026-09-01Z"), createdBy: f.a.scope.actorId } });
+    try {
+      const seasons = (await walk(f.a)).filter(page => page.section === "SEASONS").flatMap(page => page.items);
+      expect(seasons).toEqual(expect.arrayContaining([expect.objectContaining({ id: own.id, label: "Offline season", status: "ACTIVE" })]));
+      expect(JSON.stringify(await walk(f.b))).not.toContain(own.id);
+    } finally { await f.owner.season.delete({ where: { id: own.id } }); }
+  });
   it("never returns another account's records, even with a guessed cursor", async () => {
     const pages = await walk(f.b);
     expect(JSON.stringify(pages)).not.toContain(f.a.scope.farmId);

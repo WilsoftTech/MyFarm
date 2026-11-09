@@ -150,10 +150,14 @@ export function cropTrends(cycles: readonly TrendCycleFacts[], events: readonly 
   });
 }
 
-/** Each batch against the most recent earlier batch of the same animal type. `events` must not be narrowed by season or dates. */
-export function batchTrends(batches: readonly TrendBatchFacts[], events: readonly RecognitionEvent[]): BatchTrend[] {
+/**
+ * Each batch against the most recent earlier batch of the same animal type. `events` must not be narrowed by season or
+ * dates. `baselines` are batches that may serve as the earlier side but get no line of their own (P8-C4).
+ */
+export function batchTrends(batches: readonly TrendBatchFacts[], events: readonly RecognitionEvent[], baselines: readonly TrendBatchFacts[] = []): BatchTrend[] {
+  const pool = [...batches, ...baselines];
   return batches.map((batch): BatchTrend => {
-    const before = batches.filter(row => row.animalTypeId === batch.animalTypeId && row.acquiredOn < batch.acquiredOn).sort((a, b) => b.acquiredOn.localeCompare(a.acquiredOn) || a.batchId.localeCompare(b.batchId))[0];
+    const before = pool.filter(row => row.animalTypeId === batch.animalTypeId && row.acquiredOn < batch.acquiredOn).sort((a, b) => b.acquiredOn.localeCompare(a.acquiredOn) || a.batchId.localeCompare(b.batchId))[0];
     const about = { batchId: batch.batchId, label: batch.label, animalTypeName: batch.animalTypeName, earlierBatch: before ? { batchId: before.batchId, label: before.label } : null };
     const soFar = batch.status === "ACTIVE" || before?.status === "ACTIVE";
     if (!before) return { ...about, unavailable: "NO_EARLIER_BATCH", soFar, currencies: [] };

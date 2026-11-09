@@ -5,7 +5,7 @@ import { RECOGNITION_BASES } from "@/modules/farm-accounting/domain/accounting";
 import type { FarmScope } from "@/modules/enterprises-seasons/domain/production";
 import type { BatchMetrics, CostGroup, CostGroupTotals, CropMetrics, StockItemFacts, StockValue } from "../domain/metrics";
 import type { Reconciliation } from "../domain/reconcile";
-import type { BatchTrend, CropTrend, TrendBatchFacts, TrendCycleFacts } from "../domain/trends";
+import type { BatchTrend, CropTrend, TrendBatchFacts, TrendCycleFacts, TrendSeason } from "../domain/trends";
 import type { CurrencyDashboard, EnterpriseName, UnlinkedAmounts } from "../domain/profitability";
 
 /** The filter value for "not one season": every record, or the chosen dates. */
@@ -62,6 +62,13 @@ export interface MetricFacts {
   enterprises: EnterpriseName[];
   /** Newest first; each carries its animal type and acquisition date, so trends can find the previous batch. */
   batches: TrendBatchFacts[];
+  /**
+   * For each animal type, the batch just before the oldest one in `batches` when the limit cut it off. Trends use
+   * them only as a baseline; they are never shown as rows (P8-C4).
+   */
+  earlierBatches: TrendBatchFacts[];
+  /** Every season of the farm, unlimited, so a crop can find its earlier season however many there are (P8-C4). */
+  seasons: TrendSeason[];
   items: StockItemFacts[];
   costGroups: { categoryId: string; group: CostGroup }[];
 }

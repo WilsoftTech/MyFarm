@@ -359,6 +359,9 @@ test("MYF-P08-AC004 the source farmer journey: entries made offline send once, a
     await page.getByLabel("What was it for?", { exact: true }).selectOption({ label: "Fertilizer" });
     await page.getByLabel("Amount", { exact: true }).fill("2100000");
     await page.getByLabel(/^Enterprise/).selectOption({ label: "Maize" });
+    // D-P08-016: the season is optional and blank until chosen.
+    await expect(page.getByLabel(/^Season/)).toHaveValue("");
+    await page.getByLabel(/^Season/).selectOption({ label: "2026A" });
     await page.getByRole("button", { name: "Save expense" }).click();
     await expect(page.getByText("Saved on this phone. It will send when you reconnect.")).toBeVisible();
     await page.getByRole("button", { name: "Record harvest" }).click();
@@ -380,7 +383,10 @@ test("MYF-P08-AC004 the source farmer journey: entries made offline send once, a
     await page.unroute("**/api/v1/sync/push");
     expect(await expenseCount(context, base, farm, "2100000")).toBe(1);
 
-    await page.goto(base + url(farm, "?seasonId=all"));
+    // The default view is the season chosen offline, and the expense counts in it.
+    await page.goto(base + url(farm));
+    await expect(page.getByText("Showing season 2026A: only records linked to it.")).toBeVisible();
+    await expect(page.getByRole("region", { name: "Not linked to a season" })).toHaveCount(0);
     await expect(figure(page, "Recorded surplus")).toHaveText("UGX -2,100,000");
     await expect(page.getByRole("heading", { name: "These figures do not add up" })).toHaveCount(0);
     const crop = page.getByRole("list", { name: "Crop figures" }).getByRole("listitem");

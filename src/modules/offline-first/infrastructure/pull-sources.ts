@@ -8,7 +8,7 @@ import type { ActivityService } from "@/modules/farm-activities/application/acti
 import type { PullSources } from "../application/sync";
 import { PULL_LIMITS } from "../domain/commands";
 
-export interface PullServices { registry: Pick<FarmerRegistryService, "listFarms">; production: Pick<ProductionService, "listEnterprises">; crops: Pick<CropCycleService, "list" | "plots">; poultry: Pick<PoultryBatchService, "list">; accounting: Pick<FarmAccountingService, "categories" | "paymentMethods" | "records">; harvest: Pick<HarvestService, "list" | "locations">; activities: Pick<ActivityService, "list"> }
+export interface PullServices { registry: Pick<FarmerRegistryService, "listFarms">; production: Pick<ProductionService, "listEnterprises" | "listSeasons">; crops: Pick<CropCycleService, "list" | "plots">; poultry: Pick<PoultryBatchService, "list">; accounting: Pick<FarmAccountingService, "categories" | "paymentMethods" | "records">; harvest: Pick<HarvestService, "list" | "locations">; activities: Pick<ActivityService, "list"> }
 const shape = <T extends object>(page: { items: T[]; nextCursor: string | null }, id: (row: T) => string) => ({ items: page.items.map(row => ({ ...row, id: id(row) })), nextCursor: page.nextCursor });
 
 /** Every section goes through the service farmers already use, so nothing new decides what they may read. */
@@ -32,6 +32,8 @@ export function pullSources(services: PullServices): PullSources {
         case "HARVESTS": return services.harvest.list(farmId, input).then(page => shape(page, row => row.harvestId));
         case "ACTIVITIES": return services.activities.list(farmId, input).then(page => shape(page, row => row.activityId));
         case "POULTRY_BATCHES": return services.poultry.list(farmId, input).then(page => shape(page, row => row.batchId));
+        // Added last, so pull cursors already issued still point at the same sections (D-P08-016).
+        case "SEASONS": return services.production.listSeasons(farmId, input).then(page => shape(page, row => row.seasonId));
       }
     },
   };

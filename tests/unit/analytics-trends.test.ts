@@ -161,6 +161,12 @@ describe("batches against an earlier batch (D-P08-006, D-P08-007)", () => {
     expect(line.currencies).toHaveLength(1);
     expect(line.currencies[0].notLinked).toEqual({ current: "5", earlier: "9" });
   });
+  it("a batch cut off by the screen's limit is still a baseline, but gets no line of its own (P8-C4)", () => {
+    const lines = batchTrends([batch(newer, "2027-06-01")], events([costs(older, feed, "100000"), costs(newer, feed, "118000")]), [batch(older, "2027-01-01")]);
+    expect(lines.map(line => line.batchId)).toEqual([newer]);
+    expect(lines[0]).toMatchObject({ earlierBatch: { batchId: older }, unavailable: null });
+    expect(lines[0].currencies[0].categories[0].change).toEqual(value("+18"));
+  });
   it("labels the comparison so far when either batch is active", () => {
     expect(batchTrends([batch(newer, "2027-06-01", { status: "ACTIVE" }), batch(older, "2027-01-01")], [])[0].soFar).toBe(true);
     expect(batchTrends([batch(newer, "2027-06-01"), batch(older, "2027-01-01", { status: "ACTIVE" })], [])[0].soFar).toBe(true);

@@ -2,13 +2,15 @@ import { FoundationError } from "@/modules/engineering-foundation/domain/errors"
 import type { RegistryAuthorization } from "@/modules/farmer-registry/application/registry";
 import { authorizeProductionFarm, parseProductionInput as parse, type ProductionFarmAccess } from "@/modules/enterprises-seasons/application/farm-access";
 import type { FarmReportRepository } from "@/modules/farm-accounting/contracts/accounting";
-import { recognizedEvents } from "@/modules/farm-accounting/domain/accounting";
+import { recognizedEvents, type RecognitionEvent } from "@/modules/farm-accounting/domain/accounting";
 import { eventsInScope } from "@/modules/farm-accounting/domain/reporting";
-import { ALL_RECORDS, dashboardQuerySchema, type DashboardSeasons, type DashboardView, type MetricFactsRepository, type FarmScreen, type MetricsView, type TrendsView } from "../contracts/profitability";
+import { ALL_RECORDS, dashboardQuerySchema, type DashboardSeasons, type DashboardView, type MetricFacts, type MetricFactsRepository, type FarmScreen, type MetricsView, type TrendsView } from "../contracts/profitability";
 import { batchMetrics, costGroupTotals, cropMetrics, stockValue, type CostGroup } from "../domain/metrics";
-import { farmDashboard, latestActiveSeason, seasonEvents } from "../domain/profitability";
+import { farmDashboard, latestActiveSeason, seasonEvents, type EnterpriseName } from "../domain/profitability";
 import { reconcile } from "../domain/reconcile";
 import { batchTrends, cropTrends } from "../domain/trends";
+
+type View = Awaited<ReturnType<FarmProfitabilityService["view"]>>;
 
 /** R001 to R004: authorize the farm first; figures are calculated from source records on every request (D-P08-008). */
 export class FarmProfitabilityService {
@@ -26,59 +28,72 @@ export class FarmProfitabilityService {
     return { scope, query, seasons, season };
   }
 
-  async dashboard(farmId: unknown, input: unknown = {}): Promise<DashboardView> {
-    const { scope, query, seasons, season } = await this.view(farmId, input);
-    const range = { basis: query.basis, from: query.from, to: query.to };
-    const sources = await this.reports.reportSources(scope, range);
-    const events = eventsInScope(recognizedEvents(query.basis, sources.records, sources.payments), range);
-    const shown = season ? seasonEvents(events, season.seasonId) : { events, notLinkedToSeason: [] };
-    return {
-      basis: query.basis, season, from: query.from ?? null, to: query.to ?? null, asOf: this.now().toISOString(), seasons,
-      currencies: farmDashboard(shown.events, sources.enterprises), notLinkedToSeason: shown.notLinkedToSeason,
-    };
+  /** Every record in the view's basis. Each figure narrows them itself: batches cover whole lives, trends pick their own sides. */
+  private async events(view: View): Promise<{ whole: RecognitionEvent[]; enterprises: EnterpriseName[] }> {
+    const sources = await this.reports.reportSources(view.scope, { basis: view.query.basis, from: undefined, to: undefined });
+    return { whole: recognizedEvents(view.query.basis, sources.records, sources.payments), enterprises: sources.enterprises };
+  }
+  /** The view's own events: chosen dates first, then only records linked to the chosen season (D-P08-008). */
+  private shown({ query, season }: View, whole: readonly RecognitionEvent[]) {
+    const dated = Boolean(query.from || query.to);
+    const inRange = dated ? eventsInScope(whole, { basis: query.basis, from: query.from, to: query.to }) : [...whole];
+    return { dated, ...(season ? seasonEvents(inRange, season.seasonId) : { events: inRange, notLinkedToSeason: [] }) };
+  }
+  private labels({ query, season }: View) {
+    return { basis: query.basis, season, from: query.from ?? null, to: query.to ?? null, asOf: this.now().toISOString() };
   }
 
-  async metrics(farmId: unknown, input: unknown = {}): Promise<MetricsView> {
-    const { scope, query, season } = await this.view(farmId, input);
-    const range = { basis: query.basis, from: query.from, to: query.to }, dated = Boolean(query.from || query.to);
-    // Every record in the view's basis: a batch's figures cover its whole life, whichever season or dates are shown.
-    const sources = await this.reports.reportSources(scope, { basis: query.basis, from: undefined, to: undefined });
-    const whole = recognizedEvents(query.basis, sources.records, sources.payments);
-    const inRange = dated ? eventsInScope(whole, range) : whole;
-    const events = season ? seasonEvents(inRange, season.seasonId).events : inRange;
-    const facts = await this.facts.facts(scope, season?.seasonId ?? null);
+  private dashboardOf(view: View, whole: readonly RecognitionEvent[], enterprises: readonly EnterpriseName[]): DashboardView {
+    const shown = this.shown(view, whole);
+    return { ...this.labels(view), seasons: view.seasons, currencies: farmDashboard(shown.events, enterprises), notLinkedToSeason: shown.notLinkedToSeason };
+  }
+  private metricsOf(view: View, whole: readonly RecognitionEvent[], facts: MetricFacts): MetricsView {
+    const { events, dated } = this.shown(view, whole), season = view.season;
     const names = new Map(facts.enterprises.map(row => [row.enterpriseId, row.name]));
+    const cycles = season ? facts.cycles.filter(row => row.seasonId === season.seasonId) : facts.cycles;
     return {
-      basis: query.basis, season, from: query.from ?? null, to: query.to ?? null, asOf: this.now().toISOString(),
-      crops: cropMetrics(facts.cycles, events, season ? "SEASON" : dated ? "DATE_RANGE" : "ALL_RECORDS").map(line => ({ ...line, enterpriseName: names.get(line.enterpriseId) ?? "" })),
+      ...this.labels(view),
+      crops: cropMetrics(cycles, events, season ? "SEASON" : dated ? "DATE_RANGE" : "ALL_RECORDS").map(line => ({ ...line, enterpriseName: names.get(line.enterpriseId) ?? "" })),
       batches: batchMetrics(facts.batches, whole),
       costGroups: costGroupTotals(events, new Map<string, CostGroup>(facts.costGroups.map(row => [row.categoryId, row.group]))),
       stock: stockValue(facts.items),
     };
   }
-
   /** R003: how figures moved against the same crop's earlier season or the same animal's previous batch (D-P08-007). */
-  async trends(farmId: unknown, input: unknown = {}): Promise<TrendsView> {
-    const { scope, query, seasons, season } = await this.view(farmId, input);
-    // Every record in the view's basis: each side of a trend picks its own season or batch from them.
-    const sources = await this.reports.reportSources(scope, { basis: query.basis, from: undefined, to: undefined });
-    const events = recognizedEvents(query.basis, sources.records, sources.payments);
-    const facts = await this.facts.facts(scope, null);
-    // A season opened by its ID past the listed ones still compares with the listed seasons before it.
-    const known = season && !seasons.some(row => row.seasonId === season.seasonId) ? [...seasons, season] : seasons;
+  private trendsOf(view: View, whole: readonly RecognitionEvent[], facts: MetricFacts): TrendsView {
+    const season = view.season;
     return {
-      basis: query.basis, season, from: query.from ?? null, to: query.to ?? null, asOf: this.now().toISOString(), cropsNeedSeason: !season,
-      crops: season ? cropTrends(facts.cycles, events, known, season.seasonId) : [],
-      batches: batchTrends(facts.batches, events),
+      ...this.labels(view), cropsNeedSeason: !season,
+      // Every season of the farm, so an earlier one is found however many there are (P8-C4).
+      crops: season ? cropTrends(facts.cycles, whole, facts.seasons, season.seasonId) : [],
+      batches: batchTrends(facts.batches, whole, facts.earlierBatches),
     };
   }
 
+  async dashboard(farmId: unknown, input: unknown = {}): Promise<DashboardView> {
+    const view = await this.view(farmId, input);
+    const { whole, enterprises } = await this.events(view);
+    return this.dashboardOf(view, whole, enterprises);
+  }
+  async metrics(farmId: unknown, input: unknown = {}): Promise<MetricsView> {
+    const view = await this.view(farmId, input);
+    const [{ whole }, facts] = await Promise.all([this.events(view), this.facts.facts(view.scope, view.season?.seasonId ?? null)]);
+    return this.metricsOf(view, whole, facts);
+  }
+  async trends(farmId: unknown, input: unknown = {}): Promise<TrendsView> {
+    const view = await this.view(farmId, input);
+    const [{ whole }, facts] = await Promise.all([this.events(view), this.facts.facts(view.scope, null)]);
+    return this.trendsOf(view, whole, facts);
+  }
+
   /**
-   * R004: everything "How the farm is doing" shows, for one view, with the check that it adds up (L gate).
-   * Each part authorizes and validates before it reads, so a denied or invalid request reads nothing.
+   * R004: everything "How the farm is doing" shows, for one view, with the check that it adds up (L gate). It
+   * authorizes once and reads the farm's records and facts once, then derives every part from them (P8-C4).
    */
   async farmScreen(farmId: unknown, input: unknown = {}): Promise<FarmScreen> {
-    const [dashboard, metrics, trends] = await Promise.all([this.dashboard(farmId, input), this.metrics(farmId, input), this.trends(farmId, input)]);
-    return { dashboard, metrics, trends, reconciliation: reconcile(dashboard.currencies, metrics.costGroups, metrics.crops) };
+    const view = await this.view(farmId, input);
+    const [{ whole, enterprises }, facts] = await Promise.all([this.events(view), this.facts.facts(view.scope, null)]);
+    const dashboard = this.dashboardOf(view, whole, enterprises), metrics = this.metricsOf(view, whole, facts);
+    return { dashboard, metrics, trends: this.trendsOf(view, whole, facts), reconciliation: reconcile(dashboard.currencies, metrics.costGroups, metrics.crops) };
   }
 }

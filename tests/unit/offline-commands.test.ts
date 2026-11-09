@@ -117,3 +117,15 @@ describe("pull cursor", () => {
     expect(CATALOG_SECTIONS).not.toContain("ACTIVITIES");
   });
 });
+
+describe("pull sections (D-P08-003, D-P08-016)", () => {
+  it("only ever grow at the end, so a cursor already on a phone points at the same section", () => {
+    expect(PULL_SECTIONS).toEqual(["ENTERPRISES", "PLOTS", "CROP_CYCLES", "STORES", "COST_CATEGORIES", "REVENUE_CATEGORIES", "PAYMENT_METHODS", "ACCOUNTING_RECORDS", "HARVESTS", "ACTIVITIES", "POULTRY_BATCHES", "SEASONS"]);
+  });
+  it("seasons are a choice for the money forms, and an offline expense may carry one", () => {
+    expect(CATALOG_SECTIONS).toContain("SEASONS");
+    const seasonId = crypto.randomUUID();
+    const checked = checkOfflineCommand("RECORD_EXPENSE", crypto.randomUUID(), { categoryId: crypto.randomUUID(), amount: "100", currency: "UGX", occurredOn: "2026-11-01", seasonId });
+    expect(checked).toMatchObject({ ok: true, payload: { seasonId } });
+  });
+});

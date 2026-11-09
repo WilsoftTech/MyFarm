@@ -23,7 +23,7 @@ function fixture() {
     seasons: vi.fn(async () => [season(closed, "CLOSED", "2027-06-01"), season(active, "ACTIVE", "2027-03-01")]),
     season: vi.fn(async () => null),
   };
-  const facts: MetricFactsRepository = { facts: vi.fn(async (): Promise<MetricFacts> => ({ cycles: [], enterprises: [], batches: [], items: [], costGroups: [] })) };
+  const facts: MetricFactsRepository = { facts: vi.fn(async (): Promise<MetricFacts> => ({ cycles: [], enterprises: [], batches: [], earlierBatches: [], seasons: [], items: [], costGroups: [] })) };
   return { service: new FarmProfitabilityService(authorization, farms, reports, seasons, facts, () => now), authorization, farms, reports, seasons, facts };
 }
 
@@ -87,17 +87,23 @@ describe("farm dashboard service (P08-T002)", () => {
     expect(await service.trends(farmId, { from: "2027-01-01" })).toMatchObject({ season: null, cropsNeedSeason: true, crops: [] });
     expect(reports.reportSources).toHaveBeenLastCalledWith(scope, { basis: "ACCRUAL", from: undefined, to: undefined });
   });
-  it("trends compare a season opened past the listed ones with the listed seasons before it", async () => {
+  it("trends find an earlier season among all the farm's seasons, not only the listed ones (P8-C4)", async () => {
     const { service, seasons, facts } = fixture(), oldest = id(), maize = id();
     vi.mocked(seasons.season).mockResolvedValue(season(oldest, "CLOSED", "2020-01-01"));
     const cycle = (seasonId: string) => ({ cycleId: id(), seasonId, enterpriseId: id(), cropId: maize, cropName: "Maize", areaPlanted: "1", areaUnit: "ACRE" as const, status: "CLOSED" as const, harvestedKg: "10", lostKg: "0" });
-    vi.mocked(facts.facts).mockResolvedValue({ cycles: [cycle(oldest), cycle(active)], enterprises: [], batches: [], items: [], costGroups: [] });
+    const all = [{ seasonId: oldest, label: "2020", startDate: "2020-01-01" }, { seasonId: active, label: "2027-03-01", startDate: "2027-03-01" }];
+    vi.mocked(facts.facts).mockResolvedValue({ cycles: [cycle(oldest), cycle(active)], enterprises: [], batches: [], earlierBatches: [], seasons: all, items: [], costGroups: [] });
     expect((await service.trends(farmId, { seasonId: oldest })).crops).toMatchObject([{ season: { seasonId: oldest }, unavailable: "NO_EARLIER_SEASON" }]);
-    expect((await service.trends(farmId, { seasonId: active })).crops).toMatchObject([{ earlierSeason: null }]);
+    // The 2020 season is past the listed ones, but the 2027 crop still finds it.
+    expect((await service.trends(farmId, { seasonId: active })).crops).toMatchObject([{ earlierSeason: { seasonId: oldest, label: "2020" } }]);
   });
   it("the farm screen gives every part for one view with its reconciliation, and a denied farm reads nothing (P08-T011)", async () => {
     const { service, farms, reports, facts } = fixture();
     const screen = await service.farmScreen(farmId);
+    // One read of records and one of facts for the whole screen (P8-C4).
+    expect(reports.reportSources).toHaveBeenCalledTimes(1);
+    expect(facts.facts).toHaveBeenCalledTimes(1);
+    expect(facts.facts).toHaveBeenCalledWith(scope, null);
     expect(screen.dashboard.currencies).toMatchObject([{ expenses: "70" }]);
     expect(screen.metrics.costGroups).toEqual([{ currency: "UGX", labour: "0", inputs: "0", other: "70" }]);
     expect(screen.reconciliation).toEqual({ reconciled: true, checked: 4, failures: [] });

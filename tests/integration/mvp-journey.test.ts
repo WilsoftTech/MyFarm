@@ -104,6 +104,15 @@ describe("MYF-P08-AC004 source farmer journey with offline replay (P08-T011)", (
       expect(screen.dashboard.currencies[0]).toMatchObject({ expenses: input.from ? "0" : "2100000" });
     }
   });
+  it("the one-read farm screen gives exactly what the three separate endpoints give, in every view (P8-C4)", async () => {
+    const same = <T extends { asOf: string }>(value: T) => ({ ...value, asOf: "" });
+    for (const input of [{}, { basis: "CASH" }, { seasonId: "all" }, { from: "2026-07-01" }, { seasonId: "all", to: "2026-06-30" }]) {
+      const screen = await service.farmScreen(farm, input);
+      expect(same(screen.dashboard)).toEqual(same(await service.dashboard(farm, input)));
+      expect(same(screen.metrics)).toEqual(same(await service.metrics(farm, input)));
+      expect(same(screen.trends)).toEqual(same(await service.trends(farm, input)));
+    }
+  });
   it("another farm is denied before anything is read, offline or on screen", async () => {
     await expect(service.farmScreen(id())).rejects.toMatchObject({ code: "FORBIDDEN" });
     const before = await counts();

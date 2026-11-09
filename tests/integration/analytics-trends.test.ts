@@ -129,6 +129,36 @@ describe("MYF-P08-AC003 trends from real records under the restricted role (P08-
   });
 });
 
+describe("scale (P8-C4)", () => {
+  it("a batch cut off by the 100-batch limit is still the baseline for the oldest batch shown, without a line of its own", async () => {
+    const animal = await f.owner.animalTypeCatalog.findFirstOrThrow({ orderBy: { id: "asc" } });
+    const base = { tenantId: f.scope.tenantId, farmId: farm, enterpriseId: layers, animalTypeId: animal.id, animalTypeName: animal.name, startingQuantity: 100, purpose: "DUAL_PURPOSE" as const, status: "CLOSED" as const, createdBy: f.scope.actorId };
+    // 100 newer batches fill the limit; the cut-off one is older than all of them.
+    const cutOff = (await f.owner.poultryBatch.create({ data: { ...base, batchLabel: "Cut off", batchLabelKey: "cut off", acquisitionDate: new Date("2010-01-01Z") } })).id;
+    const day = (n: number) => new Date(Date.UTC(2011, 0, 1 + n));
+    await f.owner.poultryBatch.createMany({ data: Array.from({ length: 100 }, (_, n) => ({ ...base, id: crypto.randomUUID(), batchLabel: "Scale " + n, batchLabelKey: "scale " + n, acquisitionDate: day(n) })) });
+    try {
+      // Batch 1, Batch 2 and the ducks are newer, so the 100 shown are 2011-2027 batches minus the oldest scale ones.
+      const shown = (await service.trends(farm)).batches;
+      expect(shown).toHaveLength(100);
+      expect(shown.map(line => line.batchId)).not.toContain(cutOff);
+      const oldestShown = [...shown].filter(line => line.animalTypeName === animal.name).pop()!;
+      expect(oldestShown.earlierBatch).not.toBeNull();
+      expect(oldestShown.unavailable).toBeNull();
+    } finally {
+      await f.owner.poultryBatch.deleteMany({ where: { tenantId: f.scope.tenantId, OR: [{ id: cutOff }, { batchLabel: { startsWith: "Scale " } }] } });
+    }
+  });
+  it("a crop finds its earlier season even past the 100 seasons the screen lists", async () => {
+    const where = { tenantId: f.scope.tenantId, farmId: farm, createdBy: f.scope.actorId };
+    await f.owner.season.createMany({ data: Array.from({ length: 100 }, (_, n) => ({ ...where, id: crypto.randomUUID(), label: "Later " + n, startDate: new Date(Date.UTC(2030, 0, 1 + n)), status: "CLOSED" as const })) });
+    try {
+      expect((await service.dashboard(farm, { seasonId: season })).seasons.map(row => row.seasonId)).not.toContain(earlierSeason);
+      expect(await crop({ seasonId: season })).toMatchObject({ earlierSeason: { seasonId: earlierSeason }, unavailable: null });
+    } finally { await f.owner.season.deleteMany({ where: { tenantId: f.scope.tenantId, label: { startsWith: "Later " } } }); }
+  });
+});
+
 describe("trends access (P08-T008)", () => {
   it("another tenant's farm and season are denied, and forged scope or filters are refused", async () => {
     await expect(service.trends(id())).rejects.toMatchObject({ code: "FORBIDDEN" });
