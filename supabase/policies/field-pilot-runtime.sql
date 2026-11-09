@@ -75,4 +75,43 @@ CREATE POLICY myfarm_server_create ON "SupportIncident" FOR INSERT TO myfarm_run
 -- Resolving is one-way, like finishing an activity.
 DROP POLICY IF EXISTS myfarm_server_resolve ON "SupportIncident";
 CREATE POLICY myfarm_server_resolve ON "SupportIncident" FOR UPDATE TO myfarm_runtime USING (status = 'OPEN') WITH CHECK (status = 'RESOLVED');
+
+-- R002: observations, findings that must cite them, and append-only reviews. Staff only, same cohort throughout.
+REVOKE ALL ON TABLE "PilotObservation" FROM PUBLIC, anon, authenticated, myfarm_runtime;
+GRANT SELECT, INSERT ON TABLE "PilotObservation" TO myfarm_runtime;
+DROP POLICY IF EXISTS myfarm_server_read ON "PilotObservation";
+CREATE POLICY myfarm_server_read ON "PilotObservation" FOR SELECT TO myfarm_runtime USING (true);
+DROP POLICY IF EXISTS myfarm_server_create ON "PilotObservation";
+CREATE POLICY myfarm_server_create ON "PilotObservation" FOR INSERT TO myfarm_runtime WITH CHECK (
+ myfarm_private.myfarm_is_pilot_staff("createdBy", "tenantId")
+ AND ("participationId" IS NULL OR EXISTS (SELECT 1 FROM "PilotParticipation" p WHERE p.id = "PilotObservation"."participationId" AND p."tenantId" = "PilotObservation"."tenantId" AND p."cohortId" = "PilotObservation"."cohortId" AND p.status = 'ENROLLED'))
+);
+
+REVOKE ALL ON TABLE "PilotFinding" FROM PUBLIC, anon, authenticated, myfarm_runtime;
+GRANT SELECT, INSERT ON TABLE "PilotFinding" TO myfarm_runtime;
+GRANT UPDATE (status, version, "updatedAt") ON "PilotFinding" TO myfarm_runtime;
+DROP POLICY IF EXISTS myfarm_server_read ON "PilotFinding";
+CREATE POLICY myfarm_server_read ON "PilotFinding" FOR SELECT TO myfarm_runtime USING (true);
+DROP POLICY IF EXISTS myfarm_server_create ON "PilotFinding";
+CREATE POLICY myfarm_server_create ON "PilotFinding" FOR INSERT TO myfarm_runtime WITH CHECK (status = 'OPEN' AND myfarm_private.myfarm_is_pilot_staff("createdBy", "tenantId"));
+-- Closing a finding is one-way.
+DROP POLICY IF EXISTS myfarm_server_close ON "PilotFinding";
+CREATE POLICY myfarm_server_close ON "PilotFinding" FOR UPDATE TO myfarm_runtime USING (status = 'OPEN') WITH CHECK (status IN ('ACTIONED', 'DISMISSED'));
+
+REVOKE ALL ON TABLE "PilotFindingEvidence" FROM PUBLIC, anon, authenticated, myfarm_runtime;
+GRANT SELECT, INSERT ON TABLE "PilotFindingEvidence" TO myfarm_runtime;
+DROP POLICY IF EXISTS myfarm_server_read ON "PilotFindingEvidence";
+CREATE POLICY myfarm_server_read ON "PilotFindingEvidence" FOR SELECT TO myfarm_runtime USING (true);
+DROP POLICY IF EXISTS myfarm_server_create ON "PilotFindingEvidence";
+CREATE POLICY myfarm_server_create ON "PilotFindingEvidence" FOR INSERT TO myfarm_runtime WITH CHECK (
+ EXISTS (SELECT 1 FROM "PilotFinding" f JOIN "PilotObservation" o ON o."cohortId" = f."cohortId" AND o."tenantId" = f."tenantId"
+  WHERE f.id = "PilotFindingEvidence"."findingId" AND o.id = "PilotFindingEvidence"."observationId" AND f."tenantId" = "PilotFindingEvidence"."tenantId" AND f.status = 'OPEN')
+);
+
+REVOKE ALL ON TABLE "PilotReview" FROM PUBLIC, anon, authenticated, myfarm_runtime;
+GRANT SELECT, INSERT ON TABLE "PilotReview" TO myfarm_runtime;
+DROP POLICY IF EXISTS myfarm_server_read ON "PilotReview";
+CREATE POLICY myfarm_server_read ON "PilotReview" FOR SELECT TO myfarm_runtime USING (true);
+DROP POLICY IF EXISTS myfarm_server_create ON "PilotReview";
+CREATE POLICY myfarm_server_create ON "PilotReview" FOR INSERT TO myfarm_runtime WITH CHECK (myfarm_private.myfarm_is_pilot_staff("createdBy", "tenantId"));
 COMMIT;

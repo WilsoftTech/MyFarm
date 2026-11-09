@@ -40,3 +40,22 @@ describe("staff commands (D-P09-004, D-P09-007)", () => {
     expect(paperConsentSchema.safeParse({ requestId: id(), participationId: id(), paperConsentRef: "x".repeat(61), expectedVersion: 1 }).success).toBe(false);
   });
 });
+
+describe("R002 evidence contracts (P09-T004)", () => {
+  it("a review takes a decision and a reason only: never downloads or the client's own gate figures", async () => {
+    const { reviewSchema } = await import("@/modules/field-pilot/contracts/pilot");
+    const review = { requestId: id(), decision: "GO", reason: "Half kept using it unprompted at week 8" };
+    expect(reviewSchema.safeParse(review).success).toBe(true);
+    for (const forged of [{ downloads: 900 }, { installs: 120 }, { retainedVoluntarily: 25 }, { gateMet: true }, { reviewedOn: "2027-04-30" }]) expect(reviewSchema.safeParse({ ...review, ...forged }).success).toBe(false);
+  });
+  it("a finding must cite at least one observation, and an observation must be a known kind on a known screen", async () => {
+    const { findingSchema, observationSchema } = await import("@/modules/field-pilot/contracts/pilot");
+    expect(findingSchema.safeParse({ requestId: id(), title: "Category confuses", observationIds: [] }).success).toBe(false);
+    expect(findingSchema.safeParse({ requestId: id(), title: "Category confuses", observationIds: [id()] }).success).toBe(true);
+    const seen = { requestId: id(), observedOn: "2027-03-03", screen: "EXPENSE_FORM", kind: "WORDING", note: "'Category' meant nothing" };
+    const parsed = observationSchema.safeParse(seen);
+    expect(parsed.success && parsed.data.participationId).toBeUndefined();
+    expect(observationSchema.safeParse({ ...seen, kind: "DOWNLOAD" }).success).toBe(false);
+    expect(observationSchema.safeParse({ ...seen, screen: "APP_STORE" }).success).toBe(false);
+  });
+});

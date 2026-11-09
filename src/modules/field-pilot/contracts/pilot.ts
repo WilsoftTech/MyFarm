@@ -3,6 +3,7 @@ import { idSchema } from "@/modules/engineering-foundation/contracts/identity";
 import { isCalendarDate } from "@/modules/enterprises-seasons/domain/production";
 import { SUPPORT_SEVERITIES, type PilotFacts, type PilotMeasures } from "../domain/measures";
 import { PILOT_CONSENT_VERSION } from "../domain/consent";
+import { OBSERVATION_KINDS, OBSERVED_SCREENS, REVIEW_DECISIONS, type Finding, type FindingView, type GateSnapshot, type Observation, type ObservationView, type ParticipantState, type ReviewDecision } from "../domain/evidence";
 
 /**
  * Field pilot commands (R001, D-P09-006 to D-P09-009). Actor, tenant, cohort ownership and pseudonyms are
@@ -74,4 +75,43 @@ export interface PilotRepository {
   openIncident(scope: StaffScope, cohortId: string, input: SupportIncidentInput): Promise<IncidentView>;
   resolveIncident(scope: StaffScope, cohortId: string, input: z.output<typeof resolveIncidentSchema>): Promise<IncidentView>;
   recordPaperConsent(scope: StaffScope, cohortId: string, input: z.output<typeof paperConsentSchema>): Promise<StaffParticipant>;
+}
+
+/**
+ * R002 (P0555-P0566). Observations are dated notes of real use; a finding must cite them; a review records a
+ * decision with the server's own gate figures. Nothing here accepts downloads, installs or a client's gate figures.
+ */
+export const observationSchema = z.object({
+  requestId: idSchema,
+  participationId: z.union([z.literal(""), idSchema]).optional().transform(value => value || undefined),
+  observedOn: calendarDay, screen: z.enum(OBSERVED_SCREENS), kind: z.enum(OBSERVATION_KINDS), note: plain(3, 500),
+}).strict();
+export const MAX_FINDING_EVIDENCE = 50;
+export const findingSchema = z.object({ requestId: idSchema, title: plain(3, 160), observationIds: z.array(idSchema).min(1, "Choose at least one observation.").max(MAX_FINDING_EVIDENCE) }).strict();
+export const closeFindingSchema = z.object({ requestId: idSchema, findingId: idSchema, status: z.enum(["ACTIONED", "DISMISSED"]), expectedVersion }).strict();
+export const reviewSchema = z.object({ requestId: idSchema, decision: z.enum(REVIEW_DECISIONS), reason: plain(3, 1000) }).strict();
+export type ObservationInput = z.output<typeof observationSchema>;
+
+export interface ReviewView { reviewId: string; reviewedOn: string; decision: ReviewDecision; gate: GateSnapshot | null; onboarded: number; reason: string }
+export interface FindingRow extends Finding { version: number }
+export interface EvidenceView {
+  cohort: CohortSummary;
+  today: string;
+  observations: ObservationView[];
+  findings: (FindingView & { version: number })[];
+  reviews: ReviewView[];
+  /** What the evidence allows today (D-P09-004), and the gate figures a review would record. */
+  allowed: ReviewDecision[];
+  gate: GateSnapshot | null;
+}
+/** R002 port. Every method constrains the cohort to the staff organization. */
+export interface EvidenceRepository {
+  observations(scope: StaffScope, cohortId: string): Promise<Observation[]>;
+  participantStates(scope: StaffScope, cohortId: string): Promise<ParticipantState[]>;
+  findings(scope: StaffScope, cohortId: string): Promise<FindingRow[]>;
+  reviews(scope: StaffScope, cohortId: string): Promise<ReviewView[]>;
+  recordObservation(scope: StaffScope, cohortId: string, input: ObservationInput): Promise<{ observationId: string }>;
+  createFinding(scope: StaffScope, cohortId: string, input: z.output<typeof findingSchema>): Promise<{ findingId: string }>;
+  closeFinding(scope: StaffScope, cohortId: string, input: z.output<typeof closeFindingSchema>): Promise<{ findingId: string }>;
+  recordReview(scope: StaffScope, cohortId: string, input: z.output<typeof reviewSchema> & { reviewedOn: string; onboarded: number; gate: GateSnapshot | null }): Promise<ReviewView>;
 }

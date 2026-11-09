@@ -102,3 +102,66 @@ describe("field pilot policies under the restricted runtime role (D-P09-006 to D
     }
   });
 });
+
+it("the pilot evidence migration rolls back atomically and only adds tables", async () => {
+  const url = process.env.TEST_DATABASE_URL!;
+  const admin = new Client({ connectionString: url }); await admin.connect();
+  const name = "myfarm_evidence_upgrade_" + crypto.randomUUID().replaceAll("-", "");
+  const target = new URL(url); target.pathname = "/" + name;
+  await admin.query('CREATE DATABASE "' + name + '"');
+  const db = new Client({ connectionString: target.toString() }); await db.connect();
+  try {
+    const release = "202611100001_pilot_evidence";
+    for (const part of readdirSync("prisma/migrations").filter(p => /^\d/.test(p) && p < release).sort()) await db.query(readFileSync("prisma/migrations/" + part + "/migration.sql", "utf8"));
+    const tables = async () => (await db.query(`SELECT count(*)::int AS n FROM pg_tables WHERE schemaname = 'public'`)).rows[0].n;
+    const before = await tables(), sql = readFileSync("prisma/migrations/" + release + "/migration.sql", "utf8");
+    await expect(db.query(sql.replace(/COMMIT;\s*$/, "SELECT 1/0; COMMIT;"))).rejects.toMatchObject({ code: "22012" });
+    await db.query("ROLLBACK");
+    expect(await tables()).toBe(before);
+    await db.query(sql);
+    expect(await tables()).toBe(before + 4);
+  } finally { await db.end(); await admin.query('DROP DATABASE "' + name + '"'); await admin.end(); }
+}, 60_000);
+
+describe("pilot evidence policies under the restricted runtime role (D-P09-004)", () => {
+  let f: Awaited<ReturnType<typeof inventoryFixture>>, org: string, staff: string, cohort: string, other: string;
+  beforeAll(async () => {
+    f = await inventoryFixture();
+    org = (await f.owner.organization.create({ data: { name: "Evidence team", kind: "ORGANIZATION" } })).id;
+    staff = (await f.owner.user.create({ data: { authSubject: id() } })).id;
+    await f.owner.membership.create({ data: { userId: staff, organizationId: org, role: "ADMIN" } });
+    const window = { tenantId: org, consentVersion: CONSENT, startOn: new Date("2027-03-01Z"), endOn: new Date("2027-06-20Z"), createdBy: staff };
+    cohort = (await f.runtime.pilotCohort.create({ data: { ...window, name: "A", code: "EVIDENCE1", requestId: id() } })).id;
+    other = (await f.runtime.pilotCohort.create({ data: { ...window, name: "B", code: "EVIDENCE2", requestId: id() } })).id;
+  }, 60_000);
+  afterAll(async () => {
+    try {
+      for (const table of ["PilotFindingEvidence", "PilotFinding", "PilotObservation", "PilotReview", "PilotCohort"]) await f.owner.$executeRawUnsafe('DELETE FROM "' + table + '" WHERE "tenantId" = $1::uuid', org);
+      await f.owner.membership.deleteMany({ where: { organizationId: org } });
+      await f.owner.organization.delete({ where: { id: org } });
+      await f.owner.user.delete({ where: { id: staff } });
+    } finally { await f.cleanup(); }
+  });
+  const observe = (cohortId: string, createdBy = staff) => f.runtime.pilotObservation.create({ data: { cohortId, tenantId: org, observedOn: new Date("2027-03-03Z"), screen: "EXPENSE_FORM", kind: "WORDING", note: "Category meant nothing", requestId: id(), createdBy } });
+  const review = (data: Record<string, unknown>) => f.runtime.pilotReview.create({ data: { cohortId: cohort, tenantId: org, reviewedOn: new Date("2027-04-30Z"), decision: "CONTINUE", onboarded: 4, reason: "Week 8 judged", requestId: id(), createdBy: staff, ...data } });
+
+  it("only staff observe; a finding cites observations of its own cohort and closes one-way", async () => {
+    await expect(observe(cohort, f.scope.actorId)).rejects.toThrow();
+    const seen = await observe(cohort), elsewhere = await observe(other);
+    const finding = await f.runtime.pilotFinding.create({ data: { cohortId: cohort, tenantId: org, title: "Category confuses", requestId: id(), createdBy: staff } });
+    await f.runtime.pilotFindingEvidence.create({ data: { findingId: finding.id, observationId: seen.id, tenantId: org } });
+    await expect(f.runtime.pilotFindingEvidence.create({ data: { findingId: finding.id, observationId: elsewhere.id, tenantId: org } })).rejects.toThrow();
+    await f.runtime.pilotFinding.update({ where: { id: finding.id }, data: { status: "ACTIONED", version: { increment: 1 } } });
+    expect((await f.runtime.pilotFinding.updateMany({ where: { id: finding.id }, data: { status: "OPEN" } })).count).toBe(0);
+  });
+  it("a review records judged gate figures; GO needs a met gate; nothing is ever deleted or changed", async () => {
+    await review({});
+    await expect(review({ decision: "GO" })).rejects.toThrow();
+    await expect(review({ decision: "GO", gateWeek: 8, retainedVoluntarily: 1, gateMet: false })).rejects.toThrow();
+    await expect(review({ decision: "NO_GO", gateWeek: 8, retainedVoluntarily: 9, gateMet: false })).rejects.toThrow();
+    const go = await review({ decision: "GO", gateWeek: 8, retainedVoluntarily: 2, gateMet: true });
+    await expect(review({ createdBy: f.scope.actorId })).rejects.toThrow();
+    await expect(f.runtime.$executeRawUnsafe('UPDATE "PilotReview" SET decision = \'NO_GO\' WHERE id = $1::uuid', go.id)).rejects.toThrow();
+    for (const table of ["PilotReview", "PilotFindingEvidence", "PilotFinding", "PilotObservation"]) await expect(f.runtime.$executeRawUnsafe('DELETE FROM "' + table + '"')).rejects.toThrow();
+  });
+});
