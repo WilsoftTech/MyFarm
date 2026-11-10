@@ -6,7 +6,7 @@
 - Last reviewed: 2026-11-10 (Africa/Nairobi).
 - Related phase/task IDs: D-P09-005; D-P09-011; P7-C1; P7-C4; P7-C6; P4-C4; P5-C3; MYF-P09-R001.
 - Verified completed work: Pilot migrations 202611090001 and 202611100001 and the full provisioning list applied to hosted development after a verified backup; existing data unchanged.
-- Remaining work/blockers: Owner decisions on sections 2 to 5; Phase 1 C4, P8-C2 and recruitment stay with the owner. No real farmer joins yet.
+- Remaining work/blockers: Sections 2, 3 and 5 decided 2026-11-10 (D-P09-012 to D-P09-016); section 4 (real phone) and translations await the owner; Phase 1 C4, P8-C2 and recruitment stay with the owner. No real farmer joins yet.
 - Evidence/report links: [Phase 9 closeout](phase-09-closeout-2026-11-10.md); [Decision log](../DECISION-LOG.md#d-p09-011---pilot-start-checklist-work); [Project status](../PROJECT-STATUS.md).
 <!-- MYFARM-STATUS-END -->
 
@@ -17,10 +17,10 @@
 | Item (D-P09-005) | State on 2026-11-10 |
 |---|---|
 | Hosted schema for the pilot (`202611090001`, `202611100001`, provisioning list) | **DONE** - section 1 |
-| P7-C4 retention and export policy | Proposal ready - section 2 |
-| P7-C6, P4-C4, P5-C3 abuse and rate controls | Proposal ready - section 3; build after approval |
+| P7-C4 retention and export policy | **Policy approved** (D-P09-012); full farm export built locally ([evidence](phase-09-farm-export-2026-11-10.md)); qualified local review still advised |
+| P7-C6, P4-C4, P5-C3 abuse and rate controls | **Approved and built locally** (D-P09-014, D-P09-016; [evidence](phase-09-request-limits-2026-11-10.md)); hosted table step pending |
 | P7-C1 real low-cost Android phone, 14 days and 500 entries | Test plan ready - section 4; needs a phone and a hosted address |
-| Consent words approved, in each language, checked by real speakers | Draft reproduced in section 5 for approval |
+| Consent words approved, in each language, checked by real speakers | **English approved** as `pilot-consent-v1` (D-P09-015); languages and checking speakers not yet named |
 | Phase 1 C4 production sign-in, recovery email, TLS | Owner / operations; not started |
 | P8-C2 accountant and agronomist sign-off | [Review pack](phase-08-formula-review-pack-2026-11-09.md) awaits reviewers |
 | Recruit about 25 farmers and name pilot staff | Owner |
