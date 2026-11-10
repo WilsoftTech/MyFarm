@@ -69,3 +69,34 @@ describe("cohort codes", () => {
     expect(newCohortCode(bytes => bytes.fill(0))).toBe("AAAAAAAA");
   });
 });
+
+describe("refused codes are limited per farmer (D-P09-014)", () => {
+  const limited = (allowed = true) => {
+    const base = fixture();
+    const limits = { allowed: vi.fn(async () => allowed), note: vi.fn(async () => {}) };
+    return { ...base, limits, service: new FieldPilotService(base.auth, base.repo, () => now, () => "RUK2027A", limits) };
+  };
+  it("counts each refused code under its own request ID, and only refusals", async () => {
+    const { repo, limits, service } = limited();
+    repo.cohortByCode.mockResolvedValue(null);
+    await expect(service.join(join)).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(limits.allowed).toHaveBeenCalledWith(actorId, "PILOT_JOIN_REFUSED");
+    expect(limits.note).toHaveBeenCalledWith(actorId, "PILOT_JOIN_REFUSED", join.requestId);
+    const ok = limited();
+    await ok.service.join(join);
+    expect(ok.limits.note).not.toHaveBeenCalled();
+  });
+  it("over the limit, even the right code is turned away before the cohort is looked up", async () => {
+    const { repo, limits, service } = limited(false);
+    await expect(service.join(join)).rejects.toMatchObject({ code: "RATE_LIMITED" });
+    expect(repo.cohortByCode).not.toHaveBeenCalled();
+    expect(repo.join).not.toHaveBeenCalled();
+    expect(limits.note).not.toHaveBeenCalled();
+  });
+  it("input that is not a join is refused as input and not counted", async () => {
+    const { limits, service } = limited();
+    await expect(service.join({ code: "RUK2027A" })).rejects.toMatchObject({ code: "INVALID_INPUT" });
+    expect(limits.allowed).not.toHaveBeenCalled();
+    expect(limits.note).not.toHaveBeenCalled();
+  });
+});

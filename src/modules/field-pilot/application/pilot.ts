@@ -1,10 +1,15 @@
 import { FoundationError } from "@/modules/engineering-foundation/domain/errors";
 import type { Role } from "@/modules/engineering-foundation/contracts/identity";
+import type { RequestLimitPort } from "@/modules/engineering-foundation/contracts/request-limits";
 import { parseProductionInput as parse } from "@/modules/enterprises-seasons/application/farm-access";
 import { farmToday } from "@/modules/farm-activities/domain/activity";
 import { createCohortSchema, joinCohortSchema, paperConsentSchema, promptSchema, resolveIncidentSchema, supportIncidentSchema, withdrawSchema, type CohortSummary, type CohortView, type MyParticipation, type PilotRepository, type StaffScope } from "../contracts/pilot";
 import { PILOT_CONSENT_VERSION } from "../domain/consent";
 import { pilotMeasures } from "../domain/measures";
+
+/** Refused codes are counted per person (D-P09-014), so codes cannot be guessed at speed. */
+export type JoinLimits = Pick<RequestLimitPort, "allowed" | "note">;
+const UNLIMITED: JoinLimits = { allowed: async () => true, note: async () => {} };
 
 export interface PilotAuthorization {
   account(): Promise<{ id: string }>;
@@ -21,15 +26,22 @@ export function newCohortCode(random: (bytes: Uint8Array) => Uint8Array = bytes 
  * organization running the cohort, and see measures and pseudonyms, never farm records (D-P09-007).
  */
 export class FieldPilotService {
-  constructor(private readonly auth: PilotAuthorization, private readonly pilots: PilotRepository, private readonly now: () => Date = () => new Date(), private readonly code: () => string = () => newCohortCode()) {}
+  constructor(private readonly auth: PilotAuthorization, private readonly pilots: PilotRepository, private readonly now: () => Date = () => new Date(), private readonly code: () => string = () => newCohortCode(), private readonly limits: JoinLimits = UNLIMITED) {}
 
-  /** A code that is wrong, closed or past its window looks the same, so codes cannot be probed. */
+  /**
+   * A code that is wrong, closed or past its window looks the same, so codes cannot be probed; each refusal counts
+   * against the farmer's limit of 5 in 15 minutes and 20 a day.
+   */
   async join(input: unknown): Promise<MyParticipation> {
     const account = await this.auth.account();
     const command = parse(joinCohortSchema, input);
+    if (!(await this.limits.allowed(account.id, "PILOT_JOIN_REFUSED"))) throw new FoundationError("RATE_LIMITED");
     const today = farmToday(this.now());
     const cohort = await this.pilots.cohortByCode(command.code);
-    if (!cohort || cohort.status !== "ACTIVE" || today > cohort.endOn || cohort.consentVersion !== PILOT_CONSENT_VERSION) throw new FoundationError("FORBIDDEN");
+    if (!cohort || cohort.status !== "ACTIVE" || today > cohort.endOn || cohort.consentVersion !== PILOT_CONSENT_VERSION) {
+      await this.limits.note(account.id, "PILOT_JOIN_REFUSED", command.requestId);
+      throw new FoundationError("FORBIDDEN");
+    }
     if (!(await this.pilots.isActiveFarmer(account.id))) throw new FoundationError("FORBIDDEN");
     return this.pilots.join({ userId: account.id, cohort, requestId: command.requestId, enrolledOn: today < cohort.startOn ? cohort.startOn : today });
   }

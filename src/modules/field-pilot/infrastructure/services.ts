@@ -1,6 +1,7 @@
 import "server-only";
 import { authorizationService } from "@/modules/engineering-foundation/infrastructure/services";
 import { database } from "@/modules/engineering-foundation/infrastructure/database";
+import { requestLimits } from "@/modules/engineering-foundation/infrastructure/request-limits";
 import { PilotEvidenceService } from "../application/evidence";
 import { FieldPilotService } from "../application/pilot";
 import { evidenceRepository } from "./evidence-repository";
@@ -25,6 +26,9 @@ export function fieldPilotService() {
     openIncident: (scope, cohortId, input) => db().openIncident(scope, cohortId, input),
     resolveIncident: (scope, cohortId, input) => db().resolveIncident(scope, cohortId, input),
     recordPaperConsent: (scope, cohortId, input) => db().recordPaperConsent(scope, cohortId, input),
+  }, undefined, undefined, {
+    allowed: (subject, action) => requestLimits(database()).allowed(subject, action),
+    note: (subject, action, requestKey) => requestLimits(database()).note(subject, action, requestKey),
   });
 }
 

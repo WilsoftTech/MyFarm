@@ -1,5 +1,7 @@
 import "server-only";
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
+import { REQUEST_LIMITED_HEADER } from "../domain/request-limits";
 import { FoundationError } from "../domain/errors";
 import type { CommandFailure } from "../contracts/command-result";
 import { logSafe } from "./logging";
@@ -16,7 +18,11 @@ const messages: Record<FoundationError["code"], string> = {
 /** Redirect only after the service commits; preserve input with safe feedback on failure. */
 export async function runServerCommand(work: () => Promise<string>, conflict?: string | (() => never), invalidInput?: string): Promise<CommandFailure> {
   let destination: string;
-  try { destination = await work(); }
+  try {
+    // The proxy counted this form save and found it over the person's limit (D-P09-014).
+    if ((await headers()).get(REQUEST_LIMITED_HEADER)) throw new FoundationError("RATE_LIMITED");
+    destination = await work();
+  }
   catch (error) {
     const code = error instanceof FoundationError ? error.code : "UNAVAILABLE";
     logSafe({ event: "request_failed", requestId: crypto.randomUUID(), code });

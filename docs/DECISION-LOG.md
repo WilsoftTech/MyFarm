@@ -588,3 +588,23 @@ ACCEPTED, owner 2026-11-10, selecting "Clear checklist (Recommended)" when asked
 ## D-P09-011 - Pilot-start checklist work
 
 AUTHORIZED, owner 2026-11-10, selecting "Clear checklist (Recommended)" after being told Phase 10 cannot start before the Phase 9 exit gate. Scope: apply the two pilot migrations and the provisioning list to hosted development after a verified backup; prepare proposals for P7-C4 retention and export and for P7-C6, P4-C4 and P5-C3 rate controls, and a real-phone test plan for P7-C1. Phase 10 stays blocked. Done the same day: hosted development now has 21 migrations with existing data unchanged; the proposals await owner decisions. [Pilot-start pack](reports/phase-09-pilot-start-pack-2026-11-10.md).
+
+## D-P09-012 - Retention policy (P7-C4)
+
+APPROVED, owner 2026-11-10, selecting "Approve as written (Recommended)" for section 2 of the [pilot-start pack](reports/phase-09-pilot-start-pack-2026-11-10.md#2-p7-c4-how-long-data-is-kept-and-how-a-farmer-gets-it-out). Farmer profile, farm details, GPS and farm records are kept while the account is open and deleted within 30 days of a confirmed closure request, after the farmer is offered an export. The audit trail is kept for 24 months. Pilot usage counts, reminders, incidents, observations, findings and reviews are kept until the pilot decision plus 12 months, after which only cohort totals with no code names remain (in the closeout report). A withdrawn farmer is excluded from every measure at once and their pilot rows are deleted at the end-of-pilot clean-up. Entries sent from a phone are kept on the phone for 7 days. Engineering copies of hosted data are deleted 30 days after the change they protected is verified. The policy replaces the interim photo rule (D-P07-004): a photo still lives as long as its record. MyFarm makes no legal compliance claim; a qualified local reviewer should read the policy before the pilot. Deletions are carried out as reviewed operations, never by an unattended job, until the owner approves automation.
+
+## D-P09-013 - Full farm export before the pilot
+
+APPROVED, owner 2026-11-10, selecting "Build it before pilot (Recommended)". A farm owner can download everything on their farm: one CSV per record type plus their photos. It is a data right under D-P09-012, not a new farming feature, so the feature freeze (P0541) holds. Built as one engineering task with tests; committed and pushed under D-P09-001.
+
+## D-P09-014 - Abuse and rate controls (P7-C6, P4-C4, P5-C3)
+
+APPROVED, owner 2026-11-10, selecting "Approve and build (Recommended)" for section 3 of the [pilot-start pack](reports/phase-09-pilot-start-pack-2026-11-10.md#3-p7-c6-p4-c4-p5-c3-limits-against-abuse-and-runaway-phones). Each person's requests are counted per action in one table on the database clock; a retry of the same request is free; over the limit the app answers HTTP 429 with the existing message, and phones keep their entries queued. Limits: join with a code 5 wrong codes in 15 minutes and 20 a day; phone push 30 a minute; phone pull 60 a minute; photo upload 30 an hour and 200 a day; private-file reads 30 a minute (unchanged); money summary export 10 an hour; full farm export 3 a day; any other form save 120 a minute; pilot staff logs and reviews 60 a minute. Count rows older than a day are removed. One additive migration, no new package; applied to hosted development after a verified backup, as D-P09-011.
+
+## D-P09-015 - Consent words, English
+
+APPROVED, owner 2026-11-10, selecting "Approve English 1-8". The seven draft points and the added point 8 ("The team keeps the counts for up to a year after the pilot ends, then keeps only totals with no code names.") become version `pilot-consent-v1`. Languages and the real speaker who checks each translation are not yet named; no translation may be shown to farmers until it is checked (AGENTS.md section 12). Cohorts made under the draft version cannot be joined; staff make new cohorts.
+
+## D-P09-016 - Phone pull limit raised to 600 a minute
+
+APPROVED, owner 2026-11-10, selecting "Raise to 600 a minute (Recommended)". While building D-P09-014, engineering found that every signed-in page open refreshes the phone's saved copies, at least 12 pull pages per farm, so the approved 60 a minute stopped a farmer opening about 5 pages a minute; the signed-in browser suite failed 22 offline tests on it. The phone pull limit is now 600 pages a minute; phone behavior is unchanged and every other D-P09-014 number stands.

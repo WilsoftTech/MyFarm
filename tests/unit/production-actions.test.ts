@@ -77,3 +77,12 @@ it("redirects a committed season and retains the shared registration conflict ca
   await expect(createSeasonAction("farm-a", {})).rejects.toThrow("REDIRECT:/farms/farm-a/seasons/season-a?saved=1");
   await expect(runServerCommand(async () => { throw new FoundationError("CONFLICT"); }, () => mocks.redirect("/farmer"))).rejects.toThrow("REDIRECT:/farmer");
 });
+it("refuses a form save the proxy flagged as over its limit, before any work, with the usual message (D-P09-014)", async () => {
+  const { headers } = await import("next/headers");
+  const { REQUEST_LIMITED_HEADER } = await import("@/modules/engineering-foundation/domain/request-limits");
+  vi.mocked(headers).mockResolvedValueOnce(new Headers({ [REQUEST_LIMITED_HEADER]: "1" }) as never);
+  const work = vi.fn(async () => "/farms/x");
+  expect(await runServerCommand(work)).toEqual({ ok: false, message: "Too many attempts. Wait a minute, then try again. Your details are still here." });
+  expect(work).not.toHaveBeenCalled();
+  expect(mocks.redirect).not.toHaveBeenCalled();
+});

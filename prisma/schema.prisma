@@ -1120,3 +1120,15 @@ model PilotReview {
   @@index([cohortId, reviewedOn])
   @@index([createdBy])
 }
+// Per-person request counts for abuse limits (D-P09-014). `subject` is the signed-in auth subject, or the account
+// for limits counted inside a service. Retries carry the same requestKey and are not counted twice.
+model RequestCount {
+  id String @id @default(uuid()) @db.Uuid
+  subject String @db.Uuid
+  action String @db.VarChar(40)
+  requestKey String? @db.VarChar(128)
+  occurredAt DateTime @default(now()) @db.Timestamptz(6)
+  @@unique([subject, action, requestKey])
+  @@index([subject, action, occurredAt])
+  @@index([occurredAt])
+}

@@ -21,7 +21,8 @@ describe("joining (D-P09-006)", () => {
   });
   it("the consent text tells the farmer what is counted, what staff see, and how to leave", () => {
     const text = PILOT_CONSENT_POINTS.join(" ");
-    for (const point of [/code name/, /do not see your name, phone number, money amounts or records/, /leave the pilot at any time/, /does not change or delete your farm records/]) expect(text).toMatch(point);
+    for (const point of [/code name/, /do not see your name, phone number, money amounts or records/, /leave the pilot at any time/, /does not change or delete your farm records/, /up to a year after the pilot ends/]) expect(text).toMatch(point);
+    expect(PILOT_CONSENT_VERSION).toBe("pilot-consent-v1");
   });
 });
 
