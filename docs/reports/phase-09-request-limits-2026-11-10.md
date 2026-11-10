@@ -2,11 +2,11 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - pilot-start pack section 3 and 5, proxy, server actions, sync client, pilot join.
-- Implementation status: COMPLETE LOCALLY - limits built and verified on a disposable database; hosted step below.
+- Implementation status: COMPLETE - built and verified locally; schema applied to hosted development.
 - Last reviewed: 2026-11-10 (Africa/Nairobi).
 - Related phase/task IDs: D-P09-012 to D-P09-016; P7-C6, P4-C4, P5-C3; MYF-P09 pilot-start checklist.
 - Verified completed work: per-person limits on every write, phone push and pull, photo upload, money export, the coming full farm export, pilot staff work and refused pilot codes; consent version `pilot-consent-v1` with point 8.
-- Remaining work/blockers: apply migration `202611100002_request_limits` and `request-limits-runtime.sql` to hosted development with a verified backup (authorized by D-P09-014); the full signed-in browser suite is re-run with the farm export task. Translations of the consent words, with checking speakers, are still needed.
+- Remaining work/blockers: none for the build; applied to hosted development 2026-11-10 (below). The full signed-in suite passed 186 of 186 with the farm export task. The code is not pushed or deployed. Translations of the consent words, with checking speakers, are still needed.
 - Evidence/report links: [Pilot-start pack](phase-09-pilot-start-pack-2026-11-10.md); [Decision log](../DECISION-LOG.md#d-p09-014---abuse-and-rate-controls-p7-c6-p4-c4-p5-c3).
 <!-- MYFARM-STATUS-END -->
 
@@ -94,3 +94,18 @@ The proxy unit tests check:
 - Form saves have no request ID the proxy can read, so a farmer's retry of the same form counts again. At 120 a minute this does not affect a person.
 - A retry with an already-counted request ID is free, as approved. Such a retry writes nothing new, because every save is already idempotent by request ID, but it still reaches the database. These limits stop runaway phones and scripts from one account; they are not protection against a flood from many accounts or none. That is platform protection (Phase 1 C4, production hosting).
 - The counts use the session token's subject before the route re-checks the session. A signed-out but unexpired token still counts against its own person, which harms nobody else.
+
+## Hosted development - 2026-11-10
+
+Applied under D-P09-014 with the D-P09-011 backup-then-apply method (`.cache/p09b-hosted.mjs`, engineering machine only).
+
+| Step | Result |
+|---|---|
+| Snapshot before | PostgreSQL 17.11; 42 public tables, 80 rows; 21 migrations, all finished, last `202611100001_pilot_evidence` |
+| Backup | `pg_dump -Fc`, 704,311 bytes, kept only on the engineering machine for 30 days (D-P09-012) |
+| Restore check | Restored into a throwaway PostgreSQL 17 container with the `public` and `myfarm_private` schemas: no errors, all 42 tables match row for row. A first attempt restored `public` alone and reported 7 errors for policies that call `myfarm_private` functions; the data still matched |
+| Apply | `prisma migrate deploy` applied `202611100002_request_limits`; all 15 provisioning SQL files PASS, in manifest order |
+| Verify | Every existing table unchanged except `_prisma_migrations` (+1 row); `RequestCount` added, empty; 22 migrations, none unfinished; 0 browser grants; every public table has row security |
+| App's role | `myfarm_runtime` may read, add and delete (old rows only, by policy), never update or truncate. As the app's own connection, a check-only call returns true and counts nothing, and an update is refused (`42501`) |
+
+No hosted page was signed in to, and no application code was deployed: hosted development has the table, and the limits take effect when this code is deployed.

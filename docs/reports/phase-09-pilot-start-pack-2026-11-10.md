@@ -18,7 +18,7 @@
 |---|---|
 | Hosted schema for the pilot (`202611090001`, `202611100001`, provisioning list) | **DONE** - section 1 |
 | P7-C4 retention and export policy | **Policy approved** (D-P09-012); full farm export built locally ([evidence](phase-09-farm-export-2026-11-10.md)); qualified local review still advised |
-| P7-C6, P4-C4, P5-C3 abuse and rate controls | **Approved and built locally** (D-P09-014, D-P09-016; [evidence](phase-09-request-limits-2026-11-10.md)); hosted table step pending |
+| P7-C6, P4-C4, P5-C3 abuse and rate controls | **Approved and built** (D-P09-014, D-P09-016; [evidence](phase-09-request-limits-2026-11-10.md)); table on hosted development 2026-11-10; code not yet deployed |
 | P7-C1 real low-cost Android phone, 14 days and 500 entries | Test plan ready - section 4; needs a phone and a hosted address |
 | Consent words approved, in each language, checked by real speakers | **English approved** as `pilot-consent-v1` (D-P09-015); languages and checking speakers not yet named |
 | Phase 1 C4 production sign-in, recovery email, TLS | Owner / operations; not started |
