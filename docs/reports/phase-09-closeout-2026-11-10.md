@@ -80,14 +80,14 @@ The CI non-UTC step now includes the two pilot service suites.
 
 ## Verdict
 
-**Phase 9 is not closed.** All seven tasks and both acceptance criteria pass, so the software is complete. The exit gate is a fact about real farmers' behaviour over weeks, and the source is explicit: "We prove recurring usage." A test cannot prove it. Recommended status: **IMPLEMENTATION COMPLETE, EXIT GATE PENDING THE REAL PILOT** (D-P09-010, proposed). Phase 10 ("only after reliable data exists", P0569) must not start until the gate is met.
+**Phase 9 is not closed.** All seven tasks and both acceptance criteria pass, so the software is complete. The exit gate is a fact about real farmers' behaviour over weeks, and the source is explicit: "We prove recurring usage." A test cannot prove it. Recommended status: **IMPLEMENTATION COMPLETE, EXIT GATE PENDING THE REAL PILOT** (D-P09-010, accepted 2026-11-10). Phase 10 ("only after reliable data exists", P0569) must not start until the gate is met.
 
 ## Pilot-start checklist (D-P09-005)
 
 | Item | Owner | Why it blocks real farmers |
 |---|---|---|
 | Approve the consent words, in every language farmers will read, checked by real speakers | Project owner | The draft (`pilot-consent-v1-draft`) has not been approved |
-| Apply `202611090001`, `202611100001` and the provisioning list to hosted, with a verified backup | Project owner / engineering | The pilot runs on hosted |
+| ~~Apply `202611090001`, `202611100001` and the provisioning list to hosted, with a verified backup~~ **Done 2026-11-10** (D-P09-011, [pilot-start pack](phase-09-pilot-start-pack-2026-11-10.md)) | Project owner / engineering | The pilot runs on hosted |
 | P7-C4 retention and export policy, including pilot data after the pilot | Project owner | Real personal data |
 | P7-C6, P4-C4, P5-C3 abuse and rate controls, including joining | Project owner / security | Real accounts and codes |
 | Phase 1 C4: production sign-in, recovery email, TLS | Project owner / operations | Real sign-ins |
