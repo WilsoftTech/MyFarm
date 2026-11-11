@@ -608,3 +608,7 @@ APPROVED, owner 2026-11-10, selecting "Approve English 1-8". The seven draft poi
 ## D-P09-016 - Phone pull limit raised to 600 a minute
 
 APPROVED, owner 2026-11-10, selecting "Raise to 600 a minute (Recommended)". While building D-P09-014, engineering found that every signed-in page open refreshes the phone's saved copies, at least 12 pull pages per farm, so the approved 60 a minute stopped a farmer opening about 5 pages a minute; the signed-in browser suite failed 22 offline tests on it. The phone pull limit is now 600 pages a minute; phone behavior is unchanged and every other D-P09-014 number stands.
+
+## D-P09-017 - Phase 9 closes on its exit gate; Phase 10 held
+
+DECIDED, owner 2026-11-11. Asked how to close Phase 9 and whether to build Phase 10 ahead of the pilot, the owner answered "close phase 9 when complete and implement next phase" and selected "Hold Phase 10". Phase 9 is not closed now: it closes only when its exit gate is met by the real pilot (D-P09-003, D-P09-005), with the closeout committed and pushed then. Phase 10 does not start until that closure; the pilot's feature freeze (P0541) stays in force. Until then, work continues on the pilot-start checklist.
