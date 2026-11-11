@@ -1,5 +1,6 @@
 import type { MissingReason, TrendFigureRule } from "@/modules/farm-intelligence/domain/batch-trends";
 import type { RuleKey, Severity } from "@/modules/farm-intelligence/domain/rules";
+import type { ThresholdMissing, ThresholdRule } from "@/modules/farm-intelligence/domain/thresholds";
 
 /** Plain words for each approved rule (D-P10-002). The figures and dates beside them come from the server unchanged. */
 export const ruleTitles: Record<RuleKey, string> = {
@@ -36,3 +37,25 @@ export function valueText(rule: TrendFigureRule, value: string, currency: string
   if (rule === "MORTALITY_RISING") return value + "%";
   return rule === "FEED_COST_RISING" && currency ? value + " " + currency : value;
 }
+export const thresholdFigureLabels: Record<ThresholdRule, string> = {
+  HIGH_MORTALITY: "Birds that died in the last 7 days",
+  FEED_RUNNING_LOW: "Days of feed left",
+  LOSS_PER_EGG: "Cost and price per egg",
+  LOSS_PER_BIRD: "Cost and price per bird",
+  LOSS_PER_KG: "Cost and price per kg",
+};
+export const thresholdMissingLabels: Record<ThresholdMissing, string> = {
+  BATCH_TOO_YOUNG: "The batch is less than a week old here.",
+  TOO_FEW_BIRDS: "Fewer than 20 birds: one or two deaths would look too big.",
+  FEW_RECORDED_DAYS: "The batch has records on fewer than 4 of the last 7 days.",
+  NO_FEED_ITEM: "No feed item is chosen for this batch. Choose the supply it is fed from.",
+  FEED_ITEM_NOT_KG: "The chosen feed item is not counted in kg, so it cannot be compared with feed given in kg.",
+  FEW_FEED_DAYS: "Feed given was recorded on fewer than 4 days in one of the last 2 weeks.",
+  NO_FEED_USE: "No feed given was recorded in the last 2 weeks.",
+  NO_PRODUCTION: "Nothing was produced in this period.",
+  NO_SALES: "Nothing was sold in this period in this currency.",
+  MORE_THAN_ONE_CROP: "This enterprise has more than one crop cycle this season, so its costs cannot be split between them.",
+};
+export const lossUnits: Record<Extract<ThresholdRule, "LOSS_PER_EGG" | "LOSS_PER_BIRD" | "LOSS_PER_KG">, { one: string; many: string }> = {
+  LOSS_PER_EGG: { one: "egg", many: "eggs" }, LOSS_PER_BIRD: { one: "bird", many: "birds" }, LOSS_PER_KG: { one: "kg", many: "kg" },
+};

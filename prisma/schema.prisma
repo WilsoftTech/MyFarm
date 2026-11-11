@@ -91,6 +91,7 @@ model User {
   cancelledActivities ProductionActivity[] @relation("ActivityCanceller")
   recordPhotos RecordPhoto[]
   acknowledgedInsights FarmInsight[]
+  batchFeedItems BatchFeedItem[]
   pilotCohorts PilotCohort[]
   pilotParticipations PilotParticipation[] @relation("PilotParticipant")
   pilotConsentsRecorded PilotParticipation[] @relation("PilotPaperConsent")
@@ -332,6 +333,7 @@ model CropCycle {
   @@index([createdBy])
   harvests Harvest[]
   inventoryItems InventoryItem[]
+  insights FarmInsight[]
   @@unique([id, farmId, tenantId])
   @@unique([id, plotId, cropId, farmId, tenantId])
 }
@@ -376,6 +378,7 @@ model PoultryBatch {
   openingMovements StockMovement[]
   costRecords AccountingRecord[]
   insights FarmInsight[]
+  feedItem BatchFeedItem?
   @@unique([id, farmId, tenantId])
 }
 enum AccountingRecordKind {
@@ -578,6 +581,7 @@ model InventoryItem {
   batch PoultryBatch? @relation(fields: [batchId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
   @@unique([batchId, kind])
   stockOperations StockOperation[]
+  feedsBatches BatchFeedItem[]
   nameKey String?
   @@unique([farmId, tenantId, nameKey, unit])
 }
@@ -1157,7 +1161,8 @@ model FarmInsight {
   id String @id @db.Uuid
   tenantId String @db.Uuid
   farmId String @db.Uuid
-  batchId String @db.Uuid
+  batchId String? @db.Uuid
+  cropCycleId String? @db.Uuid
   ruleKey String @db.VarChar(60)
   ruleVersion Int
   severity InsightSeverity
@@ -1173,10 +1178,32 @@ model FarmInsight {
   createdAt DateTime @default(now()) @db.Timestamptz(6)
   updatedAt DateTime @default(now()) @db.Timestamptz(6)
   farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
-  batch PoultryBatch @relation(fields: [batchId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  batch PoultryBatch? @relation(fields: [batchId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  cropCycle CropCycle? @relation(fields: [cropCycleId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
   acknowledger User? @relation(fields: [acknowledgedBy], references: [id], onDelete: Restrict)
   @@unique([farmId, tenantId, liveKey])
   @@index([tenantId, farmId, batchId, ruleKey, createdAt])
   @@index([batchId, farmId, tenantId])
   @@index([acknowledgedBy])
+  @@index([cropCycleId, farmId, tenantId])
+}
+
+// The supply item a poultry batch is fed from (D-P10-007), chosen by the farmer. It only tells the shortage rule where
+// the batch's feed is kept; stock still changes only through its own entries. One row per batch.
+model BatchFeedItem {
+  id String @id @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  batchId String @db.Uuid
+  itemId String @db.Uuid
+  version Int @default(1)
+  changedBy String @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @db.Timestamptz(6)
+  batch PoultryBatch @relation(fields: [batchId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  item InventoryItem @relation(fields: [itemId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  changer User @relation(fields: [changedBy], references: [id], onDelete: Restrict)
+  @@unique([batchId, farmId, tenantId])
+  @@index([itemId, farmId, tenantId])
+  @@index([changedBy])
 }

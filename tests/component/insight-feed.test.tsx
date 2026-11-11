@@ -17,10 +17,10 @@ const evaluation = evaluateBatchTrends({
 }, "2026-11-11")!;
 const insight = (index: number, overrides: Partial<InsightView> = {}): InsightView => {
   const candidate = evaluation.candidates[index];
-  return { insightId: crypto.randomUUID(), batchId: candidate.batchId, ruleKey: candidate.ruleKey, ruleVersion: 1, severity: candidate.severity, status: "OPEN", currency: candidate.currency,
+  return { insightId: crypto.randomUUID(), batchId: candidate.batchId, cropCycleId: null, ruleKey: candidate.ruleKey, ruleVersion: 1, severity: candidate.severity, status: "OPEN", currency: candidate.currency,
     evaluatedOn: "2026-11-11", evidence: evidenceOf(evaluation, candidate), acknowledgedAt: null, version: 1, ...overrides };
 };
-const feed = (overrides: Partial<InsightFeed>): InsightFeed => ({ evaluatedOn: "2026-11-11", insights: [], notJudged: [], batchesChecked: 1, batchesTruncated: false, ...overrides });
+const feed = (overrides: Partial<InsightFeed>): InsightFeed => ({ evaluatedOn: "2026-11-11", insights: [], notJudged: [], thresholdsNotJudged: [], batchesChecked: 1, cropCyclesChecked: 0, batchesTruncated: false, ...overrides });
 const acknowledge = () => vi.fn(async () => undefined);
 
 describe("insight feed (MYF-P10-AC001)", () => {
@@ -42,7 +42,7 @@ describe("insight feed (MYF-P10-AC001)", () => {
   });
   it("tells an empty farm from a farm with nothing to report, and lists what could not be judged", () => {
     const { unmount } = render(<InsightFeedView feed={feed({ batchesChecked: 0 })} acknowledge={acknowledge} />);
-    expect(screen.getByText(/No active poultry batch to check/)).toBeTruthy();
+    expect(screen.getByText(/No active poultry batch or crop to check/)).toBeTruthy();
     unmount();
     render(<InsightFeedView feed={feed({ notJudged: [{ batchId: "b", batchLabel: "Young layers", rule: "EGGS_FALLING", currency: null, missing: ["FEW_EGG_DAYS", "NO_EARLIER_EGGS"] }] })} acknowledge={acknowledge} />);
     expect(screen.getByText(/^No alerts\./)).toBeTruthy();

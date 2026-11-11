@@ -48,13 +48,13 @@ test.beforeEach(async ({ context }) => {
   fixtures = readProductionBrowserFixtures();
   await query('DELETE FROM "FarmInsight" WHERE "tenantId" = ANY($1::uuid[])', [Object.values(fixtures.tenants)]);
   await clearInventoryBrowser(fixtures);
-  for (const table of ["AccountingReversal", "PaymentAllocation", "PaymentRecord", "AccountingRecord", "CropCycle", "PoultryBatch", "Enterprise"]) await query(`DELETE FROM "${table}" WHERE "tenantId" = ANY($1::uuid[])`, [Object.values(fixtures.tenants)]);
+  for (const table of ["BatchFeedItem", "AccountingReversal", "PaymentAllocation", "PaymentRecord", "AccountingRecord", "CropCycle", "PoultryBatch", "Enterprise"]) await query(`DELETE FROM "${table}" WHERE "tenantId" = ANY($1::uuid[])`, [Object.values(fixtures.tenants)]);
   await query('UPDATE auth.sessions SET not_after=NULL WHERE id=ANY($1::uuid[])', [Object.values(fixtures.sessions)]);
   await query('UPDATE "FarmMember" SET status=\'ACTIVE\' WHERE "userId"=$1', [fixtures.users.a]);
   await identity(context, "a");
 });
 // Other specs delete poultry batches in their own setup; an insight left behind would block them.
-test.afterEach(async () => { await query('DELETE FROM "FarmInsight" WHERE "tenantId" = ANY($1::uuid[])', [Object.values(fixtures.tenants)]); });
+test.afterEach(async () => { for (const table of ["FarmInsight", "BatchFeedItem"]) await query(`DELETE FROM "${table}" WHERE "tenantId" = ANY($1::uuid[])`, [Object.values(fixtures.tenants)]); });
 
 test("MYF-P10-AC001 an alert shows its values, both periods, the rule version and the coverage, and can be marked as seen", async ({ page, context }) => {
   await sourceBatch(context, "Layers A");
@@ -87,12 +87,12 @@ test("MYF-P10-AC001 an alert shows its values, both periods, the rule version an
 test("thin records are listed with the reason, and a farm without batches says so", async ({ page, context }) => {
   await sourceBatch(context, "Young layers", true);
   await page.goto(`/farms/${fixtures.farms.a}/insights`);
-  await expect(page.getByText("No alerts. Nothing has changed past the rules on the batches that could be checked.")).toBeVisible();
+  await expect(page.getByText("No alerts. Nothing has gone past the rules on what could be checked.")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Not enough records to check" })).toBeVisible();
   await expect(page.getByText("Young layers: Eggs per 100 birds a day")).toBeVisible();
   await expect(page.getByText("No eggs were recorded in the earlier 4 weeks.").first()).toBeVisible();
   await page.goto(`/farms/${fixtures.farms.a2}/insights`);
-  await expect(page.getByText("No active poultry batch to check.", { exact: false })).toBeVisible();
+  await expect(page.getByText("No active poultry batch or crop to check.", { exact: false })).toBeVisible();
   await noSideScroll(page);
 });
 
