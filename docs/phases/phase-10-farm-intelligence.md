@@ -2,12 +2,12 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - specification, source P0568-P0600 and Q19 against owner decisions.
-- Implementation status: PARTIALLY COMPLETE - 71% (5/7 verified tasks).
+- Implementation status: PARTIALLY COMPLETE - 86% (6/7 verified tasks).
 - Last reviewed: 2026-11-12 (Africa/Nairobi).
 - Related phase/task IDs: Phase 10; MYF-P10-T001 through MYF-P10-T007; Q19; D-P09-018; D-P10-001 through D-P10-007.
-- Verified completed work: T001 rule catalog, batch trend rules, repeat rule and evidence contract with golden fixtures. T002 additive migration 202611120001, runtime policy, generate/acknowledge services and API with integration tests (not applied to hosted). T003 Alerts screen; MYF-P10-AC001 verified locally on desktop and mobile. T004 five R002 threshold rules with golden and boundary tests. T005 migration 202611120002, feed-item link, threshold rules on real records with integration tests (not applied to hosted).
-- Remaining work/blockers: T006-T007. Started on the owner's waiver of the Phase 9 exit gate (D-P09-018), not on pilot evidence. Rule numbers await agronomist review (D-P10-003); the shortage rule uses a feed item chosen per batch (D-P10-007, T004).
-- Evidence/report links: [Phase 10 start and T001](../reports/phase-10-t001-2026-11-12.md); [T002](../reports/phase-10-t002-2026-11-12.md); [T003](../reports/phase-10-t003-2026-11-12.md); [T004](../reports/phase-10-t004-2026-11-12.md); [T005](../reports/phase-10-t005-2026-11-12.md); [Decisions](../DECISION-LOG.md#d-p10-001---phase-10-start-commits-and-pushes); [Phase 9 closeout](../reports/phase-09-closeout-2026-11-10.md).
+- Verified completed work: T001 rule catalog, batch trend rules, repeat rule and evidence contract with golden fixtures. T002 additive migration 202611120001, runtime policy, generate/acknowledge services and API with integration tests (not applied to hosted). T003 Alerts screen; MYF-P10-AC001 verified locally on desktop and mobile. T004 five R002 threshold rules with golden and boundary tests. T005 migration 202611120002, feed-item link, threshold rules on real records with integration tests (not applied to hosted). T006 feed item on the batch page; MYF-P10-AC002 verified locally on desktop and mobile.
+- Remaining work/blockers: T007 audit and closeout. Started on the owner's waiver of the Phase 9 exit gate (D-P09-018), not on pilot evidence. Rule numbers await agronomist review (D-P10-003); the shortage rule uses a feed item chosen per batch (D-P10-007, T004).
+- Evidence/report links: [Phase 10 start and T001](../reports/phase-10-t001-2026-11-12.md); [T002](../reports/phase-10-t002-2026-11-12.md); [T003](../reports/phase-10-t003-2026-11-12.md); [T004](../reports/phase-10-t004-2026-11-12.md); [T005](../reports/phase-10-t005-2026-11-12.md); [T006](../reports/phase-10-t006-2026-11-12.md); [Decisions](../DECISION-LOG.md#d-p10-001---phase-10-start-commits-and-pushes); [Phase 9 closeout](../reports/phase-09-closeout-2026-11-10.md).
 <!-- MYFARM-STATUS-END -->
 
 Status: **IN PROGRESS** since 2026-11-11 (D-P10-001). Date: 2026-10-08. Specification; implementation authorized by D-P10-001. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
@@ -180,7 +180,7 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 - [x] MYF-P10-T003 complete with evidence ([report](../reports/phase-10-t003-2026-11-12.md)).
 - [x] MYF-P10-T004 complete with evidence ([report](../reports/phase-10-t004-2026-11-12.md)).
 - [x] MYF-P10-T005 complete with evidence ([report](../reports/phase-10-t005-2026-11-12.md)).
-- [ ] MYF-P10-T006 complete with evidence.
+- [x] MYF-P10-T006 complete with evidence ([report](../reports/phase-10-t006-2026-11-12.md)).
 - [ ] MYF-P10-T007 complete with evidence.
 - [ ] Every K criterion verified.
 - [ ] Security/integrity audit, remediation and retest complete.

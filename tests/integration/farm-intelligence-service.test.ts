@@ -173,6 +173,8 @@ describe("MYF-P10-R002 threshold warnings from real records (P10-T005)", () => {
     const choose = { requestId: id(), itemId: mash.itemId, expectedVersion: null };
     const [first, again] = await Promise.all([service.setFeedItem(farm, feeder, choose), service.setFeedItem(farm, feeder, choose)]);
     expect(first).toEqual({ batchId: feeder, itemId: mash.itemId, itemName: "Layer mash", unit: "KG", version: 1 }); expect(again).toEqual(first);
+    expect(await service.feedItem(farm, feeder)).toEqual(first);
+    await expect(service.feedItem(secondFarm, feeder)).rejects.toMatchObject({ code: "FORBIDDEN" });
     await expect(service.setFeedItem(farm, feeder, { requestId: id(), itemId: mash.itemId, expectedVersion: null })).rejects.toMatchObject({ code: "CONFLICT" });
     const [row] = await mine(feeder, "FEED_RUNNING_LOW");
     expect(threshold(row.evidence).figure).toMatchObject({ window: { from: "2026-10-28", to: "2026-11-10" }, values: { itemName: "Layer mash", stockKg: "300", dailyUseKg: "50", daysLeft: "6", feedDays: "7, 7" } });

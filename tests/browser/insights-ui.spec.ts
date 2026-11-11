@@ -112,6 +112,60 @@ test("another farmer cannot see or acknowledge this farm's alerts; a stale ackno
   await expect(page).toHaveURL(/\/forbidden$/);
 });
 
+/** A batch fed 50 kg a day for the last 14 days, with 6 of its 500 birds dead in the last week. */
+async function feederBatch(context: BrowserContext) {
+  const enterpriseId = (await create(context, "enterprises", { name: "Feeder flock", type: "POULTRY" }, z.object({ enterprise: z.object({ enterpriseId: z.uuid() }) }))).enterprise.enterpriseId;
+  const batchId = (await create(context, "poultry-batches", { enterpriseId, animalTypeId: animal, batchLabel: "Feeder", startingQuantity: 500, acquisitionDate: day(-100), purpose: "EGGS" }, z.object({ batch: z.object({ batchId: z.uuid() }) }))).batch.batchId;
+  const locationId = (await create(context, "storage-locations", { name: "Store " + id().slice(0, 8) }, z.object({ location: z.object({ storageLocationId: z.uuid() }) }))).location.storageLocationId;
+  for (let i = -14; i < 0; i++) await query(`INSERT INTO "ProductionEvent" (id, "tenantId", "farmId", "batchId", "locationId", type, quantity, unit, "occurredOn", "requestHash", "createdBy")
+    VALUES ($1, $2, $3, $4, $5, 'FEED', 50, 'KG', $6, $7, $8)`, [id(), fixtures.tenants.a, fixtures.farms.a, batchId, locationId, day(i), "f".repeat(64), fixtures.users.a]);
+  await create(context, "poultry-production", { batchId, locationId, type: "MORTALITY", quantity: "6", unit: "BIRD", occurredOn: day(-3) }, z.object({}).loose());
+  return { batchId, locationId };
+}
+const supply = async (context: BrowserContext, name: string, unit: string) =>
+  (await create(context, "inventory-items", { name, unit }, z.object({ result: z.object({ itemId: z.uuid() }) }))).result.itemId;
+
+test("MYF-P10-AC002 thresholds and the feed in stock are stated, and units must match before feed is judged", async ({ page, context }) => {
+  const { batchId, locationId } = await feederBatch(context);
+  await page.goto(`/farms/${fixtures.farms.a}/insights`);
+  const deaths = card(page, "Many birds died this week");
+  await expect(deaths.getByText("Warning", { exact: true })).toBeVisible();
+  await expect(deaths).toContainText("6 of 500 (1.2%)");
+  await expect(deaths).toContainText("Rule: More than 1% of the birds died in the last 7 days (version 1).");
+  await expect(deaths).toContainText("Have a vet or extension officer look at the flock.");
+  await expect(page.getByText("No feed item is chosen for this batch. Choose the supply it is fed from.")).toBeVisible();
+
+  // A feed counted in bags cannot be compared with feed given in kg: it is reported, not guessed.
+  await supply(context, "Maize bran", "BAG");
+  await page.goto(`/farms/${fixtures.farms.a}/poultry-batches/${batchId}`);
+  await expect(page.getByText("No feed item chosen.", { exact: false })).toBeVisible();
+  await page.getByLabel("Feed item in stock").selectOption({ label: "Maize bran (BAG)" });
+  await expect(page.getByText("This item is not counted in kg", { exact: false })).toBeVisible();
+  await page.getByRole("button", { name: "Save feed item" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Feed item saved." })).toBeVisible();
+  await page.goto(`/farms/${fixtures.farms.a}/insights`);
+  await expect(page.getByText("The chosen feed item is not counted in kg, so it cannot be compared with feed given in kg.")).toBeVisible();
+
+  // 300 kg against 50 kg a day lasts 6 days: under the 7-day threshold.
+  const mash = await supply(context, "Layer mash", "KG");
+  await create(context, "stock-operations", { itemId: mash, locationId, type: "ADJUSTMENT", direction: "IN", quantity: "300", unit: "KG", occurredOn: day(-15), reason: "Opening count" }, z.object({}).loose());
+  await page.goto(`/farms/${fixtures.farms.a}/poultry-batches/${batchId}`);
+  await expect(page.getByText("Fed from: Maize bran (BAG).")).toBeVisible();
+  await page.getByLabel("Feed item in stock").selectOption({ label: "Layer mash (KG)" });
+  await page.getByRole("button", { name: "Save feed item" }).click();
+  await expect(page.getByText("Fed from: Layer mash (KG).")).toBeVisible();
+  await page.goto(`/farms/${fixtures.farms.a}/insights`);
+  const low = card(page, "Feed is running low");
+  await expect(low).toContainText("Layer mash");
+  await expect(low).toContainText("300 kg");
+  await expect(low).toContainText("50 kg");
+  await expect(low).toContainText("6 days");
+  await expect(low).toContainText("7, 7");
+  await expect(low).toContainText(`Period: ${day(-14)} to ${day(-1)}.`);
+  await expect(low).toContainText("Rule: Feed in stock lasts fewer than 7 days at the last 14 days' use (version 1).");
+  await noSideScroll(page);
+});
+
 test("offline, the alert stays readable and marking it as seen waits for a connection", async ({ page, context }) => {
   await sourceBatch(context, "Layers A");
   await page.goto(`/farms/${fixtures.farms.a}/insights`);

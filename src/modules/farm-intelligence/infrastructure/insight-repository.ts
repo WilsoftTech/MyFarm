@@ -119,6 +119,12 @@ export function insightRepository(db: PrismaClient): InsightRepository {
       return view(await tx.farmInsight.findFirstOrThrow({ where }));
     }, { isolationLevel: "ReadCommitted", timeout: 10_000 }),
 
+    async feedItem(scope, batchId) {
+      const where = { tenantId: scope.tenantId, farmId: scope.farmId };
+      if (!await db.poultryBatch.findFirst({ where: { ...where, id: batchId }, select: { id: true } })) throw new FoundationError("FORBIDDEN");
+      const row = await db.batchFeedItem.findFirst({ where: { ...where, batchId }, select: { itemId: true, version: true, item: { select: { name: true, unit: true } } } });
+      return row ? { batchId, itemId: row.itemId, itemName: row.item.name, unit: row.item.unit, version: row.version } : null;
+    },
     setFeedItem: (scope, batchId, command) => db.$transaction(async tx => {
       await requireProductionWriteAccess(tx, scope);
       const where = { tenantId: scope.tenantId, farmId: scope.farmId };

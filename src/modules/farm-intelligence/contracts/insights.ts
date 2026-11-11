@@ -108,6 +108,8 @@ export interface InsightRepository {
   generate(scope: ProductionWriteScope, today: string): Promise<InsightFeed>;
   acknowledge(scope: ProductionWriteScope, insightId: string, command: AcknowledgeInsight): Promise<InsightView>;
   setFeedItem(scope: ProductionWriteScope, batchId: string, command: SetFeedItem): Promise<FeedItemLink>;
+  /** The batch's current feed item, or null when none is chosen; a batch of another farm is refused. */
+  feedItem(scope: ProductionWriteScope, batchId: string): Promise<FeedItemLink | null>;
 }
 
 export const ruleKeySchema = z.enum(RULE_KEYS);

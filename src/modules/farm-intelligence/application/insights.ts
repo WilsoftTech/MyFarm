@@ -18,6 +18,10 @@ export class FarmIntelligenceService {
     const { scope } = await authorizeProductionFarm(this.auth, this.farms, farmId);
     return this.repo.acknowledge(scope, parse(idSchema, insightId), parse(acknowledgeInsightSchema, input));
   }
+  async feedItem(farmId: unknown, batchId: unknown) {
+    const { scope } = await authorizeProductionFarm(this.auth, this.farms, farmId);
+    return this.repo.feedItem(scope, parse(idSchema, batchId));
+  }
   /** D-P10-007: which supply item a batch is fed from, for the shortage rule. */
   async setFeedItem(farmId: unknown, batchId: unknown, input: unknown) {
     const { scope } = await authorizeProductionFarm(this.auth, this.farms, farmId);
