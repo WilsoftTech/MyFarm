@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../support/browser-test";
 import { clearInventoryBrowser, prepareInventoryBrowser } from "../support/inventory-browser";
 import { offlineServer } from "../support/offline-server";
 import { PNG, expenseCount as expenses, inDatabase, openOffline, outbox, prepared, recordExpense } from "../support/offline-browser";

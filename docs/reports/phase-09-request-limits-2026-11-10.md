@@ -3,10 +3,10 @@
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - pilot-start pack section 3 and 5, proxy, server actions, sync client, pilot join.
 - Implementation status: COMPLETE - built and verified locally; schema applied to hosted development.
-- Last reviewed: 2026-11-10 (Africa/Nairobi).
+- Last reviewed: 2026-11-11 (Africa/Nairobi).
 - Related phase/task IDs: D-P09-012 to D-P09-016; P7-C6, P4-C4, P5-C3; MYF-P09 pilot-start checklist.
 - Verified completed work: per-person limits on every write, phone push and pull, photo upload, money export, the coming full farm export, pilot staff work and refused pilot codes; consent version `pilot-consent-v1` with point 8.
-- Remaining work/blockers: none for the build; applied to hosted development 2026-11-10 (below). The full signed-in suite passed 186 of 186 with the farm export task. The code is not pushed or deployed. Translations of the consent words, with checking speakers, are still needed.
+- Remaining work/blockers: none for the build; applied to hosted development 2026-11-10 (below). The full signed-in suite passed 186 of 186 locally with the farm export task, but failed 27 of 186 in GitHub-hosted CI because counts carried between tests; fixed in the test harness 2026-11-11 (below). The code is pushed, not deployed. Translations of the consent words, with checking speakers, are still needed.
 - Evidence/report links: [Pilot-start pack](phase-09-pilot-start-pack-2026-11-10.md); [Decision log](../DECISION-LOG.md#d-p09-014---abuse-and-rate-controls-p7-c6-p4-c4-p5-c3).
 <!-- MYFARM-STATUS-END -->
 
@@ -94,6 +94,22 @@ The proxy unit tests check:
 - Form saves have no request ID the proxy can read, so a farmer's retry of the same form counts again. At 120 a minute this does not affect a person.
 - A retry with an already-counted request ID is free, as approved. Such a retry writes nothing new, because every save is already idempotent by request ID, but it still reaches the database. These limits stop runaway phones and scripts from one account; they are not protection against a flood from many accounts or none. That is platform protection (Phase 1 C4, production hosting).
 - The counts use the session token's subject before the route re-checks the session. A signed-out but unexpired token still counts against its own person, which harms nobody else.
+
+## Hosted CI finding - 2026-11-11
+
+GitHub-hosted CI failed on the two pushes that carried the limits (runs 42895564298 at 6304543 and 42898136444 at 90e8640). Every other step passed (1217 unit/component, 361 integration, 200 non-UTC, 66 anonymous browser tests); the signed-in browser suite failed 27 of 186, each with an unexpected 429.
+
+**Cause: the tests, not the app.** The signed-in suite reuses three test users across all 21 spec files and both desktop and mobile. Their counts carried from one test into the next, and the hosted runner is fast enough to fit more than 120 saves from one user into a minute, which the local machine was not. No single test comes near a limit.
+
+**Fix.** `tests/support/browser-test.ts` gives every browser test a fresh allowance: a Playwright fixture that runs before each test and empties `RequestCount` in the disposable test database. All 21 specs import `test` from it instead of `@playwright/test`. No application code or limit changed. The limits stay checked where they are meant to be: `tests/integration/request-limits.test.ts`, `tests/unit/request-limits.test.ts`, and the farm-export browser test, which still gets a 429 on its fourth export of the day.
+
+| Check (fresh PostgreSQL 17 container, Windows, fixture build) | Result |
+|---|---|
+| Lint and typecheck | PASS |
+| Full signed-in suite, desktop and mobile | PASS, 186 of 186 (14.1 min) |
+| `RATE_LIMITED` in the server log | 2, both from the intended export-limit test (desktop and mobile) |
+
+What is no longer covered: the browser suite will not show limits building up across a long session, as the pull limit did before D-P09-016. That case is a matter of numbers and is covered by the busiest-user figures above; recheck it if a limit is lowered.
 
 ## Hosted development - 2026-11-10
 

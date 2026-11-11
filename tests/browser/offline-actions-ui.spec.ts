@@ -1,4 +1,4 @@
-import { expect, test, type BrowserContext, type Page } from "@playwright/test";
+import { expect, test, type BrowserContext, type Page } from "../support/browser-test";
 import { z } from "zod";
 import { clearInventoryBrowser, prepareInventoryBrowser } from "../support/inventory-browser";
 import { offlineServer } from "../support/offline-server";

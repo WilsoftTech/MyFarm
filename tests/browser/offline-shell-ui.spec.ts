@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Page } from "../support/browser-test";
 import { prepareInventoryBrowser } from "../support/inventory-browser";
 import { offlineServer } from "../support/offline-server";
 

@@ -1,4 +1,4 @@
-import { expect, test, type BrowserContext, type Page } from "@playwright/test";
+import { expect, test, type BrowserContext, type Page } from "../support/browser-test";
 import { mkdirSync } from "node:fs";
 import { Client } from "pg";
 import { z } from "zod";

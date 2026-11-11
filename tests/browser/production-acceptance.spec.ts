@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../support/browser-test";
 import { Client } from "pg";
 import { mkdirSync } from "node:fs";
 import { z } from "zod";

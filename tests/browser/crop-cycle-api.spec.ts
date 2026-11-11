@@ -1,4 +1,4 @@
-import { expect, test, type BrowserContext } from "@playwright/test";
+import { expect, test, type BrowserContext } from "../support/browser-test";
 import { Client } from "pg";
 import { z } from "zod";
 import { readProductionBrowserFixtures, type ProductionBrowserFixtures } from "../support/production-browser-fixtures";

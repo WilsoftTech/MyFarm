@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "../support/browser-test";
 import { z } from "zod";
 import {prepareInventoryBrowser,clearInventoryBrowser} from "../support/inventory-browser";
 test("source flock reconstructs 105 birds after purchase, mortality and an atomic sale", async ({page, context}) => {

@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../support/browser-test";
 import { z } from "zod";
 import { clearInventoryBrowser, prepareInventoryBrowser } from "../support/inventory-browser";
 
