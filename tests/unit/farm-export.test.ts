@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { deflateRawSync } from "node:zlib";
+import { readFileSync } from "node:fs";
 import { readZip } from "../support/zip-reader";
 import { crc32, zip } from "@/modules/farm-export/domain/zip";
 import { EXPORT_FILES, PROFILE_FILE } from "@/modules/farm-export/domain/catalog";
@@ -81,5 +82,15 @@ describe("farm export service (D-P09-013)", () => {
     await expect(service.photos(farmId, { after: "x" })).rejects.toMatchObject({ code: "INVALID_INPUT" });
     repo.photos.mockResolvedValueOnce([]);
     expect((await service.photos(farmId, { after: rows[0].photoId })).nextAfter).toBeNull();
+  });
+});
+
+describe("the full farm export keeps up with the schema (D-P09-013, Phase 10 audit)", () => {
+  it("exports every model scoped to a farm, except the membership list of other people's accounts", () => {
+    const schema = readFileSync("prisma/schema.prisma", "utf8");
+    const farmScoped = [...schema.matchAll(/^model (\w+) \{([\s\S]*?)^\}/gm)].filter(([, , body]) => /^\s+farmId String/m.test(body)).map(([, name]) => name);
+    const excluded = new Map([["FarmMember", "lists other people's accounts on the farm"]]);
+    expect(farmScoped.length).toBeGreaterThan(20);
+    expect(farmScoped.filter(name => !excluded.has(name) && !EXPORT_FILES.some(file => file.table === name))).toEqual([]);
   });
 });

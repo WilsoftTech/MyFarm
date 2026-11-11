@@ -644,3 +644,7 @@ APPROVED, owner 2026-11-11, selecting "Batch-entry days (Rec.)", clarifying D-P1
 ## D-P10-007 - Feed in stock is chosen per batch
 
 APPROVED, owner 2026-11-12, selecting "Pick the feed per batch (Rec.)" for the D-P10-005 shortage rule. The farmer picks, once on the batch, which supply item measured in kg is that batch's feed. Daily use comes from the batch's feed-given entries (kg) over the last 14 days; the warning compares it with that item's stock balance. One optional link on the batch, added additively; stock still changes only through its own entries and nothing is deducted automatically. A batch without a chosen feed item is not judged for shortage, and the reason is shown.
+
+## D-P10-008 - Phase 10 closeout verdict
+
+PROPOSED, engineering 2026-11-12, awaiting owner acceptance. Phase 10 is COMPLETED (7/7) with verdict PASS WITH CONDITIONS - LOCAL AND HOSTED CI VERIFICATION ([closeout](reports/phase-10-closeout-2026-11-12.md)). Conditions: P10-C1 the Phase 9 exit gate was waived, not met (D-P09-018); P10-C2 agronomist review of the numbers and owner confirmation of the engineering readings in T001 and T004; P10-C3 Phase 10 schema not on hosted; P10-C4 the Alerts evaluation is not counted by the request limits; P10-C5 inherited items. Phase 11 must not start until the owner accepts this verdict and decides Phase 11's own prerequisites and Q20.

@@ -53,7 +53,8 @@ const thresholdFigure = z.object({
 export const thresholdEvidenceSchema = z.object({
   evidenceVersion: z.literal(EVIDENCE_VERSION),
   kind: z.literal("THRESHOLD"),
-  subject: z.object({ kind: z.enum(["BATCH", "CROP_CYCLE"]), label: z.string().min(1).max(120) }).strict(),
+  // A crop cycle is labelled "crop, season": two 120-character names and a separator.
+  subject: z.object({ kind: z.enum(["BATCH", "CROP_CYCLE"]), label: z.string().min(1).max(250) }).strict(),
   figure: thresholdFigure,
 }).strict();
 export type ThresholdEvidence = z.output<typeof thresholdEvidenceSchema>;

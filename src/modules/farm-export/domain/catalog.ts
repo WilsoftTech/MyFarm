@@ -33,6 +33,9 @@ export const EXPORT_FILES: readonly ExportFile[] = Object.freeze([
   { file: "activities.csv", table: "ProductionActivity", scope: "farm", description: "Farm work planned and done", columns: [col("activityId", "id"), col("type"), col("dueOn"), col("status"), col("enterpriseId"), col("plotId"), col("workerName"), col("notes"), col("costRecordId"), col("seriesId", "recurrenceId"), time("completedAt"), time("cancelledAt"), col("cancelReason"), created] },
   { file: "activity-series.csv", table: "ActivityRecurrence", scope: "farm", description: "Repeating farm work", columns: [col("seriesId", "id"), col("type"), col("frequency"), col("interval"), col("startOn"), col("endOn"), col("stoppedFrom"), col("enterpriseId"), col("plotId"), col("workerName"), col("notes"), col("previousSeriesId", "previousId"), created] },
   { file: "photos.csv", table: "RecordPhoto", scope: "farm", description: "Photos, and the record each belongs to", columns: [col("photoId", "id"), col("activityId"), col("recordId", "accountingRecordId"), col("contentType"), col("byteSize"), col("sha256"), created] },
+  // Phase 10 (D-P10-001 to D-P10-007): alerts and their evidence, and the feed item chosen for each batch. Who acknowledged or chose is left out.
+  { file: "alerts.csv", table: "FarmInsight", scope: "farm", description: "Alerts the farm's records raised, with what each was worked out from", columns: [col("alertId", "id"), col("batchId"), col("cropCycleId"), col("rule", "ruleKey"), col("ruleVersion"), col("level", "severity"), col("status"), col("currency"), col("evaluatedOn"), col("evidence"), time("seenAt", "acknowledgedAt"), col("clearedOn"), created] },
+  { file: "batch-feed-items.csv", table: "BatchFeedItem", scope: "farm", description: "The stock item each poultry batch is fed from", columns: [col("batchId"), col("itemId"), time("changedAt", "updatedAt"), created] },
 ]);
 
 export const PROFILE_FILE = "my-profile.csv";

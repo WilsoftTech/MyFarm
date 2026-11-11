@@ -93,6 +93,11 @@ describe("threshold evidence and repeats", () => {
     expect(() => thresholdEvidenceSchema.parse({ ...evidence, figure: { ...evidence.figure, rule: "SOMETHING_ELSE" } })).toThrow();
     expect(RULES.HIGH_MORTALITY.decisions).toContain("D-P10-003");
   });
+  it("keeps a crop cycle's full label: a 120-character crop in a 120-character season (T007 audit finding)", () => {
+    const [figure] = evaluateUnitLoss({ rule: "LOSS_PER_KG", window: null, produced: "3750", costs: [{ amount: "2100000", currency: "UGX", occurredOn: "2027-03-10" }], sales: [{ amount: "550000", currency: "UGX", quantity: "1000", occurredOn: "2027-07-15" }] });
+    const label = "C".repeat(120) + ", " + "S".repeat(120);
+    expect(thresholdEvidenceOf(thresholdCandidates({ kind: "CROP_CYCLE", id: "c", label }, [figure])[0]).subject.label).toBe(label);
+  });
   it("fewer days of feed left is worse; more deaths, or cost further above price, is worse", () => {
     const low = (numerator: string) => [{ rule: "FEED_RUNNING_LOW" as const, exactChange: { numerator, denominator: "1" } }];
     expect(isWorse(low("5"), low("3"))).toBe(true);
