@@ -65,7 +65,7 @@ describe("MYF-P10-R001 insights from real records under the restricted role (P10
   it("golden: raises the combined feed-and-eggs warning and a mortality watch, with their evidence", async () => {
     const feed = await service.feed(farm);
     const mine = feed.insights.filter(row => row.batchId === golden);
-    expect(feed.evaluatedOn).toBe("2026-11-11");
+    expect(feed).toMatchObject({ evaluatedOn: "2026-11-11", batchesChecked: 1, batchesTruncated: false });
     expect(mine.map(row => [row.ruleKey, row.severity, row.status, row.currency, row.ruleVersion, row.version])).toEqual([
       ["PRODUCTION_FALLING_COSTS_RISING", "WARNING", "OPEN", "UGX", 1, 1], ["MORTALITY_RISING", "WATCH", "OPEN", null, 1, 1],
     ]);

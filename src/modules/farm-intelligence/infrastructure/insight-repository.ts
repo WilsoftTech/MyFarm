@@ -87,7 +87,7 @@ export function insightRepository(db: PrismaClient): InsightRepository {
       const insights = rows.map(view).sort((a, b) => SEVERITY_ORDER[a.severity] - SEVERITY_ORDER[b.severity] || (a.status === b.status ? 0 : a.status === "OPEN" ? -1 : 1));
       const notJudged = evaluations.flatMap(evaluation => evaluation.figures.filter(figure => figure.outcome === "NOT_ENOUGH_RECORDS")
         .map(figure => ({ batchId: evaluation.batchId, batchLabel: evaluation.label, rule: figure.rule, currency: figure.currency, missing: figure.missing })));
-      const feed: InsightFeed = { evaluatedOn: today, insights, notJudged, batchesTruncated: truncated };
+      const feed: InsightFeed = { evaluatedOn: today, insights, notJudged, batchesChecked: evaluations.length, batchesTruncated: truncated };
       return feed;
     }, { isolationLevel: "ReadCommitted", timeout: 15_000 }),
 

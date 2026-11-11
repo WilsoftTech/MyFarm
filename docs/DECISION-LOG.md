@@ -640,3 +640,7 @@ APPROVED, owner 2026-11-11, selecting "Recorded figures (Rec.)". Loss: a batch's
 ## D-P10-006 - Q19 coverage per figure
 
 APPROVED, owner 2026-11-11, selecting "Batch-entry days (Rec.)", clarifying D-P10-004. A day counts as recorded when the batch has any production entry that day. Eggs need egg entries on at least 4 of every 7 days; mortality needs any batch entry on at least 4 of every 7 days, and a recorded day with no deaths counts as zero deaths; feed cost needs 4 of every 7 recorded days plus at least one Feed cost linked to the batch in each 28-day window.
+
+## D-P10-007 - Feed in stock is chosen per batch
+
+APPROVED, owner 2026-11-12, selecting "Pick the feed per batch (Rec.)" for the D-P10-005 shortage rule. The farmer picks, once on the batch, which supply item measured in kg is that batch's feed. Daily use comes from the batch's feed-given entries (kg) over the last 14 days; the warning compares it with that item's stock balance. One optional link on the batch, added additively; stock still changes only through its own entries and nothing is deducted automatically. A batch without a chosen feed item is not judged for shortage, and the reason is shown.

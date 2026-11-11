@@ -2,7 +2,7 @@ import { z } from "zod";
 import { idSchema } from "@/modules/engineering-foundation/contracts/identity";
 import type { ProductionWriteScope } from "@/modules/enterprises-seasons/contracts/production";
 import { isCalendarDate } from "@/modules/enterprises-seasons/domain/production";
-import { MISSING_REASONS, type BatchTrendEvaluation, type InsightCandidate, type MissingReason } from "../domain/batch-trends";
+import { MISSING_REASONS, type BatchTrendEvaluation, type InsightCandidate, type MissingReason, type TrendFigureRule } from "../domain/batch-trends";
 import { INSIGHT_STATUSES, type InsightStatus } from "../domain/insight-state";
 import { RULE_KEYS, SEVERITIES, type RuleKey, type Severity } from "../domain/rules";
 
@@ -56,7 +56,7 @@ export interface InsightView {
   version: number;
 }
 /** The feed: live insights, most serious first, and for each active batch the figures that could not be judged and why. */
-export interface InsightFeed { evaluatedOn: string; insights: InsightView[]; notJudged: { batchId: string; batchLabel: string; rule: RuleKey; currency: string | null; missing: MissingReason[] }[]; batchesTruncated: boolean }
+export interface InsightFeed { evaluatedOn: string; insights: InsightView[]; notJudged: { batchId: string; batchLabel: string; rule: TrendFigureRule; currency: string | null; missing: MissingReason[] }[]; batchesChecked: number; batchesTruncated: boolean }
 /** Farms in the launch market keep few batches at a time; the feed reads at most this many active ones, newest first. */
 export const MAX_INSIGHT_BATCHES = 50;
 
