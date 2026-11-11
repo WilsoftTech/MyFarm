@@ -108,6 +108,7 @@ GitHub-hosted CI failed on the two pushes that carried the limits (runs 42895564
 | Lint and typecheck | PASS |
 | Full signed-in suite, desktop and mobile | PASS, 186 of 186 (14.1 min) |
 | `RATE_LIMITED` in the server log | 2, both from the intended export-limit test (desktop and mobile) |
+| GitHub-hosted CI after push | PASS, run 43091452503 at 652bdc6 (every step) |
 
 What is no longer covered: the browser suite will not show limits building up across a long session, as the pull limit did before D-P09-016. That case is a matter of numbers and is covered by the busiest-user figures above; recheck it if a limit is lowered.
 
