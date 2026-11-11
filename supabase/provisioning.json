@@ -16,6 +16,7 @@
     "supabase/policies/offline-photos-runtime.sql",
     "supabase/policies/field-pilot-runtime.sql",
     "supabase/policies/request-limits-runtime.sql",
+    "supabase/policies/farm-intelligence-runtime.sql",
     "supabase/policies/browser-role-lockdown.sql"
   ]
 }

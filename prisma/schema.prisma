@@ -90,6 +90,7 @@ model User {
   activityRecurrences ActivityRecurrence[]
   cancelledActivities ProductionActivity[] @relation("ActivityCanceller")
   recordPhotos RecordPhoto[]
+  acknowledgedInsights FarmInsight[]
   pilotCohorts PilotCohort[]
   pilotParticipations PilotParticipation[] @relation("PilotParticipant")
   pilotConsentsRecorded PilotParticipation[] @relation("PilotPaperConsent")
@@ -171,6 +172,7 @@ model Farm {
   productionActivities ProductionActivity[]
   activityRecurrences ActivityRecurrence[]
   recordPhotos RecordPhoto[]
+  insights FarmInsight[]
   @@unique([id, tenantId])
   @@index([tenantId, createdAt, id])
   harvests Harvest[]
@@ -373,6 +375,7 @@ model PoultryBatch {
   inventoryItems InventoryItem[]
   openingMovements StockMovement[]
   costRecords AccountingRecord[]
+  insights FarmInsight[]
   @@unique([id, farmId, tenantId])
 }
 enum AccountingRecordKind {
@@ -405,6 +408,7 @@ model TransactionCategory {
   name String @db.VarChar(120)
   active Boolean @default(true)
   costGroup CostGroup?
+  metric CategoryMetric?
   createdAt DateTime @default(now()) @db.Timestamptz(6)
   records AccountingRecord[]
   @@unique([kind, name])
@@ -1131,4 +1135,48 @@ model RequestCount {
   @@unique([subject, action, requestKey])
   @@index([subject, action, occurredAt])
   @@index([occurredAt])
+}
+
+// Which approved category a farm-intelligence rule reads (D-P10-002): data on the category, never a name or ID in code.
+enum CategoryMetric {
+  FEED
+}
+enum InsightSeverity {
+  WARNING
+  WATCH
+}
+enum InsightStatus {
+  OPEN
+  ACKNOWLEDGED
+  CLEARED
+}
+// Phase 10 farm intelligence (MYF-P10-R001, D-P10-001 to D-P10-006). An insight raised by a versioned rule from the
+// farm's own records, with the evidence it was raised on. `liveKey` is set while the insight is OPEN or ACKNOWLEDGED
+// and NULL once CLEARED, so the unique key allows one live insight per batch, rule and currency (D-P10-004).
+model FarmInsight {
+  id String @id @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  batchId String @db.Uuid
+  ruleKey String @db.VarChar(60)
+  ruleVersion Int
+  severity InsightSeverity
+  status InsightStatus @default(OPEN)
+  currency String? @db.Char(3)
+  liveKey String? @db.VarChar(140)
+  evaluatedOn DateTime @db.Date
+  evidence Json
+  acknowledgedAt DateTime? @db.Timestamptz(6)
+  acknowledgedBy String? @db.Uuid
+  clearedOn DateTime? @db.Date
+  version Int @default(1)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @db.Timestamptz(6)
+  farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  batch PoultryBatch @relation(fields: [batchId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  acknowledger User? @relation(fields: [acknowledgedBy], references: [id], onDelete: Restrict)
+  @@unique([farmId, tenantId, liveKey])
+  @@index([tenantId, farmId, batchId, ruleKey, createdAt])
+  @@index([batchId, farmId, tenantId])
+  @@index([acknowledgedBy])
 }

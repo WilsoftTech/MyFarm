@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { idSchema } from "@/modules/engineering-foundation/contracts/identity";
-import { isCalendarDate, type FarmScope } from "@/modules/enterprises-seasons/domain/production";
+import type { ProductionWriteScope } from "@/modules/enterprises-seasons/contracts/production";
+import { isCalendarDate } from "@/modules/enterprises-seasons/domain/production";
 import { MISSING_REASONS, type BatchTrendEvaluation, type InsightCandidate, type MissingReason } from "../domain/batch-trends";
 import { INSIGHT_STATUSES, type InsightStatus } from "../domain/insight-state";
 import { RULE_KEYS, SEVERITIES, type RuleKey, type Severity } from "../domain/rules";
@@ -37,7 +38,8 @@ export function evidenceOf(evaluation: BatchTrendEvaluation, candidate: InsightC
   return insightEvidenceSchema.parse({ evidenceVersion: EVIDENCE_VERSION, batchLabel: evaluation.label, windows: evaluation.windows, coverage: evaluation.coverage, figures: candidate.figures });
 }
 
-export const acknowledgeInsightSchema = z.object({ requestId: idSchema, insightId: idSchema, expectedVersion: z.number().int().positive().max(2147483646) }).strict();
+/** The insight is named by the route; the body carries only the retry key and the version the farmer saw. */
+export const acknowledgeInsightSchema = z.object({ requestId: idSchema, expectedVersion: z.number().int().positive().max(2147483646) }).strict();
 export type AcknowledgeInsight = z.output<typeof acknowledgeInsightSchema>;
 
 export interface InsightView {
@@ -53,13 +55,15 @@ export interface InsightView {
   acknowledgedAt: string | null;
   version: number;
 }
-/** The feed: open and acknowledged insights, and for each active batch what could not be judged and why. */
-export interface InsightFeed { evaluatedOn: string; insights: InsightView[]; notJudged: { batchId: string; batchLabel: string; rule: RuleKey; currency: string | null; missing: MissingReason[] }[] }
+/** The feed: live insights, most serious first, and for each active batch the figures that could not be judged and why. */
+export interface InsightFeed { evaluatedOn: string; insights: InsightView[]; notJudged: { batchId: string; batchLabel: string; rule: RuleKey; currency: string | null; missing: MissingReason[] }[]; batchesTruncated: boolean }
+/** Farms in the launch market keep few batches at a time; the feed reads at most this many active ones, newest first. */
+export const MAX_INSIGHT_BATCHES = 50;
 
 export interface InsightRepository {
   /** Evaluates the farm's active batches on the farm date and applies the repeat rule in one transaction. */
-  generate(scope: FarmScope, today: string): Promise<InsightFeed>;
-  acknowledge(scope: FarmScope, command: AcknowledgeInsight): Promise<InsightView>;
+  generate(scope: ProductionWriteScope, today: string): Promise<InsightFeed>;
+  acknowledge(scope: ProductionWriteScope, insightId: string, command: AcknowledgeInsight): Promise<InsightView>;
 }
 
 export const ruleKeySchema = z.enum(RULE_KEYS);

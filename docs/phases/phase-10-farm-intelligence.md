@@ -2,12 +2,12 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - specification, source P0568-P0600 and Q19 against owner decisions.
-- Implementation status: PARTIALLY COMPLETE - 14% (1/7 verified tasks).
+- Implementation status: PARTIALLY COMPLETE - 29% (2/7 verified tasks).
 - Last reviewed: 2026-11-12 (Africa/Nairobi).
 - Related phase/task IDs: Phase 10; MYF-P10-T001 through MYF-P10-T007; Q19; D-P09-018; D-P10-001 through D-P10-006.
-- Verified completed work: T001 rule catalog, batch trend rules, repeat rule and evidence contract with golden fixtures (no schema change).
-- Remaining work/blockers: T002-T007. Started on the owner's waiver of the Phase 9 exit gate (D-P09-018), not on pilot evidence. Rule numbers await agronomist review (D-P10-003); the shortage rule needs a feed link for supplies (T004).
-- Evidence/report links: [Phase 10 start and T001](../reports/phase-10-t001-2026-11-12.md); [Decisions](../DECISION-LOG.md#d-p10-001---phase-10-start-commits-and-pushes); [Phase 9 closeout](../reports/phase-09-closeout-2026-11-10.md).
+- Verified completed work: T001 rule catalog, batch trend rules, repeat rule and evidence contract with golden fixtures. T002 additive migration 202611120001, runtime policy, generate/acknowledge services and API with integration tests (not applied to hosted).
+- Remaining work/blockers: T003-T007. Started on the owner's waiver of the Phase 9 exit gate (D-P09-018), not on pilot evidence. Rule numbers await agronomist review (D-P10-003); the shortage rule needs a feed link for supplies (T004).
+- Evidence/report links: [Phase 10 start and T001](../reports/phase-10-t001-2026-11-12.md); [T002](../reports/phase-10-t002-2026-11-12.md); [Decisions](../DECISION-LOG.md#d-p10-001---phase-10-start-commits-and-pushes); [Phase 9 closeout](../reports/phase-09-closeout-2026-11-10.md).
 <!-- MYFARM-STATUS-END -->
 
 Status: **IN PROGRESS** since 2026-11-11 (D-P10-001). Date: 2026-10-08. Specification; implementation authorized by D-P10-001. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
@@ -176,7 +176,7 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 ## O. Completion Checklist
 
 - [x] MYF-P10-T001 complete with evidence ([report](../reports/phase-10-t001-2026-11-12.md)).
-- [ ] MYF-P10-T002 complete with evidence.
+- [x] MYF-P10-T002 complete with evidence ([report](../reports/phase-10-t002-2026-11-12.md)).
 - [ ] MYF-P10-T003 complete with evidence.
 - [ ] MYF-P10-T004 complete with evidence.
 - [ ] MYF-P10-T005 complete with evidence.
