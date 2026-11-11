@@ -2,11 +2,11 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - requirements and Q18 against owner decisions.
-- Implementation status: COMPLETED - 100% (7/7 verified tasks); EXIT GATE NOT MET - the real pilot has not run.
-- Last reviewed: 2026-11-10 (Africa/Nairobi).
-- Related phase/task IDs: Phase 09; MYF-P09-T001 through MYF-P09-T007; D-P09-001 through D-P09-010.
+- Implementation status: CLOSED BY OWNER DECLARATION 2026-11-11 (D-P09-018) - 100% (7/7 verified tasks); EXIT GATE WAIVED, NOT MET - the real pilot has not run.
+- Last reviewed: 2026-11-12 (Africa/Nairobi).
+- Related phase/task IDs: Phase 09; MYF-P09-T001 through MYF-P09-T007; D-P09-001 through D-P09-018.
 - Verified completed work: T001 pilot measure rules, contracts, additive migration and runtime policy. T002 services, usage log and API. T003 screens; AC001 verified locally. T004 observation, finding and decision rules with migration. T005 evidence service and API. T006 observations and decision screen; AC002 verified locally. T007 clean-checkout audit.
-- Remaining work/blockers: The exit gate needs recurring voluntary use by real farmers; the pilot waits for the pilot-start checklist (D-P09-005, closeout). Phase 10 must not start. The exit gate needs a real pilot, and no real farmer joins until the pilot-start checklist is cleared (D-P09-005).
+- Remaining work/blockers: The owner closed Phase 9 and waived its exit gate (D-P09-018); recurring voluntary use by real farmers is still unevidenced. No real farmer joins until the pilot-start checklist is cleared (D-P09-005). Phase 10 started on the owner's waiver (D-P10-001).
 - Evidence/report links: [Closeout](../reports/phase-09-closeout-2026-11-10.md); [Plan](../reports/phase-09-start-2026-11-09.md); [T001](../reports/phase-09-t001-2026-11-09.md); [T002](../reports/phase-09-t002-2026-11-10.md); [T003](../reports/phase-09-t003-2026-11-10.md); [T004](../reports/phase-09-t004-2026-11-10.md); [T005](../reports/phase-09-t005-2026-11-10.md); [T006](../reports/phase-09-t006-2026-11-10.md); [Decisions](../DECISION-LOG.md#d-p09-001---phase-9-start-commits-and-pushes).
 <!-- MYFARM-STATUS-END -->
 

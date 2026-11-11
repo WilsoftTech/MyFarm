@@ -1,16 +1,16 @@
 # Phase 10 Farm Intelligence Engine
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — T013 metadata/status scope and evidence-link relevance; historical and future-phase facts unchanged.
-- Implementation status: NOT STARTED — 0% (0/7 verified tasks).
-- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
-- Related phase/task IDs: Phase 10; MYF-P10-T001 through MYF-P10-T007; review session Phase01; Phase02 review session (MYF-P02-T001–T013).
-- Verified completed work: No tasks implemented or verified in this phase; status/provider applicability reviewed only.
-- Remaining work/blockers: All 7 tasks and their acceptance/exit gates pending; Phase01 completion and future phase authorization required.
-- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
+- Documentation review: REVIEWED - specification, source P0568-P0600 and Q19 against owner decisions.
+- Implementation status: PARTIALLY COMPLETE - 14% (1/7 verified tasks).
+- Last reviewed: 2026-11-12 (Africa/Nairobi).
+- Related phase/task IDs: Phase 10; MYF-P10-T001 through MYF-P10-T007; Q19; D-P09-018; D-P10-001 through D-P10-006.
+- Verified completed work: T001 rule catalog, batch trend rules, repeat rule and evidence contract with golden fixtures (no schema change).
+- Remaining work/blockers: T002-T007. Started on the owner's waiver of the Phase 9 exit gate (D-P09-018), not on pilot evidence. Rule numbers await agronomist review (D-P10-003); the shortage rule needs a feed link for supplies (T004).
+- Evidence/report links: [Phase 10 start and T001](../reports/phase-10-t001-2026-11-12.md); [Decisions](../DECISION-LOG.md#d-p10-001---phase-10-start-commits-and-pushes); [Phase 9 closeout](../reports/phase-09-closeout-2026-11-10.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **NOT STARTED**. Date: 2026-10-08. This is a specification, not implementation approval. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **IN PROGRESS** since 2026-11-11 (D-P10-001). Date: 2026-10-08. Specification; implementation authorized by D-P10-001. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
@@ -175,7 +175,7 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 
 ## O. Completion Checklist
 
-- [ ] MYF-P10-T001 complete with evidence.
+- [x] MYF-P10-T001 complete with evidence ([report](../reports/phase-10-t001-2026-11-12.md)).
 - [ ] MYF-P10-T002 complete with evidence.
 - [ ] MYF-P10-T003 complete with evidence.
 - [ ] MYF-P10-T004 complete with evidence.

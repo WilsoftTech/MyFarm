@@ -57,7 +57,7 @@ Q01 is **PARTIALLY RESOLVED**: user selected Rukungiri. Remaining components and
 | Q16 | RESOLVED for Phase7 by owner 2026-11-03 ([D-P07-002](#d-p07-002---q16-support-limits), [D-P07-003](#d-p07-003---q16-shared-phones), [D-P07-005](#d-p07-005---q16-lost-entries)): 14 days and 500 unsent entries; per-account data with no PIN; warnings plus an unencrypted download. Real-device measurement stays open | Product/security/engineering owner | 1/7 | Approved; measurement pending |
 | Q17 | RESOLVED for Phase8 by owner 2026-11-03 and 2026-11-04 ([D-P08-005](#d-p08-005---q17-crop-formulas) to [D-P08-011](#d-p08-011---q17-formula-catalog)); [formula catalog](architecture/metric-formulas.md) and golden fixtures approved | Accounting/agricultural owner | 8 | Formula catalog and golden fixtures approved |
 | Q18 | RESOLVED prospectively by owner 2026-11-09 ([D-P09-002](#d-p09-002---q18-cohort-and-window) to [D-P09-004](#d-p09-004---q18-gono-go-threshold)): about 25 farmers for one season; active = one record a week, retained = 3 of 4 weeks; 50% retained voluntarily at week 8. Real cohort evidence still pending | Product/research owner | 9 | Prospective criteria then real cohort evidence |
-| Q19 | Rule mortality thresholds, percent vs points, data coverage, severity/suppression | Agronomic/product owner | 10 | Reviewed rules, comparison units and sparse-data behavior |
+| Q19 | RESOLVED for Phase10 by owner 2026-11-11 ([D-P10-002](#d-p10-002---q19-trend-rules) to [D-P10-005](#d-p10-005---q19-loss-and-shortage)): 28 days against the 28 before, per bird; feed cost +20%, eggs −10%, mortality +1 point; high mortality over 1% in 7 days; strict coverage, two levels, no repeats while open; loss and shortage from the farm's own records. Agronomist review of the numbers pending | Agronomic/product owner | 10 | Approved; agronomist review pending |
 | Q20 | AI provider/cost, data processing/retention, knowledge licenses and groundedness criteria | Product/security/AI owner | 11 | Approved tool contracts, consent/provider policy and adversarial evaluation |
 | Q21 | Speech/language accuracy, confirmation/accessibility, audio retention/offline provider | Product/AI/privacy owner | 12 | Measured language support and exact-payload confirmation |
 | Q22 | Weather source/license, accuracy/location, growth-stage input, agronomic thresholds | Agronomic/product owner | 13 | Reviewed provider/rule/freshness contracts |
@@ -612,3 +612,31 @@ APPROVED, owner 2026-11-10, selecting "Raise to 600 a minute (Recommended)". Whi
 ## D-P09-017 - Phase 9 closes on its exit gate; Phase 10 held
 
 DECIDED, owner 2026-11-11. Asked how to close Phase 9 and whether to build Phase 10 ahead of the pilot, the owner answered "close phase 9 when complete and implement next phase" and selected "Hold Phase 10". Phase 9 is not closed now: it closes only when its exit gate is met by the real pilot (D-P09-003, D-P09-005), with the closeout committed and pushed then. Phase 10 does not start until that closure; the pilot's feature freeze (P0541) stays in force. Until then, work continues on the pilot-start checklist.
+
+## D-P09-018 - Phase 9 closed by owner declaration; pilot exit gate waived
+
+DECIDED, owner 2026-11-11: "PHASE 9 PASSED. PROCEED TO NEXT PHASE." Engineering records this as the owner closing Phase 9, **not** as the exit gate being met: on 2026-11-11 no real farmer had joined, so no evidence of voluntary recurring use exists (D-P09-003, D-P09-005). The real-pilot exit gate is waived by the owner and stays recorded as unevidenced; the pilot software, the pilot-start checklist and every open condition (P7-C1, consent translations, Phase 1 C4, P8-C2, recruiting) are unchanged and still apply before real farmers join. The feature freeze for the pilot (P0541) ends with this closure. Supersedes the hold in D-P09-017.
+
+## D-P10-001 - Phase 10 start, commits and pushes
+
+AUTHORIZED, owner 2026-11-11, following D-P09-018. Phase 10 is built task by task with one commit per verified task, pushed to `origin/main` as in D-P09-001. The phase spec's prerequisite (the Phase 9 exit gate) rests on the owner's waiver, not on evidence. Hosted database changes and deployment still need their own instruction. Rules are deterministic code and never use an LLM (P0598).
+
+## D-P10-002 - Q19 trend rules
+
+APPROVED, owner 2026-11-11, selecting "4 wk vs 4 wk, 20/10/1 (Rec.)". For each poultry batch, the last 28 farm days are compared with the 28 days before them, per bird so a change in flock size does not distort the figure. A change is raised when feed cost per bird rises by 20% or more, eggs per bird fall by 10% or more, or mortality rises by 1 percentage point or more. The source's "mortality +4%" is read as percentage points, not relative change. Money is compared only within one currency.
+
+## D-P10-003 - Q19 high-mortality threshold
+
+APPROVED, owner 2026-11-11, selecting "Over 1% in 7 days (Rec.)". High mortality: deaths in the last 7 farm days divided by birds alive at the start of those 7 days is above 1%. The insight tells the farmer to review the flock with a vet or extension officer. The number is an owner-approved starting value that awaits agronomist review, as P8-C2.
+
+## D-P10-004 - Q19 coverage, severity and repeats
+
+APPROVED, owner 2026-11-11, selecting "Strict, 2 levels (Rec.)". No insight unless the batch has at least 20 birds and each compared window has records on at least 4 of every 7 days for the figure concerned; otherwise the farmer sees "not enough records" and what is missing. Two levels: Warning and Watch. The same rule on the same batch is not raised again while one is open; after acknowledgement it returns only if the figure gets worse.
+
+## D-P10-005 - Q19 loss and shortage
+
+APPROVED, owner 2026-11-11, selecting "Recorded figures (Rec.)". Loss: a batch's or crop's cost per unit (per egg, per bird, per kg) over the last 28 days or the season is above its average selling price per unit in the same currency and unit; with no sales or with mismatched units there is no judgement and the reason is shown. Shortage: feed in stock covers fewer than 7 days at the batch's average daily feed use over the last 14 days. Demand comes only from the farm's own records, never from textbook rates.
+
+## D-P10-006 - Q19 coverage per figure
+
+APPROVED, owner 2026-11-11, selecting "Batch-entry days (Rec.)", clarifying D-P10-004. A day counts as recorded when the batch has any production entry that day. Eggs need egg entries on at least 4 of every 7 days; mortality needs any batch entry on at least 4 of every 7 days, and a recorded day with no deaths counts as zero deaths; feed cost needs 4 of every 7 recorded days plus at least one Feed cost linked to the batch in each 28-day window.
