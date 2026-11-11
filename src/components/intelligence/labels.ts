@@ -7,6 +7,11 @@ export const ruleTitles: Record<RuleKey, string> = {
   FEED_COST_RISING: "Feed is costing more per bird",
   EGGS_FALLING: "Each bird is laying fewer eggs",
   MORTALITY_RISING: "More birds are dying than before",
+  HIGH_MORTALITY: "Many birds died this week",
+  FEED_RUNNING_LOW: "Feed is running low",
+  LOSS_PER_EGG: "Eggs cost more to produce than they sell for",
+  LOSS_PER_BIRD: "Birds cost more to raise than they sell for",
+  LOSS_PER_KG: "This crop costs more per kg than it sells for",
 };
 export const severityLabels: Record<Severity, string> = { WARNING: "Warning", WATCH: "Watch" };
 export const figureLabels: Record<TrendFigureRule, string> = {

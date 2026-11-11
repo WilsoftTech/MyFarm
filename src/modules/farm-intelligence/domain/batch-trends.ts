@@ -5,7 +5,7 @@ import { moneyUnits } from "@/modules/farm-accounting/domain/money";
 import { addDays } from "@/modules/farm-activities/domain/recurrence";
 import { quantityUnits } from "@/modules/harvest-inventory/domain/harvest";
 import { assertProductionQuantity, type ProductionEventType } from "@/modules/harvest-inventory/domain/production";
-import { BLOCK_DAYS, EGG_FALL, FEED_RISE, MIN_BIRDS, MIN_RECORDED_DAYS_PER_BLOCK, MORTALITY_RISE_POINTS, RULES, WINDOW_DAYS, type RuleKey, type Severity } from "./rules";
+import { BLOCK_DAYS, EGG_FALL, FEED_RISE, MIN_BIRDS, MIN_RECORDED_DAYS_PER_BLOCK, MORTALITY_RISE_POINTS, RULES, WINDOW_DAYS, type RuleKey, type Severity, type TrendRuleKey } from "./rules";
 
 /**
  * Batch trends (MYF-P10-R001): rising feed cost, falling eggs and rising mortality for one poultry batch, from its
@@ -48,7 +48,7 @@ export interface TrendFigure {
   change: string | null;
   exactChange: ExactChange | null;
 }
-export interface InsightCandidate { ruleKey: RuleKey; ruleVersion: number; severity: Severity; batchId: string; currency: string | null; figures: TrendFigure[] }
+export interface InsightCandidate { ruleKey: TrendRuleKey; ruleVersion: number; severity: Severity; batchId: string; currency: string | null; figures: TrendFigure[] }
 export interface BatchTrendEvaluation { batchId: string; label: string; windows: TrendWindows; coverage: TrendCoverage; figures: TrendFigure[]; candidates: InsightCandidate[] }
 
 const SCALE = 1_000_000n, MONEY_SCALE = 10_000n;
@@ -67,7 +67,7 @@ const inWindow = (date: string, window: DateWindow) => date >= window.from && da
 const whole = (entry: BatchEntry) => quantityUnits(entry.quantity) / SCALE;
 
 /** Birds alive at the start of each day: the opening count from the acquisition date, then each earlier day's purchases, deaths and sales. */
-function flockByDay(facts: BatchTrendFacts, days: readonly string[]): bigint[] {
+export function flockByDay(facts: Pick<BatchTrendFacts, "entries" | "acquiredOn" | "startingQuantity">, days: readonly string[]): bigint[] {
   const change = new Map<string, bigint>();
   for (const entry of facts.entries) {
     const delta = entry.type === "PURCHASE" ? whole(entry) : entry.type === "MORTALITY" || entry.type === "BIRD_SALE" ? -whole(entry) : 0n;
@@ -155,7 +155,7 @@ export function evaluateBatchTrends(facts: BatchTrendFacts, today: string): Batc
   };
 
   const feedFigures = currencies.length ? currencies.map(feed) : [feed(null)], eggFigure = eggs(), mortalityFigure = mortality();
-  const candidate = (ruleKey: RuleKey, currency: string | null, figures: TrendFigure[]): InsightCandidate =>
+  const candidate = (ruleKey: TrendRuleKey, currency: string | null, figures: TrendFigure[]): InsightCandidate =>
     ({ ruleKey, ruleVersion: RULES[ruleKey].version, severity: RULES[ruleKey].severity, batchId: facts.batchId, currency, figures });
   const candidates: InsightCandidate[] = [];
   const eggsRaised = eggFigure.outcome === "RAISED";

@@ -3,8 +3,12 @@
  * deterministic code: no LLM or provider is involved (P0598). Every insight records the rule's key and version, so a
  * later change to a threshold is a new version and never rewrites what a farmer was shown.
  */
-export const RULE_KEYS = ["FEED_COST_RISING", "EGGS_FALLING", "MORTALITY_RISING", "PRODUCTION_FALLING_COSTS_RISING"] as const;
+export const TREND_RULE_KEYS = ["FEED_COST_RISING", "EGGS_FALLING", "MORTALITY_RISING", "PRODUCTION_FALLING_COSTS_RISING"] as const;
+/** MYF-P10-R002 threshold warnings (D-P10-003, D-P10-005, D-P10-007). */
+export const THRESHOLD_RULE_KEYS = ["HIGH_MORTALITY", "FEED_RUNNING_LOW", "LOSS_PER_EGG", "LOSS_PER_BIRD", "LOSS_PER_KG"] as const;
+export const RULE_KEYS = [...TREND_RULE_KEYS, ...THRESHOLD_RULE_KEYS] as const;
 export type RuleKey = typeof RULE_KEYS[number];
+export type TrendRuleKey = typeof TREND_RULE_KEYS[number];
 export const SEVERITIES = ["WARNING", "WATCH"] as const;
 export type Severity = typeof SEVERITIES[number];
 
@@ -40,4 +44,10 @@ export const RULES: Readonly<Record<RuleKey, RuleDefinition>> = {
   // The source's own example insight (P0580-P0587): feed costs rising while eggs fall. When both rules fire on a
   // batch, this one is raised in their place, with both figures as evidence.
   PRODUCTION_FALLING_COSTS_RISING: { key: "PRODUCTION_FALLING_COSTS_RISING", version: 1, severity: "WARNING", decisions: [...TREND, "P0587"], threshold: "Feed cost per bird up 20% or more while eggs per bird fall 10% or more" },
+  // Threshold warnings are always Warnings: a figure is past an explicit limit, not only moving.
+  HIGH_MORTALITY: { key: "HIGH_MORTALITY", version: 1, severity: "WARNING", decisions: ["D-P10-003", "D-P10-004"], threshold: "More than 1% of the birds died in the last 7 days" },
+  FEED_RUNNING_LOW: { key: "FEED_RUNNING_LOW", version: 1, severity: "WARNING", decisions: ["D-P10-005", "D-P10-007"], threshold: "Feed in stock lasts fewer than 7 days at the last 14 days' use" },
+  LOSS_PER_EGG: { key: "LOSS_PER_EGG", version: 1, severity: "WARNING", decisions: ["D-P10-005"], threshold: "Cost per egg in the last 28 days is above the average price per egg sold" },
+  LOSS_PER_BIRD: { key: "LOSS_PER_BIRD", version: 1, severity: "WARNING", decisions: ["D-P10-005", "D-P08-006"], threshold: "Cost per bird so far is above the average price per bird sold" },
+  LOSS_PER_KG: { key: "LOSS_PER_KG", version: 1, severity: "WARNING", decisions: ["D-P10-005", "D-P08-005"], threshold: "Cost per kg this season is above the average price per kg sold" },
 };
