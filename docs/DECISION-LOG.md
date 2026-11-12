@@ -652,3 +652,23 @@ ACCEPTED, owner 2026-11-12, selecting "Accept, fix C4 first" (proposed by engine
 ## D-P10-009 - Alerts evaluation counted by the request limits (closes P10-C4 locally)
 
 DECIDED, owner 2026-11-12 ("Accept, fix C4 first"); the number is an engineering choice the owner may change. Each open of the Alerts page and each `GET /api/v1/farms/{farmId}/insights` runs every rule and stores the results, so it now counts against a new per-person limit, `INSIGHTS_EVALUATE`, of 30 a minute, on the database clock, in the same table and function as D-P09-014. It is taken by the farm intelligence service once the farm is authorized, so the page and the API share one count and requests for a farm the person cannot see are not counted. Over the limit nothing is evaluated or stored: the API answers 429 `RATE_LIMITED` and the page says "Alerts were checked many times in the last minute. Wait a minute, then open this page again. Your records are safe." Marking an alert as seen stays under the existing save limit. No schema change, no new package. Live on hosted only once the Phase 10 schema is (P10-C3).
+
+## D-P11-001 - Phase 11 start
+
+AUTHORIZED, owner 2026-11-12: after accepting the Phase 10 verdict (D-P10-008) and the P10-C4 fix (D-P10-009), the owner wrote "proceed to next step" and answered Q20 (D-P11-002 to D-P11-005). Phase 11's prerequisite, the Phase 10 exit gate, holds as accepted with conditions; it carries the waived Phase 9 gate (P10-C1, D-P09-018). Phase 11 is built task by task, one verified commit per task. Unlike D-P10-001, pushing Phase 11 commits to `origin/main` awaits the owner's explicit word. Hosted database changes, deployment, AI provider accounts and paid APIs each need their own instruction.
+
+## D-P11-002 - Q20 provider
+
+DECIDED, owner 2026-11-12, selecting "Fake first, decide later (Recommended)". Tasks are built and tested against a fake explainer that returns MyFarm's own plain answer. No AI provider package, key, account or paid API is added; `tests/unit/mvp-scope.test.ts` keeps provider packages and secrets forbidden. The owner chooses a provider before any real farmer sees an answer.
+
+## D-P11-003 - Q20 privacy and retention
+
+DECIDED, owner 2026-11-12, selecting "Figures only, keep 90 days (Recommended)". Only the question and the calculated figures, with their periods, units and currencies, may be sent to a provider; no names, phone numbers, locations or farm or record IDs. Enterprises are sent as {E1}, {E2} and seasons as dates. The provider must not train on or keep what is sent. MyFarm keeps questions and answers 90 days, and the farmer can delete them sooner. The question is the farmer's own text and is sent as it is typed; engineering reading for owner confirmation: the screen should say not to type names or phone numbers into a question.
+
+## D-P11-004 - Q20 cost
+
+DECIDED, owner 2026-11-12, selecting "20 a day per person (Recommended)". Each person may ask 20 questions a day; token use and estimated cost are logged per farm.
+
+## D-P11-005 - Q20 knowledge and evaluation
+
+DECIDED, owner 2026-11-12, selecting "Records only + strict tests (Recommended)". Answers come only from the farm's own records; no agronomic knowledge documents. A question asking for crop or animal advice gets a referral to an extension officer, labeled UNCERTAINTY. Before farmers see answers, on a golden question set: 100% of figures match MyFarm's calculation, 0 cross-farm leaks, and every prompt-injection case refused.
