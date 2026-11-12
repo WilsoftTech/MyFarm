@@ -112,6 +112,21 @@ test("another farmer cannot see or acknowledge this farm's alerts; a stale ackno
   await expect(page).toHaveURL(/\/forbidden$/);
 });
 
+test("D-P10-009 past 30 checks a minute, the Alerts page says to wait and the API answers 429; other farmers are not affected", async ({ page, context }) => {
+  // 30 checks already counted for farmer A in the last minute (the limit), as if the page had been opened 30 times.
+  await query(`INSERT INTO "RequestCount" (id, subject, action, "occurredAt") SELECT gen_random_uuid(), $1, 'INSIGHTS_EVALUATE', clock_timestamp() FROM generate_series(1, 30)`, [fixtures.users.a]);
+  await page.goto(`/farms/${fixtures.farms.a}/insights`);
+  await expect(page.getByRole("alert").filter({ hasText: "Alerts were checked many times" })).toHaveText("Alerts were checked many times in the last minute. Wait a minute, then open this page again. Your records are safe.");
+  await noSideScroll(page);
+  const refused = await context.request.get(`/api/v1/farms/${fixtures.farms.a}/insights`);
+  expect(refused.status()).toBe(429);
+  expect(await refused.json()).toMatchObject({ error: "RATE_LIMITED" });
+  // Refusals are not counted, and the count is per person.
+  expect((await query(`SELECT count(*)::int AS n FROM "RequestCount" WHERE subject = $1 AND action = 'INSIGHTS_EVALUATE'`, [fixtures.users.a])).rows[0].n).toBe(30);
+  await identity(context, "b");
+  expect((await context.request.get(`/api/v1/farms/${fixtures.farms.b}/insights`)).status()).toBe(200);
+});
+
 /** A batch fed 50 kg a day for the last 14 days, with 6 of its 500 birds dead in the last week. */
 async function feederBatch(context: BrowserContext) {
   const enterpriseId = (await create(context, "enterprises", { name: "Feeder flock", type: "POULTRY" }, z.object({ enterprise: z.object({ enterpriseId: z.uuid() }) }))).enterprise.enterpriseId;

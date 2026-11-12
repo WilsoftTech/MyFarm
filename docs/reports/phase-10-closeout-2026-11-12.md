@@ -2,9 +2,9 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - Phase 10 specification, source P0568-P0600, D-P09-018 and D-P10-001 to D-P10-007, every T001-T006 report, the Phase 10 code and tests.
-- Implementation status: COMPLETED - 100% (7/7 verified tasks); verdict PASS WITH CONDITIONS - LOCAL AND HOSTED CI VERIFICATION, awaiting owner acceptance (D-P10-008 PROPOSED).
+- Implementation status: COMPLETED - 100% (7/7 verified tasks); verdict PASS WITH CONDITIONS - LOCAL AND HOSTED CI VERIFICATION, owner accepted 2026-11-12 (D-P10-008); P10-C4 resolved locally (D-P10-009).
 - Last reviewed: 2026-11-12 (Africa/Nairobi).
-- Related phase/task IDs: MYF-P10-T001 through MYF-P10-T007; MYF-P10-R001, R002; MYF-P10-AC001, AC002; D-P09-018; D-P10-001 to D-P10-008.
+- Related phase/task IDs: MYF-P10-T001 through MYF-P10-T007; MYF-P10-R001, R002; MYF-P10-AC001, AC002; D-P09-018; D-P10-001 to D-P10-009.
 - Verified completed work: Deterministic trend and threshold rules, insight storage and repeat rule, Alerts page, feed item per batch; AC001 and AC002 verified on desktop and mobile; clean-checkout run of every quality-workflow step; two audit findings fixed and retested.
 - Remaining work/blockers: Conditions P10-C1 to P10-C5 below; Phase 10 schema not on hosted; nothing deployed.
 - Evidence/report links: [T001](phase-10-t001-2026-11-12.md); [T002](phase-10-t002-2026-11-12.md); [T003](phase-10-t003-2026-11-12.md); [T004](phase-10-t004-2026-11-12.md); [T005](phase-10-t005-2026-11-12.md); [T006](phase-10-t006-2026-11-12.md); [Phase specification](../phases/phase-10-farm-intelligence.md).
@@ -122,7 +122,7 @@ The runtime policy `supabase/policies/farm-intelligence-runtime.sql` sits in the
 | **P10-C1** The Phase 9 exit gate (voluntary recurring use by real farmers) was waived, not met. Whether these alerts help farmers is unproven until real farmers use them | Product owner | Before Phase 10 alerts are relied on with real farmers |
 | **P10-C2** Agronomist review of the numbers (1% in 7 days, 20% / 10% / 1 point, 7 days of feed) and owner confirmation of the engineering readings in T001 (severity mapping, clearing) and T004 (birds bought at risk, shared feed, bird loss for meat batches only, egg-loss costs, no coverage for loss) | Owner with an agronomist, as P8-C2 | Before real farmers see alerts |
 | **P10-C3** Migrations 202611120001 and 202611120002 and the provisioning list are not on hosted development | Owner instruction (D-P10-001 needs its own instruction) | Before any hosted use |
-| **P10-C4** Opening the Alerts page or `GET .../insights` evaluates and stores: bounded (50 batches, 50 crop cycles) but not counted by the request limits | Engineering | Before production hardening |
+| **P10-C4** ~~Opening the Alerts page or `GET .../insights` evaluates and stores: bounded (50 batches, 50 crop cycles) but not counted by the request limits~~ **Resolved locally 2026-11-12 (D-P10-009)**: 30 evaluations a minute per person; on hosted with P10-C3 | Engineering | Done |
 | **P10-C5** Inherited open items: Phase 1 C4, P7-C1 real phone, P8-C2, consent translations, the pilot-start checklist | Owner | As recorded |
 
 **Limitations:**
@@ -136,3 +136,20 @@ The runtime policy `supabase/policies/farm-intelligence-runtime.sql` sits in the
 ## Status-update evidence
 
 Progress from verified task IDs: T001-T007, 7 of 7. Updated: this report, the Phase 10 specification, `docs/PROJECT-STATUS.md` and `docs/DECISION-LOG.md` (D-P10-008 PROPOSED).
+
+## Owner acceptance and P10-C4 fix - 2026-11-12
+
+The owner accepted the verdict ("Accept, fix C4 first", D-P10-008). Hosted CI also passed for this closeout commit (run 43119206600 at 99d6962), so all seven tasks pass hosted CI.
+
+**P10-C4 (D-P10-009).** Each Alerts evaluation now counts against a per-person limit, `INSIGHTS_EVALUATE`, of 30 a minute, using the D-P09-014 table and database function (no schema change, no new package). The farm intelligence service takes it after authorizing the farm, so the page and the API share one count and a farm the person cannot see is not counted. Over the limit nothing is evaluated or stored: the API answers 429 `RATE_LIMITED`, and the Alerts page says to wait a minute instead of failing. Marking an alert as seen stays under the save limit.
+
+| Check (local, disposable PostgreSQL 17 `myfarm-p10-dev`) | Result |
+|---|---|
+| Lint (0 warnings), typecheck, import boundaries | PASS |
+| Unit/component | 1255 passed |
+| Integration (new: evaluations are counted, refusals store nothing, a forbidden farm is not counted) | 380 passed |
+| Signed-in browser, desktop and mobile (new: the page message, API 429, refusals not counted, another farmer unaffected) | 198 passed (13.8 min) |
+
+The first browser run of the new test failed on its own locator, which also matched Next.js's hidden route announcer (`role="alert"`); the test now selects the message by its text. No application code changed for that.
+
+Still open: P10-C1, C2, C3 and C5. Phase 11 waits for Q20.

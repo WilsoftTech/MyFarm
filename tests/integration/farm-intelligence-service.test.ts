@@ -9,6 +9,7 @@ import { StockService } from "@/modules/harvest-inventory/application/stock";
 import { stockRepository } from "@/modules/harvest-inventory/infrastructure/stock-repository";
 import { FarmIntelligenceService } from "@/modules/farm-intelligence/application/insights";
 import { insightRepository } from "@/modules/farm-intelligence/infrastructure/insight-repository";
+import { requestLimits } from "@/modules/engineering-foundation/infrastructure/request-limits";
 import { addDays } from "@/modules/farm-activities/domain/recurrence";
 import { isThresholdEvidence, type InsightEvidence, type ThresholdEvidence, type TrendEvidence } from "@/modules/farm-intelligence/contracts/insights";
 
@@ -142,6 +143,24 @@ describe("MYF-P10-R001 insights from real records under the restricted role (P10
     await expect(service.acknowledge(secondFarm, insight.id, { requestId: id(), expectedVersion: insight.version })).rejects.toMatchObject({ code: "FORBIDDEN" });
     await expect(service.acknowledge(farm, insight.id, { requestId: id(), expectedVersion: insight.version, status: "CLEARED" })).rejects.toMatchObject({ code: "INVALID_INPUT" });
     expect((await service.feed(secondFarm)).insights).toEqual([]);
+  });
+
+  it("D-P10-009: evaluations count against the person's 30 a minute; past it nothing is evaluated or stored, other farms' checks are not counted", async () => {
+    const limited = new FarmIntelligenceService(f.auth, registryRepository(f.runtime), insightRepository(f.runtime), () => now, requestLimits(f.runtime));
+    const counted = async () => f.owner.requestCount.count({ where: { subject: f.scope.actorId, action: "INSIGHTS_EVALUATE" } });
+    try {
+      await limited.feed(farm);
+      expect(await counted()).toBe(1);
+      await expect(limited.feed(id())).rejects.toMatchObject({ code: "FORBIDDEN" });
+      expect(await counted()).toBe(1);
+      await f.owner.requestCount.createMany({ data: Array.from({ length: 29 }, () => ({ id: id(), subject: f.scope.actorId, action: "INSIGHTS_EVALUATE" })) });
+      const before = await f.owner.farmInsight.findMany({ where: { farmId: farm }, orderBy: { id: "asc" } });
+      await expect(limited.feed(farm)).rejects.toMatchObject({ code: "RATE_LIMITED" });
+      expect(await counted()).toBe(30);
+      expect(await f.owner.farmInsight.findMany({ where: { farmId: farm }, orderBy: { id: "asc" } })).toEqual(before);
+    } finally {
+      await f.owner.requestCount.deleteMany({ where: { subject: f.scope.actorId } });
+    }
   });
 
   it("a member who leaves the farm can no longer read or acknowledge", async () => {

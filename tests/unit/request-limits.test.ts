@@ -15,6 +15,8 @@ describe("approved limits (D-P09-014, D-P09-016)", () => {
       FARM_EXPORT: [{ max: 3, seconds: 86_400 }],
       PILOT_STAFF: [{ max: 60, seconds: 60 }],
       PILOT_JOIN_REFUSED: [{ max: 5, seconds: 900 }, { max: 20, seconds: 86_400 }],
+      // D-P10-009, counted by the farm intelligence service rather than by the proxy.
+      INSIGHTS_EVALUATE: [{ max: 30, seconds: 60 }],
     });
     expect(retryAfterSeconds("SAVE")).toBe(60);
     expect(retryAfterSeconds("PHOTO_UPLOAD")).toBe(3600);
@@ -43,6 +45,7 @@ describe("which limit a request counts against", () => {
     expect(requestActionFor("DELETE", "/api/v1/session", false)).toBeNull();
     expect(requestActionFor("POST", "/farms/x/accounting", false)).toBeNull();
     expect(requestActionFor("HEAD", farm + "/export", false)).toBeNull();
+    expect(requestActionFor("GET", farm + "/insights", false)).toBeNull(); // counted once by the service (D-P10-009)
   });
   it("form saves are counted by the page that holds the form; signing in is left to Supabase Auth", () => {
     expect(requestActionFor("POST", "/farms/x/accounting/expenses/new", true)).toBe("SAVE");

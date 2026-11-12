@@ -18,6 +18,11 @@ export const REQUEST_LIMITS = Object.freeze({
   PILOT_STAFF: [{ max: 60, seconds: 60 }],
   /** Counted only when a code is refused, so a farmer who mistypes is not blocked for long. */
   PILOT_JOIN_REFUSED: [{ max: 5, seconds: 900 }, { max: 20, seconds: 86_400 }],
+  /**
+   * D-P10-009 (closes P10-C4): each Alerts open or GET .../insights runs every rule on the farm's records and stores
+   * the results. Counted by the service, not here, so the page and the API share one count.
+   */
+  INSIGHTS_EVALUATE: [{ max: 30, seconds: 60 }],
 } satisfies Record<string, readonly RequestWindow[]>);
 
 export type RequestAction = keyof typeof REQUEST_LIMITS;

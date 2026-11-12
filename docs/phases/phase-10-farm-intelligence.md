@@ -2,15 +2,15 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - specification, source P0568-P0600 and Q19 against owner decisions.
-- Implementation status: COMPLETED - 100% (7/7 verified tasks); PASS WITH CONDITIONS - LOCAL AND HOSTED CI VERIFICATION, awaiting owner acceptance (D-P10-008 PROPOSED).
+- Implementation status: COMPLETED - 100% (7/7 verified tasks); PASS WITH CONDITIONS - LOCAL AND HOSTED CI VERIFICATION, owner accepted 2026-11-12 (D-P10-008); P10-C4 resolved locally (D-P10-009).
 - Last reviewed: 2026-11-12 (Africa/Nairobi).
-- Related phase/task IDs: Phase 10; MYF-P10-T001 through MYF-P10-T007; Q19; D-P09-018; D-P10-001 through D-P10-008.
+- Related phase/task IDs: Phase 10; MYF-P10-T001 through MYF-P10-T007; Q19; D-P09-018; D-P10-001 through D-P10-009.
 - Verified completed work: T001 rule catalog, batch trend rules, repeat rule and evidence contract with golden fixtures. T002 additive migration 202611120001, runtime policy, generate/acknowledge services and API with integration tests (not applied to hosted). T003 Alerts screen; MYF-P10-AC001 verified locally on desktop and mobile. T004 five R002 threshold rules with golden and boundary tests. T005 migration 202611120002, feed-item link, threshold rules on real records with integration tests (not applied to hosted). T006 feed item on the batch page; MYF-P10-AC002 verified locally on desktop and mobile.
 - Remaining work/blockers: Conditions P10-C1 to P10-C5 in the closeout (Phase 9 gate waived not met; agronomist review and owner confirmation of readings; schema not on hosted; Alerts evaluation not rate limited; inherited items). Phase 11 must not start before owner acceptance. Started on the owner's waiver of the Phase 9 exit gate (D-P09-018), not on pilot evidence. Rule numbers await agronomist review (D-P10-003); the shortage rule uses a feed item chosen per batch (D-P10-007, T004).
 - Evidence/report links: [Closeout](../reports/phase-10-closeout-2026-11-12.md); [Phase 10 start and T001](../reports/phase-10-t001-2026-11-12.md); [T002](../reports/phase-10-t002-2026-11-12.md); [T003](../reports/phase-10-t003-2026-11-12.md); [T004](../reports/phase-10-t004-2026-11-12.md); [T005](../reports/phase-10-t005-2026-11-12.md); [T006](../reports/phase-10-t006-2026-11-12.md); [Decisions](../DECISION-LOG.md#d-p10-001---phase-10-start-commits-and-pushes); [Phase 9 closeout](../reports/phase-09-closeout-2026-11-10.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **COMPLETED 2026-11-12, PASS WITH CONDITIONS, awaiting owner acceptance (D-P10-008)**; started 2026-11-11 (D-P10-001). Date: 2026-10-08. Specification; implementation authorized by D-P10-001. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **COMPLETED 2026-11-12, PASS WITH CONDITIONS, owner accepted 2026-11-12 (D-P10-008); P10-C4 resolved locally (D-P10-009)**; started 2026-11-11 (D-P10-001). Date: 2026-10-08. Specification; implementation authorized by D-P10-001. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
