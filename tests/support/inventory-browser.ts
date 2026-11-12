@@ -19,7 +19,7 @@ export async function prepareInventoryBrowser() {
 export async function clearInventoryBrowser(f:ProductionBrowserFixtures) {
  const db=browserDatabase();await db.connect();
  try{
-  for(const table of ["FarmInsight","BatchFeedItem","RecordPhoto","ProductionActivity","ActivityRecurrence","StockMovement","StockAdjustment","StockOperation","ProductionEvent","Harvest","InventoryItem","StorageLocation","AccountingReversal","PaymentAllocation","PaymentRecord","AccountingRecord"])
+  for(const table of ["AssistantQuestion","AssistantUsage","FarmInsight","BatchFeedItem","RecordPhoto","ProductionActivity","ActivityRecurrence","StockMovement","StockAdjustment","StockOperation","ProductionEvent","Harvest","InventoryItem","StorageLocation","AccountingReversal","PaymentAllocation","PaymentRecord","AccountingRecord"])
    await db.query('DELETE FROM "'+table+'" WHERE "tenantId"=$1',[f.tenants.a]);
  }finally{await db.end();}
 }

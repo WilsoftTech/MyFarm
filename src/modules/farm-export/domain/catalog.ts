@@ -6,7 +6,14 @@
  */
 export type ExportColumnKind = "text" | "time";
 export interface ExportColumn { header: string; sql: string; kind?: ExportColumnKind }
-export interface ExportFile { file: string; table: string; /** How rows are found: by farm, or by the farm's own id. */ scope: "farm" | "self"; description: string; columns: readonly ExportColumn[] }
+export interface ExportFile {
+  file: string; table: string;
+  /** How rows are found: by farm, by the farm's own id, or by farm and the person exporting (rows private to them). */
+  scope: "farm" | "self" | "mine";
+  /** A fixed extra condition written in code, never from a request. */
+  only?: string;
+  description: string; columns: readonly ExportColumn[];
+}
 
 const col = (header: string, sql = header, kind: ExportColumnKind = "text"): ExportColumn => ({ header, sql: '"' + sql + '"', kind });
 const time = (header: string, sql = header) => col(header, sql, "time");
@@ -36,6 +43,9 @@ export const EXPORT_FILES: readonly ExportFile[] = Object.freeze([
   // Phase 10 (D-P10-001 to D-P10-007): alerts and their evidence, and the feed item chosen for each batch. Who acknowledged or chose is left out.
   { file: "alerts.csv", table: "FarmInsight", scope: "farm", description: "Alerts the farm's records raised, with what each was worked out from", columns: [col("alertId", "id"), col("batchId"), col("cropCycleId"), col("rule", "ruleKey"), col("ruleVersion"), col("level", "severity"), col("status"), col("currency"), col("evaluatedOn"), col("evidence"), time("seenAt", "acknowledgedAt"), col("clearedOn"), created] },
   { file: "batch-feed-items.csv", table: "BatchFeedItem", scope: "farm", description: "The stock item each poultry batch is fed from", columns: [col("batchId"), col("itemId"), time("changedAt", "updatedAt"), created] },
+  // Phase 11 (D-P11-003, D-P11-004): your own questions to the assistant still kept, and what explaining answers cost the farm.
+  { file: "my-assistant-questions.csv", table: "AssistantQuestion", scope: "mine", only: `"retentionUntil" > now()`, description: "Your own questions to the farm assistant and the answers shown, kept 90 days", columns: [col("questionId", "id"), col("question"), col("intent"), col("answers"), col("provider"), col("model"), created, time("keptUntil", "retentionUntil")] },
+  { file: "assistant-usage.csv", table: "AssistantUsage", scope: "farm", description: "What explaining assistant answers cost, with no question text", columns: [col("usageId", "id"), col("provider"), col("model"), col("calls"), col("inputTokens"), col("outputTokens"), col("costEstimateUsd"), created] },
 ]);
 
 export const PROFILE_FILE = "my-profile.csv";

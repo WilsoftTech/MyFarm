@@ -17,6 +17,8 @@ describe("approved limits (D-P09-014, D-P09-016)", () => {
       PILOT_JOIN_REFUSED: [{ max: 5, seconds: 900 }, { max: 20, seconds: 86_400 }],
       // D-P10-009, counted by the farm intelligence service rather than by the proxy.
       INSIGHTS_EVALUATE: [{ max: 30, seconds: 60 }],
+      // D-P11-004, counted by the assistant service.
+      ASSISTANT_QUESTION: [{ max: 20, seconds: 86_400 }],
     });
     expect(retryAfterSeconds("SAVE")).toBe(60);
     expect(retryAfterSeconds("PHOTO_UPLOAD")).toBe(3600);

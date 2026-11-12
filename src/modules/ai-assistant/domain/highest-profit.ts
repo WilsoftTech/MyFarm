@@ -84,8 +84,11 @@ export function highestProfitEvidence(input: HighestProfitInput): HighestProfitE
   });
 }
 
+/** What the plain answer needs: no names or IDs, so the fake explainer can build it from the explain request alone. */
+export type DraftSource = Pick<HighestProfitEvidence, "outcome" | "enterprisesLeftOut"> & { figures: readonly Omit<Figure, "currency">[]; enterprises: readonly { ref: string }[] };
+
 const signedUnits = (value: string) => value.startsWith("-") ? -moneyUnits(value.slice(1)) : moneyUnits(value);
-const refOf = (evidence: HighestProfitEvidence, enterpriseRef: string | null, measure: Measure) =>
+const refOf = (evidence: DraftSource, enterpriseRef: string | null, measure: Measure) =>
   evidence.figures.find(row => row.enterpriseRef === enterpriseRef && row.measure === measure)?.ref;
 
 /** What an answer to this evidence may cite and must conclude (see answer.ts). */
@@ -105,7 +108,7 @@ const GROSS_MARGIN_MEANING = "Gross margin is sales less the costs linked to eac
  * The plain answer, built only from the evidence. The fake explainer returns it (D-P11-002), and it is shown
  * whenever an explanation fails its checks, so a farmer always gets the exact figures or an honest "cannot say".
  */
-export function draftHighestProfitAnswer(evidence: HighestProfitEvidence): Answer {
+export function draftHighestProfitAnswer(evidence: DraftSource): Answer {
   const outcome = evidence.outcome;
   if (outcome.status === "NO_CONCLUSION") {
     const text = outcome.reason === "NO_RECORDS"

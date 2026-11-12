@@ -3,6 +3,7 @@ import { idSchema } from "@/modules/engineering-foundation/contracts/identity";
 import { dashboardQuerySchema } from "@/modules/analytics-profitability/contracts/profitability";
 import { MAX_REFS, MAX_STATEMENT_LENGTH, MAX_STATEMENTS, STATEMENT_KINDS } from "../domain/answer";
 import type { ExplainRequest } from "../domain/explain-request";
+import type { ShownAnswer, StoredAnswers } from "../domain/exchange";
 
 export const MAX_QUESTION_LENGTH = 500;
 
@@ -41,3 +42,33 @@ export const explainedAnswerSchema = z.object({
  */
 export interface IntentDetector { detect(question: string): Promise<unknown> }
 export interface AnswerExplainer { explain(request: ExplainRequest): Promise<unknown> }
+/** The provider behind both ports, recorded with every question (D-P11-002: FAKE until the owner chooses one). */
+export interface AssistantProvider { name: string; detector: IntentDetector; explainer: AnswerExplainer }
+
+/** What an explainer call returns: its answer (checked separately) and what it cost (D-P11-004). */
+export const explainerResultSchema = z.object({
+  output: z.unknown(),
+  model: z.string().min(1).max(100),
+  inputTokens: z.number().int().min(0).max(10_000_000),
+  outputTokens: z.number().int().min(0).max(10_000_000),
+  costEstimateUsd: z.string().regex(/^\d{1,14}(\.\d{1,6})?$/),
+}).strict();
+export type ExplainerResult = z.output<typeof explainerResultSchema>;
+
+export interface AssistantScope { tenantId: string; farmId: string; actorId: string }
+/** A question as its asker sees it: never another person's, and never one past its 90 days. */
+export interface AssistantExchange { questionId: string; question: string; intent: Intent; askedAt: string; keptUntil: string; answers: ShownAnswer[] }
+export type Intent = typeof INTENTS[number];
+export interface AssistantUsageRecord { provider: string; model: string | null; calls: number; inputTokens: number; outputTokens: number; costEstimateUsd: string }
+/** The most questions listed at once, newest first. */
+export const MAX_LISTED_QUESTIONS = 20;
+
+/** Write and read port. Every method constrains tenant, farm AND the asking person. */
+export interface AssistantRepository {
+  byRequest(scope: AssistantScope, requestId: string): Promise<AssistantExchange | null>;
+  /** Keeps the question once per request ID, removes the person's expired questions, and logs the cost of a new one. */
+  record(scope: AssistantScope, input: { requestId: string; question: string; intent: Intent; answers: StoredAnswers; provider: string; model: string | null; usage: AssistantUsageRecord | null }): Promise<AssistantExchange>;
+  list(scope: AssistantScope, limit: number): Promise<AssistantExchange[]>;
+  /** True when the person's own question was deleted. */
+  remove(scope: AssistantScope, questionId: string): Promise<boolean>;
+}

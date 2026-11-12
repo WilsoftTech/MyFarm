@@ -23,6 +23,8 @@ export const REQUEST_LIMITS = Object.freeze({
    * the results. Counted by the service, not here, so the page and the API share one count.
    */
   INSIGHTS_EVALUATE: [{ max: 30, seconds: 60 }],
+  /** D-P11-004: questions to the farm assistant, 20 in any 24 hours per person; a retry of the same question is free. */
+  ASSISTANT_QUESTION: [{ max: 20, seconds: 86_400 }],
 } satisfies Record<string, readonly RequestWindow[]>);
 
 export type RequestAction = keyof typeof REQUEST_LIMITS;

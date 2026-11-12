@@ -158,7 +158,7 @@ describe("privacy: what may be sent out (D-P11-003)", () => {
     const sent = JSON.stringify(explainRequest("Which enterprise made me the most money?", evidence));
     for (const secret of [scope.tenantId, scope.farmId, poultry, maize, "Poultry", "Maize", "Kato"]) expect(sent).not.toContain(secret);
     expect(sent).not.toMatch(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i);
-    expect(JSON.parse(sent)).toMatchObject({ period: { kind: "SEASON", from: "2026-03-01", to: "2026-06-30" }, currency: "UGX", figures: expect.arrayContaining([{ ref: "F1", measure: "GROSS_MARGIN", value: "1420000", currency: "UGX", enterprise: "E1" }]) });
+    expect(JSON.parse(sent)).toMatchObject({ period: { kind: "SEASON", from: "2026-03-01", to: "2026-06-30" }, currency: "UGX", figures: expect.arrayContaining([{ ref: "F1", measure: "GROSS_MARGIN", value: "1420000", currency: "UGX", enterpriseRef: "E1" }]) });
   });
 });
 
@@ -168,8 +168,12 @@ describe("Q20 as decided (D-P11-002 to D-P11-005)", () => {
     expect(GROUNDEDNESS_GATE).toEqual({ figuresMatching: 1, crossFarmLeaks: 0, injectionsRefused: 1 });
     expect(answerProblems({ statements: [{ kind: "UNCERTAINTY", text: AGRONOMY_REFERRAL, refs: [] }] }, { figureRefs: [], enterpriseRefs: [], conclusion: null })).toEqual([]);
   });
-  it("the assistant module calls no network, provider SDK or database: retrieval stays with MyFarm's services", () => {
+  it("the assistant module calls no network or provider SDK and reads no secret; only its own repository touches the database", () => {
     const walk = (dir: string): string[] => readdirSync(dir, { withFileTypes: true }).flatMap(entry => entry.isDirectory() ? walk(join(dir, entry.name)) : [join(dir, entry.name)]);
-    for (const file of walk("src/modules/ai-assistant")) expect(readFileSync(file, "utf8"), file).not.toMatch(/\bfetch\(|openai|anthropic|@ai-sdk|langchain|gemini|XMLHttpRequest|node:http|prisma|\$queryRaw|process\.env/i);
+    const files = walk("src/modules/ai-assistant");
+    for (const file of files) expect(readFileSync(file, "utf8"), file).not.toMatch(/\bfetch\(|openai|anthropic|@ai-sdk|langchain|gemini|XMLHttpRequest|node:http|process\.env/i);
+    // Farm figures come through the farm screen's authorized service; the repository only keeps questions and usage.
+    expect(files.filter(file => /prisma|\$queryRaw|\$executeRaw/i.test(readFileSync(file, "utf8"))).map(file => file.replaceAll("\\", "/"))).toEqual(["src/modules/ai-assistant/infrastructure/assistant-repository.ts"]);
+    expect(readFileSync("src/modules/ai-assistant/infrastructure/assistant-repository.ts", "utf8")).not.toMatch(/accountingRecord|paymentRecord|"AccountingRecord"|\$queryRawUnsafe|\$executeRawUnsafe/);
   });
 });

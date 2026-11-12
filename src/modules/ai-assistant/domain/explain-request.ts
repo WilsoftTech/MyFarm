@@ -16,7 +16,7 @@ export interface ExplainRequest {
   currency: string | null;
   outcome: HighestProfitEvidence["outcome"];
   enterprises: string[];
-  figures: { ref: string; measure: Measure; value: string; currency: string; enterprise: string | null }[];
+  figures: { ref: string; measure: Measure; value: string; currency: string; enterpriseRef: string | null }[];
   enterprisesLeftOut: number;
 }
 
@@ -32,7 +32,7 @@ export function explainRequest(question: string, evidence: HighestProfitEvidence
     currency: evidence.currency,
     outcome: evidence.outcome,
     enterprises: evidence.enterprises.map(row => row.ref),
-    figures: evidence.figures.map(row => ({ ref: row.ref, measure: row.measure, value: row.value, currency: row.currency, enterprise: row.enterpriseRef })),
+    figures: evidence.figures.map(row => ({ ref: row.ref, measure: row.measure, value: row.value, currency: row.currency, enterpriseRef: row.enterpriseRef })),
     enterprisesLeftOut: evidence.enterprisesLeftOut,
   };
 }

@@ -91,6 +91,7 @@ model User {
   cancelledActivities ProductionActivity[] @relation("ActivityCanceller")
   recordPhotos RecordPhoto[]
   acknowledgedInsights FarmInsight[]
+  assistantQuestions AssistantQuestion[]
   batchFeedItems BatchFeedItem[]
   pilotCohorts PilotCohort[]
   pilotParticipations PilotParticipation[] @relation("PilotParticipant")
@@ -174,6 +175,8 @@ model Farm {
   activityRecurrences ActivityRecurrence[]
   recordPhotos RecordPhoto[]
   insights FarmInsight[]
+  assistantQuestions AssistantQuestion[]
+  assistantUsage AssistantUsage[]
   @@unique([id, tenantId])
   @@index([tenantId, createdAt, id])
   harvests Harvest[]
@@ -1206,4 +1209,48 @@ model BatchFeedItem {
   @@unique([batchId, farmId, tenantId])
   @@index([itemId, farmId, tenantId])
   @@index([changedBy])
+}
+
+// Phase 11 (D-P11-001 to D-P11-006). One row per question a person asked about one farm: the question, the evidence
+// MyFarm calculated and the answer shown. Private to the person who asked; kept 90 days (D-P11-003) and never changed.
+enum AssistantIntent {
+  HIGHEST_PROFIT
+  AGRONOMY
+  UNSUPPORTED
+}
+
+model AssistantQuestion {
+  id String @id @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  actorId String @db.Uuid
+  requestId String @db.Uuid
+  question String @db.VarChar(500)
+  intent AssistantIntent
+  answers Json
+  provider String @db.VarChar(40)
+  model String? @db.VarChar(100)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  retentionUntil DateTime @default(dbgenerated("(CURRENT_TIMESTAMP + '90 days'::interval)")) @db.Timestamptz(6)
+  farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  actor User @relation(fields: [actorId], references: [id], onDelete: Restrict)
+  @@unique([actorId, requestId])
+  @@index([tenantId, farmId, actorId, createdAt])
+  @@index([retentionUntil])
+}
+
+// What explaining answers cost, per farm (D-P11-004). No question text, so it outlives a deleted question.
+model AssistantUsage {
+  id String @id @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  provider String @db.VarChar(40)
+  model String? @db.VarChar(100)
+  calls Int
+  inputTokens Int
+  outputTokens Int
+  costEstimateUsd Decimal @db.Decimal(20, 6)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  @@index([tenantId, farmId, createdAt])
 }
