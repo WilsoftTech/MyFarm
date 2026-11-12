@@ -2,20 +2,20 @@ import type { ShownAnswer } from "@/modules/ai-assistant/domain/exchange";
 import type { AssistantExchange } from "@/modules/ai-assistant/contracts/assistant";
 import type { CommandSubmit } from "@/modules/engineering-foundation/contracts/command-result";
 import Link from "next/link";
-import { basisText, kindLabels, periodText, toolLink, toolSources, valueText } from "./labels";
+import { basisText, kindLabels, kindMeanings, periodText, toolLink, toolSources, valueText } from "./labels";
 import { DeleteQuestionForm } from "./delete-form";
 
 const when = (iso: string) => iso.slice(0, 16).replace("T", " ") + " UTC";
 
 /** One answer: each statement with its kind, then where its figures came from (R002 provenance, R003 labels). */
 export function AnswerView({ answer, farmId }: { answer: ShownAnswer; farmId: string }) {
-  const source = answer.provenance, more = source ? toolLink(source.tool, farmId) : null;
+  const source = answer.provenance, more = source ? toolLink(source.tool, farmId) : null, conflicts = new Set(answer.conflicts);
   return <div className="mt-4 rounded-xl bg-muted/40 p-4">
     {source?.currency && <p className="text-sm font-semibold">{source.currency}</p>}
     <ul className="space-y-3">
       {answer.statements.map((statement, index) => <li key={index} className="leading-7">
         <span className={"mr-2 inline-block rounded-full px-3 py-0.5 text-sm font-semibold " + (statement.kind === "FACT" ? "bg-foreground text-background" : statement.kind === "UNCERTAINTY" ? "border border-foreground" : "bg-muted")}>{kindLabels[statement.kind]}</span>
-        <span>{statement.parts.map((part, at) => part.type === "TEXT" ? <span key={at}>{part.text}</span> : <strong key={at}>{valueText(answer.values[part.ref])}</strong>)}</span>
+        <span>{statement.parts.map((part, at) => part.type === "TEXT" ? <span key={at}>{part.text}</span> : <strong key={at}>{valueText(answer.values[part.ref])}{conflicts.has(part.ref) && <span className="font-normal"> (does not add up)</span>}</strong>)}</span>
       </li>)}
     </ul>
     {source && <p className="mt-4 text-sm leading-6 text-foreground/80">
@@ -35,4 +35,15 @@ export function QuestionCard({ exchange, farmId, remove }: { exchange: Assistant
     <p className="mt-4 text-sm text-foreground/80">Kept until <time dateTime={exchange.keptUntil}>{exchange.keptUntil.slice(0, 10)}</time>, then deleted.</p>
     <DeleteQuestionForm question={exchange.question} submit={remove} />
   </article></li>;
+}
+
+/** R003: what each label means, in the farmer's words, next to the answers. */
+export function LabelGuide() {
+  return <details className="mt-6 rounded-2xl border border-border bg-white p-5">
+    <summary className="min-h-12 cursor-pointer py-2 font-semibold">What the labels mean</summary>
+    <dl className="mt-3 space-y-3 leading-7">
+      {(Object.keys(kindLabels) as (keyof typeof kindLabels)[]).map(kind => <div key={kind}><dt className="font-semibold">{kindLabels[kind]}</dt><dd>{kindMeanings[kind]}</dd></div>)}
+    </dl>
+    <p className="mt-3 text-sm leading-6 text-foreground/80">MyFarm works out every figure from your records; the wording around the figures is checked before you see it. A figure marked &ldquo;does not add up&rdquo; is one MyFarm&apos;s own checks disagree on.</p>
+  </details>;
 }

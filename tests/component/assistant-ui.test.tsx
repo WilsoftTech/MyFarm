@@ -63,3 +63,28 @@ describe("the question box", () => {
     expect(submit).toHaveBeenCalledWith({ requestId: expect.any(String), question: "Which enterprise made the most money?", view: { seasonId: "all" } });
   });
 });
+
+describe("labels on screen (MYF-P11-AC003)", () => {
+  it("the guide says what each label promises", async () => {
+    const { LabelGuide } = await import("@/components/assistant/answer-view");
+    render(<LabelGuide />);
+    expect(screen.getByText("What the labels mean")).toBeInTheDocument();
+    for (const [term, meaning] of [["Fact from your records", "Exactly what your records say"], ["What this suggests", "It is not certain"], ["Suggestion", "It is never certain"], ["Not certain", "advice only an extension officer should give"]]) {
+      expect(screen.getByText(term, { selector: "dt" }).nextElementSibling).toHaveTextContent(meaning);
+    }
+  });
+  it("figures MyFarm's own checks disagree on are marked, and stated only as not certain", async () => {
+    const { withDisagreements } = await import("@/modules/ai-assistant/domain/evidence");
+    const { explainProfitEvidence } = await import("@/modules/ai-assistant/domain/money-tools");
+    const { draftAnswer } = await import("@/modules/ai-assistant/domain/tools");
+    const [profit] = explainProfitEvidence({ scope: evidence.scope, basis: "ACCRUAL", period: { kind: "SEASON", label: "2026A", startDate: "2026-03-01", endDate: null }, asOf: "2026-11-12T09:00:00.000Z", currencies: [{
+      currency: "UGX", revenue: "3000000", expenses: "1280000", recordedSurplus: "1720000", surplusMargin: { status: "AVAILABLE", value: "57.3" }, enterprises: [], topEnterpriseIds: [],
+      allEnterprises: { revenue: "0", directCosts: "0", grossMargin: "0" }, unassigned: { revenue: "0", costs: "0" } }] });
+    const disputed = withDisagreements(profit, [{ currency: "UGX", expected: "1720000", found: "1700000" }]);
+    const answer = shownAnswer({ evidence: disputed, statements: draftAnswer(disputed).statements, source: "PLAIN", explainer: "NOT_ASKED", problems: [] });
+    render(<ol><QuestionCard exchange={exchange([answer], "How much profit did I make?")} farmId="f1" remove={vi.fn(async () => undefined)} /></ol>);
+    const items = within(screen.getByRole("article", { name: "How much profit did I make?" })).getAllByRole("listitem");
+    expect(items[0]).toHaveTextContent("Not certainMyFarm's own checks do not add up for season 2026A in this currency: one way of adding the records gives UGX 1,720,000 (does not add up), another gives UGX 1,700,000 (does not add up).");
+    expect(items.every(item => item.textContent?.startsWith("Not certain"))).toBe(true);
+  });
+});

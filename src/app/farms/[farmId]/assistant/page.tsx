@@ -4,7 +4,7 @@ import { assistantService } from "@/modules/ai-assistant/infrastructure/services
 import { loadPage } from "@/app/farmer/guard";
 import { ProductionShell } from "@/components/production/shell";
 import { AskForm } from "@/components/assistant/ask-form";
-import { QuestionCard } from "@/components/assistant/answer-view";
+import { LabelGuide, QuestionCard } from "@/components/assistant/answer-view";
 import { askQuestion, deleteQuestion } from "./actions";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Ask about this farm" };
@@ -20,6 +20,7 @@ export default async function AssistantPage({ params, searchParams }: { params: 
     <p className="mb-5 max-w-3xl leading-7">Answers come only from this farm&apos;s records. MyFarm works out every figure itself; nothing is guessed. For advice on crops or animals, ask an extension officer.</p>
     {search.deleted && <p role="status" className="mb-4 rounded-xl bg-muted p-4">Question deleted.</p>}
     <AskForm seasons={view.seasons.map(season => ({ seasonId: season.seasonId, label: season.label, closed: season.status === "CLOSED" }))} defaultSeason={view.season?.seasonId ?? "all"} submit={askQuestion.bind(null, farm.farmId)} />
+    <LabelGuide />
     <section aria-labelledby="your-questions" className="mt-8">
       <h2 id="your-questions" className="text-2xl font-semibold">Your questions</h2>
       <p className="mt-1 text-sm leading-6 text-foreground/80">Only you can see your questions. Each is kept 90 days, then deleted.</p>

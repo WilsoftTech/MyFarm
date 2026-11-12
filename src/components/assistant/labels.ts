@@ -11,6 +11,14 @@ export const kindLabels: Record<StatementKind, string> = {
   UNCERTAINTY: "Not certain",
 };
 
+/** What each label promises (R003, D-P11-005). */
+export const kindMeanings: Record<StatementKind, string> = {
+  FACT: "Exactly what your records say: a figure, a date or an entry. Nothing is guessed.",
+  INFERENCE: "A reading of the facts. It is not certain; check it against your own knowledge of the farm.",
+  RECOMMENDATION: "Something you might do. It is never certain.",
+  UNCERTAINTY: "Something MyFarm cannot know from your records, or advice only an extension officer should give.",
+};
+
 export function periodText(period: AssistantPeriod): string {
   if (period.kind === "SEASON") return "season " + period.label;
   if (period.kind === "ALL_RECORDS") return "all records";
