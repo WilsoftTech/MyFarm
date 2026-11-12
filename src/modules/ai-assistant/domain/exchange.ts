@@ -1,5 +1,5 @@
 import { answerParts, type AnswerProblem, type ShownStatement, type Statement } from "./answer";
-import { HIGHEST_PROFIT_TOOL, type AssistantPeriod, type HighestProfitEvidence, type Measure } from "./highest-profit";
+import type { AssistantPeriod, Evidence, FigureKind, LabelKind, ToolKey } from "./evidence";
 import { AGRONOMY_REFERRAL } from "./policy";
 
 /**
@@ -12,7 +12,7 @@ export type ExplainerOutcome = typeof EXPLAINER_OUTCOMES[number];
 export type ExplanationProblem = AnswerProblem | "MALFORMED";
 
 export interface StoredAnswer {
-  evidence: HighestProfitEvidence | null;
+  evidence: Evidence | null;
   statements: Statement[];
   /** EXPLAINER when the explanation passed every check; PLAIN when MyFarm's own answer was shown instead. */
   source: "EXPLAINER" | "PLAIN";
@@ -21,40 +21,44 @@ export interface StoredAnswer {
 }
 export interface StoredAnswers { answersVersion: 1; answers: StoredAnswer[] }
 
-/** Questions MyFarm cannot answer yet get this, never a guess. */
-export const UNSUPPORTED_ANSWER = "MyFarm can answer one question so far: which enterprise made the most money. Ask that in your own words, and choose the season or dates on the farm screen first.";
+/** Questions MyFarm cannot answer get this, never a guess. */
+export const UNSUPPORTED_ANSWER = "MyFarm can answer questions about this farm's own records: your latest money records, the surplus, which enterprise made the most money, how this season compares with the one before, a summary, a farm report, unusual costs and work coming up. Ask one of those in your own words.";
 
-/** The answer for a question that needs no farm figures: crop or animal advice (D-P11-005), or one not supported yet. */
+/** The answer for a question that needs no farm figures: crop or animal advice (D-P11-005), or one not supported. */
 export function plainAnswer(intent: "AGRONOMY" | "UNSUPPORTED"): StoredAnswer {
   return { evidence: null, statements: [{ kind: "UNCERTAINTY", text: intent === "AGRONOMY" ? AGRONOMY_REFERRAL : UNSUPPORTED_ANSWER, refs: [] }], source: "PLAIN", explainer: "NOT_ASKED", problems: [] };
 }
 
 /** What fills a placeholder; the screen formats amounts and dates. */
 export type ShownValue =
-  | { kind: "MONEY"; amount: string; currency: string; measure: Measure }
-  | { kind: "ENTERPRISE"; name: string }
+  | { kind: Exclude<FigureKind, "MONEY">; value: string; measure: string }
+  | { kind: "MONEY"; amount: string; currency: string; measure: string }
+  | { kind: "LABEL"; labelKind: LabelKind; text: string }
   | { kind: "PERIOD"; period: AssistantPeriod };
 
 export interface ShownAnswer {
   source: StoredAnswer["source"];
   /** Null for a referral or an unsupported question, which rest on no figures. */
-  provenance: { tool: typeof HIGHEST_PROFIT_TOOL.key; toolVersion: number; basis: HighestProfitEvidence["basis"]; period: AssistantPeriod; asOf: string; currency: string | null } | null;
+  provenance: { tool: ToolKey; toolVersion: number; basis: Evidence["basis"]; period: AssistantPeriod | null; asOf: string; currency: string | null } | null;
   statements: ShownStatement[];
   values: Record<string, ShownValue>;
+  /** Figures MyFarm's own calculations disagree on (R003); the screen marks them. */
+  conflicts: string[];
 }
 
 export function shownAnswer(stored: StoredAnswer): ShownAnswer {
   const evidence = stored.evidence;
   const values: Record<string, ShownValue> = {};
   if (evidence) {
-    values.P = { kind: "PERIOD", period: evidence.period };
-    for (const figure of evidence.figures) values[figure.ref] = { kind: "MONEY", amount: figure.value, currency: figure.currency, measure: figure.measure };
-    for (const enterprise of evidence.enterprises) values[enterprise.ref] = { kind: "ENTERPRISE", name: enterprise.name };
+    if (evidence.period) values.P = { kind: "PERIOD", period: evidence.period };
+    for (const figure of evidence.figures) values[figure.ref] = figure.kind === "MONEY" ? { kind: "MONEY", amount: figure.value, currency: figure.currency ?? "", measure: figure.measure } : { kind: figure.kind, value: figure.value, measure: figure.measure };
+    for (const label of evidence.labels) values[label.ref] = { kind: "LABEL", labelKind: label.kind, text: label.text };
   }
   return {
     source: stored.source,
     provenance: evidence ? { tool: evidence.tool, toolVersion: evidence.toolVersion, basis: evidence.basis, period: evidence.period, asOf: evidence.asOf, currency: evidence.currency } : null,
     statements: answerParts({ statements: stored.statements }),
     values,
+    conflicts: evidence?.conflicts ?? [],
   };
 }

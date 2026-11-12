@@ -7,7 +7,9 @@ import type { RegistryAuthorization } from "@/modules/farmer-registry/applicatio
 import { answerProblems } from "../domain/answer";
 import { plainAnswer, type StoredAnswer } from "../domain/exchange";
 import { explainRequest } from "../domain/explain-request";
-import { draftHighestProfitAnswer, highestProfitEvidence, highestProfitRules, type AssistantPeriod, type HighestProfitEvidence } from "../domain/highest-profit";
+import { answerRules, type AssistantPeriod, type Evidence } from "../domain/evidence";
+import { highestProfitEvidence } from "../domain/highest-profit";
+import { draftAnswer } from "../domain/tools";
 import { askQuestionSchema, detectedIntentSchema, explainedAnswerSchema, explainerResultSchema, MAX_LISTED_QUESTIONS, type AssistantExchange, type AssistantProvider, type AssistantRepository, type AssistantUsageRecord, type Intent } from "../contracts/assistant";
 
 /** Questions are counted per person (D-P11-004), on the database clock. */
@@ -51,7 +53,8 @@ export class AssistantService {
       // One currency at a time, in order, so a slow provider never runs several calls at once for one person.
       for (const item of evidence) answers.push(await this.explain(command.question, item, usage));
     } else {
-      answers = [plainAnswer(intent)];
+      // Question types without a tool yet are answered as unsupported, never guessed (T005 connects them).
+      answers = [plainAnswer(intent === "AGRONOMY" ? "AGRONOMY" : "UNSUPPORTED")];
     }
     return this.repo.record(scope, { requestId: command.requestId, question: command.question, intent, answers: { answersVersion: 1, answers }, provider: this.provider.name, model: usage.model, usage: usage.calls > 0 ? usage : null });
   }
@@ -75,8 +78,8 @@ export class AssistantService {
     } catch { return "UNSUPPORTED"; }
   }
 
-  private async explain(question: string, evidence: HighestProfitEvidence, usage: AssistantUsageRecord): Promise<StoredAnswer> {
-    const plain = (explainer: StoredAnswer["explainer"], problems: StoredAnswer["problems"] = []): StoredAnswer => ({ evidence, statements: draftHighestProfitAnswer(evidence).statements, source: "PLAIN", explainer, problems });
+  private async explain(question: string, evidence: Evidence, usage: AssistantUsageRecord): Promise<StoredAnswer> {
+    const plain = (explainer: StoredAnswer["explainer"], problems: StoredAnswer["problems"] = []): StoredAnswer => ({ evidence, statements: draftAnswer(evidence).statements, source: "PLAIN", explainer, problems });
     // Missing evidence yields no conclusion: nothing to explain, and nothing to spend.
     if (evidence.outcome.status !== "ANSWERED") return plain("NOT_ASKED");
     usage.calls += 1;
@@ -91,7 +94,7 @@ export class AssistantService {
     usage.costEstimateUsd = addDecimal(usage.costEstimateUsd, result.data.costEstimateUsd);
     const answer = explainedAnswerSchema.safeParse(result.data.output);
     if (!answer.success) return plain("REFUSED", ["MALFORMED"]);
-    const problems = answerProblems(answer.data, highestProfitRules(evidence));
+    const problems = answerProblems(answer.data, answerRules(evidence));
     if (problems.length) return plain("REFUSED", problems);
     return { evidence, statements: answer.data.statements, source: "EXPLAINER", explainer: "USED", problems: [] };
   }

@@ -1,6 +1,6 @@
 import type { AssistantProvider } from "../contracts/assistant";
 import type { ExplainRequest } from "../domain/explain-request";
-import { draftHighestProfitAnswer } from "../domain/highest-profit";
+import { draftAnswer } from "../domain/tools";
 
 /**
  * D-P11-002: the stand-in used until the owner chooses an AI provider. It calls no network and costs nothing. Intent
@@ -20,7 +20,7 @@ export function fakeIntentOf(question: string): "HIGHEST_PROFIT" | "AGRONOMY" | 
 
 export function fakeExplanation(request: ExplainRequest) {
   return {
-    output: draftHighestProfitAnswer({ outcome: request.outcome, figures: request.figures, enterprises: request.enterprises.map(ref => ({ ref })), enterprisesLeftOut: request.enterprisesLeftOut }),
+    output: draftAnswer({ tool: request.tool, outcome: request.outcome, figures: request.figures, labels: request.labels, leftOut: request.leftOut, conflicts: request.conflicts }),
     model: FAKE_MODEL, inputTokens: 0, outputTokens: 0, costEstimateUsd: "0",
   };
 }

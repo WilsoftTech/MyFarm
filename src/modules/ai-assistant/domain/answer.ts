@@ -31,20 +31,22 @@ export type AnswerProblem =
 
 /** What an answer may cite, and what it must say when it answers. */
 export interface AnswerRules {
-  /** Figure refs (F1...) and enterprise refs (E1...) the evidence holds. */
+  /** Figure refs (F1...) and label refs (E1, C1, A1...) the evidence holds. */
   figureRefs: readonly string[];
-  enterpriseRefs: readonly string[];
+  labelRefs: readonly string[];
   /**
    * When the evidence allows a conclusion, the refs the first FACT must cite (the leading figure and its enterprise).
    * When it does not, null: then only UNCERTAINTY may be said (missing evidence yields no conclusion, AC001).
    */
   conclusion: readonly string[] | null;
+  /** Figures two of MyFarm's own calculations disagree on (R003); empty when they agree. */
+  conflicts?: readonly string[];
 }
 
 /** Every problem with an answer, each once, in a stable order; an empty list means it may be shown. */
 export function answerProblems(answer: Answer, rules: AnswerRules): AnswerProblem[] {
   const problems = new Set<AnswerProblem>();
-  const figures = new Set(rules.figureRefs), known = new Set([...rules.figureRefs, ...rules.enterpriseRefs, PERIOD_REF]);
+  const figures = new Set(rules.figureRefs), known = new Set([...rules.figureRefs, ...rules.labelRefs, PERIOD_REF]);
   if (answer.statements.length === 0) problems.add("EMPTY");
   if (answer.statements.length > MAX_STATEMENTS) problems.add("TOO_LONG");
   for (const statement of answer.statements) {

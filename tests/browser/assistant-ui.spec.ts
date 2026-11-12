@@ -66,7 +66,7 @@ test("MYF-P11-AC001 the highest-profit answer cites the period, the farm's recor
 test("advice gets the extension-officer referral and other questions say what can be asked", async ({ page }) => {
   await page.goto(`/farms/${fixtures.farms.a}/assistant`);
   await expect((await ask(page, "What should I spray on my maize for armyworm?")).getByRole("listitem")).toHaveText(/^Not certainMyFarm answers from your own records only\. For advice on crops or animals, ask an extension officer\.$/);
-  await expect((await ask(page, "How many eggs did we collect yesterday?")).getByRole("listitem")).toHaveText(/^Not certainMyFarm can answer one question so far/);
+  await expect((await ask(page, "How many eggs did we collect yesterday?")).getByRole("listitem")).toHaveText(/^Not certainMyFarm can answer questions about this farm's own records/);
   await expect(page.getByRole("article")).toHaveCount(2);
 });
 

@@ -1,7 +1,7 @@
 import type { StatementKind } from "@/modules/ai-assistant/domain/answer";
 import type { ShownAnswer, ShownValue } from "@/modules/ai-assistant/domain/exchange";
-import type { AssistantPeriod } from "@/modules/ai-assistant/domain/highest-profit";
-import { formatMoney } from "@/components/accounting/labels";
+import type { AssistantPeriod } from "@/modules/ai-assistant/domain/evidence";
+import { formatMoney, formatNumber } from "@/components/accounting/labels";
 
 /** R003: every statement says what kind of claim it is, in plain words. */
 export const kindLabels: Record<StatementKind, string> = {
@@ -22,8 +22,11 @@ export function periodText(period: AssistantPeriod): string {
 export function valueText(value: ShownValue | undefined): string {
   if (!value) return "";
   if (value.kind === "MONEY") return formatMoney(value.amount, value.currency);
-  if (value.kind === "ENTERPRISE") return value.name;
-  return periodText(value.period);
+  if (value.kind === "LABEL") return value.text;
+  if (value.kind === "PERIOD") return periodText(value.period);
+  if (value.kind === "PERCENT") return value.value + "%";
+  if (value.kind === "COUNT") return value.value.endsWith("+") ? formatNumber(value.value.slice(0, -1)) + " or more" : formatNumber(value.value);
+  return value.value;
 }
 
 /** The whole statement as text, for tests and screen readers. */

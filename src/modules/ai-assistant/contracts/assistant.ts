@@ -23,7 +23,7 @@ export type AskQuestion = z.output<typeof askQuestionSchema>;
  * period or any other field is refused, so a question cannot widen or move the scope (fake scope, AC001).
  * AGRONOMY questions get the referral, not advice (D-P11-005).
  */
-export const INTENTS = ["HIGHEST_PROFIT", "AGRONOMY", "UNSUPPORTED"] as const;
+export const INTENTS = ["HIGHEST_PROFIT", "ASK_RECORDS", "EXPLAIN_PROFIT", "COMPARE_SEASONS", "SUMMARIZE", "UNUSUAL_COSTS", "UPCOMING_TASKS", "FARM_REPORT", "AGRONOMY", "UNSUPPORTED"] as const;
 export const detectedIntentSchema = z.object({ intent: z.enum(INTENTS) }).strict();
 export type DetectedIntent = z.output<typeof detectedIntentSchema>;
 

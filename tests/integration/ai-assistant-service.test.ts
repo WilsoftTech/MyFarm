@@ -60,7 +60,7 @@ const usageOf = (farmId: string) => owner.assistantUsage.findMany({ where: { far
 const said = (answer: ShownAnswer) => answer.statements.map(statement => statement.kind + ": " + statement.parts.map(part => {
   if (part.type === "TEXT") return part.text;
   const value = answer.values[part.ref];
-  return value.kind === "MONEY" ? value.currency + " " + value.amount : value.kind === "ENTERPRISE" ? value.name : value.period.kind === "SEASON" ? value.period.label : value.period.kind;
+  return value.kind === "MONEY" ? value.currency + " " + value.amount : value.kind === "LABEL" ? value.text : value.kind === "PERIOD" ? (value.period.kind === "SEASON" ? value.period.label : value.period.kind) : value.value;
 }).join(""));
 const provider = (explain: AssistantProvider["explainer"]["explain"], detect: AssistantProvider["detector"]["detect"] = fakeProvider.detector.detect): AssistantProvider => ({ name: "TEST", detector: { detect }, explainer: { explain } });
 

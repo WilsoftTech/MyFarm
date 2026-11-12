@@ -18,7 +18,7 @@ export function AnswerView({ answer }: { answer: ShownAnswer }) {
       </li>)}
     </ul>
     {source && <p className="mt-4 text-sm leading-6 text-foreground/80">
-      Worked out by MyFarm from this farm&apos;s records: {periodText(source.period)}, {basisText[source.basis]}. Calculated <time dateTime={source.asOf}>{when(source.asOf)}</time>; ask again for the latest figures.
+      Worked out by MyFarm from this farm&apos;s records{source.period ? ": " + periodText(source.period) : ", each alert over its own period"}{source.basis ? ", " + basisText[source.basis] : ""}. Calculated <time dateTime={source.asOf}>{when(source.asOf)}</time>; ask again for the latest figures.
     </p>}
     <p className="mt-1 text-sm text-foreground/80">{answer.source === "EXPLAINER" ? "Worded by the assistant and checked by MyFarm." : "Worded by MyFarm."}</p>
   </div>;

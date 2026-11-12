@@ -3,7 +3,8 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { CurrencyDashboard } from "@/modules/analytics-profitability/domain/profitability";
 import { answerParts, answerProblems, type Answer } from "@/modules/ai-assistant/domain/answer";
-import { belongsTo, draftHighestProfitAnswer, highestProfitEvidence, highestProfitRules, MAX_ENTERPRISES, type HighestProfitEvidence, type HighestProfitInput } from "@/modules/ai-assistant/domain/highest-profit";
+import { draftHighestProfitAnswer, highestProfitEvidence, MAX_ENTERPRISES, type MoneyViewInput } from "@/modules/ai-assistant/domain/highest-profit";
+import { answerRules, belongsTo, type Evidence } from "@/modules/ai-assistant/domain/evidence";
 import { explainRequest } from "@/modules/ai-assistant/domain/explain-request";
 import { AGRONOMY_REFERRAL, ASSISTANT_POLICY, GROUNDEDNESS_GATE } from "@/modules/ai-assistant/domain/policy";
 import { askQuestionSchema, detectedIntentSchema, explainedAnswerSchema } from "@/modules/ai-assistant/contracts/assistant";
@@ -18,28 +19,28 @@ function currency(code: string, enterprises: ReturnType<typeof line>[], tops: st
   return { currency: code, revenue: "0", expenses: "0", recordedSurplus: "0", surplusMargin: { status: "UNAVAILABLE", reason: "NO_REVENUE" }, enterprises, topEnterpriseIds: tops,
     allEnterprises: { revenue: "0", directCosts: "0", grossMargin: "0" }, unassigned };
 }
-const input = (currencies: CurrencyDashboard[], period: HighestProfitInput["period"] = season): HighestProfitInput => ({ scope, basis: "ACCRUAL", period, asOf: "2026-11-12T10:00:00.000Z", currencies });
+const input = (currencies: CurrencyDashboard[], period: MoneyViewInput["period"] = season): MoneyViewInput => ({ scope, basis: "ACCRUAL", period, asOf: "2026-11-12T10:00:00.000Z", currencies });
 /** The source example (P0624): poultry made the most this period, UGX 1.42M. */
 const golden = () => highestProfitEvidence(input([currency("UGX", [line(poultry, "Poultry", "2100000", "680000", "1420000"), line(maize, "Maize", "900000", "600000", "300000")], [poultry], { revenue: "50000", costs: "120000" })]))[0];
-const check = (answer: Answer, evidence: HighestProfitEvidence) => answerProblems(answer, highestProfitRules(evidence));
+const check = (answer: Answer, evidence: Evidence) => answerProblems(answer, answerRules(evidence));
 /** Shows the answer as a screen would: placeholders replaced from the evidence only. */
-function shown(answer: Answer, evidence: HighestProfitEvidence) {
+function shown(answer: Answer, evidence: Evidence) {
   return answerParts(answer).map(statement => statement.kind + ": " + statement.parts.map(part => {
     if (part.type === "TEXT") return part.text;
-    if (part.ref === "P") return evidence.period.kind === "SEASON" ? evidence.period.label : "the chosen dates";
+    if (part.ref === "P") return evidence.period?.kind === "SEASON" ? evidence.period.label : "the chosen dates";
     const figure = evidence.figures.find(row => row.ref === part.ref);
-    return figure ? figure.currency + " " + figure.value : evidence.enterprises.find(row => row.ref === part.ref)!.name;
+    return figure ? figure.currency + " " + figure.value : evidence.labels.find(row => row.ref === part.ref)!.text;
   }).join("")).join("\n");
 }
 
 describe("MYF-P11-AC001 golden: the highest-profit answer cites exact period, scope and result", () => {
   it("poultry at UGX 1,420,000 for the season, from the Phase 8 gross margin, with its sales and costs", () => {
     const evidence = golden();
-    expect(evidence).toMatchObject({ tool: "HIGHEST_PROFIT", toolVersion: 1, scope, basis: "ACCRUAL", period: season, currency: "UGX", outcome: { status: "ANSWERED", leaders: ["E1"], noProfit: false } });
+    expect(evidence).toMatchObject({ tool: "HIGHEST_PROFIT", toolVersion: 1, scope, basis: "ACCRUAL", period: season, currency: "UGX", outcome: { status: "ANSWERED", conclusion: ["F1", "E1"], detail: { leaders: ["E1"], noProfit: false } } });
     expect(evidence.figures.slice(0, 3)).toEqual([
-      { ref: "F1", measure: "GROSS_MARGIN", value: "1420000", currency: "UGX", enterpriseRef: "E1" },
-      { ref: "F2", measure: "REVENUE", value: "2100000", currency: "UGX", enterpriseRef: "E1" },
-      { ref: "F3", measure: "DIRECT_COSTS", value: "680000", currency: "UGX", enterpriseRef: "E1" },
+      { ref: "F1", measure: "GROSS_MARGIN", kind: "MONEY", value: "1420000", currency: "UGX", subjectRef: "E1" },
+      { ref: "F2", measure: "REVENUE", kind: "MONEY", value: "2100000", currency: "UGX", subjectRef: "E1" },
+      { ref: "F3", measure: "DIRECT_COSTS", kind: "MONEY", value: "680000", currency: "UGX", subjectRef: "E1" },
     ]);
     const answer = draftHighestProfitAnswer(evidence);
     expect(check(answer, evidence)).toEqual([]);
@@ -53,24 +54,24 @@ describe("MYF-P11-AC001 golden: the highest-profit answer cites exact period, sc
   });
   it("ties name every leader; when nothing made money it says so instead of 'most money'", () => {
     const tie = highestProfitEvidence(input([currency("UGX", [line(maize, "Maize", "500", "100", "400"), line(poultry, "Poultry", "900", "500", "400"), line(beans, "Beans", "10", "0", "10")], [poultry, maize])]))[0];
-    expect(tie.outcome).toEqual({ status: "ANSWERED", leaders: ["E1", "E2"], noProfit: false });
+    expect(tie.outcome).toEqual({ status: "ANSWERED", conclusion: ["F1", "E1"], detail: { leaders: ["E1", "E2"], noProfit: false } });
     expect(check(draftHighestProfitAnswer(tie), tie)).toEqual([]);
     expect(shown(draftHighestProfitAnswer(tie), tie).split("\n")[0]).toBe("FACT: Maize and Poultry tied for the highest gross margin for Kato's 2026 season A: UGX 400 each.");
     for (const top of ["0", "-5000"]) {
       const loss = highestProfitEvidence(input([currency("UGX", [line(maize, "Maize", "0", "0", top), line(poultry, "Poultry", "0", "9000", "-9000")], [maize])]))[0];
-      expect(loss.outcome).toEqual({ status: "ANSWERED", leaders: ["E1"], noProfit: true });
+      expect(loss.outcome).toEqual({ status: "ANSWERED", conclusion: ["F1", "E1"], detail: { leaders: ["E1"], noProfit: true } });
       expect(check(draftHighestProfitAnswer(loss), loss)).toEqual([]);
       expect(shown(draftHighestProfitAnswer(loss), loss).split("\n")[0]).toBe(`FACT: No enterprise made money for Kato's 2026 season A. The highest gross margin was UGX ${top}, for Maize.`);
     }
   });
   it("never combines currencies: each currency is its own evidence and answer", () => {
     const both = highestProfitEvidence(input([currency("USD", [line(maize, "Maize", "900", "100", "800")], [maize]), currency("UGX", [line(poultry, "Poultry", "1000", "100", "900")], [poultry])]));
-    expect(both.map(row => [row.currency, row.enterprises.map(e => e.name), row.figures.every(f => f.currency === row.currency)])).toEqual([["UGX", ["Poultry"], true], ["USD", ["Maize"], true]]);
+    expect(both.map(row => [row.currency, row.labels.map(e => e.text), row.figures.every(f => f.currency === row.currency)])).toEqual([["UGX", ["Poultry"], true], ["USD", ["Maize"], true]]);
   });
   it("carries at most the top enterprises and says the list is not complete", () => {
     const many = Array.from({ length: MAX_ENTERPRISES + 3 }, (_, index) => line(id(), "Plot " + String(index).padStart(2, "0"), "100", "0", String(1000 - index)));
     const evidence = highestProfitEvidence(input([currency("UGX", many, [many[0].enterpriseId])]))[0];
-    expect([evidence.enterprises.length, evidence.enterprisesLeftOut]).toEqual([MAX_ENTERPRISES, 3]);
+    expect([evidence.labels.length, evidence.leftOut]).toEqual([MAX_ENTERPRISES, 3]);
     expect(shown(draftHighestProfitAnswer(evidence), evidence)).toContain("UNCERTAINTY: Only the enterprises with the highest gross margins are listed here.");
   });
 });
@@ -87,7 +88,7 @@ describe("missing evidence yields no conclusion", () => {
       expect(draft.statements.map(row => row.kind)).toEqual(["UNCERTAINTY"]);
       expect(check(draft, evidence)).toEqual([]);
     }
-    expect(highestProfitRules(unlinked).conclusion).toBeNull();
+    expect(answerRules(unlinked).conclusion).toBeNull();
     // An explainer that concludes anyway is refused.
     expect(check({ statements: [{ kind: "FACT", text: "Sales were {F1}.", refs: ["F1"] }] }, unlinked)).toEqual(["CLAIM_WITHOUT_EVIDENCE"]);
     expect(check({ statements: [{ kind: "RECOMMENDATION", text: "Grow more maize.", refs: [] }] }, none[0])).toEqual(["CLAIM_WITHOUT_EVIDENCE"]);
@@ -118,7 +119,7 @@ describe("prompt injection: the question is data, and the output can only cite t
   it("the request carries the question as untrusted text and only the refs MyFarm retrieved", () => {
     const request = explainRequest(injected, evidence);
     expect(request.question).toBe(injected);
-    expect(request.enterprises).toEqual(["E1", "E2"]);
+    expect(request.labels).toEqual([{ ref: "E1", kind: "ENTERPRISE" }, { ref: "E2", kind: "ENTERPRISE" }]);
     expect(request.figures.map(row => row.ref)).toEqual(evidence.figures.map(row => row.ref));
   });
   it("whatever the explainer obeys, invented refs, links, stray braces and extra fields are refused", () => {
@@ -158,7 +159,7 @@ describe("privacy: what may be sent out (D-P11-003)", () => {
     const sent = JSON.stringify(explainRequest("Which enterprise made me the most money?", evidence));
     for (const secret of [scope.tenantId, scope.farmId, poultry, maize, "Poultry", "Maize", "Kato"]) expect(sent).not.toContain(secret);
     expect(sent).not.toMatch(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i);
-    expect(JSON.parse(sent)).toMatchObject({ period: { kind: "SEASON", from: "2026-03-01", to: "2026-06-30" }, currency: "UGX", figures: expect.arrayContaining([{ ref: "F1", measure: "GROSS_MARGIN", value: "1420000", currency: "UGX", enterpriseRef: "E1" }]) });
+    expect(JSON.parse(sent)).toMatchObject({ period: { kind: "SEASON", from: "2026-03-01", to: "2026-06-30" }, currency: "UGX", figures: expect.arrayContaining([{ ref: "F1", measure: "GROSS_MARGIN", kind: "MONEY", value: "1420000", currency: "UGX", subjectRef: "E1" }]) });
   });
 });
 
@@ -166,7 +167,7 @@ describe("Q20 as decided (D-P11-002 to D-P11-005)", () => {
   it("fake provider, figures only, 90 days, 20 questions a day, records only, strict gate", () => {
     expect(ASSISTANT_POLICY).toEqual({ provider: "FAKE", sendsOnly: "QUESTION_AND_FIGURES", retentionDays: 90, questionsPerDay: 20, knowledge: "RECORDS_ONLY" });
     expect(GROUNDEDNESS_GATE).toEqual({ figuresMatching: 1, crossFarmLeaks: 0, injectionsRefused: 1 });
-    expect(answerProblems({ statements: [{ kind: "UNCERTAINTY", text: AGRONOMY_REFERRAL, refs: [] }] }, { figureRefs: [], enterpriseRefs: [], conclusion: null })).toEqual([]);
+    expect(answerProblems({ statements: [{ kind: "UNCERTAINTY", text: AGRONOMY_REFERRAL, refs: [] }] }, { figureRefs: [], labelRefs: [], conclusion: null })).toEqual([]);
   });
   it("the assistant module calls no network or provider SDK and reads no secret; only its own repository touches the database", () => {
     const walk = (dir: string): string[] => readdirSync(dir, { withFileTypes: true }).flatMap(entry => entry.isDirectory() ? walk(join(dir, entry.name)) : [join(dir, entry.name)]);
