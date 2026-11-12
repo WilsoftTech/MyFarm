@@ -30,7 +30,7 @@ async function enterprise(context: BrowserContext, farm: string, name: string, s
 async function ask(page: Page, question: string) {
   await page.getByRole("textbox", { name: "Your question" }).fill(question);
   await page.getByRole("combobox", { name: "Which records" }).selectOption("all");
-  await page.getByRole("button", { name: "Ask" }).click();
+  await page.getByRole("button", { name: "Ask", exact: true }).click();
   await expect(page).toHaveURL(/\/assistant\?asked=/);
   return page.getByRole("article", { name: question });
 }
@@ -58,7 +58,7 @@ test("MYF-P11-AC001 the highest-profit answer cites the period, the farm's recor
   await expect(lines.nth(1)).toHaveText("Fact from your recordsThat is UGX 2,100,000 of sales less UGX 680,000 of costs linked to Layers house.");
   await expect(lines.nth(2)).toHaveText("Fact from your recordsNext was Broiler shed, at UGX 300,000.");
   await expect(lines.nth(3)).toContainText("Not certainGross margin is sales less the costs linked to each enterprise.");
-  await expect(answer).toContainText("Worked out by MyFarm from this farm's records: all records, counted when sold or bought. Calculated");
+  await expect(answer).toContainText("Worked out by MyFarm from the money figures on the farm screen: all records, counted when sold or bought. Calculated");
   await expect(answer).toContainText("Kept until");
   await noSideScroll(page);
 });

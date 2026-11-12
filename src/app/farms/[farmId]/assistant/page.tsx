@@ -24,7 +24,7 @@ export default async function AssistantPage({ params, searchParams }: { params: 
       <h2 id="your-questions" className="text-2xl font-semibold">Your questions</h2>
       <p className="mt-1 text-sm leading-6 text-foreground/80">Only you can see your questions. Each is kept 90 days, then deleted.</p>
       {questions.length === 0 ? <p className="mt-4 leading-7">You have not asked anything on this farm yet.</p>
-        : <ol className="mt-4 space-y-4">{questions.map(exchange => <QuestionCard key={exchange.questionId} exchange={exchange} remove={deleteQuestion.bind(null, farm.farmId, exchange.questionId)} />)}</ol>}
+        : <ol className="mt-4 space-y-4">{questions.map(exchange => <QuestionCard key={exchange.questionId} exchange={exchange} farmId={farm.farmId} remove={deleteQuestion.bind(null, farm.farmId, exchange.questionId)} />)}</ol>}
     </section>
   </ProductionShell>;
 }

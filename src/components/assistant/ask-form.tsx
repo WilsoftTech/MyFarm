@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
 import { ProductionFormFeedback } from "@/components/production/form-feedback";
 import { useProductionSubmit } from "@/components/production/use-production-submit";
+import { EXAMPLE_QUESTIONS } from "./labels";
 
 export interface SeasonChoice { seasonId: string; label: string; closed: boolean }
 const MAX = 500;
@@ -30,10 +31,17 @@ export function AskForm({ seasons, defaultSeason, submit }: { seasons: SeasonCho
     }}>
     <div>
       <label htmlFor="assistantQuestion" className="field-label">Your question</label>
-      <p id="assistantQuestionHint" className="mb-2 text-sm leading-6 text-foreground/80">For example: which enterprise made me the most money? Do not type names or phone numbers: the question is kept with the answer.</p>
+      <p id="assistantQuestionHint" className="mb-2 text-sm leading-6 text-foreground/80">Ask about this farm's own records. Do not type names or phone numbers: the question is kept with the answer.</p>
       <textarea id="assistantQuestion" name="question" rows={3} maxLength={MAX} className={textarea} value={question} onChange={event => setQuestion(event.target.value)}
         aria-describedby={"assistantQuestionHint" + (problem ? " assistantQuestionError" : "")} aria-invalid={problem ? true : undefined} />
       {problem && <p id="assistantQuestionError" role="alert" className="field-error">{problem}</p>}
+    </div>
+    <div>
+      <p id="assistantExamples" className="text-sm font-semibold">You can ask, for example:</p>
+      <ul aria-labelledby="assistantExamples" className="mt-2 flex flex-wrap gap-2">
+        {EXAMPLE_QUESTIONS.map(example => <li key={example}><button type="button" className="min-h-12 rounded-full border border-border px-4 py-2 text-left text-sm underline-offset-4 hover:underline"
+          onClick={() => { setQuestion(example); setProblem(""); document.getElementById("assistantQuestion")?.focus(); }}>{example}</button></li>)}
+      </ul>
     </div>
     <div>
       <label htmlFor="assistantSeason" className="field-label">Which records</label>

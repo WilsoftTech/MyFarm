@@ -22,7 +22,7 @@ const exchange = (answers: AssistantExchange["answers"], question = "Which enter
 describe("an answer on screen (MYF-P11-AC001)", () => {
   it("labels each statement, fills every figure from the evidence and states where it came from", () => {
     const answer = shownAnswer({ evidence, statements: draftHighestProfitAnswer(evidence).statements, source: "PLAIN", explainer: "NOT_ASKED", problems: [] });
-    render(<ol><QuestionCard exchange={exchange([answer])} remove={vi.fn(async () => undefined)} /></ol>);
+    render(<ol><QuestionCard exchange={exchange([answer])} farmId="f1" remove={vi.fn(async () => undefined)} /></ol>);
     const card = screen.getByRole("article", { name: "Which enterprise made me the most money?" });
     expect(within(card).getAllByRole("listitem").map(item => item.textContent)).toEqual([
       "Fact from your recordsLayers house made the most money for season 2026A: a gross margin of UGX 1,420,000.",
@@ -31,13 +31,13 @@ describe("an answer on screen (MYF-P11-AC001)", () => {
       "Not certainGross margin is sales less the costs linked to each enterprise. It is not net profit: costs shared by the farm, depreciation and loans are not taken off.",
     ]);
     expect(statementText(answer, 0)).toBe("Layers house made the most money for season 2026A: a gross margin of UGX 1,420,000.");
-    expect(card).toHaveTextContent("Worked out by MyFarm from this farm's records: season 2026A, counted when sold or bought. Calculated 2026-11-12 09:00 UTC");
+    expect(card).toHaveTextContent("Worked out by MyFarm from the money figures on the farm screen: season 2026A, counted when sold or bought. Calculated 2026-11-12 09:00 UTC");
     expect(card).toHaveTextContent("Worded by MyFarm.");
     expect(card).toHaveTextContent("Kept until 2027-02-10, then deleted.");
     expect(within(card).getByRole("button", { name: "Delete this question" })).toBeInTheDocument();
   });
   it("a referral rests on no figures and says it is not certain; a question is shown as text, never as markup", () => {
-    render(<ol><QuestionCard exchange={exchange([shownAnswer(plainAnswer("AGRONOMY"))], "<b>spray</b> what?")} remove={vi.fn(async () => undefined)} /></ol>);
+    render(<ol><QuestionCard exchange={exchange([shownAnswer(plainAnswer("AGRONOMY"))], "<b>spray</b> what?")} farmId="f1" remove={vi.fn(async () => undefined)} /></ol>);
     const card = screen.getByRole("article", { name: "<b>spray</b> what?" });
     expect(within(card).getByRole("listitem")).toHaveTextContent("Not certain" + AGRONOMY_REFERRAL);
     expect(card).not.toHaveTextContent("Worked out by MyFarm");
