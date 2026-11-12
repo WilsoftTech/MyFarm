@@ -26,7 +26,7 @@ export interface EvidenceLabel { ref: string; kind: LabelKind; text: string; id:
 /** Each label kind has its own ref letter, so a placeholder reads the same in every tool. */
 export const LABEL_PREFIX: Record<LabelKind, string> = { ENTERPRISE: "E", CATEGORY: "C", RECORD_KIND: "K", ACTIVITY: "A", SEASON: "S", ALERT: "R", SUBJECT: "B" };
 
-export const NO_CONCLUSION_REASONS = ["NO_RECORDS", "NO_ENTERPRISE_LINKED", "NOT_A_SEASON", "NO_EARLIER_SEASON", "NOT_IN_BOTH_SEASONS", "NOTHING_CHECKED"] as const;
+export const NO_CONCLUSION_REASONS = ["NO_RECORDS", "NO_ENTERPRISE_LINKED", "NOT_A_SEASON", "NO_EARLIER_SEASON", "NOT_IN_BOTH_SEASONS", "NOTHING_CHECKED", "SOURCES_DISAGREE"] as const;
 export type NoConclusionReason = typeof NO_CONCLUSION_REASONS[number];
 export type Outcome =
   | {
@@ -113,3 +113,21 @@ export const refOf = (source: Pick<DraftSource, "figures">, measure: string, sub
   source.figures.find(row => row.measure === measure && row.subjectRef === subjectRef)?.ref;
 export const detailRefs = (outcome: Outcome, key: string): string[] => outcome.status === "ANSWERED" && Array.isArray(outcome.detail[key]) ? outcome.detail[key] as string[] : [];
 export const detailFlag = (outcome: Outcome, key: string): boolean => outcome.status === "ANSWERED" && outcome.detail[key] === true;
+
+/** One failed check of the farm screen's own reconciliation (Phase 8, R004): two paths gave different totals. */
+export interface SourceDisagreement { currency: string; expected: string; found: string }
+
+/**
+ * Contradictory sources (R003). When MyFarm's own checks disagree in this evidence's currency, no money figure in that
+ * currency may be stated as a fact: every one becomes a conflict, the two disagreeing totals are added so the answer
+ * can say what disagrees, and there is no conclusion. Evidence in another currency is unaffected.
+ */
+export function withDisagreements(evidence: Evidence, disagreements: readonly SourceDisagreement[]): Evidence {
+  const found = disagreements.find(row => row.currency === evidence.currency);
+  if (!found || !evidence.currency) return evidence;
+  const figures = [...evidence.figures];
+  const add = (measure: string, value: string) => { const ref = "F" + (figures.length + 1); figures.push({ ref, measure, kind: "MONEY", value, currency: evidence.currency, subjectRef: null }); return ref; };
+  add("CHECK_EXPECTED", found.expected); add("CHECK_FOUND", found.found);
+  const conflicts = figures.filter(row => row.kind === "MONEY" && row.currency === evidence.currency).map(row => row.ref);
+  return { ...evidence, figures, conflicts, outcome: { status: "NO_CONCLUSION", reason: "SOURCES_DISAGREE" } };
+}

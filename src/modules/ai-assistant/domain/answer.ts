@@ -27,7 +27,21 @@ export type AnswerProblem =
   | "BAD_BRACES"
   | "CLAIM_WITHOUT_FIGURE"
   | "CLAIM_WITHOUT_EVIDENCE"
-  | "CONCLUSION_NOT_CITED";
+  | "CONCLUSION_NOT_CITED"
+  | "UNSAFE_CERTAINTY"
+  | "FUTURE_AS_FACT"
+  | "AGRONOMY_NOT_UNCERTAIN"
+  | "CONFLICT_STATED_AS_FACT"
+  | "CONFLICT_NOT_DISCLOSED";
+
+/**
+ * MYF-P11-R003. A FACT is what the records say; an INFERENCE or RECOMMENDATION is never certain; crop and animal advice
+ * is only ever UNCERTAINTY with a referral (D-P11-005, P0643). These word lists are deliberately broad: a refused
+ * explanation costs nothing, because MyFarm's own plain answer is shown instead.
+ */
+export const CERTAINTY_WORDS = /\b(definitely|certainly|surely|guarantee[sd]?|always|never fails?|for sure|without (?:a |any )?doubt|no doubt|undoubtedly|proven|clearly will|absolutely)\b/i;
+export const FUTURE_WORDS = /\b(will|going to|next (?:season|year|month|week)|expect(?:ed|s)?|forecast\w*|predict\w*|likely to)\b/i;
+export const AGRONOMY_WORDS = /\b(spray\w*|fertili[sz]\w*|pesticides?|herbicides?|fungicides?|insecticides?|vaccin\w*|deworm\w*|antibiotics?|medicines?|medication|drugs?|doses?|dosage|treat(?:s|ed|ing|ment)?|chemicals?|seed rate|manure|lime|irrigat\w*|plant (?:more|now|earlier|later|less))\b/i;
 
 /** What an answer may cite, and what it must say when it answers. */
 export interface AnswerRules {
@@ -46,7 +60,7 @@ export interface AnswerRules {
 /** Every problem with an answer, each once, in a stable order; an empty list means it may be shown. */
 export function answerProblems(answer: Answer, rules: AnswerRules): AnswerProblem[] {
   const problems = new Set<AnswerProblem>();
-  const figures = new Set(rules.figureRefs), known = new Set([...rules.figureRefs, ...rules.labelRefs, PERIOD_REF]);
+  const figures = new Set(rules.figureRefs), known = new Set([...rules.figureRefs, ...rules.labelRefs, PERIOD_REF]), conflicts = new Set(rules.conflicts ?? []);
   if (answer.statements.length === 0) problems.add("EMPTY");
   if (answer.statements.length > MAX_STATEMENTS) problems.add("TOO_LONG");
   for (const statement of answer.statements) {
@@ -66,12 +80,18 @@ export function answerProblems(answer: Answer, rules: AnswerRules): AnswerProble
     const citesFigure = statement.refs.some(ref => figures.has(ref));
     if ((statement.kind === "FACT" || statement.kind === "INFERENCE") && !citesFigure) problems.add("CLAIM_WITHOUT_FIGURE");
     if (rules.conclusion === null && statement.kind !== "UNCERTAINTY") problems.add("CLAIM_WITHOUT_EVIDENCE");
+    if (statement.kind !== "FACT" && CERTAINTY_WORDS.test(words)) problems.add("UNSAFE_CERTAINTY");
+    if (statement.kind === "FACT" && (FUTURE_WORDS.test(words) || CERTAINTY_WORDS.test(words))) problems.add("FUTURE_AS_FACT");
+    if (statement.kind !== "UNCERTAINTY" && AGRONOMY_WORDS.test(words)) problems.add("AGRONOMY_NOT_UNCERTAIN");
+    if (statement.kind !== "UNCERTAINTY" && statement.refs.some(ref => conflicts.has(ref))) problems.add("CONFLICT_STATED_AS_FACT");
   }
+  // Contradictory sources (R003): when MyFarm's own checks disagree, the answer must say so, citing what disagrees.
+  if (conflicts.size && !answer.statements.some(statement => statement.kind === "UNCERTAINTY" && statement.refs.some(ref => conflicts.has(ref)))) problems.add("CONFLICT_NOT_DISCLOSED");
   if (rules.conclusion !== null) {
     const first = answer.statements.find(statement => statement.kind === "FACT");
     if (!first || rules.conclusion.some(ref => !first.refs.includes(ref))) problems.add("CONCLUSION_NOT_CITED");
   }
-  const order: AnswerProblem[] = ["EMPTY", "TOO_LONG", "DIGIT_IN_TEXT", "LINK_IN_TEXT", "UNKNOWN_REF", "PLACEHOLDER_NOT_CITED", "BAD_BRACES", "CLAIM_WITHOUT_FIGURE", "CLAIM_WITHOUT_EVIDENCE", "CONCLUSION_NOT_CITED"];
+  const order: AnswerProblem[] = ["EMPTY", "TOO_LONG", "DIGIT_IN_TEXT", "LINK_IN_TEXT", "UNKNOWN_REF", "PLACEHOLDER_NOT_CITED", "BAD_BRACES", "CLAIM_WITHOUT_FIGURE", "CLAIM_WITHOUT_EVIDENCE", "CONCLUSION_NOT_CITED", "UNSAFE_CERTAINTY", "FUTURE_AS_FACT", "AGRONOMY_NOT_UNCERTAIN", "CONFLICT_STATED_AS_FACT", "CONFLICT_NOT_DISCLOSED"];
   return order.filter(problem => problems.has(problem));
 }
 

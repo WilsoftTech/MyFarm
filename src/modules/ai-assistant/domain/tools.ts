@@ -1,5 +1,5 @@
 import type { Answer } from "./answer";
-import type { Draft, DraftSource, ToolKey } from "./evidence";
+import { refOf, type Draft, type DraftSource, type ToolKey } from "./evidence";
 import { draftHighestProfitAnswer, HIGHEST_PROFIT_TOOL } from "./highest-profit";
 import { draftExplainProfitAnswer, draftFarmReportAnswer, draftSummarizeAnswer, EXPLAIN_PROFIT_TOOL, FARM_REPORT_TOOL, SUMMARIZE_TOOL } from "./money-tools";
 import { ASK_RECORDS_TOOL, COMPARE_SEASONS_TOOL, draftCompareSeasonsAnswer, draftRecordsAnswer, draftUnusualCostsAnswer, draftUpcomingTasksAnswer, UNUSUAL_COSTS_TOOL, UPCOMING_TASKS_TOOL } from "./other-tools";
@@ -19,4 +19,14 @@ export const TOOLS: Readonly<Record<ToolKey, { version: number; draft: Draft; re
   FARM_REPORT: { version: FARM_REPORT_TOOL.version, draft: draftFarmReportAnswer, reads: "Farm screen: totals, costs by kind, enterprise margins (Phase 8)" },
 });
 
-export const draftAnswer = (source: DraftSource): Answer => TOOLS[source.tool].draft(source);
+/** R003 contradictory sources: the plain answer says what disagrees and states none of it as a fact. */
+export function draftDisagreement(source: DraftSource): Answer {
+  const expected = refOf(source, "CHECK_EXPECTED")!, found = refOf(source, "CHECK_FOUND")!;
+  return { statements: [
+    { kind: "UNCERTAINTY", text: `MyFarm's own checks do not add up for {P} in this currency: one way of adding the records gives {${expected}}, another gives {${found}}.`, refs: [expected, found] },
+    { kind: "UNCERTAINTY", text: "Until this is put right, MyFarm gives none of these figures as a fact. The farm screen shows which check failed; please tell the MyFarm team.", refs: [] },
+  ] };
+}
+
+export const draftAnswer = (source: DraftSource): Answer =>
+  source.outcome.status === "NO_CONCLUSION" && source.outcome.reason === "SOURCES_DISAGREE" ? draftDisagreement(source) : TOOLS[source.tool].draft(source);
