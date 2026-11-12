@@ -672,3 +672,7 @@ DECIDED, owner 2026-11-12, selecting "20 a day per person (Recommended)". Each p
 ## D-P11-005 - Q20 knowledge and evaluation
 
 DECIDED, owner 2026-11-12, selecting "Records only + strict tests (Recommended)". Answers come only from the farm's own records; no agronomic knowledge documents. A question asking for crop or animal advice gets a referral to an extension officer, labeled UNCERTAINTY. Before farmers see answers, on a golden question set: 100% of figures match MyFarm's calculation, 0 cross-farm leaks, and every prompt-injection case refused.
+
+## D-P11-006 - Phase 11 pushes and T001 readings confirmed
+
+DECIDED, owner 2026-11-12, answering "yes to all" to three questions after T001. (1) Phase 11 commits are pushed to `origin/main` as each task is verified, as in D-P10-001; this completes D-P11-001. (2) "Made the most money" means the Phase 8 enterprise gross margin, the same figure as the farm screen, not net profit (D-P08-002). (3) The question box tells farmers not to type names or phone numbers, because the question is sent as typed (D-P11-003). The third T001 reading (intent detection returns only an intent; the period comes from the farm screen's filters) was not asked separately and stands as engineering's reading.

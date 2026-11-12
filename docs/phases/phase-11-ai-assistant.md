@@ -4,9 +4,9 @@
 - Documentation review: REVIEWED - Phase 11 start and T001 evidence (2026-11-12).
 - Implementation status: PARTIALLY COMPLETE - 10% (1/10 verified tasks): MYF-P11-T001 verified locally.
 - Last reviewed: 2026-11-12 (Africa/Nairobi).
-- Related phase/task IDs: Phase 11; MYF-P11-T001 through MYF-P11-T010; Q20; D-P10-008; D-P11-001 through D-P11-005.
+- Related phase/task IDs: Phase 11; MYF-P11-T001 through MYF-P11-T010; Q20; D-P10-008; D-P11-001 through D-P11-006.
 - Verified completed work: T001 answer contract, highest-profit evidence tool, minimized explain request and Q20 policy (domain only, no schema, no provider).
-- Remaining work/blockers: T002-T010 and AC001-AC003. Pushing awaits the owner (D-P11-001); a provider must be chosen before farmers see answers (D-P11-002); Phase 10 conditions P10-C1, C2, C3, C5 carry over.
+- Remaining work/blockers: T002-T010 and AC001-AC003. Pushes per verified task (D-P11-006); a provider must be chosen before farmers see answers (D-P11-002); Phase 10 conditions P10-C1, C2, C3, C5 carry over.
 - Evidence/report links: [Phase 11 start and T001](../reports/phase-11-t001-2026-11-12.md); [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
 <!-- MYFARM-STATUS-END -->
 
