@@ -32,7 +32,22 @@ export type AnswerProblem =
   | "FUTURE_AS_FACT"
   | "AGRONOMY_NOT_UNCERTAIN"
   | "CONFLICT_STATED_AS_FACT"
-  | "CONFLICT_NOT_DISCLOSED";
+  | "CONFLICT_NOT_DISCLOSED"
+  | "ECHOES_QUESTION";
+
+/**
+ * Prompt injection: an explanation that repeats six or more words in a row of the farmer's question is refused,
+ * so an instruction hidden in a question cannot be parroted into an answer. Short phrases ("the most money") stay free.
+ */
+export const ECHO_WORDS = 6;
+const wordsOf = (text: string) => text.toLowerCase().replace(/\{[A-Z][0-9]{0,3}\}/g, " ").split(/[^\p{L}\p{N}']+/u).filter(Boolean);
+export function echoesQuestion(text: string, question: string): boolean {
+  const asked = wordsOf(question);
+  if (asked.length < ECHO_WORDS) return false;
+  const runs = new Set(asked.slice(0, asked.length - ECHO_WORDS + 1).map((_, i) => asked.slice(i, i + ECHO_WORDS).join(" ")));
+  const said = wordsOf(text);
+  return said.slice(0, Math.max(0, said.length - ECHO_WORDS + 1)).some((_, i) => runs.has(said.slice(i, i + ECHO_WORDS).join(" ")));
+}
 
 /**
  * MYF-P11-R003. A FACT is what the records say; an INFERENCE or RECOMMENDATION is never certain; crop and animal advice
@@ -55,6 +70,8 @@ export interface AnswerRules {
   conclusion: readonly string[] | null;
   /** Figures two of MyFarm's own calculations disagree on (R003); empty when they agree. */
   conflicts?: readonly string[];
+  /** The farmer's question, when known: an answer may not parrot it (prompt injection). */
+  question?: string;
 }
 
 /** Every problem with an answer, each once, in a stable order; an empty list means it may be shown. */
@@ -84,6 +101,7 @@ export function answerProblems(answer: Answer, rules: AnswerRules): AnswerProble
     if (statement.kind === "FACT" && (FUTURE_WORDS.test(words) || CERTAINTY_WORDS.test(words))) problems.add("FUTURE_AS_FACT");
     if (statement.kind !== "UNCERTAINTY" && AGRONOMY_WORDS.test(words)) problems.add("AGRONOMY_NOT_UNCERTAIN");
     if (statement.kind !== "UNCERTAINTY" && statement.refs.some(ref => conflicts.has(ref))) problems.add("CONFLICT_STATED_AS_FACT");
+    if (rules.question && echoesQuestion(statement.text, rules.question)) problems.add("ECHOES_QUESTION");
   }
   // Contradictory sources (R003): when MyFarm's own checks disagree, the answer must say so, citing what disagrees.
   if (conflicts.size && !answer.statements.some(statement => statement.kind === "UNCERTAINTY" && statement.refs.some(ref => conflicts.has(ref)))) problems.add("CONFLICT_NOT_DISCLOSED");
@@ -91,7 +109,7 @@ export function answerProblems(answer: Answer, rules: AnswerRules): AnswerProble
     const first = answer.statements.find(statement => statement.kind === "FACT");
     if (!first || rules.conclusion.some(ref => !first.refs.includes(ref))) problems.add("CONCLUSION_NOT_CITED");
   }
-  const order: AnswerProblem[] = ["EMPTY", "TOO_LONG", "DIGIT_IN_TEXT", "LINK_IN_TEXT", "UNKNOWN_REF", "PLACEHOLDER_NOT_CITED", "BAD_BRACES", "CLAIM_WITHOUT_FIGURE", "CLAIM_WITHOUT_EVIDENCE", "CONCLUSION_NOT_CITED", "UNSAFE_CERTAINTY", "FUTURE_AS_FACT", "AGRONOMY_NOT_UNCERTAIN", "CONFLICT_STATED_AS_FACT", "CONFLICT_NOT_DISCLOSED"];
+  const order: AnswerProblem[] = ["EMPTY", "TOO_LONG", "DIGIT_IN_TEXT", "LINK_IN_TEXT", "UNKNOWN_REF", "PLACEHOLDER_NOT_CITED", "BAD_BRACES", "CLAIM_WITHOUT_FIGURE", "CLAIM_WITHOUT_EVIDENCE", "CONCLUSION_NOT_CITED", "UNSAFE_CERTAINTY", "FUTURE_AS_FACT", "AGRONOMY_NOT_UNCERTAIN", "CONFLICT_STATED_AS_FACT", "CONFLICT_NOT_DISCLOSED", "ECHOES_QUESTION"];
   return order.filter(problem => problems.has(problem));
 }
 

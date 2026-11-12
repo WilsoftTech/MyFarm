@@ -8,7 +8,7 @@ import type { RegistryAuthorization } from "@/modules/farmer-registry/applicatio
 import { answerProblems } from "../domain/answer";
 import { plainAnswer, type StoredAnswer } from "../domain/exchange";
 import { explainRequest } from "../domain/explain-request";
-import { answerRules, type AssistantPeriod, type Evidence, type EvidenceScope } from "../domain/evidence";
+import { answerRules, withDisagreements, type AssistantPeriod, type Evidence, type EvidenceScope } from "../domain/evidence";
 import { highestProfitEvidence } from "../domain/highest-profit";
 import { explainProfitEvidence, farmReportEvidence, summarizeEvidence } from "../domain/money-tools";
 import { compareSeasonsEvidence, earlierSeason, recordsEvidence, unusualCostsEvidence, upcomingTasksEvidence, type CostAlertInput, type RecordInput, type TaskInput } from "../domain/other-tools";
@@ -64,14 +64,17 @@ export class AssistantService {
         const input = moneyInput(scope, screen.dashboard);
         const evidence = intent === "HIGHEST_PROFIT" ? highestProfitEvidence(input) : intent === "EXPLAIN_PROFIT" ? explainProfitEvidence(input)
           : intent === "SUMMARIZE" ? summarizeEvidence(input) : farmReportEvidence({ ...input, costGroups: screen.metrics.costGroups });
-        return evidence;
+        // R003 contradictory sources: a currency whose own checks fail gives no figure as fact.
+        return evidence.map(item => withDisagreements(item, screen.reconciliation.failures));
       }
       case "COMPARE_SEASONS": {
-        const current = await this.sources.dashboard(scope.farmId, view);
+        const screen = await this.sources.farmScreen(scope.farmId, view), current = screen.dashboard;
         if (!current.season) return compareSeasonsEvidence({ scope, basis: current.basis, asOf: current.asOf, current: null, earlier: null });
         const before = earlierSeason(current.seasons, current.season);
-        const earlier = before ? await this.sources.dashboard(scope.farmId, { basis: current.basis, seasonId: before.seasonId }) : null;
-        return compareSeasonsEvidence({ scope, basis: current.basis, asOf: current.asOf, current: { season: current.season, currencies: current.currencies }, earlier: before && earlier ? { season: before, currencies: earlier.currencies } : null });
+        const earlier = before ? await this.sources.farmScreen(scope.farmId, { basis: current.basis, seasonId: before.seasonId }) : null;
+        const disagreements = [...screen.reconciliation.failures, ...(earlier?.reconciliation.failures ?? [])];
+        return compareSeasonsEvidence({ scope, basis: current.basis, asOf: current.asOf, current: { season: current.season, currencies: current.currencies }, earlier: before && earlier ? { season: before, currencies: earlier.dashboard.currencies } : null })
+          .map(item => withDisagreements(item, disagreements));
       }
       case "ASK_RECORDS": {
         const page = await this.sources.records(scope.farmId);
@@ -101,6 +104,17 @@ export class AssistantService {
       for (const item of evidence) answers.push(await this.explain(command.question, item, usage));
     }
     return this.repo.record(scope, { requestId: command.requestId, question: command.question, intent, answers: { answersVersion: 1, answers }, provider: this.provider.name, model: usage.model, usage: usage.calls > 0 ? usage : null });
+  }
+
+  /**
+   * The evidence a question type would be answered from, worked out now and not stored: for the groundedness
+   * evaluation and audits (D-P11-005). Authorized like a question; counts against nothing and calls no provider.
+   */
+  async evidence(farmId: unknown, intent: unknown, view: unknown = {}): Promise<Evidence[]> {
+    const { scope } = await authorizeProductionFarm(this.auth, this.farms, farmId);
+    const parsed = detectedIntentSchema.safeParse({ intent });
+    if (!parsed.success || parsed.data.intent === "AGRONOMY" || parsed.data.intent === "UNSUPPORTED") throw new FoundationError("INVALID_INPUT");
+    return this.evidenceFor(parsed.data.intent, { tenantId: scope.tenantId, farmId: scope.farmId }, view);
   }
 
   async list(farmId: unknown): Promise<AssistantExchange[]> {
@@ -138,7 +152,7 @@ export class AssistantService {
     usage.costEstimateUsd = addDecimal(usage.costEstimateUsd, result.data.costEstimateUsd);
     const answer = explainedAnswerSchema.safeParse(result.data.output);
     if (!answer.success) return plain("REFUSED", ["MALFORMED"]);
-    const problems = answerProblems(answer.data, answerRules(evidence));
+    const problems = answerProblems(answer.data, { ...answerRules(evidence), question });
     if (problems.length) return plain("REFUSED", problems);
     return { evidence, statements: answer.data.statements, source: "EXPLAINER", explainer: "USED", problems: [] };
   }

@@ -1,16 +1,16 @@
 # Phase 11 AI Farm Assistant
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED - Phase 11 start to T007 evidence (2026-11-12).
-- Implementation status: PARTIALLY COMPLETE - 70% (7/10 verified tasks): MYF-P11-T001 to T007 verified locally.
+- Documentation review: REVIEWED - Phase 11 start to T008 evidence (2026-11-12).
+- Implementation status: PARTIALLY COMPLETE - 80% (8/10 verified tasks): MYF-P11-T001 to T008 verified locally.
 - Last reviewed: 2026-11-12 (Africa/Nairobi).
 - Related phase/task IDs: Phase 11; MYF-P11-T001 through MYF-P11-T010; Q20; D-P10-008; D-P11-001 through D-P11-006.
-- Verified completed work: T001-T003 R001 (AC001); T004-T006 R002 (AC002); T007 R003 label rules, contradictory sources and groundedness evaluation.
-- Remaining work/blockers: T008-T010 and AC001-AC003; migration 202611120003 not on hosted. Pushes per verified task (D-P11-006); a provider must be chosen before farmers see answers (D-P11-002); Phase 10 conditions P10-C1, C2, C3, C5 carry over.
-- Evidence/report links: [Phase 11 T007](../reports/phase-11-t007-2026-11-13.md); [Phase 11 T006](../reports/phase-11-t006-2026-11-13.md); [Phase 11 T005](../reports/phase-11-t005-2026-11-13.md); [Phase 11 T004](../reports/phase-11-t004-2026-11-13.md); [Phase 11 T003](../reports/phase-11-t003-2026-11-12.md); [Phase 11 T002](../reports/phase-11-t002-2026-11-12.md); [Phase 11 start and T001](../reports/phase-11-t001-2026-11-12.md); [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
+- Verified completed work: T001-T003 R001 (AC001); T004-T006 R002 (AC002); T007-T008 R003: label rules, contradictory sources, echo rule, groundedness gate met on real records.
+- Remaining work/blockers: T009-T010 and AC001-AC003; migration 202611120003 not on hosted. Pushes per verified task (D-P11-006); a provider must be chosen before farmers see answers (D-P11-002); Phase 10 conditions P10-C1, C2, C3, C5 carry over.
+- Evidence/report links: [Phase 11 T008](../reports/phase-11-t008-2026-11-13.md); [Phase 11 T007](../reports/phase-11-t007-2026-11-13.md); [Phase 11 T006](../reports/phase-11-t006-2026-11-13.md); [Phase 11 T005](../reports/phase-11-t005-2026-11-13.md); [Phase 11 T004](../reports/phase-11-t004-2026-11-13.md); [Phase 11 T003](../reports/phase-11-t003-2026-11-12.md); [Phase 11 T002](../reports/phase-11-t002-2026-11-12.md); [Phase 11 start and T001](../reports/phase-11-t001-2026-11-12.md); [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **IN PROGRESS - 7/10**; started 2026-11-12 (D-P11-001); Q20 decided (D-P11-002 to D-P11-005). Date: 2026-10-08. This is a specification, not implementation approval. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **IN PROGRESS - 8/10**; started 2026-11-12 (D-P11-001); Q20 decided (D-P11-002 to D-P11-005). Date: 2026-10-08. This is a specification, not implementation approval. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
