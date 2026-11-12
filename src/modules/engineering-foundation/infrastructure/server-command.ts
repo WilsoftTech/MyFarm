@@ -16,18 +16,20 @@ const messages: Record<FoundationError["code"], string> = {
 };
 
 /** Redirect only after the service commits; preserve input with safe feedback on failure. */
-export async function runServerCommand(work: () => Promise<string>, conflict?: string | (() => never), invalidInput?: string): Promise<CommandFailure> {
-  let destination: string;
+/** `rateLimited` replaces the per-minute message for a limit counted over a longer window (D-P11-004). */
+export async function runServerCommand(work: () => Promise<string>, conflict?: string | (() => never), invalidInput?: string, rateLimited?: string): Promise<CommandFailure> {
+  let destination: string, limitedByProxy = false;
   try {
     // The proxy counted this form save and found it over the person's limit (D-P09-014).
-    if ((await headers()).get(REQUEST_LIMITED_HEADER)) throw new FoundationError("RATE_LIMITED");
+    limitedByProxy = Boolean((await headers()).get(REQUEST_LIMITED_HEADER));
+    if (limitedByProxy) throw new FoundationError("RATE_LIMITED");
     destination = await work();
   }
   catch (error) {
     const code = error instanceof FoundationError ? error.code : "UNAVAILABLE";
     logSafe({ event: "request_failed", requestId: crypto.randomUUID(), code });
     if (code === "CONFLICT" && typeof conflict === "function") conflict();
-    return { ok: false, message: code === "CONFLICT" && typeof conflict === "string" ? conflict : code === "INVALID_INPUT" && invalidInput ? invalidInput : messages[code] };
+    return { ok: false, message: code === "CONFLICT" && typeof conflict === "string" ? conflict : code === "INVALID_INPUT" && invalidInput ? invalidInput : code === "RATE_LIMITED" && rateLimited && !limitedByProxy ? rateLimited : messages[code] };
   }
   redirect(destination);
 }

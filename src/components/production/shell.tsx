@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-const sections = { enterprises: "Enterprises", seasons: "Seasons", "crop-cycles": "Crop cycles", "poultry-batches": "Poultry batches", activities: "Activities", inventory: "Inventory", harvests: "Harvests", "storage-locations": "Stores", insights: "Alerts" } as const;
+const sections = { enterprises: "Enterprises", seasons: "Seasons", "crop-cycles": "Crop cycles", "poultry-batches": "Poultry batches", activities: "Activities", inventory: "Inventory", harvests: "Harvests", "storage-locations": "Stores", insights: "Alerts", assistant: "Ask" } as const;
 
 export function ProductionShell({ farm, active, title, children }: { farm: { farmId: string; name: string }; active: keyof typeof sections; title: string; children: ReactNode }) {
   return <section className="min-w-0 break-words">

@@ -1,16 +1,16 @@
 # Phase 11 AI Farm Assistant
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED - Phase 11 start, T001 and T002 evidence (2026-11-12).
-- Implementation status: PARTIALLY COMPLETE - 20% (2/10 verified tasks): MYF-P11-T001 and T002 verified locally.
+- Documentation review: REVIEWED - Phase 11 start to T003 evidence (2026-11-12).
+- Implementation status: PARTIALLY COMPLETE - 30% (3/10 verified tasks): MYF-P11-T001 to T003 verified locally.
 - Last reviewed: 2026-11-12 (Africa/Nairobi).
 - Related phase/task IDs: Phase 11; MYF-P11-T001 through MYF-P11-T010; Q20; D-P10-008; D-P11-001 through D-P11-006.
-- Verified completed work: T001 answer contract, highest-profit evidence tool, minimized explain request and Q20 policy; T002 authorized service, API, migration 202611120003 with runtime policy, fake provider, limit, retention and export.
-- Remaining work/blockers: T003-T010 and AC001-AC003; migration 202611120003 not on hosted. Pushes per verified task (D-P11-006); a provider must be chosen before farmers see answers (D-P11-002); Phase 10 conditions P10-C1, C2, C3, C5 carry over.
-- Evidence/report links: [Phase 11 T002](../reports/phase-11-t002-2026-11-12.md); [Phase 11 start and T001](../reports/phase-11-t001-2026-11-12.md); [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
+- Verified completed work: T001 answer contract and evidence; T002 authorized service, API, migration 202611120003, fake provider, limit, retention, export; T003 Ask page with labeled answers, sources and delete; AC001 verified locally.
+- Remaining work/blockers: T004-T010 and AC001-AC003; migration 202611120003 not on hosted. Pushes per verified task (D-P11-006); a provider must be chosen before farmers see answers (D-P11-002); Phase 10 conditions P10-C1, C2, C3, C5 carry over.
+- Evidence/report links: [Phase 11 T003](../reports/phase-11-t003-2026-11-12.md); [Phase 11 T002](../reports/phase-11-t002-2026-11-12.md); [Phase 11 start and T001](../reports/phase-11-t001-2026-11-12.md); [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **IN PROGRESS - 2/10**; started 2026-11-12 (D-P11-001); Q20 decided (D-P11-002 to D-P11-005). Date: 2026-10-08. This is a specification, not implementation approval. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **IN PROGRESS - 3/10**; started 2026-11-12 (D-P11-001); Q20 decided (D-P11-002 to D-P11-005). Date: 2026-10-08. This is a specification, not implementation approval. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
