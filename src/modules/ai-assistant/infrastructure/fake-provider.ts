@@ -1,4 +1,4 @@
-import type { AssistantProvider } from "../contracts/assistant";
+import type { AssistantProvider, Intent } from "../contracts/assistant";
 import type { ExplainRequest } from "../domain/explain-request";
 import { draftAnswer } from "../domain/tools";
 
@@ -9,13 +9,24 @@ import { draftAnswer } from "../domain/tools";
  */
 export const FAKE_PROVIDER = "FAKE", FAKE_MODEL = "fake-explainer-1";
 
-const MONEY = /\b(most money|profit\w*|margin|earn\w*|made (?:me )?(?:the )?most|best enterprise|highest income|which (?:enterprise|farm|crop|business) (?:made|did best|pays))\b/i;
-const ADVICE = /\b(plant\w*|spray\w*|fertili[sz]\w*|disease\w*|pests?|vaccin\w*|seeds?|treat\w*|medicine|drugs?|weed\w*|soil|sick|dying|manure|varieties|variety)\b/i;
+/**
+ * Plain keyword patterns, tried in order; the first that matches decides. A real provider will be judged on the same
+ * question corpus (tests/unit/ai-assistant-intents.test.ts) before farmers see it.
+ */
+const PATTERNS: readonly [Intent, RegExp][] = [
+  ["HIGHEST_PROFIT", /\b(most money|best enterprise|highest (?:profit|income|margin)|which (?:enterprise|farm|crop|business|one) (?:made|earned|did best|pays|is (?:best|most profitable))|most profitable)\b/i],
+  ["COMPARE_SEASONS", /\b(compare|comparison|versus|vs\.?|last season|previous season|season before|than last)\b/i],
+  ["UNUSUAL_COSTS", /\b(unusual|strange|odd|abnormal|too (?:high|much)|rising|going up|spending too much)\b.*\b(costs?|spend\w*|expenses?)\b|\b(costs?|spend\w*|expenses?)\b.*\b(unusual|strange|abnormal|too (?:high|much)|rising|going up)\b/i],
+  ["UPCOMING_TASKS", /\b(tasks?|to ?do|upcoming|due|coming up|scheduled?|activities|what (?:work|should i do) (?:is )?(?:next|this week|today))\b/i],
+  ["FARM_REPORT", /\b(report|statement|breakdown)\b/i],
+  ["SUMMARIZE", /\b(summary|summari[sz]e|overview|how (?:is|are) (?:my|the|things on the) farm|how am i doing|performance)\b/i],
+  ["EXPLAIN_PROFIT", /\b(profit\w*|surplus|margin|earn\w*|make money|made money|money did i make|making money|losing money|in profit|at a loss)\b/i],
+  ["ASK_RECORDS", /\b(records?|transactions?|latest (?:sales?|expenses?|entries)|recent (?:sales?|expenses?|entries)|what did i (?:sell|buy|spend|pay)|show me my)\b/i],
+  ["AGRONOMY", /\b(plant\w*|spray\w*|fertili[sz]\w*|disease\w*|pests?|vaccin\w*|seeds?|treat\w*|medicine|drugs?|weed\w*|soil|sick|dying|manure|varieties|variety|armyworm|blight)\b/i],
+];
 
-export function fakeIntentOf(question: string): "HIGHEST_PROFIT" | "AGRONOMY" | "UNSUPPORTED" {
-  if (MONEY.test(question)) return "HIGHEST_PROFIT";
-  if (ADVICE.test(question)) return "AGRONOMY";
-  return "UNSUPPORTED";
+export function fakeIntentOf(question: string): Intent {
+  return PATTERNS.find(([, pattern]) => pattern.test(question))?.[0] ?? "UNSUPPORTED";
 }
 
 export function fakeExplanation(request: ExplainRequest) {

@@ -1,22 +1,40 @@
 import { idSchema } from "@/modules/engineering-foundation/contracts/identity";
 import type { RequestLimitPort } from "@/modules/engineering-foundation/contracts/request-limits";
 import { FoundationError } from "@/modules/engineering-foundation/domain/errors";
-import type { DashboardView } from "@/modules/analytics-profitability/contracts/profitability";
+import type { DashboardView, FarmScreen } from "@/modules/analytics-profitability/contracts/profitability";
+import { farmToday } from "@/modules/farm-activities/domain/activity";
 import { authorizeProductionFarm, parseProductionInput as parse, type ProductionFarmAccess } from "@/modules/enterprises-seasons/application/farm-access";
 import type { RegistryAuthorization } from "@/modules/farmer-registry/application/registry";
 import { answerProblems } from "../domain/answer";
 import { plainAnswer, type StoredAnswer } from "../domain/exchange";
 import { explainRequest } from "../domain/explain-request";
-import { answerRules, type AssistantPeriod, type Evidence } from "../domain/evidence";
+import { answerRules, type AssistantPeriod, type Evidence, type EvidenceScope } from "../domain/evidence";
 import { highestProfitEvidence } from "../domain/highest-profit";
+import { explainProfitEvidence, farmReportEvidence, summarizeEvidence } from "../domain/money-tools";
+import { compareSeasonsEvidence, earlierSeason, recordsEvidence, unusualCostsEvidence, upcomingTasksEvidence, type CostAlertInput, type RecordInput, type TaskInput } from "../domain/other-tools";
 import { draftAnswer } from "../domain/tools";
 import { askQuestionSchema, detectedIntentSchema, explainedAnswerSchema, explainerResultSchema, MAX_LISTED_QUESTIONS, type AssistantExchange, type AssistantProvider, type AssistantRepository, type AssistantUsageRecord, type Intent } from "../contracts/assistant";
 
 /** Questions are counted per person (D-P11-004), on the database clock. */
 export type QuestionLimits = Pick<RequestLimitPort, "take">;
 const UNLIMITED: QuestionLimits = { take: async () => true };
-/** The farm screen's own figures, through its authorized service (D-P08-008); the assistant never queries records itself. */
-export interface DashboardSource { dashboard(farmId: unknown, input: unknown): Promise<DashboardView> }
+/**
+ * Where the tools read: only the farm's own authorized services, each re-checking the asker's membership (R002).
+ * The assistant never queries records itself, never writes and never makes a file.
+ */
+export interface FarmSources {
+  /** The farm screen (Phase 8, D-P08-008): dashboard, metrics and reconciliation for one view. */
+  farmScreen(farmId: string, view: unknown): Promise<FarmScreen>;
+  dashboard(farmId: string, view: unknown): Promise<DashboardView>;
+  /** Latest money records, newest first (Phase 4). */
+  records(farmId: string): Promise<{ items: RecordInput[]; more: boolean }>;
+  /** Open alerts of the approved cost rules (Phase 10). */
+  costAlerts(farmId: string): Promise<{ alerts: CostAlertInput[]; checked: number; notJudged: number }>;
+  /** Work due from today, soonest first, and work past its date (Phase 6). */
+  tasks(farmId: string): Promise<{ due: TaskInput[]; missed: TaskInput[]; moreDue: boolean; moreMissed: boolean }>;
+}
+/** The farm screen's figures as tool input. */
+const moneyInput = (scope: EvidenceScope, view: DashboardView) => ({ scope, basis: view.basis, period: periodOf(view), asOf: view.asOf, currencies: view.currencies });
 /** How long a provider may take before MyFarm's own answer is shown instead. */
 export const PROVIDER_TIMEOUT_MS = 20_000;
 
@@ -29,12 +47,40 @@ export class AssistantService {
   constructor(
     private readonly auth: RegistryAuthorization,
     private readonly farms: ProductionFarmAccess,
-    private readonly dashboards: DashboardSource,
+    private readonly sources: FarmSources,
     private readonly repo: AssistantRepository,
     private readonly provider: AssistantProvider,
     private readonly limits: QuestionLimits = UNLIMITED,
     private readonly timeoutMs: number = PROVIDER_TIMEOUT_MS,
+    private readonly now: () => Date = () => new Date(),
   ) {}
+
+  /** MYF-P11-R002: the bounded, read-only tool for each question type. */
+  private async evidenceFor(intent: Exclude<Intent, "AGRONOMY" | "UNSUPPORTED">, scope: EvidenceScope, view: unknown): Promise<Evidence[]> {
+    const asOf = this.now().toISOString();
+    switch (intent) {
+      case "HIGHEST_PROFIT": case "EXPLAIN_PROFIT": case "SUMMARIZE": case "FARM_REPORT": {
+        const screen = await this.sources.farmScreen(scope.farmId, view);
+        const input = moneyInput(scope, screen.dashboard);
+        const evidence = intent === "HIGHEST_PROFIT" ? highestProfitEvidence(input) : intent === "EXPLAIN_PROFIT" ? explainProfitEvidence(input)
+          : intent === "SUMMARIZE" ? summarizeEvidence(input) : farmReportEvidence({ ...input, costGroups: screen.metrics.costGroups });
+        return evidence;
+      }
+      case "COMPARE_SEASONS": {
+        const current = await this.sources.dashboard(scope.farmId, view);
+        if (!current.season) return compareSeasonsEvidence({ scope, basis: current.basis, asOf: current.asOf, current: null, earlier: null });
+        const before = earlierSeason(current.seasons, current.season);
+        const earlier = before ? await this.sources.dashboard(scope.farmId, { basis: current.basis, seasonId: before.seasonId }) : null;
+        return compareSeasonsEvidence({ scope, basis: current.basis, asOf: current.asOf, current: { season: current.season, currencies: current.currencies }, earlier: before && earlier ? { season: before, currencies: earlier.currencies } : null });
+      }
+      case "ASK_RECORDS": {
+        const page = await this.sources.records(scope.farmId);
+        return recordsEvidence({ scope, asOf, records: page.items, more: page.more });
+      }
+      case "UNUSUAL_COSTS": return unusualCostsEvidence({ scope, asOf, ...await this.sources.costAlerts(scope.farmId) });
+      case "UPCOMING_TASKS": return upcomingTasksEvidence({ scope, asOf, today: farmToday(this.now()), ...await this.sources.tasks(scope.farmId) });
+    }
+  }
 
   async ask(farmId: unknown, input: unknown): Promise<AssistantExchange> {
     const { scope } = await authorizeProductionFarm(this.auth, this.farms, farmId);
@@ -46,15 +92,13 @@ export class AssistantService {
     const intent = await this.detect(command.question);
     const usage: AssistantUsageRecord = { provider: this.provider.name, model: null, calls: 0, inputTokens: 0, outputTokens: 0, costEstimateUsd: "0" };
     let answers: StoredAnswer[];
-    if (intent === "HIGHEST_PROFIT") {
-      const view = await this.dashboards.dashboard(scope.farmId, command.view ?? {});
-      const evidence = highestProfitEvidence({ scope: { tenantId: scope.tenantId, farmId: scope.farmId }, basis: view.basis, period: periodOf(view), asOf: view.asOf, currencies: view.currencies });
-      answers = [];
-      // One currency at a time, in order, so a slow provider never runs several calls at once for one person.
-      for (const item of evidence) answers.push(await this.explain(command.question, item, usage));
+    if (intent === "AGRONOMY" || intent === "UNSUPPORTED") {
+      answers = [plainAnswer(intent)];
     } else {
-      // Question types without a tool yet are answered as unsupported, never guessed (T005 connects them).
-      answers = [plainAnswer(intent === "AGRONOMY" ? "AGRONOMY" : "UNSUPPORTED")];
+      const evidence = await this.evidenceFor(intent, { tenantId: scope.tenantId, farmId: scope.farmId }, command.view ?? {});
+      answers = [];
+      // One evidence at a time, in order, so a slow provider never runs several calls at once for one person.
+      for (const item of evidence) answers.push(await this.explain(command.question, item, usage));
     }
     return this.repo.record(scope, { requestId: command.requestId, question: command.question, intent, answers: { answersVersion: 1, answers }, provider: this.provider.name, model: usage.model, usage: usage.calls > 0 ? usage : null });
   }

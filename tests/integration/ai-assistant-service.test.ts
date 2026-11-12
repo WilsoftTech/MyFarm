@@ -19,6 +19,11 @@ import { FarmProfitabilityService } from "@/modules/analytics-profitability/appl
 import { metricFactsRepository } from "@/modules/analytics-profitability/infrastructure/metric-facts-repository";
 import { dashboardSeasonRepository } from "@/modules/analytics-profitability/infrastructure/repository";
 import { AssistantService } from "@/modules/ai-assistant/application/assistant";
+import { sourcesFrom } from "@/modules/ai-assistant/application/sources";
+import { FarmIntelligenceService } from "@/modules/farm-intelligence/application/insights";
+import { insightRepository } from "@/modules/farm-intelligence/infrastructure/insight-repository";
+import { ActivityService } from "@/modules/farm-activities/application/activity";
+import { activityRepository } from "@/modules/farm-activities/infrastructure/activity-repository";
 import { assistantRepository } from "@/modules/ai-assistant/infrastructure/assistant-repository";
 import { fakeExplanation, fakeProvider, FAKE_MODEL } from "@/modules/ai-assistant/infrastructure/fake-provider";
 import type { AssistantExchange, AssistantProvider } from "@/modules/ai-assistant/contracts/assistant";
@@ -48,7 +53,13 @@ const accounts = (who: Who) => new FarmAccountingService(auth(who), registryRepo
 const now = new Date("2026-11-12T09:00:00.000Z");
 const dashboards = (who: Who) => new FarmProfitabilityService(auth(who), registryRepository(runtime), farmReportRepository(runtime), dashboardSeasonRepository(runtime), metricFactsRepository(runtime), () => now);
 const assistant = (who: Who = "a", provider: AssistantProvider = fakeProvider, timeoutMs?: number) =>
-  new AssistantService(auth(who), registryRepository(runtime), dashboards(who), assistantRepository(runtime), provider, requestLimits(runtime), timeoutMs);
+  new AssistantService(auth(who), registryRepository(runtime), sources(who), assistantRepository(runtime), provider, requestLimits(runtime), timeoutMs, () => now);
+/** The same wiring as the app, with every service built for the asking person on the restricted runtime role. */
+const sources = (who: Who) => sourcesFrom({
+  profitability: dashboards(who), accounting: accounts(who),
+  intelligence: new FarmIntelligenceService(auth(who), registryRepository(runtime), insightRepository(runtime), () => now),
+  activities: new ActivityService(auth(who), registryRepository(runtime), activityRepository(runtime), () => now),
+});
 const seed = { feed: "f4040002-0000-4000-8000-000000000112", fertilizer: "f4040002-0000-4000-8000-000000000111", cropSales: "f4040002-0000-4000-8000-000000000204", eggSales: "f4040002-0000-4000-8000-000000000202" };
 let tenantA: string, tenantB: string, farm: string, empty: string, farmB: string, season: string, seasonB: string, poultry: string, maize: string;
 const QUESTION = "Which enterprise made me the most money?";
@@ -60,7 +71,7 @@ const usageOf = (farmId: string) => owner.assistantUsage.findMany({ where: { far
 const said = (answer: ShownAnswer) => answer.statements.map(statement => statement.kind + ": " + statement.parts.map(part => {
   if (part.type === "TEXT") return part.text;
   const value = answer.values[part.ref];
-  return value.kind === "MONEY" ? value.currency + " " + value.amount : value.kind === "LABEL" ? value.text : value.kind === "PERIOD" ? (value.period.kind === "SEASON" ? value.period.label : value.period.kind) : value.value;
+  return value.kind === "MONEY" ? value.currency + " " + value.amount : value.kind === "LABEL" ? value.text : value.kind === "PERIOD" ? (value.period.kind === "SEASON" ? value.period.label : value.period.kind) : value.kind === "PERCENT" ? value.value + "%" : value.value;
 }).join(""));
 const provider = (explain: AssistantProvider["explainer"]["explain"], detect: AssistantProvider["detector"]["detect"] = fakeProvider.detector.detect): AssistantProvider => ({ name: "TEST", detector: { detect }, explainer: { explain } });
 
@@ -268,5 +279,107 @@ describe("the app's database role (runtime policy)", () => {
     await expect(runtime.$executeRaw`UPDATE "AssistantUsage" SET calls = 0 WHERE "farmId" = ${farm}::uuid`).rejects.toThrow();
     await expect(runtime.$executeRaw`DELETE FROM "AssistantUsage" WHERE "farmId" = ${farm}::uuid`).rejects.toThrow();
     await expect(owner.$executeRaw`INSERT INTO "AssistantQuestion" (id, "tenantId", "farmId", "actorId", "requestId", question, intent, answers, provider) VALUES (${id()}::uuid, ${tenantA}::uuid, ${farm}::uuid, ${users.a}::uuid, ${id()}::uuid, 'q', 'UNSUPPORTED', '{"answers":[]}'::jsonb, 'FAKE')`).rejects.toThrow();
+  });
+});
+
+describe("MYF-P11-AC002 the seven question types on real records (P11-T005)", () => {
+  let earlier: string, batch: string;
+  const downProvider = provider(async () => { throw new Error("provider down"); });
+  const questions = {
+    ASK_RECORDS: "Show me my latest records", EXPLAIN_PROFIT: "How much profit did I make?", COMPARE_SEASONS: "Compare this season with the last season",
+    SUMMARIZE: "Give me a summary of the farm", UNUSUAL_COSTS: "Are any costs unusual?", UPCOMING_TASKS: "What tasks are coming up?", FARM_REPORT: "Make me a farm report",
+  } as const;
+  beforeAll(async () => {
+    // An earlier season with its own records, for comparing seasons: 500,000 earned, 100,000 spent.
+    earlier = (await production("a").createSeason(farm, { requestId: id(), label: "2025B", startDate: "2025-08-01" })).seasonId;
+    for (const [kind, categoryId, amount] of [["SALE", seed.eggSales, "500000"], ["EXPENSE", seed.feed, "100000"]] as const) {
+      await accounts("a").recordTransaction(kind, farm, { requestId: id(), categoryId, amount, currency: "UGX", occurredOn: "2025-09-01", enterpriseId: poultry, seasonId: earlier });
+    }
+    // Work: one due in two days, one past its date.
+    const activities = new ActivityService(auth("a"), registryRepository(runtime), activityRepository(runtime), () => now);
+    await activities.schedule(farm, { requestId: id(), type: "SPRAYING", dueOn: "2026-11-14", enterpriseId: maize });
+    await activities.schedule(farm, { requestId: id(), type: "VACCINATION", dueOn: "2026-11-01", enterpriseId: poultry });
+    // The Phase 10 source example on a batch: eggs down about 13%, feed cost per bird up about 23% (one cost alert).
+    const animal = await owner.animalTypeCatalog.findFirstOrThrow();
+    batch = (await owner.poultryBatch.create({ data: { tenantId: tenantA, farmId: farm, enterpriseId: poultry, animalTypeId: animal.id, animalTypeName: animal.name, batchLabel: "Layers A", batchLabelKey: "layers a", startingQuantity: 500, acquisitionDate: new Date("2026-08-01T00:00:00Z"), purpose: "EGGS", createdBy: users.a } })).id;
+    const location = await owner.storageLocation.create({ data: { tenantId: tenantA, farmId: farm, name: "Egg store", nameKey: "egg store", createdBy: users.a } });
+    const day = (from: string, index: number) => new Date(Date.parse(from + "T00:00:00Z") + index * 86_400_000);
+    await owner.productionEvent.createMany({ data: [
+      ...Array.from({ length: 28 }, (_, i) => ({ quantity: "400", occurredOn: day("2026-09-17", i) })),
+      ...Array.from({ length: 28 }, (_, i) => ({ quantity: i < 13 ? "349" : "348", occurredOn: day("2026-10-15", i) })),
+    ].map(row => ({ id: id(), tenantId: tenantA, farmId: farm, batchId: batch, locationId: location.id, type: "EGGS" as const, unit: "EGG", requestHash: id().replaceAll("-", "").padEnd(64, "0"), createdBy: users.a, ...row })) });
+    for (const [amount, occurredOn] of [["250000", "2026-09-21"], ["250000", "2026-10-05"], ["306900", "2026-10-19"], ["306900", "2026-11-02"]]) {
+      await accounts("a").recordTransaction("EXPENSE", farm, { requestId: id(), categoryId: seed.feed, amount, currency: "UGX", occurredOn, batchId: batch, enterpriseId: poultry });
+    }
+  }, 120_000);
+  afterAll(async () => {
+    for (const table of ["FarmInsight", "ProductionEvent", "ProductionActivity"]) await owner.$executeRawUnsafe(`DELETE FROM "${table}" WHERE "tenantId" = $1::uuid`, tenantA);
+    await owner.accountingRecord.deleteMany({ where: { tenantId: tenantA, batchId: batch } });
+    await owner.poultryBatch.deleteMany({ where: { tenantId: tenantA } }); await owner.storageLocation.deleteMany({ where: { tenantId: tenantA } });
+  });
+
+  it("the fake recognises each question, and each answer comes from the right tool with its provenance", async () => {
+    const answered: Record<string, string[]> = {};
+    for (const [intent, question] of Object.entries(questions)) {
+      const exchange = await ask("a", farm, { question });
+      expect([exchange.intent, exchange.answers[0].provenance?.tool]).toEqual([intent, intent]);
+      expect(exchange.answers[0].provenance).toMatchObject({ toolVersion: 1 });
+      answered[intent] = said(exchange.answers[0]);
+    }
+    expect(answered.EXPLAIN_PROFIT.slice(0, 2)).toEqual([
+      "FACT: For 2026A, money earned was UGX 3000000 and money spent was UGX 1280000, so the recorded surplus is UGX 1720000.",
+      "FACT: The surplus is 57.3% of the money earned.",
+    ]);
+    expect(answered.COMPARE_SEASONS[0]).toBe("FACT: The recorded surplus was UGX 1720000 in 2026A and UGX 400000 in 2025B: a change of UGX 1320000.");
+    expect(answered.SUMMARIZE.slice(0, 3)).toEqual([
+      "FACT: For 2026A, money earned was UGX 3000000 and money spent was UGX 1280000, so the recorded surplus is UGX 1720000.",
+      "FACT: Layers house had the highest gross margin: UGX 1420000.",
+      "FACT: Enterprises with money records: 2. Of those, enterprises with a gross margin below zero: 0.",
+    ]);
+    expect(answered.FARM_REPORT[0]).toBe(answered.SUMMARIZE[0]);
+    expect(answered.FARM_REPORT.at(-1)).toBe("UNCERTAINTY: The assistant does not make files. To download your records, use the money summary or the full farm export on the farm's own pages.");
+    expect(answered.ASK_RECORDS[0]).toBe("FACT: Your latest money records, newest first:");
+    expect(answered.ASK_RECORDS[1]).toMatch(/^FACT: 2026-11-02: Expense, .+, UGX 306900, for Layers house\.$/);
+    expect(answered.UNUSUAL_COSTS[0]).toBe("FACT: Cost alerts open on this farm: 1.");
+    expect(answered.UNUSUAL_COSTS[1]).toMatch(/^FACT: Fewer eggs while feed costs more, Layers A: feed cost per bird went from UGX [\d.]+ to UGX [\d.]+, a change of [\d.]+%\.$/);
+    expect(answered.UPCOMING_TASKS[0]).toBe("FACT: Farm work due from 2026-11-12 and not yet done: 1.");
+    expect(answered.UPCOMING_TASKS[1]).toMatch(/^FACT: .+ for Maize hill, due 2026-11-14\.$/);
+    expect(answered.UPCOMING_TASKS.slice(2)).toEqual(["FACT: Work past its date and not marked done: 1.", expect.stringMatching(/^FACT: .+ for Layers house was due on 2026-11-01 and is not marked done\.$/)]);
+  });
+
+  it("stale context: an answer keeps the figures it was given; asking again after records change gives the new ones", async () => {
+    const before = await ask("a", farm, { question: questions.EXPLAIN_PROFIT });
+    const sale = await accounts("a").recordTransaction("SALE", farm, { requestId: id(), categoryId: seed.eggSales, amount: "100000", currency: "UGX", occurredOn: "2026-06-03", enterpriseId: poultry, seasonId: season });
+    try {
+      const after = await ask("a", farm, { question: questions.EXPLAIN_PROFIT });
+      expect(said(after.answers[0])[0]).toContain("so the recorded surplus is UGX 1820000.");
+      const kept = (await assistant().list(farm)).find(row => row.questionId === before.questionId)!;
+      expect(said(kept.answers[0])[0]).toContain("so the recorded surplus is UGX 1720000.");
+    } finally {
+      await owner.accountingRecord.delete({ where: { id: sale.recordId } });
+    }
+  });
+
+  it("denied exports: a report makes no file, no export receipt and no export count; a removed member gets nothing", async () => {
+    const exports = () => Promise.all([owner.auditEvent.count({ where: { actorId: users.a, action: { contains: "EXPORT" } } }), owner.requestCount.count({ where: { subject: users.a, action: { in: ["MONEY_EXPORT", "FARM_EXPORT"] } } })]);
+    const counts = await exports();
+    const report = await ask("a", farm, { question: questions.FARM_REPORT });
+    expect(JSON.stringify(report)).not.toMatch(/\.csv|https?:|\/api\//);
+    expect(await exports()).toEqual(counts);
+    await owner.farmMember.updateMany({ where: { userId: users.a, farmId: farm }, data: { status: "REVOKED" } });
+    try {
+      for (const question of Object.values(questions)) await expect(ask("a", farm, { question })).rejects.toMatchObject({ code: "FORBIDDEN" });
+      await expect(assistant().list(farm)).rejects.toMatchObject({ code: "FORBIDDEN" });
+    } finally {
+      await owner.farmMember.updateMany({ where: { userId: users.a, farmId: farm }, data: { status: "ACTIVE" } });
+    }
+  });
+
+  it("provider outage: every question type still gets MyFarm's own answer, word for word", async () => {
+    for (const question of Object.values(questions)) {
+      const fine = await ask("a", farm, { question }), down = await ask("a", farm, { question }, downProvider);
+      expect(down.answers.map(answer => answer.source)).toEqual(down.answers.map(() => "PLAIN"));
+      expect(down.answers.map(said)).toEqual(fine.answers.map(said));
+    }
   });
 });
