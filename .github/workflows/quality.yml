@@ -40,8 +40,8 @@ jobs:
         env:
           TZ: Africa/Nairobi
       - run: npx prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code
-      - name: Non-UTC voice confirmation and input verification
-        run: npm run test:integration -- tests/integration/voice-drafts.test.ts tests/integration/voice-input.test.ts
+      - name: Non-UTC voice and weather confirmation verification
+        run: npm run test:integration -- tests/integration/voice-drafts.test.ts tests/integration/voice-input.test.ts tests/integration/weather-service.test.ts
         env:
           TZ: Africa/Nairobi
       - name: Stock recovery rehearsal

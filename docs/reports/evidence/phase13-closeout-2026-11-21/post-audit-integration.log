@@ -1,0 +1,11 @@
+> myfarm@0.1.0 test:integration
+> vitest run --project integration
+
+
+ RUN  v5.0.3 D:/Myfarm
+
+
+ Test Files  41 passed (41)
+      Tests  439 passed (439)
+   Start at  23:59:47
+   Duration  214.35s (tests 90%, import 8%, transform 1%)

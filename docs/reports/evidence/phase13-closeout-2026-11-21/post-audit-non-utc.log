@@ -1,0 +1,11 @@
+> myfarm@0.1.0 test:integration
+> vitest run --project integration tests/integration/weather-service.test.ts tests/integration/activity-service.test.ts tests/integration/activity-lifecycle.test.ts
+
+
+ RUN  v5.0.3 D:/Myfarm
+
+
+ Test Files  3 passed (3)
+      Tests  43 passed (43)
+   Start at  00:06:26
+   Duration  16.25s (tests 84%, import 10%, transform 6%)

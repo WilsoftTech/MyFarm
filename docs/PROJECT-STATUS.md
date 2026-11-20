@@ -3,16 +3,18 @@
 Hosted development follow-up, 2026-11-20: all five pending Phase 10-12 migrations and all 18 ordered provider policy files applied after an approved backup and successful 43-table application restore rehearsal. Existing records preserved; restricted runtime and browser denial checks pass; migration status is up to date. Drift remains limited to the documented Phase 3 legacy `LivestockBatch` table, preserved intentionally. Hosted CI passed for `6ad820a`; full hosted application journeys and production deployment remain unverified. [Evidence and limits](reports/phase-12-migration-push-2026-11-20.md#successful-authorized-retry---2026-11-20).
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED - Phase 12 T003-T010 implementation, full local audit and approved staged scope; historical evidence preserved.
-- Implementation status: REFERENCE ONLY - N/A (verified project progress).
-- Last reviewed: 2026-11-20 (Africa/Nairobi).
-- Related phase/task IDs: MYF-P12-T001 through T010; D-P12-001 through D-P12-003.
-- Verified completed work: Phase 12 software complete (10/10), PASS WITH CONDITIONS - LOCAL VERIFICATION, test-adapter/text-fallback scope.
-- Remaining work/blockers: P12-C1 through C6; real speech/language accuracy, hosted operations/CI, owner acceptance and inherited release conditions. Phase 13 not authorized.
-- Evidence/report links: [Phase 12 closeout](reports/phase-12-closeout-2026-11-20.md); [document review](reports/phase-12-document-review-2026-11-20.md).
+- Documentation review: REVIEWED - Phase 13 T002-T007 staged implementation and local audit.
+- Implementation status: REFERENCE ONLY - verified execution checkpoint.
+- Last reviewed: 2026-11-21 (Africa/Nairobi).
+- Related phase/task IDs: MYF-P13-T001 through T007; D-P13-001 through D-P13-004.
+- Verified completed work: All seven software tasks verified in the approved synthetic-forecast scope; no live weather or reviewed agronomic thresholds claimed.
+- Remaining work/blockers: P13-C1 through C5, inherited release conditions and owner acceptance; Phase 14 not authorized.
+- Evidence/report links: [Phase 13 closeout](reports/phase-13-closeout-2026-11-21.md).
 <!-- MYFARM-STATUS-END -->
 
-Current checkpoint - **Phase 12 software complete (10/10), PASS WITH CONDITIONS - LOCAL VERIFICATION**, 2026-11-20, within the approved test-adapter/text-fallback scope. The farmer reviews exact expense details, confirms separately and recovers the same receipt through retries, refresh and conflicting windows. No real speech language is advertised; unsupported input offers manual text. 1360 unit/component, 425 integration, 49 non-UTC, 78 anonymous and 238 signed-in desktop/mobile tests pass; builds, drift, three recovery rehearsals and production audit (0 vulnerabilities) pass. Owner acceptance, real speech/accuracy, hosted and inherited release conditions remain. Phase 13 is not started. [Closeout](reports/phase-12-closeout-2026-11-20.md).
+**Current execution checkpoint - 2026-11-21:** Phase 13 software complete (7/7), **PASS WITH CONDITIONS - LOCAL VERIFICATION**, approved synthetic scope. Six test capabilities and contextual task notices, current authorized exact reviewed one-off date changes, atomic audit/retry/expiry controls and desktop/mobile acceptance pass. 1384 unit/component, 439 integration, 43 non-UTC, 82 anonymous, 20 focused weather and 258 full signed-in desktop/mobile tests pass; builds, zero fresh drift, three recovery rehearsals and production audit pass. No live weather/agronomic claim or hosted weather-policy application. Owner acceptance and release conditions remain; Phase 14 not authorized. [Closeout](reports/phase-13-closeout-2026-11-21.md).
+
+Previous checkpoint - **Phase 12 software complete (10/10), PASS WITH CONDITIONS - LOCAL VERIFICATION**, 2026-11-20, within the approved test-adapter/text-fallback scope. The farmer reviews exact expense details, confirms separately and recovers the same receipt through retries, refresh and conflicting windows. No real speech language is advertised; unsupported input offers manual text. 1360 unit/component, 425 integration, 49 non-UTC, 78 anonymous and 238 signed-in desktop/mobile tests pass; builds, drift, three recovery rehearsals and production audit (0 vulnerabilities) pass. Owner acceptance, real speech/accuracy, hosted and inherited release conditions remain. Phase 13 is not started. [Closeout](reports/phase-12-closeout-2026-11-20.md).
 
 Previous checkpoint - **Phase 12 T002 complete (2/10, 20%), local verification** on 2026-11-20. Private expense drafts expire after 30 minutes; exact current-actor/farm/version/hash confirmation posts one expense and receipt atomically, with safe replay and current-access rechecks. 1,324 unit/component, 421 integration, 74 anonymous and 6 focused signed-in desktop/mobile checks pass; build and schema drift pass. One additive migration applied only to synthetic local PostgreSQL. Next: T003 review/confirmation UI and approved text fallback; full AC001 and real speech remain pending. [T002](reports/phase-12-t002-2026-11-20.md).
 

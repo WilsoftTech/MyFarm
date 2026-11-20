@@ -1,16 +1,18 @@
 # Master implementation roadmap
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED - Phase 12 T003-T010 implementation, full local audit and approved staged scope; historical evidence preserved.
-- Implementation status: REFERENCE ONLY - N/A (roadmap order unchanged).
-- Last reviewed: 2026-11-20 (Africa/Nairobi).
-- Related phase/task IDs: MYF-P12-T001 through T010; D-P12-003.
-- Verified completed work: Phase 12 software complete (10/10), PASS WITH CONDITIONS - LOCAL VERIFICATION, approved test/text scope.
-- Remaining work/blockers: P12-C1 through C6 and inherited release conditions; owner acceptance and Phase 13 authorization pending.
-- Evidence/report links: [Phase 12 closeout](reports/phase-12-closeout-2026-11-20.md).
+- Documentation review: REVIEWED - Phase 13 T002-T007 staged implementation and local audit.
+- Implementation status: REFERENCE ONLY - verified execution checkpoint.
+- Last reviewed: 2026-11-21 (Africa/Nairobi).
+- Related phase/task IDs: MYF-P13-T001 through T007; D-P13-001 through D-P13-004.
+- Verified completed work: All seven software tasks verified in the approved synthetic-forecast scope; no live weather or reviewed agronomic thresholds claimed.
+- Remaining work/blockers: P13-C1 through C5, inherited release conditions and owner acceptance; Phase 14 not authorized.
+- Evidence/report links: [Phase 13 closeout](reports/phase-13-closeout-2026-11-21.md).
 <!-- MYFARM-STATUS-END -->
 
-**Current execution checkpoint - 2026-11-20:** Phase 12 software COMPLETED (10/10), PASS WITH CONDITIONS - LOCAL VERIFICATION, within the approved test-adapter/text-fallback scope. Real speech, measured language support, hosted CI/provisioning and owner acceptance remain conditions. Phase 13 is not started or authorized. [Closeout](reports/phase-12-closeout-2026-11-20.md).
+**Current execution checkpoint - 2026-11-21:** Phase 13 software complete (7/7), **PASS WITH CONDITIONS - LOCAL VERIFICATION**, approved synthetic scope. Six test capabilities and contextual task notices, current authorized exact reviewed one-off date changes, atomic audit/retry/expiry controls and desktop/mobile acceptance pass. 1384 unit/component, 439 integration, 43 non-UTC, 82 anonymous, 20 focused weather and 258 full signed-in desktop/mobile tests pass; builds, zero fresh drift, three recovery rehearsals and production audit pass. No live weather/agronomic claim or hosted weather-policy application. Owner acceptance and release conditions remain; Phase 14 not authorized. [Closeout](reports/phase-13-closeout-2026-11-21.md).
+
+**Previous execution checkpoint - 2026-11-20:** Phase 12 software COMPLETED (10/10), PASS WITH CONDITIONS - LOCAL VERIFICATION, within the approved test-adapter/text-fallback scope. Real speech, measured language support, hosted CI/provisioning and owner acceptance remain conditions. Phase 13 is not started or authorized. [Closeout](reports/phase-12-closeout-2026-11-20.md).
 
 **Previous execution checkpoint - 2026-11-20 (T002):** Phase 12 PARTIALLY COMPLETE (2/10, 20%). T002 private drafts and exact, atomic, retry-safe expense confirmation are verified locally. Full UI acceptance and speech/language evaluation remain pending; no hosted migration or deployment. Next: T003. [Evidence](reports/phase-12-t002-2026-11-20.md).
 

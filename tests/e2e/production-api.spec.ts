@@ -1,5 +1,14 @@
 import { expect, test } from "@playwright/test";
 const farm = "11111111-1111-4111-8111-111111111111", record = "22222222-2222-4222-8222-222222222222";
+
+test("weather checks and confirmations require authentication, same-origin JSON and private failures", async ({request}) => {
+  for (const command of ["check","review","confirm"]) {
+    const path=`/api/v1/farms/${farm}/weather/${command}`;
+    const response=await request.post(path,{headers:{origin:"http://127.0.0.1:3101"},data:{}});
+    expect(response.status()).toBe(401);expect(response.headers()["cache-control"]).toContain("no-store");
+    expect((await request.post(path,{headers:{origin:"https://untrusted.test"},data:{}})).status()).toBe(403);
+  }
+});
 test("closure commands require authentication, same-origin JSON and private failures", async ({ request }) => {
   for (const resource of ["seasons", "crop-cycles"]) {
     const path = `/api/v1/farms/${farm}/${resource}/${record}/close`;

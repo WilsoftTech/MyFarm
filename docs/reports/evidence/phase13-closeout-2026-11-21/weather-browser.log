@@ -1,0 +1,61 @@
+> myfarm@0.1.0 test:e2e
+> playwright test --config playwright.production.config.ts tests/browser/weather-ui.spec.ts --reporter=line
+
+[WebServer] (node:16952) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:16576) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 20 tests using 1 worker
+
+(node:17652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/20] [desktop] › tests\browser\weather-ui.spec.ts:38:1 › AC001/AC002 names the task/time and changes one date only after exact separate confirmation
+[2/20] [desktop] › tests\browser\weather-ui.spec.ts:51:1 › all six capabilities use synthetic fixtures and provider failure makes no weather claim
+[3/20] [desktop] › tests\browser\weather-ui.spec.ts:60:1 › editing a reviewed date clears consent and discarding makes no change
+[4/20] [desktop] › tests\browser\weather-ui.spec.ts:68:1 › a lost response retries the same confirmation without a second date move
+[5/20] [desktop] › tests\browser\weather-ui.spec.ts:75:1 › revocation after review refuses the move
+[WebServer] {"event":"request_failed","requestId":"b6726d39-df90-48aa-8aaa-d1ca53418916","code":"FORBIDDEN"}
+
+[6/20] [desktop] › tests\browser\weather-ui.spec.ts:80:1 › expired review disables confirmation
+[7/20] [desktop] › tests\browser\weather-ui.spec.ts:84:1 › a revoked session after review cannot confirm
+[WebServer] {"event":"request_failed","requestId":"b5b814a7-0a65-4acb-9feb-030ce2101593","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"f69e99ba-53da-4795-b0f4-6d0d1867cd77","code":"UNAUTHENTICATED"}
+
+[8/20] [desktop] › tests\browser\weather-ui.spec.ts:89:1 › offline check is explicit and never queues a date move
+[9/20] [desktop] › tests\browser\weather-ui.spec.ts:93:1 › another farm and nested activity cannot be read through the weather endpoint
+[WebServer] {"event":"request_failed","requestId":"fc75e429-081a-43df-a3a2-cc594366a70f","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"2998c56f-b055-4c83-9cf1-3670f9f61616","code":"FORBIDDEN"}
+
+[10/20] [desktop] › tests\browser\weather-ui.spec.ts:100:1 › an older selected activity remains available through paged choices
+(node:18368) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[11/20] [mobile] › tests\browser\weather-ui.spec.ts:38:1 › AC001/AC002 names the task/time and changes one date only after exact separate confirmation
+[12/20] [mobile] › tests\browser\weather-ui.spec.ts:51:1 › all six capabilities use synthetic fixtures and provider failure makes no weather claim
+[13/20] [mobile] › tests\browser\weather-ui.spec.ts:60:1 › editing a reviewed date clears consent and discarding makes no change
+[14/20] [mobile] › tests\browser\weather-ui.spec.ts:68:1 › a lost response retries the same confirmation without a second date move
+[15/20] [mobile] › tests\browser\weather-ui.spec.ts:75:1 › revocation after review refuses the move
+[WebServer] {"event":"request_failed","requestId":"d3c3e8bf-da9f-419d-aa61-7f808b437c50","code":"FORBIDDEN"}
+
+[16/20] [mobile] › tests\browser\weather-ui.spec.ts:80:1 › expired review disables confirmation
+[17/20] [mobile] › tests\browser\weather-ui.spec.ts:84:1 › a revoked session after review cannot confirm
+[WebServer] {"event":"request_failed","requestId":"065c154d-c0f0-475a-9236-4b65bad52ca2","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"eda66f19-6312-47d8-a66d-a36d7514e983","code":"UNAUTHENTICATED"}
+
+[18/20] [mobile] › tests\browser\weather-ui.spec.ts:89:1 › offline check is explicit and never queues a date move
+[19/20] [mobile] › tests\browser\weather-ui.spec.ts:93:1 › another farm and nested activity cannot be read through the weather endpoint
+[WebServer] {"event":"request_failed","requestId":"30624e7f-de66-4549-b820-dc5aa9c797a5","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"6d8070e2-39f9-4cb5-8052-6539b2454c0a","code":"FORBIDDEN"}
+
+[20/20] [mobile] › tests\browser\weather-ui.spec.ts:100:1 › an older selected activity remains available through paged choices
+  20 passed (43.4s)

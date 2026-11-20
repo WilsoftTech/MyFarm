@@ -1,0 +1,29 @@
+> myfarm@0.1.0 test:integration
+> vitest run --project integration
+
+
+ RUN  v5.0.3 D:/Myfarm
+
+ ❯ |integration| tests/integration/catalog-release-migration.test.ts (4 tests | 4 skipped) 361ms
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| tests/integration/catalog-release-migration.test.ts [ tests/integration/catalog-release-migration.test.ts ]
+error: relation "ProductionActivity" does not exist
+ ❯ node_modules/pg/lib/client.js:545:17
+ ❯ runSqlFile tests/support/provisioning.ts:12:7
+     10|
+     11| export async function runSqlFile(client: Client, path: string, transfo…
+     12| try { await client.query(transform(readFileSync(path, "utf8"))); }
+       |       ^
+     13| catch (error) { await client.query("ROLLBACK").catch(() => {}); throw …
+     14| }
+ ❯ tests/integration/catalog-release-migration.test.ts:31:91
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 40 passed (41)
+      Tests  434 passed | 4 skipped (438)
+   Start at  23:27:13
+   Duration  116.23s (tests 90%, import 8%, transform 1%)

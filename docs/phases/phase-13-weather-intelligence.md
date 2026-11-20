@@ -1,16 +1,16 @@
 # Phase 13 Weather and Agronomic Intelligence
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — T013 metadata/status scope and evidence-link relevance; historical and future-phase facts unchanged.
-- Implementation status: NOT STARTED — 0% (0/7 verified tasks).
-- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
-- Related phase/task IDs: Phase 13; MYF-P13-T001 through MYF-P13-T007; review session Phase01; Phase02 review session (MYF-P02-T001–T013).
-- Verified completed work: No tasks implemented or verified in this phase; status/provider applicability reviewed only.
-- Remaining work/blockers: All 7 tasks and their acceptance/exit gates pending; Phase01 completion and future phase authorization required.
-- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
+- Documentation review: REVIEWED - Phase 13 T002-T007 staged implementation and local audit.
+- Implementation status: COMPLETED - 7/7 (100%), PASS WITH CONDITIONS - LOCAL VERIFICATION, synthetic scope.
+- Last reviewed: 2026-11-21 (Africa/Nairobi).
+- Related phase/task IDs: MYF-P13-T001 through T007; D-P13-001 through D-P13-004.
+- Verified completed work: All seven software tasks verified in the approved synthetic-forecast scope; no live weather or reviewed agronomic thresholds claimed.
+- Remaining work/blockers: P13-C1 through C5, inherited release conditions and owner acceptance; Phase 14 not authorized.
+- Evidence/report links: [Phase 13 closeout](../reports/phase-13-closeout-2026-11-21.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **NOT STARTED**. Date: 2026-10-08. This is a specification, not implementation approval. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **SOFTWARE COMPLETED - 7/7 (100%), PASS WITH CONDITIONS - LOCAL VERIFICATION**, 2026-11-21, approved synthetic-forecast scope under D-P13-001 through D-P13-004. Real weather and agronomic release conditions remain. [Closeout](../reports/phase-13-closeout-2026-11-21.md).
 
 ## A. Phase Overview
 
@@ -79,7 +79,7 @@ Loading announced; recoverable errors retain input and safe retry. Empty states 
 
 ## H. Implementation Tasks
 
-Execute these small stages sequentially after authorization. Field/model/provider policies remain proposals until affected decisions are resolved. Each capability separates contract/domain work, authorized service/evidence work, and user-visible acceptance. All task IDs remain pending.
+Execute these small stages sequentially after authorization. Field/model/provider policies remain proposals until affected decisions are resolved. Each capability separates contract/domain work, authorized service/evidence work, and user-visible acceptance. T001-T007 are verified in the approved synthetic scope; real-provider/expert/operational release conditions remain.
 
 ### MYF-P13-T001 — Specify and implement domain contract for MYF-P13-R001
 
@@ -175,14 +175,14 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 
 ## O. Completion Checklist
 
-- [ ] MYF-P13-T001 complete with evidence.
-- [ ] MYF-P13-T002 complete with evidence.
-- [ ] MYF-P13-T003 complete with evidence.
-- [ ] MYF-P13-T004 complete with evidence.
-- [ ] MYF-P13-T005 complete with evidence.
-- [ ] MYF-P13-T006 complete with evidence.
-- [ ] MYF-P13-T007 complete with evidence.
-- [ ] Every K criterion verified.
-- [ ] Security/integrity audit, remediation and retest complete.
-- [ ] Applicable quality/E2E/integration/migration evidence recorded.
-- [ ] L gate approved; closeout/status updated from evidence.
+- [x] MYF-P13-T001 complete with [evidence](../reports/phase-13-t001-2026-11-20.md).
+- [x] MYF-P13-T002 complete with [evidence](../reports/phase-13-closeout-2026-11-21.md).
+- [x] MYF-P13-T003 complete with [evidence](../reports/phase-13-closeout-2026-11-21.md).
+- [x] MYF-P13-T004 complete with [evidence](../reports/phase-13-closeout-2026-11-21.md).
+- [x] MYF-P13-T005 complete with [evidence](../reports/phase-13-closeout-2026-11-21.md).
+- [x] MYF-P13-T006 complete with [evidence](../reports/phase-13-closeout-2026-11-21.md).
+- [x] MYF-P13-T007 complete with [evidence](../reports/phase-13-closeout-2026-11-21.md).
+- [x] Every K criterion verified within the approved synthetic scope.
+- [x] Security/integrity audit, remediation and retest complete.
+- [x] Applicable quality/E2E/integration/migration evidence recorded.
+- [x] Approved staged L invariant verified; closeout/status updated from evidence.

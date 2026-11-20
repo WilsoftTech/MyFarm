@@ -1,0 +1,1 @@
+PASS: real dump/restore retains activities, series, cost links, photos and exact audit receipts including confirmed weather moves, occurrence uniqueness, lifecycle and weather guards, RLS and runtime/browser grants.

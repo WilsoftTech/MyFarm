@@ -1,0 +1,56 @@
+{
+  "date": "2026-11-20",
+  "timezone": "Africa/Nairobi",
+  "scope": "MYF-P13-T001",
+  "checks": [
+    {
+      "name": "lint",
+      "command": "npm run lint",
+      "exitCode": 0
+    },
+    {
+      "name": "typecheck",
+      "command": "npm run typecheck",
+      "exitCode": 0
+    },
+    {
+      "name": "unit-component",
+      "command": "npm test",
+      "exitCode": 0
+    },
+    {
+      "name": "build-initial",
+      "command": "npm run build",
+      "exitCode": 1
+    },
+    {
+      "name": "build-unrestricted-retry",
+      "command": "npm run build",
+      "exitCode": 1
+    },
+    {
+      "name": "build-fresh-cache",
+      "command": "npm run build",
+      "exitCode": 0
+    }
+  ],
+  "additional": [
+    {
+      "command": "npm test -- tests/unit/weather-activity.test.ts",
+      "exitCode": 0,
+      "tests": 14
+    },
+    {
+      "command": "npm run check:boundaries",
+      "exitCode": 0
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0
+    }
+  ],
+  "unitComponentTests": 1374,
+  "files": 83,
+  "noMigration": true,
+  "noDeployment": true
+}

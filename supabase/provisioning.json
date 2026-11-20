@@ -19,6 +19,7 @@
     "supabase/policies/farm-intelligence-runtime.sql",
     "supabase/policies/ai-assistant-runtime.sql",
     "supabase/policies/voice-experience-runtime.sql",
+    "supabase/policies/weather-runtime.sql",
     "supabase/policies/browser-role-lockdown.sql"
   ]
 }

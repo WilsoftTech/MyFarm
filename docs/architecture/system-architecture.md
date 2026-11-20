@@ -61,3 +61,13 @@ Enterprise list/detail screens and both production selectors consume the authori
 ## Phase 12 staged implementation - 2026-11-20
 
 Voice input is a bounded read-only service with provider-independent ports and strict suggestion output. A separate authorized draft/confirmation service applies deterministic accounting validation and commits expense, confirmation state and receipts atomically. The review UI composes the existing expense form, choices and formatting. Synthetic marker transcription and example parsing demonstrate the adapter flow; real speech registrations remain empty and manual text fallback is explicit. [Closeout and limitations](../reports/phase-12-closeout-2026-11-20.md).
+
+
+## Phase 13 T001 staged domain - 2026-11-20
+
+Weather intelligence starts with pure validated synthetic forecasts and context, a clock-injected task evaluator and a test adapter port carrying only a coarse location key. It reuses current activity labels, farm-calendar dates and scope consistency checks; a notice cannot write or reschedule an activity. Missing/stale/mismatched evidence yields an explicit limitation. Current membership and crop/task parent resolution remain T002 service responsibilities. No schema, network provider, live agronomic rule or UI is introduced. [Evidence](../reports/phase-13-t001-2026-11-20.md).
+
+
+## Phase 13 staged weather implementation - 2026-11-21
+
+Six ephemeral synthetic forecast capabilities reuse current authorized farm/activity/crop services and approximate district context, never GPS or inferred stage. The weather page does not cache private responses or queue weather changes offline. A separately reviewed exact one-off spraying date change is server-validated, versioned and atomically audited, with current access checks after locks and DB-clock expiry. Dates and a payload digest remain in the existing immutable audit receipt; raw stage/forecast does not. Successful retries recover the same receipt; changed replays conflict. The additive manifest-listed weather runtime policy/trigger permits only the guarded scheduled date move and remains unapplied to hosted. Existing offline activity commands still use their original versions, so a stale version cannot silently overwrite the moved task. No new application table, external provider, paid service or live agronomic rule is introduced. [Closeout](../reports/phase-13-closeout-2026-11-21.md).

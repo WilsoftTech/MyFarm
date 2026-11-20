@@ -130,8 +130,8 @@ Status date: 2026-10-08. Grouped explicit capabilities map to unique requirement
 
 | ID | Source | Requirement | Phase/task | Acceptance | Test expectation | Status |
 |---|---|---|---|---|---|---|
-| MYF-P13-R001 | P0693–P0709 | Combine location/weather/crop/growth stage/planned activity, e.g. rain before spraying. | [Phase 13](phases/phase-13-weather-intelligence.md) / MYF-P13-T001, MYF-P13-T002, MYF-P13-T003 | MYF-P13-AC001: Warning names affected task/time; missing stage/location reduces specificity. | Rain/spraying, stale forecasts, absent GPS/timezone. | NOT STARTED |
-| MYF-P13-R002 | P0710–P0716 | Forecasts, rain alerts, planting windows, spraying warnings, irrigation and extreme-weather alerts. | [Phase 13](phases/phase-13-weather-intelligence.md) / MYF-P13-T004, MYF-P13-T005, MYF-P13-T006 | MYF-P13-AC002: Six capabilities use reviewed rules; rescheduling requires confirmation. | Thresholds, provider failure, duplicate alerts and confirmed change. | NOT STARTED |
+| MYF-P13-R001 | P0693–P0709 | Combine location/weather/crop/growth stage/planned activity, e.g. rain before spraying. | [Phase 13](phases/phase-13-weather-intelligence.md) / MYF-P13-T001, MYF-P13-T002, MYF-P13-T003 | MYF-P13-AC001: Warning names affected task/time; missing stage/location reduces specificity. | Rain/spraying, stale forecasts, absent GPS/timezone. | T001 verified (test-only contract/domain); T002-T003 pending |
+| MYF-P13-R002 | P0710–P0716 | Forecasts, rain alerts, planting windows, spraying warnings, irrigation and extreme-weather alerts. | [Phase 13](phases/phase-13-weather-intelligence.md) / MYF-P13-T004, MYF-P13-T005, MYF-P13-T006 | MYF-P13-AC002: Six capabilities use reviewed rules; rescheduling requires confirmation. | Thresholds, provider failure, duplicate alerts and confirmed change. | T004-T007 verified; AC002 passes in approved synthetic scope; live expert rules deferred |
 
 ## Phase 14 Extension Officer and Field Agent Platform
 

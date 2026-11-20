@@ -1,0 +1,26 @@
+> myfarm@0.1.0 test:integration
+> vitest run --project integration tests/integration/weather-service.test.ts
+
+
+ RUN  v5.0.3 D:/Myfarm
+
+ ❯ |integration| tests/integration/weather-service.test.ts (11 tests | 11 skipped) 48ms
+npm.cmd :
+At line:16 char:104
++ ... se01_test'; npm.cmd run test:integration -- tests/integration/weather ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| tests/integration/weather-service.test.ts > Phase 13 authorized test forecasts and exact
+confirmed activity moves
+Error: connect EACCES 127.0.0.1:55479
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  11 skipped (11)
+   Start at  23:19:37
+   Duration  1.82s (transform 49%, import 48%, tests 3%)

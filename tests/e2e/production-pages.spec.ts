@@ -1,4 +1,9 @@
 import { expect, test } from "@playwright/test";
+test("weather tests redirect anonymous users before reading farm context",async ({page,request})=>{
+  const path="/farms/11111111-1111-4111-8111-111111111111/weather";
+  await page.goto(path);await expect(page).toHaveURL(/\/sign-in\?reason=session-required/);
+  const response=await request.get(path,{maxRedirects:0});expect(response.status()).toBe(307);expect(response.headers()["cache-control"]).toContain("no-store");
+});
 const farm = "11111111-1111-4111-8111-111111111111", record = "22222222-2222-4222-8222-222222222222";
 test("production pages send anonymous users to sign-in before rendering farm records", async ({ page }) => {
   for (const resource of ["enterprises", "seasons", "crop-cycles", "poultry-batches", "activities"]) {

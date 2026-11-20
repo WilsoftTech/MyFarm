@@ -1,0 +1,1 @@
+PASS: actual dump/restore preserves one exact expense, actor/farm binding, review/hash/expiry, immutable confirmation, audit receipt uniqueness, RLS and runtime/browser grants.

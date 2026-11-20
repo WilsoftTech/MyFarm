@@ -1,0 +1,157 @@
+[
+  {
+    "name": "lint",
+    "command": "npm run lint",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "typecheck",
+    "command": "npm run typecheck",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "boundaries",
+    "command": "npm run check:boundaries",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "unit",
+    "command": "npm test",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "migrate",
+    "command": "npm run db:migrate",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "integration",
+    "command": "npm run test:integration",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "non-utc",
+    "command": "npm run test:integration -- tests/integration/weather-service.test.ts tests/integration/activity-service.test.ts tests/integration/activity-lifecycle.test.ts",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "drift",
+    "command": "node node_modules/prisma/build/index.js migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "stock-recovery",
+    "command": "node tests/support/phase05-recovery.mjs",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "activity-recovery",
+    "command": "node tests/support/phase06-recovery.mjs",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "voice-recovery",
+    "command": "node tests/support/phase12-recovery.mjs",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "audit",
+    "command": "npm audit --omit=dev --json",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "anonymous-browser",
+    "command": "npm run test:e2e -- --reporter=line",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "fixture-build",
+    "command": "npm run build",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "weather-browser",
+    "command": "npm run test:e2e -- --config playwright.production.config.ts tests/browser/weather-ui.spec.ts --reporter=line",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "signed-in-browser",
+    "command": "npm run test:e2e -- --config playwright.production.config.ts --reporter=line",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "final-lint",
+    "command": "npm run lint",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "final-typecheck",
+    "command": "npm run typecheck",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "final-unit",
+    "command": "npm test",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "final-build",
+    "command": "npm run build",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "post-audit-integration",
+    "command": "npm run test:integration",
+    "exitCode": 0,
+    "database": "isolated loopback 55479"
+  },
+  {
+    "name": "post-audit-non-utc",
+    "command": "npm run test:integration -- tests/integration/weather-service.test.ts tests/integration/activity-service.test.ts tests/integration/activity-lifecycle.test.ts",
+    "exitCode": 0,
+    "database": "isolated loopback 55479",
+    "TZ": "Africa/Nairobi"
+  },
+  {
+    "name": "post-context-integration",
+    "command": "npm run test:integration -- tests/integration/weather-service.test.ts",
+    "exitCode": 0,
+    "database": "isolated loopback 55479",
+    "TZ": "Africa/Nairobi"
+  },
+  {
+    "name": "post-ui-fixture-build",
+    "command": "npm run build",
+    "exitCode": 0
+  },
+  {
+    "name": "post-ui-weather-browser",
+    "command": "npm run test:e2e -- --config playwright.production.config.ts tests/browser/weather-ui.spec.ts --reporter=line",
+    "exitCode": 0
+  },
+  {
+    "name": "post-ui-default-build",
+    "command": "npm run build",
+    "exitCode": 0
+  }
+]

@@ -1,0 +1,531 @@
+> myfarm@0.1.0 test
+> vitest run --project unit --project component tests/component/weather-form.test.tsx
+
+
+ RUN  v5.0.3 D:/Myfarm
+
+npm.cmd : (node:16512) TimeoutOverflowWarning: 2303653978147 does not fit into a 32-bit signed integer.
+At line:16 char:1
++ npm.cmd test -- tests/component/weather-form.test.tsx *> .cache/p13-c ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ((node:16512) Ti...signed integer.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+Timeout duration was set to 1.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ❯ |component| tests/component/weather-form.test.tsx (2 tests | 1 failed) 1755ms
+   ❯ weather review interface (2)
+     × keeps consent separate, clears it after edits and retries an uncertain write with the identical payload 1642ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |component| tests/component/weather-form.test.tsx > weather review interface > keeps consent separate, clears
+it after edits and retries an uncertain write with the identical payload
+TestingLibraryElementError: Unable to find role="heading" and name "Check this date change"
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="max-w-2xl space-y-5"
+    >
+      <p
+        class="rounded-xl border border-border p-4"
+      >
+        <strong>
+          Test forecasts only.
+        </strong>
+         This page uses made-up weather signals. It does not provide live weather or agronomic advice. Confirming
+a date change changes real planned work.
+      </p>
+      <form
+        class="space-y-4"
+      >
+        <fieldset
+          class="space-y-4"
+        >
+          <label
+            class="block"
+          >
+            Test scenario
+            <select
+              class="mt-1 min-h-12 w-full rounded-xl border border-border bg-background p-3"
+              name="scenario"
+            >
+              <option
+                value="RAIN"
+              >
+                Rain and spraying
+              </option>
+              <option
+                value="PLANTING"
+              >
+                Planting window
+              </option>
+              <option
+                value="IRRIGATION"
+              >
+                Irrigation
+              </option>
+              <option
+                value="EXTREME"
+              >
+                Extreme weather
+              </option>
+              <option
+                value="NONE"
+              >
+                No signals
+              </option>
+              <option
+                value="UNAVAILABLE"
+              >
+                Provider unavailable
+              </option>
+            </select>
+          </label>
+          <label
+            class="block"
+          >
+            Planned activity
+            <select
+              class="mt-1 min-h-12 w-full rounded-xl border border-border bg-background p-3"
+              name="activityId"
+            >
+              <option
+                value=""
+              >
+                No activity selected
+              </option>
+              <option
+                selected=""
+                value="a0000000-0000-4000-8000-000000000001"
+              >
+                Spraying
+              </option>
+            </select>
+          </label>
+          <label
+            class="block"
+          >
+            Crop cycle (optional)
+            <select
+              class="mt-1 min-h-12 w-full rounded-xl border border-border bg-background p-3"
+              name="cycleId"
+            >
+              <option
+                value=""
+              >
+                No crop selected
+              </option>
+            </select>
+          </label>
+          <label
+            class="block"
+          >
+            Crop stage you observed (optional)
+            <input
+              class="mt-1 min-h-12 w-full rounded-xl border border-border bg-background p-3"
+              maxlength="120"
+              name="stage"
+            />
+            <span
+              class="text-sm"
+            >
+              Choose a crop before entering a stage. A stage is never guessed.
+            </span>
+          </label>
+          <button
+            class="inline-flex min-h-12 items-center justify-center rounded-xl px-5 py-3 text-sm
+font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90"
+            type="submit"
+          >
+            Check test forecast
+          </button>
+          <label
+            class="block"
+          >
+            New activity date
+            <input
+              class="mt-1 min-h-12 w-full rounded-xl border border-border bg-background p-3"
+              name="newDueOn"
+              type="date"
+            />
+          </label>
+          <button
+            class="inline-flex min-h-12 items-center justify-center rounded-xl px-5 py-3 text-sm
+font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+disabled:pointer-events-none disabled:opacity-50 border border-border bg-background hover:bg-muted"
+            disabled=""
+            type="button"
+          >
+            Review date change
+          </button>
+        </fieldset>
+      </form>
+      <p
+        class="text-sm"
+      >
+        Choices show the latest 50 records. For other work, open its activity page and follow Weather tests.
+Recurring work stays in the series workflow.
+      </p>
+      <section
+        aria-label="Test forecast results"
+        class="space-y-3"
+      >
+        <h2
+          class="text-xl font-semibold"
+        >
+          Test forecast results
+        </h2>
+        <p>
+          Approximate place:
+          Rukungiri
+          .
+          Crop not supplied.
+        </p>
+        <p>
+          Checked:
+          2026-11-20T12:00:00Z
+        </p>
+        <p>
+          Source: synthetic test fixture. Issued:
+          2026-11-20T12:00:00Z
+          . Window:
+          2026-11-20T12:00:00Z
+           to
+          2026-11-22T12:00:00Z
+          . Expires:
+          2099-11-20T12:15:00Z
+          .
+        </p>
+        <p
+          role="status"
+        >
+          This test forecast expired. Check again before reviewing a change.
+        </p>
+        <div
+          class="rounded-xl border border-border p-4"
+        >
+          <h3
+            class="font-semibold"
+          >
+            Spraying
+             on
+            2026-11-21
+          </h3>
+          <p>
+            Test rain may affect Spraying.
+          </p>
+          <p>
+            Context limits:
+            crop missing
+          </p>
+        </div>
+        <ul
+          class="space-y-3"
+        >
+          <li
+            class="rounded-xl border border-border p-3"
+          >
+            FORECAST: synthetic signal for testing only.
+          </li>
+          <li
+            class="rounded-xl border border-border p-3"
+          >
+            RAIN: synthetic signal for testing only.
+          </li>
+          <li
+            class="rounded-xl border border-border p-3"
+          >
+            PLANTING: synthetic signal for testing only.
+          </li>
+          <li
+            class="rounded-xl border border-border p-3"
+          >
+            SPRAYING: synthetic signal for testing only.
+          </li>
+          <li
+            class="rounded-xl border border-border p-3"
+          >
+            IRRIGATION: synthetic signal for testing only.
+          </li>
+          <li
+            class="rounded-xl border border-border p-3"
+          >
+            EXTREME: synthetic signal for testing only.
+          </li>
+        </ul>
+      </section>
+      <a
+        class="inline-block min-h-12 py-3 underline"
+        href="/farms/a0000000-0000-4000-8000-000000000001/activities"
+      >
+        Open planned work
+      </a>
+    </div>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="max-w-2xl space-y-5"
+    >
+      <p
+        class="rounded-xl border border-border p-4"
+      >
+        <strong>
+          Test forecasts only.
+        </strong>
+         This page uses made-up weather signals. It does not provide live weather or agronomic advice. Confirming
+a date change changes real planned work.
+      </p>
+      <form
+        class="space-y-4"
+      >
+        <fieldset
+          class="space-y-4"
+        >
+          <label
+            class="block"
+          >
+            Test scenario
+            <select
+              class="mt-1 min-h-12 w-full rounded-xl border border-border bg-background p-3"
+              name="scenario"
+            >
+              <option
+                value="RAIN"
+              >
+                Rain and spraying
+              </option>
+              <option
+                value="PLANTING"
+              >
+                Planting window
+              </option>
+              <option
+                value="IRRIGATION"
+              >
+                Irrigation
+              </option>
+              <option
+                value="EXTREME"
+              >
+                Extreme weather
+              </option>
+              <option
+                value="NONE"
+              >
+                No signals
+              </option>
+              <option
+                value="UNAVAILABLE"
+              >
+                Provider unavailable
+              </option>
+            </select>
+          </label>
+          <label
+            class="block"
+          >
+            Planned activity
+            <select
+              class="mt-1 min-h-12 w-full rounded-xl border border-border bg-background p-3"
+              name="activityId"
+            >
+              <option
+                value=""
+              >
+                No activity selected
+              </option>
+              <option
+                selected=""
+                value="a0000000-0000-4000-8000-000000000001"
+              >
+                Spraying
+              </option>
+            </select>
+          </label>
+          <label
+            class="block"
+          >
+            Crop cycle (optional)
+            <select
+              class="mt-1 min-h-12 w-full rounded-xl border border-border bg-background p-3"
+              name="cycleId"
+            >
+              <option
+                value=""
+              >
+                No crop selected
+              </option>
+            </select>
+          </label>
+          <label
+            class="block"
+          >
+            Crop stage you observed (optional)
+            <input
+              class="mt-1 min-h-12 w-full rounded-xl border border-border bg-background p-3"
+              maxlength="120"
+              name="stage"
+            />
+            <span
+              class="text-sm"
+            >
+              Choose a crop before entering a stage. A stage is never guessed.
+            </span>
+          </label>
+          <button
+            class="inline-flex min-h-12 items-center justify-center rounded-xl px-5 py-3 text-sm
+font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90"
+            type="submit"
+          >
+            Check test forecast
+          </button>
+          <label
+            class="block"
+          >
+            New activity date
+            <input
+
+              class="mt-1 min-h-12 w-full rounded-xl border border-border bg-background p-3"
+              name="newDueOn"
+              type="date"
+            />
+          </label>
+          <button
+            class="inline-flex min-h-12 items-center justify-center rounded-xl px-5 py-3 text-sm
+font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring
+disabled:pointer-events-none disabled:opacity-50 border border-border bg-background hover:bg-muted"
+            disabled=""
+            type="button"
+          >
+            Review date change
+          </button>
+        </fieldset>
+      </form>
+      <p
+        class="text-sm"
+      >
+        Choices show the latest 50 records. For other work, open its activity page and follow Weather tests.
+Recurring work stays in the series workflow.
+      </p>
+      <section
+        aria-label="Test forecast results"
+        class="space-y-3"
+      >
+        <h2
+          class="text-xl font-semibold"
+        >
+          Test forecast results
+        </h2>
+        <p>
+          Approximate place:
+          Rukungiri
+          .
+          Crop not supplied.
+        </p>
+        <p>
+          Checked:
+          2026-11-20T12:00:00Z
+        </p>
+        <p>
+          Source: synthetic test fixture. Issued:
+          2026-11-20T12:00:00Z
+          . Window:
+          2026-11-20T12:00:00Z
+           to
+          2026-11-22T12:00:00Z
+          . Expires:
+          2099-11-20T12:15:00Z
+          .
+        </p>
+        <p
+          role="status"
+        >
+          This test forecast expired. Check again before reviewing a change.
+        </p>
+        <div
+          class="rounded-xl border border-border p-4"
+        >
+          <h3
+            class="font-semibold"
+          >
+            Spraying
+             on
+            2026-11-21
+          </h3>
+          <p>
+            Test rain may affect Spraying.
+          </p>
+          <p>
+            Context limits:
+            crop missing
+          </p>
+        </div>
+        <ul
+          class="space-y-3"
+        >
+          <li
+            class="rounded-xl border border-border p-3"
+          >
+            FORECAST: synthetic signal for testing only.
+          </li>
+          <li
+            class="rounded-xl border border-border p-3"
+          >
+            RAIN: synthetic signal for testing only.
+          </li>
+          <li
+            class="rounded-xl border border-border p-3"
+          >
+            PLANTING: synthetic signal for testing only.
+          </li>
+          <li
+            class="rounded-xl border border-border p-3"
+          >
+            SPRAYING: synthetic signal for testing only.
+          </li>
+          <li
+            class="rounded-xl border border-border p-3"
+          >
+            IRRIGATION: synthetic signal for testing only.
+          </li>
+          <li
+            class="rounded-xl border border-border p-3"
+          >
+            EXTREME: synthetic signal for testing only.
+          </li>
+        </ul>
+      </section>
+      <a
+        class="inline-block min-h-12 py-3 underline"
+        href="/farms/a0000000-0000-4000-8000-000000000001/activities"
+      >
+        Open planned work
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  23:21:58
+   Duration  4.45s (tests 41%, environment 37%, import 11%, setup 8%, transform 3%)
+
+      </a>
+    </div>
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ tests/component/weather-form.test.tsx:27:18
+     25|     await user.type(screen.getByLabelText("New activity date"),"2026-1…
+     26|     await user.click(screen.getByRole("button",{name:"Review date chan…
+     27|     await screen.findByRole("heading",{name:"Check this date change"});
+       |                  ^
+     28|     expect(screen.getByRole("button",{name:"Confirm date change"})).to…
+     29|     await user.click(screen.getByRole("checkbox"));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯

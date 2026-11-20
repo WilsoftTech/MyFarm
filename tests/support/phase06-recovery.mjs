@@ -20,7 +20,7 @@ const user=randomUUID(),tenant=randomUUID(),farmer=randomUUID(),farm=randomUUID(
 let created=false,connected=false;
 const snapshot=async db=>({rows:(await db.query(`SELECT a."dueOn"::text,a.status,a."workerName",a."completedBy",a."recurrenceId",a."cancelReason",r.amount::text AS cost,r.currency FROM "ProductionActivity" a LEFT JOIN "AccountingRecord" r ON r.id=a."costRecordId" WHERE a."tenantId"=$1 ORDER BY a."dueOn"`,[tenant])).rows,
 series:(await db.query(`SELECT frequency,"interval","startOn"::text,"stoppedFrom"::text,version FROM "ActivityRecurrence" WHERE "tenantId"=$1`,[tenant])).rows,
-audits:(await db.query(`SELECT count(*)::int AS n FROM "AuditEvent" WHERE "tenantId"=$1`,[tenant])).rows,
+audits:(await db.query(`SELECT "actorId",action,"targetId","requestId" FROM "AuditEvent" WHERE "tenantId"=$1 ORDER BY action,id`,[tenant])).rows,
 photos:(await db.query(`SELECT "contentType","byteSize",sha256 FROM "RecordPhoto" WHERE "tenantId"=$1`,[tenant])).rows,
 grants:(await db.query(`SELECT has_table_privilege('myfarm_runtime','"ProductionActivity"','INSERT') AS insert,
 has_column_privilege('myfarm_runtime','"ProductionActivity"','status','UPDATE') AS finish,
@@ -53,8 +53,11 @@ try{
  ])await source.query('INSERT INTO "ProductionActivity" (id,"tenantId","farmId",type,"dueOn",status,"workerName","completedAt","completedBy","cancelledAt","cancelledBy","cancelReason","costRecordId","recurrenceId","requestHash","createdBy") VALUES ($1,$2,$3,\'FEEDING\',$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,\'x\',$14)',[row.id,tenant,farm,row.dueOn,row.status,row.workerName,row.completedAt,row.completedBy,row.cancelledAt,row.cancelledBy,row.cancelReason,row.costRecordId,series,user]);
  await source.query('INSERT INTO "RecordPhoto" (id,"tenantId","farmId","accountingRecordId","contentType","byteSize",sha256,"createdBy") VALUES ($1,$2,$3,$4,\'image/jpeg\',5,$5,$6)',[randomUUID(),tenant,farm,cost,"a".repeat(64),user]);
  await source.query('INSERT INTO "AuditEvent" (id,"tenantId","actorId",action,"targetId","requestId") VALUES ($1,$2,$3,\'ACTIVITY_SERIES_CREATED\',$4,$5)',[randomUUID(),tenant,user,series,randomUUID()]);
+ const moved=randomUUID();
+ await source.query('INSERT INTO "ProductionActivity" (id,"tenantId","farmId",type,"dueOn",version,"requestHash","createdBy") VALUES ($1,$2,$3,\'SPRAYING\',\'2026-11-06\',2,\'weather-recovery\',$4)',[moved,tenant,farm,user]);
+ await source.query('INSERT INTO "AuditEvent" (id,"tenantId","actorId",action,"targetId","requestId") VALUES ($1,$2,$3,$4,$5,$6)',[randomUUID(),tenant,user,'WEATHER_MOVE:2026-11-04:2026-11-06:'+"a".repeat(40),moved,randomUUID()]);
  await source.query("COMMIT");
- const before=await snapshot(source);if(before.rows.length!==3||before.rows[0].cost!=="150000.0000")throw new Error("Recovery fixture missing");
+ const before=await snapshot(source);if(before.rows.length!==4||before.rows[0].cost!=="150000.0000")throw new Error("Recovery fixture missing");
  const dump=pg("pg_dump","myfarm_phase01_test",["-Fc"]);
  await source.query('CREATE DATABASE "'+restoreName+'"');created=true;
  pg("pg_restore",restoreName,["--exit-on-error"],dump);await restored.connect();connected=true;
@@ -63,7 +66,10 @@ try{
  if(duplicate!=="23505")throw new Error("Restored one-occurrence-per-date key failed");
  const lifecycle=await restored.query(`UPDATE "ProductionActivity" SET status='COMPLETED' WHERE "tenantId"=$1 AND status='SCHEDULED'`,[tenant]).then(()=>"accepted",e=>e.code);
  if(lifecycle!=="23514")throw new Error("Restored lifecycle check failed");
- console.log("PASS: real dump/restore retains activities, series, cost links, photo records and audit receipts, the one-occurrence-per-date key, the lifecycle check, RLS and runtime/browser grants.");
+ await restored.query('SET ROLE myfarm_runtime');
+ const guarded=await restored.query('UPDATE "ProductionActivity" SET notes=\'unreviewed\' WHERE id=$1',[moved]).then(()=>"accepted",e=>e.code);
+ await restored.query('RESET ROLE');if(guarded!=="23514")throw new Error("Restored weather move guard failed");
+ console.log("PASS: real dump/restore retains activities, series, cost links, photos and exact audit receipts including confirmed weather moves, occurrence uniqueness, lifecycle and weather guards, RLS and runtime/browser grants.");
 }finally{
  if(connected)await restored.end();if(created)await source.query('DROP DATABASE "'+restoreName+'"');await source.query("ROLLBACK");
  await source.query("BEGIN");for(const table of ["RecordPhoto","ProductionActivity","ActivityRecurrence","AccountingRecord","AuditEvent","FarmMember","Farm","Farmer"])await source.query('DELETE FROM "'+table+'" WHERE "tenantId"=$1',[tenant]);

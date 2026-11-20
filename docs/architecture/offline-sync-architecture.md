@@ -62,3 +62,8 @@ The phase audit reproduced a reload leaving an unexpired sending lease in Indexe
 ## Phase 12 staged implementation - 2026-11-20
 
 Voice review/confirmation remains online. An open page retains typed details across connectivity loss; the saved draft ID in the URL resumes a private server review or completed receipt after refresh, without persisting raw words or confirmation consent. Uncertain financial responses retain the original grant and retry/recover the same outcome. Offline work uses the existing typed expense/outbox path; no voice outbox operation or IndexedDB migration is added. [Closeout and limitations](../reports/phase-12-closeout-2026-11-20.md).
+
+
+## Phase 13 staged weather implementation - 2026-11-21
+
+Six ephemeral synthetic forecast capabilities reuse current authorized farm/activity/crop services and approximate district context, never GPS or inferred stage. The weather page does not cache private responses or queue weather changes offline. A separately reviewed exact one-off spraying date change is server-validated, versioned and atomically audited, with current access checks after locks and DB-clock expiry. Dates and a payload digest remain in the existing immutable audit receipt; raw stage/forecast does not. Successful retries recover the same receipt; changed replays conflict. The additive manifest-listed weather runtime policy/trigger permits only the guarded scheduled date move and remains unapplied to hosted. Existing offline activity commands still use their original versions, so a stale version cannot silently overwrite the moved task. No new application table, external provider, paid service or live agronomic rule is introduced. [Closeout](../reports/phase-13-closeout-2026-11-21.md).

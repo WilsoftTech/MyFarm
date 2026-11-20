@@ -1,0 +1,320 @@
+> myfarm@0.1.0 test:e2e
+> playwright test --config playwright.production.config.ts tests/browser/weather-ui.spec.ts --reporter=line
+
+[WebServer] (node:18136) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:18756) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 20 tests using 1 worker
+
+(node:9124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/20] [desktop] › tests\browser\weather-ui.spec.ts:29:1 › AC001/AC002 names the task/time and changes one date only after exact separate confirmation
+[2/20] [desktop] › tests\browser\weather-ui.spec.ts:41:1 › all six capabilities use synthetic fixtures and provider failure makes no weather claim
+  1) [desktop] › tests\browser\weather-ui.spec.ts:41:1 › all six capabilities use synthetic fixtures and provider failure makes no weather claim
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByLabel('Test scenario', { exact: true })
+
+
+      42 |   await check(page);
+      43 |   for(const scenario of ["PLANTING","IRRIGATION","EXTREME","NONE","UNAVAILABLE"]){
+    > 44 |     await page.getByLabel("Test scenario",{exact:true}).selectOption(scenario); await page.getByRole("button",{name:"Check test forecast",exact:true}).click();
+         |                                                         ^
+      45 |     await expect(page.getByRole("heading",{name:"Test forecast results"})).toBeVisible();
+      46 |     await expect(page.getByRole("region",{name:"Test forecast results"}).getByRole("listitem")).toHaveCount(6);
+      47 |   }
+        at D:\Myfarm\tests\browser\weather-ui.spec.ts:44:57
+
+    Error Context: test-results\weather-ui-all-six-capabil-00f11-lure-makes-no-weather-claim-desktop\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\weather-ui-all-six-capabil-00f11-lure-makes-no-weather-claim-desktop\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\weather-ui-all-six-capabil-00f11-lure-makes-no-weather-claim-desktop\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+(node:17612) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[3/20] [desktop] › tests\browser\weather-ui.spec.ts:50:1 › editing a reviewed date clears consent and discarding makes no change
+[4/20] [desktop] › tests\browser\weather-ui.spec.ts:58:1 › a lost response retries the same confirmation without a second date move
+  2) [desktop] › tests\browser\weather-ui.spec.ts:58:1 › a lost response retries the same confirmation without a second date move
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: 1
+
+      59 |   await review(page); await page.route("**/weather/confirm",async route=>{await route.fetch();await route.abort("failed");},{times:1});
+      60 |   await page.getByRole("checkbox").check(); await page.getByRole("button",{name:"Confirm date change",exact:true}).click();
+    > 61 |   await expect(page.getByRole("button",{name:"Retry this confirmation"})).toBeVisible(); expect((await current()).version).toBe(2);
+         |                                                                                                                            ^
+      62 |   await page.getByRole("button",{name:"Retry this confirmation"}).click();
+      63 |   await expect(page.getByRole("heading",{name:"Date change saved"})).toBeVisible();expect((await current()).version).toBe(2);
+      64 | });
+        at D:\Myfarm\tests\browser\weather-ui.spec.ts:61:124
+
+    Error: "route.fetch: Test ended.
+    Call log:
+      - → POST http://127.0.0.1:3102/api/v1/farms/b1c237ce-5102-41ed-8d73-bd21d59a1afa/weather/confirm
+        - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36
+        - accept: */*
+        - accept-encoding: gzip,deflate,br
+        - accept-language: en-US
+        - credential: [redacted synthetic test credential]
+        - origin: http://127.0.0.1:3102
+        - referer: http://127.0.0.1:3102/farms/b1c237ce-5102-41ed-8d73-bd21d59a1afa/weather?activity=d2af5395-9b82-46fc-93aa-0ebd4b8230f3
+        - content-type: application/json
+        - sec-ch-ua: "Not:A-Brand";v="8", "Chromium";v="156", "HeadlessChrome";v="156"
+        - sec-ch-ua-mobile: ?0
+        - sec-ch-ua-platform: "Windows"
+        - content-length: 364
+    " while running route callback.
+    Consider awaiting `await page.unrouteAll({ behavior: 'ignoreErrors' })`
+    before the end of the test to ignore remaining routes in flight.
+
+      57 | });
+      58 | test("a lost response retries the same confirmation without a second date move",async ({page})=>{
+    > 59 |   await review(page); await page.route("**/weather/confirm",async route=>{await route.fetch();await route.abort("failed");},{times:1});
+         |                                                                                       ^
+      60 |   await page.getByRole("checkbox").check(); await page.getByRole("button",{name:"Confirm date change",exact:true}).click();
+      61 |   await expect(page.getByRole("button",{name:"Retry this confirmation"})).toBeVisible(); expect((await current()).version).toBe(2);
+      62 |   await page.getByRole("button",{name:"Retry this confirmation"}).click();
+        at page.route.times (D:\Myfarm\tests\browser\weather-ui.spec.ts:59:87)
+
+    Error Context: test-results\weather-ui-a-lost-response-c7f2f--without-a-second-date-move-desktop\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\weather-ui-a-lost-response-c7f2f--without-a-second-date-move-desktop\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\weather-ui-a-lost-response-c7f2f--without-a-second-date-move-desktop\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+(node:21160) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[5/20] [desktop] › tests\browser\weather-ui.spec.ts:65:1 › revocation after review refuses the move
+[WebServer] {"event":"request_failed","requestId":"9a1cbdc8-1865-492d-9e09-ee36b9ee5ab0","code":"FORBIDDEN"}
+
+[6/20] [desktop] › tests\browser\weather-ui.spec.ts:70:1 › expired review disables confirmation
+[7/20] [desktop] › tests\browser\weather-ui.spec.ts:74:1 › a revoked session after review cannot confirm
+[WebServer] {"event":"request_failed","requestId":"8a9b1e4b-9a92-48e3-8c43-ec0bc97599cc","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"528e99f9-690a-4c62-9a6d-0e2a168fed1c","code":"UNAUTHENTICATED"}
+
+[8/20] [desktop] › tests\browser\weather-ui.spec.ts:79:1 › offline check is explicit and never queues a date move
+[9/20] [desktop] › tests\browser\weather-ui.spec.ts:83:1 › another farm and nested activity cannot be read through the weather endpoint
+[WebServer] {"event":"request_failed","requestId":"ec2a71a6-d6b0-4043-a972-c560dc62444c","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"efe2091f-1c08-48a1-a4e4-9efd9a6968e8","code":"FORBIDDEN"}
+
+[10/20] [desktop] › tests\browser\weather-ui.spec.ts:90:1 › an older selected activity remains available through paged choices
+  3) [desktop] › tests\browser\weather-ui.spec.ts:90:1 › an older selected activity remains available through paged choices
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator: getByLabel('Planned activity', { exact: true })
+    Expected: "b272d26e-8aab-411c-8397-a1794ab7557a"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveValue" getByLabel('Planned activity', { exact: true }) with timeout 5000ms
+      - waiting for getByLabel('Planned activity', { exact: true })
+
+
+      90 | test("an older selected activity remains available through paged choices",async ({page})=>{
+      91 |   await query('INSERT INTO "ProductionActivity" (id,"tenantId","farmId",type,"dueOn","createdBy","requestHash") SELECT gen_random_uuid(),$1,$2,\'SPRAYING\',$3,$4,\'weather-page-fixture\' FROM generate_series(1,52)',[fixtures.tenants.a,fixtures.farms.a,dueOn,fixtures.users.a]);
+    > 92 |   await check(page);await expect(page.getByLabel("Planned activity",{exact:true})).toHaveValue(activityId);
+         |                                                                                    ^
+      93 |   await page.getByRole("navigation",{name:"Activity choices pages"}).getByRole("link",{name:"More records"}).click();
+      94 |   await expect(page.getByLabel("Planned activity",{exact:true})).toHaveValue(activityId);
+      95 |   await page.getByRole("button",{name:"Check test forecast",exact:true}).click();await expect(page.getByText(/Test forecast: rain is expected/)).toBeVisible();
+        at D:\Myfarm\tests\browser\weather-ui.spec.ts:92:84
+
+    Error Context: test-results\weather-ui-an-older-select-6cf3b-lable-through-paged-choices-desktop\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\weather-ui-an-older-select-6cf3b-lable-through-paged-choices-desktop\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\weather-ui-an-older-select-6cf3b-lable-through-paged-choices-desktop\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+(node:4644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[11/20] [mobile] › tests\browser\weather-ui.spec.ts:29:1 › AC001/AC002 names the task/time and changes one date only after exact separate confirmation
+[12/20] [mobile] › tests\browser\weather-ui.spec.ts:41:1 › all six capabilities use synthetic fixtures and provider failure makes no weather claim
+  4) [mobile] › tests\browser\weather-ui.spec.ts:41:1 › all six capabilities use synthetic fixtures and provider failure makes no weather claim
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByLabel('Test scenario', { exact: true })
+
+
+      42 |   await check(page);
+      43 |   for(const scenario of ["PLANTING","IRRIGATION","EXTREME","NONE","UNAVAILABLE"]){
+    > 44 |     await page.getByLabel("Test scenario",{exact:true}).selectOption(scenario); await page.getByRole("button",{name:"Check test forecast",exact:true}).click();
+         |                                                         ^
+      45 |     await expect(page.getByRole("heading",{name:"Test forecast results"})).toBeVisible();
+      46 |     await expect(page.getByRole("region",{name:"Test forecast results"}).getByRole("listitem")).toHaveCount(6);
+      47 |   }
+        at D:\Myfarm\tests\browser\weather-ui.spec.ts:44:57
+
+    Error Context: test-results\weather-ui-all-six-capabil-00f11-lure-makes-no-weather-claim-mobile\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\weather-ui-all-six-capabil-00f11-lure-makes-no-weather-claim-mobile\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\weather-ui-all-six-capabil-00f11-lure-makes-no-weather-claim-mobile\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+(node:15128) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[13/20] [mobile] › tests\browser\weather-ui.spec.ts:50:1 › editing a reviewed date clears consent and discarding makes no change
+[14/20] [mobile] › tests\browser\weather-ui.spec.ts:58:1 › a lost response retries the same confirmation without a second date move
+  5) [mobile] › tests\browser\weather-ui.spec.ts:58:1 › a lost response retries the same confirmation without a second date move
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 2
+    Received: 1
+
+      59 |   await review(page); await page.route("**/weather/confirm",async route=>{await route.fetch();await route.abort("failed");},{times:1});
+      60 |   await page.getByRole("checkbox").check(); await page.getByRole("button",{name:"Confirm date change",exact:true}).click();
+    > 61 |   await expect(page.getByRole("button",{name:"Retry this confirmation"})).toBeVisible(); expect((await current()).version).toBe(2);
+         |                                                                                                                            ^
+      62 |   await page.getByRole("button",{name:"Retry this confirmation"}).click();
+      63 |   await expect(page.getByRole("heading",{name:"Date change saved"})).toBeVisible();expect((await current()).version).toBe(2);
+      64 | });
+        at D:\Myfarm\tests\browser\weather-ui.spec.ts:61:124
+
+    Error: "route.fetch: Test ended.
+    Call log:
+      - → POST http://127.0.0.1:3102/api/v1/farms/b1c237ce-5102-41ed-8d73-bd21d59a1afa/weather/confirm
+        - user-agent: Mozilla/5.0 (Linux; Android 14; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Mobile Safari/537.36
+        - accept: */*
+        - accept-encoding: gzip,deflate,br
+        - accept-language: en-US
+        - credential: [redacted synthetic test credential]
+        - origin: http://127.0.0.1:3102
+        - referer: http://127.0.0.1:3102/farms/b1c237ce-5102-41ed-8d73-bd21d59a1afa/weather?activity=eb3d4da4-4d25-4ba5-b4e3-0647db879737
+        - content-type: application/json
+        - sec-ch-ua: "Not:A-Brand";v="8", "Chromium";v="156", "HeadlessChrome";v="156"
+        - sec-ch-ua-mobile: ?1
+        - sec-ch-ua-platform: "Android"
+        - content-length: 364
+    " while running route callback.
+    Consider awaiting `await page.unrouteAll({ behavior: 'ignoreErrors' })`
+    before the end of the test to ignore remaining routes in flight.
+
+      57 | });
+      58 | test("a lost response retries the same confirmation without a second date move",async ({page})=>{
+    > 59 |   await review(page); await page.route("**/weather/confirm",async route=>{await route.fetch();await route.abort("failed");},{times:1});
+         |                                                                                       ^
+      60 |   await page.getByRole("checkbox").check(); await page.getByRole("button",{name:"Confirm date change",exact:true}).click();
+      61 |   await expect(page.getByRole("button",{name:"Retry this confirmation"})).toBeVisible(); expect((await current()).version).toBe(2);
+      62 |   await page.getByRole("button",{name:"Retry this confirmation"}).click();
+        at page.route.times (D:\Myfarm\tests\browser\weather-ui.spec.ts:59:87)
+
+    Error Context: test-results\weather-ui-a-lost-response-c7f2f--without-a-second-date-move-mobile\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\weather-ui-a-lost-response-c7f2f--without-a-second-date-move-mobile\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\weather-ui-a-lost-response-c7f2f--without-a-second-date-move-mobile\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+(node:2876) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[15/20] [mobile] › tests\browser\weather-ui.spec.ts:65:1 › revocation after review refuses the move
+[WebServer] {"event":"request_failed","requestId":"ef566e74-1908-4ed1-bc9b-26e3ca565b28","code":"FORBIDDEN"}
+
+[16/20] [mobile] › tests\browser\weather-ui.spec.ts:70:1 › expired review disables confirmation
+[17/20] [mobile] › tests\browser\weather-ui.spec.ts:74:1 › a revoked session after review cannot confirm
+[WebServer] {"event":"request_failed","requestId":"5db04524-4cb9-4e52-a1cc-4ab7cd946f82","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"6574bba0-f180-4096-8eb6-4aae56c48e39","code":"UNAUTHENTICATED"}
+
+[18/20] [mobile] › tests\browser\weather-ui.spec.ts:79:1 › offline check is explicit and never queues a date move
+[19/20] [mobile] › tests\browser\weather-ui.spec.ts:83:1 › another farm and nested activity cannot be read through the weather endpoint
+[WebServer] {"event":"request_failed","requestId":"cfdebb32-bf69-4552-a4eb-afdda19ab412","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"c73e2c1c-de6e-478e-b9d2-b6433c815aeb","code":"FORBIDDEN"}
+
+[20/20] [mobile] › tests\browser\weather-ui.spec.ts:90:1 › an older selected activity remains available through paged choices
+  6) [mobile] › tests\browser\weather-ui.spec.ts:90:1 › an older selected activity remains available through paged choices
+
+    Error: expect(locator).toHaveValue(expected) failed
+
+    Locator: getByLabel('Planned activity', { exact: true })
+    Expected: "b89d74d1-acd5-4586-8d06-1c20195ea9e2"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveValue" getByLabel('Planned activity', { exact: true }) with timeout 5000ms
+      - waiting for getByLabel('Planned activity', { exact: true })
+
+
+      90 | test("an older selected activity remains available through paged choices",async ({page})=>{
+      91 |   await query('INSERT INTO "ProductionActivity" (id,"tenantId","farmId",type,"dueOn","createdBy","requestHash") SELECT gen_random_uuid(),$1,$2,\'SPRAYING\',$3,$4,\'weather-page-fixture\' FROM generate_series(1,52)',[fixtures.tenants.a,fixtures.farms.a,dueOn,fixtures.users.a]);
+    > 92 |   await check(page);await expect(page.getByLabel("Planned activity",{exact:true})).toHaveValue(activityId);
+         |                                                                                    ^
+      93 |   await page.getByRole("navigation",{name:"Activity choices pages"}).getByRole("link",{name:"More records"}).click();
+      94 |   await expect(page.getByLabel("Planned activity",{exact:true})).toHaveValue(activityId);
+      95 |   await page.getByRole("button",{name:"Check test forecast",exact:true}).click();await expect(page.getByText(/Test forecast: rain is expected/)).toBeVisible();
+        at D:\Myfarm\tests\browser\weather-ui.spec.ts:92:84
+
+    Error Context: test-results\weather-ui-an-older-select-6cf3b-lable-through-paged-choices-mobile\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\weather-ui-an-older-select-6cf3b-lable-through-paged-choices-mobile\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\weather-ui-an-older-select-6cf3b-lable-through-paged-choices-mobile\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  6 failed
+    [desktop] › tests\browser\weather-ui.spec.ts:41:1 › all six capabilities use synthetic fixtures and provider failure makes no weather claim
+    [desktop] › tests\browser\weather-ui.spec.ts:58:1 › a lost response retries the same confirmation without a second date move
+    [desktop] › tests\browser\weather-ui.spec.ts:90:1 › an older selected activity remains available through paged choices
+    [mobile] › tests\browser\weather-ui.spec.ts:41:1 › all six capabilities use synthetic fixtures and provider failure makes no weather claim
+    [mobile] › tests\browser\weather-ui.spec.ts:58:1 › a lost response retries the same confirmation without a second date move
+    [mobile] › tests\browser\weather-ui.spec.ts:90:1 › an older selected activity remains available through paged choices
+  14 passed (1.8m)

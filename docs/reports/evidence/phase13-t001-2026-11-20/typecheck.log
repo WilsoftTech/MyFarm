@@ -1,0 +1,14 @@
+> myfarm@0.1.0 typecheck
+> prisma generate && tsc --noEmit
+
+npm.cmd : Loaded Prisma config from prisma.config.ts.
+At line:16 char:1
++ npm.cmd run typecheck *> .cache/p13-t001-typecheck.log; $taskExit = $ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Loaded Prisma c...isma.config.ts.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+
+Prisma schema loaded from prisma\schema.prisma.
+
+✔ Generated Prisma Client (7.10.0) to .\src\generated\prisma in 711ms
