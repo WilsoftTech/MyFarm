@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -24,13 +24,22 @@ const settledWhenRecorded = (kind: AccountingRecordKind) => kind === "EXPENSE" |
 export interface LinkChoices { pages: Record<AccountingChoiceKind, ChoicePage>; load: ChoiceLoad<AccountingChoiceKind> }
 
 /** Expense/income may name how they were paid; sales/purchases are settled later by payments. Links are optional (R003). */
-export function TransactionForm({ kind, categories, paymentMethods, links, submit }: { kind: AccountingRecordKind; categories: CatalogOption[]; paymentMethods: CatalogOption[]; links?: LinkChoices; submit: CommandSubmit }) {
+export function TransactionForm({ kind, categories, paymentMethods, links, submit, initialValues, submitLabel, onDraftChange }: { kind: AccountingRecordKind; categories: CatalogOption[]; paymentMethods: CatalogOption[]; links?: LinkChoices; submit: CommandSubmit; initialValues?: Partial<Values>; submitLabel?: string; onDraftChange?: (values: Partial<Values>) => void }) {
   const state = useProductionSubmit(submit), form = useRef<HTMLFormElement>(null), withMethod = settledWhenRecorded(kind), withBatch = BATCH_LINK_KINDS.includes(kind);
   // The four schemas share the form's fields but differ in output type, so the chosen one is typed as the widest.
   // This only shapes form hints: the server validates every command against its own schema again.
   const resolver = zodResolver({ EXPENSE: recordExpenseSchema, INCOME: recordIncomeSchema, SALE: recordSaleSchema, PURCHASE: recordPurchaseSchema }[kind]) as unknown as Resolver<Values, unknown, RecordExpense>;
   const defaults: Values = { requestId: state.initialRequestId, categoryId: "", amount: "", currency: "UGX", occurredOn: "", counterparty: "", plotId: "", enterpriseId: "", seasonId: "", ...(withBatch ? { batchId: "" } : {}), ...(withMethod ? { paymentMethodId: "" } : {}) };
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<Values, unknown, RecordExpense>({ resolver, shouldFocusError: false, defaultValues: defaults });
+  const baseline = useRef(defaults);
+  const { register, handleSubmit, watch, reset, formState: { errors, isSubmitting } } = useForm<Values, unknown, RecordExpense>({ resolver, shouldFocusError: false, defaultValues: { ...defaults, ...initialValues } });
+  useEffect(() => {
+    if (!onDraftChange) return;
+    const subscription = watch(values => onDraftChange(values));
+    return () => subscription.unsubscribe();
+  }, [watch, onDraftChange]);
+  useEffect(() => {
+    if (initialValues !== undefined) reset({ ...baseline.current, ...initialValues });
+  }, [initialValues, reset]);
   const label = recordKindLabels[kind].toLowerCase();
   if (categories.length === 0) return <div className="space-y-4 leading-7"><h2 className="text-xl font-semibold">No categories are available</h2><p>There are no {kind === "SALE" || kind === "INCOME" ? "income" : "spending"} categories to choose from. Ask farm support to check the category list.</p></div>;
   return <form ref={form} noValidate aria-busy={isSubmitting || !state.ready} onSubmit={handleSubmit(state.save, () => focusFirstInvalid(form.current))}>
@@ -52,7 +61,7 @@ export function TransactionForm({ kind, categories, paymentMethods, links, submi
       {withBatch && <ChoiceField hint="If this cost was for one batch, choose it. It then counts towards that batch's cost per bird, under the batch's own enterprise." id="recordBatch" label="Poultry batch" optional kind="batches" initial={links.pages.batches} control={register("batchId")} error={errors.batchId ? "Choose a batch or leave it empty." : undefined} online={state.online} load={links.load} />}
     </fieldset>}
     <ProductionFormFeedback online={state.online} saving={isSubmitting} message={state.message} />
-    <Button type="submit" disabled={isSubmitting || !state.online} className="w-full sm:w-auto">{isSubmitting ? "Saving…" : "Save " + label}</Button>
+    <Button type="submit" disabled={isSubmitting || !state.online} className="w-full sm:w-auto">{isSubmitting ? (submitLabel ? "Preparing review…" : "Saving…") : submitLabel ?? "Save " + label}</Button>
     </fieldset>
   </form>;
 }

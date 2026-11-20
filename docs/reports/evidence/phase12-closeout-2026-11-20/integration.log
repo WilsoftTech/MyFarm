@@ -1,0 +1,13 @@
+$ npm run test:integration
+
+> myfarm@0.1.0 test:integration
+> vitest run --project integration
+
+
+ RUN  v5.0.3 D:/Myfarm
+
+
+ Test Files  40 passed (40)
+      Tests  425 passed (425)
+   Start at  09:22:31
+   Duration  107.42s (tests 90%, import 8%, transform 1%)

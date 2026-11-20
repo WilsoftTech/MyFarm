@@ -1,14 +1,20 @@
 # Master implementation roadmap
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED - Phase 8 start; source roadmap order unchanged.
-- Implementation status: REFERENCE ONLY - N/A (navigation and verified progress record).
-- Last reviewed: 2026-11-05 (Africa/Nairobi).
-- Related phase/task IDs: MYF-P08-T001; D-P07-009; D-P08-001 through D-P08-008.
-- Verified completed work: Phase 7 accepted with conditions (D-P07-009); hosted CI passes at 0298f20. Phase 8 T001-T006 (6/13): metric screens and batch link on forms; AC002 verified locally.
-- Remaining work/blockers: Phase 8 T007-T013. P7-C1 and P7-C3 to P7-C6 stay open. Migration 202611040001 is not applied to hosted. Pushes and hosted changes for Phase 8 are not authorized.
-- Evidence/report links: [Phase 8 start and T001](reports/phase-08-start-2026-11-03.md); [Project status](PROJECT-STATUS.md).
+- Documentation review: REVIEWED - Phase 12 T003-T010 implementation, full local audit and approved staged scope; historical evidence preserved.
+- Implementation status: REFERENCE ONLY - N/A (roadmap order unchanged).
+- Last reviewed: 2026-11-20 (Africa/Nairobi).
+- Related phase/task IDs: MYF-P12-T001 through T010; D-P12-003.
+- Verified completed work: Phase 12 software complete (10/10), PASS WITH CONDITIONS - LOCAL VERIFICATION, approved test/text scope.
+- Remaining work/blockers: P12-C1 through C6 and inherited release conditions; owner acceptance and Phase 13 authorization pending.
+- Evidence/report links: [Phase 12 closeout](reports/phase-12-closeout-2026-11-20.md).
 <!-- MYFARM-STATUS-END -->
+
+**Current execution checkpoint - 2026-11-20:** Phase 12 software COMPLETED (10/10), PASS WITH CONDITIONS - LOCAL VERIFICATION, within the approved test-adapter/text-fallback scope. Real speech, measured language support, hosted CI/provisioning and owner acceptance remain conditions. Phase 13 is not started or authorized. [Closeout](reports/phase-12-closeout-2026-11-20.md).
+
+**Previous execution checkpoint - 2026-11-20 (T002):** Phase 12 PARTIALLY COMPLETE (2/10, 20%). T002 private drafts and exact, atomic, retry-safe expense confirmation are verified locally. Full UI acceptance and speech/language evaluation remain pending; no hosted migration or deployment. Next: T003. [Evidence](reports/phase-12-t002-2026-11-20.md).
+
+**Previous execution checkpoint - 2026-11-18:** Phase 11 COMPLETED (10/10), PASS WITH CONDITIONS, accepted; Phase 12 PARTIALLY COMPLETE (1/10), test-adapter feed-expense review contract verified. [Transition](reports/phase-11-12-transition-2026-11-18.md). Earlier dated checkpoints below are historical.
 
 Source roadmap remains authoritative. Preserve Phase 0–24 in order; cumulative gates apply. Phase 8 closes MVP, Phase 9 validates field use. No release dates or implementation approvals are inferred.
 

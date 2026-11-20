@@ -36,7 +36,7 @@ async function receive(page: Page, amount: string) {
 const due = (page: Page) => page.getByRole("region", { name: "Money for this sale" });
 test.beforeEach(async ({ context }) => {
   fixtures = readProductionBrowserFixtures();
-  for (const table of ["AccountingReversal", "PaymentAllocation", "PaymentRecord", "AccountingRecord"]) await query(`DELETE FROM "${table}" WHERE "tenantId"=ANY($1::uuid[])`, [Object.values(fixtures.tenants)]);
+  for (const table of ["VoiceExpenseDraft", "AccountingReversal", "PaymentAllocation", "PaymentRecord", "AccountingRecord"]) await query(`DELETE FROM "${table}" WHERE "tenantId"=ANY($1::uuid[])`, [Object.values(fixtures.tenants)]);
   await query('UPDATE auth.sessions SET not_after=NULL WHERE id=ANY($1::uuid[])', [Object.values(fixtures.sessions)]);
   await query('UPDATE "FarmMember" SET status=\'ACTIVE\' WHERE "userId"=$1', [fixtures.users.a]);
   await identity(context, "a");

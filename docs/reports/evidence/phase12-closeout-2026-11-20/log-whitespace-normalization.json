@@ -1,0 +1,115 @@
+{
+  "transformation": "Remove trailing spaces/tabs and terminal blank lines only; output content and exit records preserved. Original captures remain in the ignored local cache. CRLF newlines in one historical PowerShell capture normalized to LF.",
+  "files": [
+    {
+      "path": "docs/reports/evidence/phase-transition-2026-11-18/p11-historical-clean-run.log",
+      "beforeSha256": "aac58b5d7416405bb368f95d9154f0452d4e2e58787c14fe8b0ca8e54a840a39",
+      "afterSha256": "5f2096adcc0b9ea99c41351ab174feeb5225c3c720fc64feae3592efb9fba01c"
+    },
+    {
+      "path": "docs/reports/evidence/phase-transition-2026-11-18/postpatch-before-offline-fix.log",
+      "beforeSha256": "3de4c8dc829e06a757146ffc7b66d9af9c20c8892864eeec60f888fb42946c59",
+      "afterSha256": "b7e825e6dada5cb1a5d17c2bd8eb6e759c541038f0790adbc5206778982fa048"
+    },
+    {
+      "path": "docs/reports/evidence/phase-transition-2026-11-18/postpatch-offline-fixture-failure.log",
+      "beforeSha256": "1eae9d397838a1909f7edfaacb26161a164412e77efaa363dcd371052b6d9cea",
+      "afterSha256": "1e831e4809148ccf7fbbf7d963d0dae49411ef7fa0d2fe625f491347fbfb8326"
+    },
+    {
+      "path": "docs/reports/evidence/phase-transition-2026-11-18/postpatch.log",
+      "beforeSha256": "32b1fd7798dc228d87d1b0bc6ee356c8ad9b4ba62ea5f1b8b4859e923ffb287f",
+      "afterSha256": "bd650686c7ba27bb9ad24d5cfa4ed875968ba9f40e6f1d8dd477008d089dee2c"
+    },
+    {
+      "path": "docs/reports/evidence/phase-transition-2026-11-18/production-audit-network-error.log",
+      "beforeSha256": "b6bd3579220fce9bd5ba5a3e5eb8a77d9b75e2b2af08f1b48a0ce6571a7d7a97",
+      "afterSha256": "73c004e57a57572e7879edcdd5153bad627ea12ff044426c61f95f269f949b59"
+    },
+    {
+      "path": "docs/reports/evidence/phase-transition-2026-11-18/verification-rest.log",
+      "beforeSha256": "606cac31a4d2b2068c7590bf9387d1ed4f22fbfc6c2a66d8bef7a4d1d5caa5b5",
+      "afterSha256": "54edd2d2db78922e8fb25b0416490d7d0e747b1c3c40907c3e7879a00369aabd"
+    },
+    {
+      "path": "docs/reports/evidence/phase-transition-2026-11-18/verification.log",
+      "beforeSha256": "9eb8597ec3fdaa5f5787c6a8b0ae259037bb0e4784e09256baeb0cb7dea28022",
+      "afterSha256": "4adefbc101a8c21912c3e2fd604bb7c754f6c86135e19e2e3c0b4868832e6d0d"
+    },
+    {
+      "path": "docs/reports/evidence/phase12-t002-2026-11-20/verification.log",
+      "beforeSha256": "7cd5ee73e278269f34b856f094d26ecfe57141b810382d04411796dab2bde3bb",
+      "afterSha256": "0e5d4ea77567716a04e1f99fb6fb34569f6b98e792c9afc93977ace36d4e871c"
+    },
+    {
+      "path": "docs/reports/evidence/phase12-closeout-2026-11-20/build.log",
+      "beforeSha256": "4d45049e222f671064f820162c61e53f32d0e7370658e040711a33e879a48441",
+      "afterSha256": "78d3aa2207aa97d0e4d91cd16139ba2ed4be33c3efd11ba5388d50eae2fd7c92"
+    },
+    {
+      "path": "docs/reports/evidence/phase12-closeout-2026-11-20/drift.log",
+      "beforeSha256": "0a00fb80778c10a21e4577b7347ec50252a8844c28fc39f140116244a6f34313",
+      "afterSha256": "0d608c7603f4da11e2bc504180e1fa7ede4378169c345be3bb4d26b5c1f4a114"
+    },
+    {
+      "path": "docs/reports/evidence/phase12-closeout-2026-11-20/final-lint.log",
+      "beforeSha256": "85e0ab56a2939d14ed51dc3bc7ca24c6bbe68c33ba50ea23d9e910fd29741e8b",
+      "afterSha256": "97555088327d0ed5953a1dfae317fcc7fbcd84ee50747cf80cf581ed0ae4532f"
+    },
+    {
+      "path": "docs/reports/evidence/phase12-closeout-2026-11-20/final-typecheck.log",
+      "beforeSha256": "977e7236c10679952996d1a595918828aa5dc3c3b70156c08dfb463cbe1caadc",
+      "afterSha256": "70daf262d7f28bff2b4aa6b9ef2287ec5b248759c80fa323d6f85c6b2eaf0e24"
+    },
+    {
+      "path": "docs/reports/evidence/phase12-closeout-2026-11-20/final-voice-component.log",
+      "beforeSha256": "70fbd7a440509b15e9c3dd57c24b09395dc34b009344fdfebdb1a230a152a3e2",
+      "afterSha256": "da23d882f81ed25734e8826a8d320db4985d2e0a215293e6697adf38f320455c"
+    },
+    {
+      "path": "docs/reports/evidence/phase12-closeout-2026-11-20/fixture-build.log",
+      "beforeSha256": "53595e65e5b3001cdbfb4b1ec0f042422694cb8c82a71fd10256e2c1c26b78f2",
+      "afterSha256": "5c42547535af2f25dc08dd475bf8e25a42dfd75002010885841489b893bdda04"
+    },
+    {
+      "path": "docs/reports/evidence/phase12-closeout-2026-11-20/integration.log",
+      "beforeSha256": "8222f939cd9b6ff3c7b710b0780329d7d420ed0ea2bb5cd2dcaa1c1a3a26b32f",
+      "afterSha256": "cf01d5764c342d1cb32ad83244aa31ca7de3ab2ee7fe94acdb565196720cc801"
+    },
+    {
+      "path": "docs/reports/evidence/phase12-closeout-2026-11-20/lint.log",
+      "beforeSha256": "85e0ab56a2939d14ed51dc3bc7ca24c6bbe68c33ba50ea23d9e910fd29741e8b",
+      "afterSha256": "97555088327d0ed5953a1dfae317fcc7fbcd84ee50747cf80cf581ed0ae4532f"
+    },
+    {
+      "path": "docs/reports/evidence/phase12-closeout-2026-11-20/non-utc.log",
+      "beforeSha256": "dfe2bb55036bc7be6acb3cfc525df0255690d1fb5cb4dc2be2590c545060e49a",
+      "afterSha256": "fdcf19ea52e54bdc0499af973d8b198f059c72617095f2a328767b56d88d1e33"
+    },
+    {
+      "path": "docs/reports/evidence/phase12-closeout-2026-11-20/post-fix-browser-before-fixture-cleanup.log",
+      "beforeSha256": "e86bdf5850c71335658b3dac691988986706a3ce22e1f5cee9dbd17f350ea6cd",
+      "afterSha256": "f5ff0f2a9b7da6d22b6f20fdca9cf279ecd4a85d0b41d5012285e1faebcf0a25"
+    },
+    {
+      "path": "docs/reports/evidence/phase12-closeout-2026-11-20/production-audit.log",
+      "beforeSha256": "ad6760860dc2dd4b4decb1dec8bc59e1ecdffc84728a82d7fde7033e085dc703",
+      "afterSha256": "b89a15f54d91f2b50403569e44b8bc8554bdd32df896b6be8870586766b27f3c"
+    },
+    {
+      "path": "docs/reports/evidence/phase12-closeout-2026-11-20/typecheck.log",
+      "beforeSha256": "d73d15a97325fae5c84260da585d07c26506d8dd9a09ca26afa00c49216504f0",
+      "afterSha256": "f7bbb40e408402fefb9d214b65ac317e56c568a5dbecfcd7975a38c3be73dc9b"
+    },
+    {
+      "path": "docs/reports/evidence/phase12-closeout-2026-11-20/unit-component.log",
+      "beforeSha256": "3a7e9d19deca97ce4e88516ef17b96214d9a2bd5c32a9bd07ec0b0597aee8985",
+      "afterSha256": "a226325cd428c595fbacfee215a0cc0a19642907924c37776ea537857b86aff5"
+    },
+    {
+      "path": "docs/reports/evidence/phase-transition-2026-11-18/verification-rest.log",
+      "beforeSha256": "54edd2d2db78922e8fb25b0416490d7d0e747b1c3c40907c3e7879a00369aabd",
+      "afterSha256": "4eb9fd8c25cb7921bc12c293ecb02483db2e8c13026c995604ecdb92b87b2887"
+    }
+  ]
+}

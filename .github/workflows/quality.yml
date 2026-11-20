@@ -40,12 +40,20 @@ jobs:
         env:
           TZ: Africa/Nairobi
       - run: npx prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code
+      - name: Non-UTC voice confirmation and input verification
+        run: npm run test:integration -- tests/integration/voice-drafts.test.ts tests/integration/voice-input.test.ts
+        env:
+          TZ: Africa/Nairobi
       - name: Stock recovery rehearsal
         run: node tests/support/phase05-recovery.mjs
         env:
           MYFARM_TEST_CONTAINER: ${{ job.services.postgres.id }}
       - name: Activity recovery rehearsal
         run: node tests/support/phase06-recovery.mjs
+        env:
+          MYFARM_TEST_CONTAINER: ${{ job.services.postgres.id }}
+      - name: Voice confirmation recovery rehearsal
+        run: node tests/support/phase12-recovery.mjs
         env:
           MYFARM_TEST_CONTAINER: ${{ job.services.postgres.id }}
       - run: npm run build

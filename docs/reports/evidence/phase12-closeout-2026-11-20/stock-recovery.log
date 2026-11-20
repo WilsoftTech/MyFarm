@@ -1,0 +1,2 @@
+$ node tests/support/phase05-recovery.mjs
+PASS: real dump/restore retains exact maximum stock, immutable operation/approval/audit provenance, unique approval, RLS and runtime/browser grants.

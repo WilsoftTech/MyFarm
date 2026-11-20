@@ -57,7 +57,7 @@ const batchOf = (command: TransactionCommand) => "batchId" in command ? command.
  * A cost on a batch belongs to that batch's enterprise, so the enterprise's gross margin stays whole. Normalized
  * before the receipt check, so a retry compares like with like. Another farm's batch looks the same as a missing one.
  */
-async function withBatchEnterprise<C extends TransactionCommand>(tx: Prisma.TransactionClient, scope: FarmScope, command: C): Promise<C> {
+export async function withBatchEnterprise<C extends TransactionCommand>(tx: Prisma.TransactionClient, scope: FarmScope, command: C): Promise<C> {
   const batchId = batchOf(command);
   if (!batchId) return command;
   const batch = await tx.poultryBatch.findFirst({ where: { ...scoped(scope), id: batchId }, select: { enterpriseId: true } });
@@ -166,39 +166,47 @@ export function farmAccountingRepository(db: PrismaClient): FarmAccountingReposi
   };
 }
 
+/** Reused by draft review and the writer: validate current references without posting a record. */
+export async function validateAccountingRecord(tx: Prisma.TransactionClient, scope: import("@/modules/enterprises-seasons/contracts/production").ProductionWriteScope, kind: AccountingRecordKind, command: TransactionCommand) {
+  await requireProductionWriteAccess(tx, scope);
+  const where = scoped(scope);
+  const methodId = "paymentMethodId" in command ? command.paymentMethodId : undefined;
+  const [category, method, plot, enterprise, season] = await Promise.all([
+    tx.transactionCategory.findUnique({ where: { id: command.categoryId } }),
+    methodId ? tx.paymentMethod.findUnique({ where: { id: methodId } }) : null,
+    command.plotId ? tx.plot.findFirst({ where: { ...where, id: command.plotId } }) : null,
+    command.enterpriseId ? tx.enterprise.findFirst({ where: { ...where, id: command.enterpriseId } }) : null,
+    command.seasonId ? tx.season.findFirst({ where: { ...where, id: command.seasonId } }) : null,
+  ]);
+  if (!category || (methodId && !method)) throw new FoundationError("INVALID_INPUT");
+  // Another farm's (or an unknown) link is indistinguishable from a missing one: FORBIDDEN.
+  if ((command.plotId && !plot) || (command.enterpriseId && !enterprise) || (command.seasonId && !season)) throw new FoundationError("FORBIDDEN");
+  // D-P04-007: a crop enterprise linked with a plot and/or season must match one of its cycles (any status).
+  const cropCycles = enterprise && (command.plotId || command.seasonId) ? (await tx.cropCycle.findMany({
+    where: { ...where, enterpriseId: enterprise.id, ...(command.plotId ? { plotId: command.plotId } : {}), ...(command.seasonId ? { seasonId: command.seasonId } : {}) },
+    select: { id: true, tenantId: true, farmId: true, enterpriseId: true, seasonId: true, plotId: true }, take: 1,
+  })).map(cycle => ({ cycleId: cycle.id, tenantId: cycle.tenantId, farmId: cycle.farmId, enterpriseId: cycle.enterpriseId, seasonId: cycle.seasonId, plotId: cycle.plotId })) : [];
+  assertAccountingRecord(scope, { ...command, kind, paymentMethodId: methodId, batchId: batchOf(command) }, {
+    category: { categoryId: category.id, kind: category.kind, active: category.active },
+    paymentMethod: method ? { paymentMethodId: method.id, active: method.active } : undefined,
+    plot: plot ? { ...where, plotId: plot.id } : undefined,
+    enterprise: enterprise ? { ...where, enterpriseId: enterprise.id, type: enterprise.type, status: enterprise.status } : undefined,
+    season: season ? { ...where, seasonId: season.id, status: season.status } : undefined,
+    cropCycles,
+  });
+  return category;
+}
+
 /** Shared transaction writer for single stock/financial source events. Caller owns receipt and commit. */
 export async function createAccountingRecord(tx: Prisma.TransactionClient, scope: import("@/modules/enterprises-seasons/contracts/production").ProductionWriteScope, kind: AccountingRecordKind, command: TransactionCommand, id: string) {
-  await requireProductionWriteAccess(tx, scope);
-      const where = scoped(scope);
-      const methodId = "paymentMethodId" in command ? command.paymentMethodId : undefined;
-      const [category, method, plot, enterprise, season] = await Promise.all([
-        tx.transactionCategory.findUnique({ where: { id: command.categoryId } }),
-        methodId ? tx.paymentMethod.findUnique({ where: { id: methodId } }) : null,
-        command.plotId ? tx.plot.findFirst({ where: { ...where, id: command.plotId } }) : null,
-        command.enterpriseId ? tx.enterprise.findFirst({ where: { ...where, id: command.enterpriseId } }) : null,
-        command.seasonId ? tx.season.findFirst({ where: { ...where, id: command.seasonId } }) : null,
-      ]);
-      if (!category || (methodId && !method)) throw new FoundationError("INVALID_INPUT");
-      // Another farm's (or an unknown) link is indistinguishable from a missing one: FORBIDDEN.
-      if ((command.plotId && !plot) || (command.enterpriseId && !enterprise) || (command.seasonId && !season)) throw new FoundationError("FORBIDDEN");
-      // D-P04-007: a crop enterprise linked with a plot and/or season must match one of its cycles (any status).
-      const cropCycles = enterprise && (command.plotId || command.seasonId) ? (await tx.cropCycle.findMany({
-        where: { ...where, enterpriseId: enterprise.id, ...(command.plotId ? { plotId: command.plotId } : {}), ...(command.seasonId ? { seasonId: command.seasonId } : {}) },
-        select: { id: true, tenantId: true, farmId: true, enterpriseId: true, seasonId: true, plotId: true }, take: 1,
-      })).map(cycle => ({ cycleId: cycle.id, tenantId: cycle.tenantId, farmId: cycle.farmId, enterpriseId: cycle.enterpriseId, seasonId: cycle.seasonId, plotId: cycle.plotId })) : [];
-      assertAccountingRecord(scope, { ...command, kind, paymentMethodId: methodId, batchId: batchOf(command) }, {
-        category: { categoryId: category.id, kind: category.kind, active: category.active },
-        paymentMethod: method ? { paymentMethodId: method.id, active: method.active } : undefined,
-        plot: plot ? { ...where, plotId: plot.id } : undefined,
-        enterprise: enterprise ? { ...where, enterpriseId: enterprise.id, type: enterprise.type, status: enterprise.status } : undefined,
-        season: season ? { ...where, seasonId: season.id, status: season.status } : undefined,
-        cropCycles,
-      });
-      const row = await tx.accountingRecord.create({ data: {
-        id, ...where, kind, categoryId: category.id, categoryName: category.name, amount: command.amount, currency: command.currency, occurredOn: date(command.occurredOn),
-        counterparty: command.counterparty, paymentMethodId: methodId, plotId: command.plotId, enterpriseId: command.enterpriseId, seasonId: command.seasonId, batchId: batchOf(command), createdBy: scope.actorId,
-      }, include: recordInclude });
-      return recordView(row);
+  const category = await validateAccountingRecord(tx, scope, kind, command);
+  const where = scoped(scope);
+  const methodId = "paymentMethodId" in command ? command.paymentMethodId : undefined;
+  const row = await tx.accountingRecord.create({ data: {
+    id, ...where, kind, categoryId: category.id, categoryName: category.name, amount: command.amount, currency: command.currency, occurredOn: date(command.occurredOn),
+    counterparty: command.counterparty, paymentMethodId: methodId, plotId: command.plotId, enterpriseId: command.enterpriseId, seasonId: command.seasonId, batchId: batchOf(command), createdBy: scope.actorId,
+  }, include: recordInclude });
+  return recordView(row);
 }
 
 /** Caller owns the coordinated stock/finance receipt and transaction. Payments must be reversed first. */

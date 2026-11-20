@@ -9,7 +9,8 @@ import { join } from "node:path";
  */
 // Phase 11 (AI assistant) was authorized on 2026-11-12 (D-P11-001), so its names are allowed; its provider packages
 // and secrets stay forbidden until the owner chooses a provider (D-P11-002: a fake explains answers until then).
-const later = /^(voice|marketplace|market|buyers?|listings?|wallets?|mobile-money|momo|mpesa|loans?|lending|credit|financing|insurance|billing|subscriptions?|checkout)$/i;
+// Phase 12 test adapters and text fallback authorized on 2026-11-18 (D-P12-001); provider packages remain forbidden.
+const later = /^(marketplace|market|buyers?|listings?|wallets?|mobile-money|momo|mpesa|loans?|lending|credit|financing|insurance|billing|subscriptions?|checkout)$/i;
 const laterPackages = /^(openai|@anthropic-ai\/.+|@google\/(generative-ai|genai)|langchain|@langchain\/.+|ai|@ai-sdk\/.+|stripe|@stripe\/.+|paystack.*|flutterwave.*|@flutterwave\/.+|mtn-momo.*|africastalking|twilio)$/;
 const laterSecrets = /process\.env\.(OPENAI|ANTHROPIC|GEMINI|STRIPE|PAYSTACK|FLUTTERWAVE|MOMO|MPESA|TWILIO|AFRICASTALKING)\w*/;
 
@@ -23,7 +24,7 @@ const source = walk("src").filter(path => !path.includes(join("src", "generated"
 const segments = (path: string) => path.split(/[\\/]/).map(part => part.replace(/^\(|\)$|^\[|\]$/g, "").replace(/\.(tsx?|mjs)$/, ""));
 
 describe("MVP scope: later-phase capabilities are absent (MYF-P08-R004)", () => {
-  it("no route, module or component for AI, voice, markets, wallets, lending or billing", () => {
+  it("no route, module or component for markets, wallets, lending or billing", () => {
     expect(source.filter(path => segments(path).some(part => later.test(part)))).toEqual([]);
   });
   it("no AI, payment-provider or messaging package is installed", () => {
@@ -35,8 +36,8 @@ describe("MVP scope: later-phase capabilities are absent (MYF-P08-R004)", () => 
     expect(source.filter(path => /\.(tsx?|mjs)$/.test(path) && laterSecrets.test(readFileSync(path, "utf8")))).toEqual([]);
   });
   it("the guard itself recognises later-phase names and leaves Phase 4 payments alone", () => {
-    expect(["wallet", "marketplace", "loans", "voice", "billing"].every(name => later.test(name))).toBe(true);
-    expect(["ai", "assistant", "ai-assistant"].some(name => later.test(name))).toBe(false);
+    expect(["wallet", "marketplace", "loans", "billing"].every(name => later.test(name))).toBe(true);
+    expect(["ai", "assistant", "ai-assistant", "voice", "voice-experience"].some(name => later.test(name))).toBe(false);
     expect(["payments", "payment-methods", "accounting", "activities"].some(name => later.test(name))).toBe(false);
     expect(["openai", "@anthropic-ai/sdk", "stripe", "@langchain/core"].every(name => laterPackages.test(name))).toBe(true);
   });

@@ -1,0 +1,270 @@
+$ npm run test:e2e -- --config playwright.production.config.ts tests/browser/voice-ui.spec.ts tests/browser/farm-accounting-ui.spec.ts --reporter=line
+
+> myfarm@0.1.0 test:e2e
+> playwright test --config playwright.production.config.ts tests/browser/voice-ui.spec.ts tests/browser/farm-accounting-ui.spec.ts --reporter=line
+
+[WebServer] (node:21900) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:18576) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 32 tests using 1 worker
+
+(node:18696) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/32] [desktop] › tests\browser\farm-accounting-ui.spec.ts:45:1 › AC001: one sale, a partial payment, UGX 120,000 still to receive and one revenue record
+[2/32] [desktop] › tests\browser\farm-accounting-ui.spec.ts:77:1 › an expense records how it was paid; a purchase is paid in full; farms stay separate
+[3/32] [desktop] › tests\browser\farm-accounting-ui.spec.ts:102:1 › overpayment and a lost response keep the draft and never duplicate a payment
+[WebServer] {"event":"request_failed","requestId":"18774f33-e804-4690-aa3d-3c9f971cd2bf","code":"CONFLICT"}
+
+[4/32] [desktop] › tests\browser\farm-accounting-ui.spec.ts:128:1 › payments are reversed before the sale; reversals keep history and restore what is due
+[5/32] [desktop] › tests\browser\farm-accounting-ui.spec.ts:152:1 › offline forms keep details and save once after reconnecting
+[6/32] [desktop] › tests\browser\farm-accounting-ui.spec.ts:161:1 › other farms, users and kinds are denied; revocation keeps the draft; expired sessions sign in again
+[WebServer] {"event":"request_failed","requestId":"db87ce91-ed07-43d9-b769-4f0b74ff3697","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"a1eeb7ea-d2f9-4ef4-a4d8-4f083f2f55a2","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"7d425384-cb9a-40fb-a86c-6647189d153e","code":"UNAUTHENTICATED"}
+
+[7/32] [desktop] › tests\browser\voice-ui.spec.ts:25:1 › AC001 reviews the source total, creates nothing until confirmed, and opens the one saved expense
+[8/32] [desktop] › tests\browser\voice-ui.spec.ts:34:1 › AC001 a mistaken amount must be reviewed again and discarding posts no expense
+[9/32] [desktop] › tests\browser\voice-ui.spec.ts:41:1 › AC002 a lost response is retried as the same confirmation, with one financial effect
+[10/32] [desktop] › tests\browser\voice-ui.spec.ts:50:1 › AC002 a pending review resumes after refresh but never carries confirmation consent
+[11/32] [desktop] › tests\browser\voice-ui.spec.ts:54:1 › AC002 retrying the same confirmation response remains available
+[12/32] [desktop] › tests\browser\voice-ui.spec.ts:62:1 › AC002 access revoked after review prevents confirmation
+[WebServer] {"event":"request_failed","requestId":"6444f548-05e2-44c0-81a9-d1ac03a1565d","code":"FORBIDDEN"}
+
+[13/32] [desktop] › tests\browser\voice-ui.spec.ts:68:1 › AC002 editing invalidates a copied confirmation and expiry requires fresh review
+[WebServer] {"event":"request_failed","requestId":"0f2b2533-41e7-4d86-ab36-6de3161a65f1","code":"CONFLICT"}
+
+[14/32] [desktop] › tests\browser\voice-ui.spec.ts:82:1 › AC002 an expired session cannot commit, and offline review keeps input for reconnect
+[WebServer] {"event":"request_failed","requestId":"fe73a1d9-5ca0-4bd6-bdca-6c077359f228","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"62d15765-683c-4385-a4f9-19c009b09db2","code":"UNAUTHENTICATED"}
+
+[15/32] [desktop] › tests\browser\voice-ui.spec.ts:91:1 › AC003 language choices promise no speech and fall back to text; the source example reviews two bags as one total
+[16/32] [desktop] › tests\browser\voice-ui.spec.ts:111:1 › AC002 editing a review already confirmed in another window recovers its receipt instead of posting a duplicate
+[WebServer] {"event":"request_failed","requestId":"6b1cc651-9330-446b-8d96-351aaf12bac7","code":"CONFLICT"}
+
+(node:18500) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[17/32] [mobile] › tests\browser\farm-accounting-ui.spec.ts:45:1 › AC001: one sale, a partial payment, UGX 120,000 still to receive and one revenue record
+  1) [mobile] › tests\browser\farm-accounting-ui.spec.ts:45:1 › AC001: one sale, a partial payment, UGX 120,000 still to receive and one revenue record
+
+    error: update or delete on table "AccountingRecord" violates foreign key constraint "VoiceExpenseDraft_accountingRecordId_farmId_tenantId_fkey" on table "VoiceExpenseDraft"
+
+       7 | async function query(sql: string, values: unknown[] = []) {
+       8 |   const db = new Client({ connectionString: process.env.TEST_DATABASE_URL }); await db.connect();
+    >  9 |   try { return await db.query(sql, values); } finally { await db.end(); }
+         |                ^
+      10 | }
+      11 | async function identity(context: BrowserContext, who: "a" | "b" | "admin") {
+      12 |   await context.clearCookies(); await context.addCookies([{ name: "sb-127-auth-token", value: fixtures.accounts[who].cookie, url: "http://127.0.0.1:3102", httpOnly: true, sameSite: "Lax", secure: false }]);
+        at D:\Myfarm\node_modules\pg\lib\client.js:545:17
+        at query (D:\Myfarm\tests\browser\farm-accounting-ui.spec.ts:9:16)
+        at D:\Myfarm\tests\browser\farm-accounting-ui.spec.ts:39:105
+
+    Error Context: test-results\farm-accounting-ui-AC001-o-d8c0f-eive-and-one-revenue-record-mobile\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\farm-accounting-ui-AC001-o-d8c0f-eive-and-one-revenue-record-mobile\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\farm-accounting-ui-AC001-o-d8c0f-eive-and-one-revenue-record-mobile\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+(node:11604) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[18/32] [mobile] › tests\browser\farm-accounting-ui.spec.ts:77:1 › an expense records how it was paid; a purchase is paid in full; farms stay separate
+  2) [mobile] › tests\browser\farm-accounting-ui.spec.ts:77:1 › an expense records how it was paid; a purchase is paid in full; farms stay separate
+
+    error: update or delete on table "AccountingRecord" violates foreign key constraint "VoiceExpenseDraft_accountingRecordId_farmId_tenantId_fkey" on table "VoiceExpenseDraft"
+
+       7 | async function query(sql: string, values: unknown[] = []) {
+       8 |   const db = new Client({ connectionString: process.env.TEST_DATABASE_URL }); await db.connect();
+    >  9 |   try { return await db.query(sql, values); } finally { await db.end(); }
+         |                ^
+      10 | }
+      11 | async function identity(context: BrowserContext, who: "a" | "b" | "admin") {
+      12 |   await context.clearCookies(); await context.addCookies([{ name: "sb-127-auth-token", value: fixtures.accounts[who].cookie, url: "http://127.0.0.1:3102", httpOnly: true, sameSite: "Lax", secure: false }]);
+        at D:\Myfarm\node_modules\pg\lib\client.js:545:17
+        at query (D:\Myfarm\tests\browser\farm-accounting-ui.spec.ts:9:16)
+        at D:\Myfarm\tests\browser\farm-accounting-ui.spec.ts:39:105
+
+    Error Context: test-results\farm-accounting-ui-an-expe-806eb-in-full-farms-stay-separate-mobile\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\farm-accounting-ui-an-expe-806eb-in-full-farms-stay-separate-mobile\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\farm-accounting-ui-an-expe-806eb-in-full-farms-stay-separate-mobile\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+(node:5640) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[19/32] [mobile] › tests\browser\farm-accounting-ui.spec.ts:102:1 › overpayment and a lost response keep the draft and never duplicate a payment
+  3) [mobile] › tests\browser\farm-accounting-ui.spec.ts:102:1 › overpayment and a lost response keep the draft and never duplicate a payment
+
+    error: update or delete on table "AccountingRecord" violates foreign key constraint "VoiceExpenseDraft_accountingRecordId_farmId_tenantId_fkey" on table "VoiceExpenseDraft"
+
+       7 | async function query(sql: string, values: unknown[] = []) {
+       8 |   const db = new Client({ connectionString: process.env.TEST_DATABASE_URL }); await db.connect();
+    >  9 |   try { return await db.query(sql, values); } finally { await db.end(); }
+         |                ^
+      10 | }
+      11 | async function identity(context: BrowserContext, who: "a" | "b" | "admin") {
+      12 |   await context.clearCookies(); await context.addCookies([{ name: "sb-127-auth-token", value: fixtures.accounts[who].cookie, url: "http://127.0.0.1:3102", httpOnly: true, sameSite: "Lax", secure: false }]);
+        at D:\Myfarm\node_modules\pg\lib\client.js:545:17
+        at query (D:\Myfarm\tests\browser\farm-accounting-ui.spec.ts:9:16)
+        at D:\Myfarm\tests\browser\farm-accounting-ui.spec.ts:39:105
+
+    Error Context: test-results\farm-accounting-ui-overpay-50f15-d-never-duplicate-a-payment-mobile\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\farm-accounting-ui-overpay-50f15-d-never-duplicate-a-payment-mobile\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\farm-accounting-ui-overpay-50f15-d-never-duplicate-a-payment-mobile\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+(node:24732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[20/32] [mobile] › tests\browser\farm-accounting-ui.spec.ts:128:1 › payments are reversed before the sale; reversals keep history and restore what is due
+  4) [mobile] › tests\browser\farm-accounting-ui.spec.ts:128:1 › payments are reversed before the sale; reversals keep history and restore what is due
+
+    error: update or delete on table "AccountingRecord" violates foreign key constraint "VoiceExpenseDraft_accountingRecordId_farmId_tenantId_fkey" on table "VoiceExpenseDraft"
+
+       7 | async function query(sql: string, values: unknown[] = []) {
+       8 |   const db = new Client({ connectionString: process.env.TEST_DATABASE_URL }); await db.connect();
+    >  9 |   try { return await db.query(sql, values); } finally { await db.end(); }
+         |                ^
+      10 | }
+      11 | async function identity(context: BrowserContext, who: "a" | "b" | "admin") {
+      12 |   await context.clearCookies(); await context.addCookies([{ name: "sb-127-auth-token", value: fixtures.accounts[who].cookie, url: "http://127.0.0.1:3102", httpOnly: true, sameSite: "Lax", secure: false }]);
+        at D:\Myfarm\node_modules\pg\lib\client.js:545:17
+        at query (D:\Myfarm\tests\browser\farm-accounting-ui.spec.ts:9:16)
+        at D:\Myfarm\tests\browser\farm-accounting-ui.spec.ts:39:105
+
+    Error Context: test-results\farm-accounting-ui-payment-c0144-ory-and-restore-what-is-due-mobile\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\farm-accounting-ui-payment-c0144-ory-and-restore-what-is-due-mobile\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\farm-accounting-ui-payment-c0144-ory-and-restore-what-is-due-mobile\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+(node:6544) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[21/32] [mobile] › tests\browser\farm-accounting-ui.spec.ts:152:1 › offline forms keep details and save once after reconnecting
+  5) [mobile] › tests\browser\farm-accounting-ui.spec.ts:152:1 › offline forms keep details and save once after reconnecting
+
+    error: update or delete on table "AccountingRecord" violates foreign key constraint "VoiceExpenseDraft_accountingRecordId_farmId_tenantId_fkey" on table "VoiceExpenseDraft"
+
+       7 | async function query(sql: string, values: unknown[] = []) {
+       8 |   const db = new Client({ connectionString: process.env.TEST_DATABASE_URL }); await db.connect();
+    >  9 |   try { return await db.query(sql, values); } finally { await db.end(); }
+         |                ^
+      10 | }
+      11 | async function identity(context: BrowserContext, who: "a" | "b" | "admin") {
+      12 |   await context.clearCookies(); await context.addCookies([{ name: "sb-127-auth-token", value: fixtures.accounts[who].cookie, url: "http://127.0.0.1:3102", httpOnly: true, sameSite: "Lax", secure: false }]);
+        at D:\Myfarm\node_modules\pg\lib\client.js:545:17
+        at query (D:\Myfarm\tests\browser\farm-accounting-ui.spec.ts:9:16)
+        at D:\Myfarm\tests\browser\farm-accounting-ui.spec.ts:39:105
+
+    Error Context: test-results\farm-accounting-ui-offline-a2080-ave-once-after-reconnecting-mobile\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\farm-accounting-ui-offline-a2080-ave-once-after-reconnecting-mobile\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\farm-accounting-ui-offline-a2080-ave-once-after-reconnecting-mobile\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+(node:4240) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[22/32] [mobile] › tests\browser\farm-accounting-ui.spec.ts:161:1 › other farms, users and kinds are denied; revocation keeps the draft; expired sessions sign in again
+  6) [mobile] › tests\browser\farm-accounting-ui.spec.ts:161:1 › other farms, users and kinds are denied; revocation keeps the draft; expired sessions sign in again
+
+    error: update or delete on table "AccountingRecord" violates foreign key constraint "VoiceExpenseDraft_accountingRecordId_farmId_tenantId_fkey" on table "VoiceExpenseDraft"
+
+       7 | async function query(sql: string, values: unknown[] = []) {
+       8 |   const db = new Client({ connectionString: process.env.TEST_DATABASE_URL }); await db.connect();
+    >  9 |   try { return await db.query(sql, values); } finally { await db.end(); }
+         |                ^
+      10 | }
+      11 | async function identity(context: BrowserContext, who: "a" | "b" | "admin") {
+      12 |   await context.clearCookies(); await context.addCookies([{ name: "sb-127-auth-token", value: fixtures.accounts[who].cookie, url: "http://127.0.0.1:3102", httpOnly: true, sameSite: "Lax", secure: false }]);
+        at D:\Myfarm\node_modules\pg\lib\client.js:545:17
+        at query (D:\Myfarm\tests\browser\farm-accounting-ui.spec.ts:9:16)
+        at D:\Myfarm\tests\browser\farm-accounting-ui.spec.ts:39:105
+
+    Error Context: test-results\farm-accounting-ui-other-f-fc421-ired-sessions-sign-in-again-mobile\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\farm-accounting-ui-other-f-fc421-ired-sessions-sign-in-again-mobile\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\farm-accounting-ui-other-f-fc421-ired-sessions-sign-in-again-mobile\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+(node:17216) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[23/32] [mobile] › tests\browser\voice-ui.spec.ts:25:1 › AC001 reviews the source total, creates nothing until confirmed, and opens the one saved expense
+[24/32] [mobile] › tests\browser\voice-ui.spec.ts:34:1 › AC001 a mistaken amount must be reviewed again and discarding posts no expense
+[25/32] [mobile] › tests\browser\voice-ui.spec.ts:41:1 › AC002 a lost response is retried as the same confirmation, with one financial effect
+[26/32] [mobile] › tests\browser\voice-ui.spec.ts:50:1 › AC002 a pending review resumes after refresh but never carries confirmation consent
+[27/32] [mobile] › tests\browser\voice-ui.spec.ts:54:1 › AC002 retrying the same confirmation response remains available
+[28/32] [mobile] › tests\browser\voice-ui.spec.ts:62:1 › AC002 access revoked after review prevents confirmation
+[WebServer] {"event":"request_failed","requestId":"8c2bfac1-3c2b-4f8e-970f-d64ae86f4d76","code":"FORBIDDEN"}
+
+[29/32] [mobile] › tests\browser\voice-ui.spec.ts:68:1 › AC002 editing invalidates a copied confirmation and expiry requires fresh review
+[WebServer] {"event":"request_failed","requestId":"a6d7e7e9-a240-443f-975b-497cee5ba6a6","code":"CONFLICT"}
+
+[30/32] [mobile] › tests\browser\voice-ui.spec.ts:82:1 › AC002 an expired session cannot commit, and offline review keeps input for reconnect
+[WebServer] {"event":"request_failed","requestId":"0f7dd5c4-dd9d-46bb-bd37-990f34c36fcb","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"f6fd7acf-2c09-4985-853a-156b298c54d5","code":"UNAUTHENTICATED"}
+
+[31/32] [mobile] › tests\browser\voice-ui.spec.ts:91:1 › AC003 language choices promise no speech and fall back to text; the source example reviews two bags as one total
+[32/32] [mobile] › tests\browser\voice-ui.spec.ts:111:1 › AC002 editing a review already confirmed in another window recovers its receipt instead of posting a duplicate
+[WebServer] {"event":"request_failed","requestId":"dcadde7b-c51b-4060-8121-9bf21b19125c","code":"CONFLICT"}
+
+  6 failed
+    [mobile] › tests\browser\farm-accounting-ui.spec.ts:45:1 › AC001: one sale, a partial payment, UGX 120,000 still to receive and one revenue record
+    [mobile] › tests\browser\farm-accounting-ui.spec.ts:77:1 › an expense records how it was paid; a purchase is paid in full; farms stay separate
+    [mobile] › tests\browser\farm-accounting-ui.spec.ts:102:1 › overpayment and a lost response keep the draft and never duplicate a payment
+    [mobile] › tests\browser\farm-accounting-ui.spec.ts:128:1 › payments are reversed before the sale; reversals keep history and restore what is due
+    [mobile] › tests\browser\farm-accounting-ui.spec.ts:152:1 › offline forms keep details and save once after reconnecting
+    [mobile] › tests\browser\farm-accounting-ui.spec.ts:161:1 › other farms, users and kinds are denied; revocation keeps the draft; expired sessions sign in again
+  26 passed (1.5m)

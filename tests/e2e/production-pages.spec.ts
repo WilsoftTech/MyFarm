@@ -34,6 +34,13 @@ test("activity calendar and repeating pages send anonymous users to sign-in", as
     expect(response.status()).toBe(307); expect(response.headers()["cache-control"]).toContain("no-store");
   }
 });
+test("the Ask page sends anonymous users to sign-in before rendering any question (P11)", async ({ page, request }) => {
+  await page.goto(`/farms/${farm}/assistant`);
+  await expect(page).toHaveURL(/\/sign-in\?reason=session-required/);
+  const response = await request.get(`/farms/${farm}/assistant`, { maxRedirects: 0 });
+  expect(response.status()).toBe(307); expect(response.headers()["location"]).toBe("/sign-in?reason=session-required");
+  expect(response.headers()["cache-control"]).toContain("no-store");
+});
 test("the offline shell is public, static and free of farm data", async ({ request }) => {
   const response = await request.get("/offline", { maxRedirects: 0 });
   expect(response.status()).toBe(200);

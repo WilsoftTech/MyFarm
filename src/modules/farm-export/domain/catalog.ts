@@ -46,6 +46,8 @@ export const EXPORT_FILES: readonly ExportFile[] = Object.freeze([
   // Phase 11 (D-P11-003, D-P11-004): your own questions to the assistant still kept, and what explaining answers cost the farm.
   { file: "my-assistant-questions.csv", table: "AssistantQuestion", scope: "mine", only: `"retentionUntil" > now()`, description: "Your own questions to the farm assistant and the answers shown, kept 90 days", columns: [col("questionId", "id"), col("question"), col("intent"), col("answers"), col("provider"), col("model"), created, time("keptUntil", "retentionUntil")] },
   { file: "assistant-usage.csv", table: "AssistantUsage", scope: "farm", description: "What explaining assistant answers cost, with no question text", columns: [col("usageId", "id"), col("provider"), col("model"), col("calls"), col("inputTokens"), col("outputTokens"), col("costEstimateUsd"), created] },
+  // Private drafts and confirmation receipts (D-P12-002); leave mutation IDs and hashes out.
+  { file: "my-voice-expenses.csv", table: "VoiceExpenseDraft", scope: "mine", only: '("confirmedAt" IS NOT NULL OR "expiresAt" > now())', description: "Your own expense reviews and confirmed records, without audio or transcripts", columns: [col("draftId", "id"), { header: "review", sql: '("review" #- \'{command,requestId}\')' }, col("recordId", "accountingRecordId"), time("confirmedAt"), time("expiresAt"), created] },
 ]);
 
 export const PROFILE_FILE = "my-profile.csv";

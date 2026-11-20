@@ -1,0 +1,14 @@
+$ git diff --check
+warning: in the working copy of '.github/workflows/quality.yml', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/architecture/offline-sync-architecture.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/phases/phase-11-ai-assistant.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/app/farms/[farmId]/page.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/components/accounting/transaction-form.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/components/production/shell.tsx', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/modules/offline-first/client/sync-engine.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/modules/offline-first/domain/sync-state.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/browser/offline-replay-ui.spec.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/e2e/production-api.spec.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/e2e/production-pages.spec.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/unit/mvp-scope.test.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/unit/offline-sync-state.test.ts', LF will be replaced by CRLF the next time Git touches it

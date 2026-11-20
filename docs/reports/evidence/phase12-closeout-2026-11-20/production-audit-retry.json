@@ -1,0 +1,9 @@
+{
+  "name": "production-audit",
+  "command": "npm audit --omit=dev --json --fetch-retries=1 --fetch-timeout=20000",
+  "startedAt": "2026-11-20T06:26:53.884Z",
+  "exitCode": 0,
+  "signal": null,
+  "error": null,
+  "log": "production-audit-retry.log"
+}

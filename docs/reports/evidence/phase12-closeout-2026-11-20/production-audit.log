@@ -1,0 +1,11 @@
+$ npm audit --omit=dev --json
+npm warn audit request to https://registry.npmjs.org/-/npm/v1/security/advisories/bulk failed, reason:
+npm error audit endpoint returned an error
+{
+  "message": "request to https://registry.npmjs.org/-/npm/v1/security/advisories/bulk failed, reason: ",
+  "error": {
+    "summary": "",
+    "detail": ""
+  }
+}
+npm error A complete log of this run can be found in: C:\Users\willi\AppData\Local\npm-cache\_logs\2026-11-20T06_24_47_163Z-debug-0.log

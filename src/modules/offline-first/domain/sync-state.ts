@@ -23,9 +23,9 @@ export function retryDelayMs(attempt: number, random: () => number = Math.random
 export function startSending(entry: OutboxEntry, now: Date): OutboxEntry {
   return change(entry, "SYNCING", now, { leaseUntil: new Date(now.getTime() + SYNC_TIMING.leaseMs).toISOString() });
 }
-/** A browser that closed mid-send leaves SYNCING behind. The server's receipt makes the resend safe. */
-export function recoverIfAbandoned(entry: OutboxEntry, now: Date): OutboxEntry {
-  if (entry.syncStatus !== "SYNCING" || (entry.leaseUntil && Date.parse(entry.leaseUntil) > now.getTime())) return entry;
+/** A browser that closed mid-send leaves SYNCING behind. An exclusive Web Lock proves the prior sender is gone; otherwise wait for its lease. Server receipts make replay safe. */
+export function recoverIfAbandoned(entry: OutboxEntry, now: Date, exclusiveSender = false): OutboxEntry {
+  if (entry.syncStatus !== "SYNCING" || (!exclusiveSender && entry.leaseUntil && Date.parse(entry.leaseUntil) > now.getTime())) return entry;
   return change(entry, "PENDING", now, { leaseUntil: null, nextAttemptAt: null });
 }
 

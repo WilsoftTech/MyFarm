@@ -1,13 +1,13 @@
 # Decision log
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — T013 task-relevant content, status and evidence.
-- Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
-- Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
-- Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
-- Remaining work/blockers: Phase3 T001/T002 verified; T003–T013 and full acceptance remain. [T002 report](reports/phase-03-t002-2026-10-18.md). Historical sections stay historical.
-- Evidence/report links: [Phase1+2 integration report](reports/phase-01-02-integration-2026-10-09.md); [Phase02 closeout](reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](reports/phase-01-closeout-2026-10-08.md); [every-document review](reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](reports/phase-03-closeout-2026-10-25.md).
+- Documentation review: REVIEWED - Phase 12 T003-T010 implementation, full local audit and approved staged scope; historical evidence preserved.
+- Implementation status: REFERENCE ONLY - N/A.
+- Last reviewed: 2026-11-20 (Africa/Nairobi).
+- Related phase/task IDs: D-P12-001; D-P12-002; D-P12-003.
+- Verified completed work: Phase 11 closure accepted, P11-C4 explicitly confirmed, Phase 12 test-adapter start authorized.
+- Remaining work/blockers: Real speech/provider/privacy and measured-language policies remain decisions before dependent work; no hosted approval.
+- Evidence/report links: [Transition and verification](reports/phase-11-12-transition-2026-11-18.md).
 <!-- MYFARM-STATUS-END -->
 
 Date: 2026-10-08, Africa/Nairobi. Human owner roles below are **unassigned**, not invented personnel. No field research has been verified. Phase1 local engineering/test evidence is in the current closeout. [ADRs](architecture/architecture-decisions.md) explain tradeoffs.
@@ -676,3 +676,33 @@ DECIDED, owner 2026-11-12, selecting "Records only + strict tests (Recommended)"
 ## D-P11-006 - Phase 11 pushes and T001 readings confirmed
 
 DECIDED, owner 2026-11-12, answering "yes to all" to three questions after T001. (1) Phase 11 commits are pushed to `origin/main` as each task is verified, as in D-P10-001; this completes D-P11-001. (2) "Made the most money" means the Phase 8 enterprise gross margin, the same figure as the farm screen, not net profit (D-P08-002). (3) The question box tells farmers not to type names or phone numbers, because the question is sent as typed (D-P11-003). The third T001 reading (intent detection returns only an intent; the period comes from the farm screen's filters) was not asked separately and stands as engineering's reading.
+
+## D-P11-007 - Phase 11 closeout verdict
+
+ACCEPTED, owner 2026-11-18 requested "complete the current phase and go to next phase", then explicitly accepted the existing behaviors listed in P11-C4. Phase 11 is COMPLETED (10/10) with verdict PASS WITH CONDITIONS - LOCAL AND HOSTED CI VERIFICATION ([closeout](reports/phase-11-closeout-2026-11-13.md)). AC001 to AC003 are verified on desktop and mobile, and the D-P11-005 gate is met on real records for the test stand-in and for providers built to misbehave. Conditions: P11-C1 answers are worded by a test stand-in, and a real provider must pass the same question corpus and gate, under terms that forbid training on or keeping what is sent, before any farmer sees answers; P11-C2 the Phase 11 schema is not on hosted; P11-C3 a reviewed clean-up for questions of people who never ask again; P11-C4 engineering readings from T002, T004, T005 and T008 explicitly confirmed 2026-11-18; P11-C5 "unusual costs" runs the alert evaluation; P11-C6 asking and deleting are not in the audit trail; P11-C7 inherited Phase 10 items and the `FarmInsight` evidence check. Phase 12 contract work is authorized under D-P12-001. Other conditions remain and no farmer-release gate is waived.
+
+## D-P11-008 - Audit security remediation
+
+Engineering 2026-11-18: npm audit identified GHSA-mfr8-8qww-v76h and GHSA-vc7v-qv4w-wrv8 against Next.js 16.4.3. Updated the existing MIT-licensed framework to pinned patch 16.4.6; no new dependency or architecture. Both advisories identify 16.4.5 as patched. Existing dependencies or platform APIs cannot replace a framework security fix; no vulnerable caching API was found in application source. Lockfile updated through npm, without force, peer overrides or broad upgrades. See [verification](reports/phase-11-12-transition-2026-11-18.md) for the actual retest and remaining release gates.
+
+## D-P12-001 - Voice phase start and Q21 staged scope
+
+AUTHORIZED, owner 2026-11-18 requested advancement and selected "Start with test adapters (Recommended)": test speech adapters, text fallback, no retained audio, no paid provider and no unmeasured language-support claim. P11-C4 existing behavior was explicitly accepted before phase advancement was recorded. T001 is contract/domain work using the existing expense DTO, exact money validation and reviewed category/date selection. No actual transcription, microphone use, persisted draft, confirmation grant or financial write is implemented by T001. T002 must first resolve the minimum persisted draft/confirmation model, expiry and replay behavior; real speech/provider contracts, measured accuracy and offline behavior remain open Q21 work before affected capabilities. The proposed Phase 12 gate remains exact current actor/scope/payload/expiry confirmation and retry-safe execution; no gate is waived. Hosted changes, deployment, real-provider accounts, paid APIs and Phase 13 are not authorized by this start.
+
+## D-P11-009 - Offline lease recovery audit correction
+
+Engineering 2026-11-18: the full browser run exposed an abandoned, unexpired SYNCING lease after reload. A worker holding the exclusive same-account Web Lock now recovers it immediately; browsers without Web Locks keep the original expiry guard. Server receipts still protect duplicate financial requests, no queue/DB schema changes, no network or authorization changes. Unit and desktop/mobile regression evidence is in the [transition report](reports/phase-11-12-transition-2026-11-18.md). P11-C5 is also resolved: the owner explicitly accepted unusual-cost questions running the existing alert checks.
+
+## D-P12-002 - Persisted expense draft and confirmation policy
+
+APPROVED, owner 2026-11-19 selected "Approve proposed policy": save private drafts bound to the current actor and farm; expire unconfirmed drafts after 30 minutes; require fresh review after edits; commit confirmation, one expense and its receipt atomically; allow identical successful retries after expiry only after rechecking current access; retain completed receipts under the existing accounting audit policy, without audio or raw transcripts.
+
+The minimum implemented subset is one VoiceExpenseDraft table holding the versioned validated review, actor/farm/tenant binding, canonical payload hash, fixed expiry and optional completed expense reference/confirmation time. A completed row is the immutable confirmation receipt. Edits preserve the original expiry and require fresh confirmation of the new version/hash. The existing accounting writer, authorization and audit receipt pattern are reused; no separate AudioAsset or retained transcript is introduced. Expiry defines confirmation validity; background cleanup/physical erasure of expired unconfirmed selected fields is not claimed or assigned a new policy here.
+
+Verified locally 2026-11-20: T002 is complete, Phase 12 is 2/10 (20%); full AC001 awaits T003 UI acceptance. The migration/provisioning file was applied only to synthetic local PostgreSQL; hosted changes, deployment, real providers, measured language support and later phases remain unauthorized by this decision. [T002 evidence](reports/phase-12-t002-2026-11-20.md).
+
+## D-P12-003 - Complete remaining voice software tasks and commit
+
+AUTHORIZED, owner 2026-11-20 explicitly requested implementation of T003-T010 and a commit after completion. This continues D-P12-001's test-adapter/text-fallback/no-retained-audio scope and D-P12-002's private exact-confirmation policy. It authorizes the local completion, audit and commit of the tested application and its uncommitted prerequisites; no hosted push/deployment, real provider/account, paid API, real-language accuracy approval, microphone release or Phase 13 is inferred.
+
+Engineering outcome: all ten Phase 12 software tasks and scoped confirmation/language-advertising invariants pass local verification; verdict PASS WITH CONDITIONS - LOCAL VERIFICATION. The default speech registry is empty and the English example adapter is bounded; real speech and accuracy are explicitly not complete. Owner acceptance of this verdict remains pending. The audit also required the narrow Effect 3.22.1 transitive security override under @prisma/config; Prisma and direct dependencies were not broadly upgraded. [Closeout, exact evidence and conditions](reports/phase-12-closeout-2026-11-20.md).

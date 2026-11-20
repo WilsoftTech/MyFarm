@@ -1,0 +1,170 @@
+[
+  {
+    "name": "migrate",
+    "command": "npm run db:migrate",
+    "startedAt": "2026-11-20T06:22:28.093Z",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "name": "integration",
+    "command": "npm run test:integration",
+    "startedAt": "2026-11-20T06:22:30.360Z",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "name": "non-utc",
+    "command": "npm run test:integration -- tests/integration/voice-drafts.test.ts tests/integration/voice-input.test.ts tests/integration/farm-accounting-service.test.ts",
+    "startedAt": "2026-11-20T06:24:18.981Z",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "name": "drift",
+    "command": "node node_modules/prisma/build/index.js migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code",
+    "startedAt": "2026-11-20T06:24:30.660Z",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "name": "stock-recovery",
+    "command": "node tests/support/phase05-recovery.mjs",
+    "startedAt": "2026-11-20T06:24:32.286Z",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "name": "activity-recovery",
+    "command": "node tests/support/phase06-recovery.mjs",
+    "startedAt": "2026-11-20T06:24:36.999Z",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "name": "voice-recovery",
+    "command": "node tests/support/phase12-recovery.mjs",
+    "startedAt": "2026-11-20T06:24:41.823Z",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "name": "production-audit",
+    "command": "npm audit --omit=dev --json",
+    "startedAt": "2026-11-20T06:24:46.857Z",
+    "exitCode": 1,
+    "signal": null,
+    "error": null
+  },
+  {
+    "name": "anonymous-browser",
+    "command": "npm run test:e2e -- --reporter=line",
+    "startedAt": "2026-11-20T06:27:06.138Z",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "name": "signed-in-browser",
+    "command": "npm run test:e2e -- --config playwright.production.config.ts --reporter=line",
+    "startedAt": "2026-11-20T06:27:34.645Z",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "name": "lint",
+    "command": "npm run lint",
+    "startedAt": "2026-11-20T06:53:19.058Z",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "name": "typecheck",
+    "command": "npm run typecheck",
+    "startedAt": "2026-11-20T06:53:28.490Z",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "name": "boundaries",
+    "command": "npm run check:boundaries",
+    "startedAt": "2026-11-20T06:53:39.352Z",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "name": "unit-component",
+    "command": "npm test",
+    "startedAt": "2026-11-20T06:53:40.296Z",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "name": "build",
+    "command": "npm run build",
+    "startedAt": "2026-11-20T06:54:27.361Z",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "name": "fixture-build",
+    "command": "npm run build",
+    "startedAt": "2026-11-20T06:54:52.509Z",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "name": "diff",
+    "command": "git diff --check",
+    "startedAt": "2026-11-20T06:55:13.006Z",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "name": "post-fix-browser",
+    "command": "npm run test:e2e -- --config playwright.production.config.ts tests/browser/voice-ui.spec.ts tests/browser/farm-accounting-ui.spec.ts --reporter=line",
+    "startedAt": "2026-11-20T06:57:16.600Z",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "name": "final-lint",
+    "command": "npm run lint",
+    "startedAt": "2026-11-20T06:59:22.764Z",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "name": "final-typecheck",
+    "command": "npm run typecheck",
+    "startedAt": "2026-11-20T06:59:31.342Z",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  },
+  {
+    "name": "final-voice-component",
+    "command": "npm test -- tests/component/voice-expense.test.tsx",
+    "startedAt": "2026-11-20T06:59:40.290Z",
+    "exitCode": 0,
+    "signal": null,
+    "error": null
+  }
+]

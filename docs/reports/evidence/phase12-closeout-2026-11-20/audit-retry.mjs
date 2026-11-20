@@ -1,0 +1,11 @@
+import { openSync, closeSync, writeFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+const directory = "D:/Myfarm/.cache/phase12-complete/final";
+const command = "npm audit --omit=dev --json --fetch-retries=1 --fetch-timeout=20000";
+const fd = openSync(directory + "/production-audit-retry.log", "w");
+const startedAt = new Date().toISOString();
+const result = spawnSync(process.env.ComSpec, ["/d", "/s", "/c", command], { cwd: "D:/Myfarm", stdio: ["ignore", fd, fd], timeout: 120000 });
+closeSync(fd);
+const record = { name: "production-audit", command, startedAt, exitCode: result.status, signal: result.signal, error: result.error?.message ?? null, log: "production-audit-retry.log" };
+writeFileSync(directory + "/production-audit-retry.json", JSON.stringify(record, null, 2));
+console.log(JSON.stringify(record)); process.exitCode = result.status ?? 1;

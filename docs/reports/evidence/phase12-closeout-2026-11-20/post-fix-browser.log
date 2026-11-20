@@ -1,0 +1,87 @@
+$ npm run test:e2e -- --config playwright.production.config.ts tests/browser/voice-ui.spec.ts tests/browser/farm-accounting-ui.spec.ts --reporter=line
+
+> myfarm@0.1.0 test:e2e
+> playwright test --config playwright.production.config.ts tests/browser/voice-ui.spec.ts tests/browser/farm-accounting-ui.spec.ts --reporter=line
+
+[WebServer] (node:1472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:18932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 32 tests using 1 worker
+
+(node:22944) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/32] [desktop] › tests\browser\farm-accounting-ui.spec.ts:45:1 › AC001: one sale, a partial payment, UGX 120,000 still to receive and one revenue record
+[2/32] [desktop] › tests\browser\farm-accounting-ui.spec.ts:77:1 › an expense records how it was paid; a purchase is paid in full; farms stay separate
+[3/32] [desktop] › tests\browser\farm-accounting-ui.spec.ts:102:1 › overpayment and a lost response keep the draft and never duplicate a payment
+[WebServer] {"event":"request_failed","requestId":"7f968f4b-f0ba-45c1-94dd-6bc3781dc980","code":"CONFLICT"}
+
+[4/32] [desktop] › tests\browser\farm-accounting-ui.spec.ts:128:1 › payments are reversed before the sale; reversals keep history and restore what is due
+[5/32] [desktop] › tests\browser\farm-accounting-ui.spec.ts:152:1 › offline forms keep details and save once after reconnecting
+[6/32] [desktop] › tests\browser\farm-accounting-ui.spec.ts:161:1 › other farms, users and kinds are denied; revocation keeps the draft; expired sessions sign in again
+[WebServer] {"event":"request_failed","requestId":"c0adfac8-59cc-4f1a-8575-3af36504c742","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"8df535ee-b400-4e79-9c68-bc3aecc1409d","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"86f1d128-7d48-4352-937a-2c1e2a478990","code":"UNAUTHENTICATED"}
+
+[7/32] [desktop] › tests\browser\voice-ui.spec.ts:25:1 › AC001 reviews the source total, creates nothing until confirmed, and opens the one saved expense
+[8/32] [desktop] › tests\browser\voice-ui.spec.ts:34:1 › AC001 a mistaken amount must be reviewed again and discarding posts no expense
+[9/32] [desktop] › tests\browser\voice-ui.spec.ts:41:1 › AC002 a lost response is retried as the same confirmation, with one financial effect
+[10/32] [desktop] › tests\browser\voice-ui.spec.ts:50:1 › AC002 a pending review resumes after refresh but never carries confirmation consent
+[11/32] [desktop] › tests\browser\voice-ui.spec.ts:54:1 › AC002 retrying the same confirmation response remains available
+[12/32] [desktop] › tests\browser\voice-ui.spec.ts:62:1 › AC002 access revoked after review prevents confirmation
+[WebServer] {"event":"request_failed","requestId":"dc4279a9-e0b2-489b-abde-7cec5506bc96","code":"FORBIDDEN"}
+
+[13/32] [desktop] › tests\browser\voice-ui.spec.ts:68:1 › AC002 editing invalidates a copied confirmation and expiry requires fresh review
+[WebServer] {"event":"request_failed","requestId":"4bd23ab7-a21a-4bfc-bddf-f5c9f8606325","code":"CONFLICT"}
+
+[14/32] [desktop] › tests\browser\voice-ui.spec.ts:82:1 › AC002 an expired session cannot commit, and offline review keeps input for reconnect
+[WebServer] {"event":"request_failed","requestId":"3aa42eb2-b6a1-4a43-a5b6-f8cf5e3e05c0","code":"UNAUTHENTICATED"}
+
+[15/32] [desktop] › tests\browser\voice-ui.spec.ts:91:1 › AC003 language choices promise no speech and fall back to text; the source example reviews two bags as one total
+[16/32] [desktop] › tests\browser\voice-ui.spec.ts:111:1 › AC002 editing a review already confirmed in another window recovers its receipt instead of posting a duplicate
+[WebServer] {"event":"request_failed","requestId":"9675c4b0-61de-4b31-910a-79dccc434c7f","code":"CONFLICT"}
+
+(node:18256) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[17/32] [mobile] › tests\browser\farm-accounting-ui.spec.ts:45:1 › AC001: one sale, a partial payment, UGX 120,000 still to receive and one revenue record
+[18/32] [mobile] › tests\browser\farm-accounting-ui.spec.ts:77:1 › an expense records how it was paid; a purchase is paid in full; farms stay separate
+[19/32] [mobile] › tests\browser\farm-accounting-ui.spec.ts:102:1 › overpayment and a lost response keep the draft and never duplicate a payment
+[WebServer] {"event":"request_failed","requestId":"a259613f-0054-4782-9694-8235130986fc","code":"CONFLICT"}
+
+[20/32] [mobile] › tests\browser\farm-accounting-ui.spec.ts:128:1 › payments are reversed before the sale; reversals keep history and restore what is due
+[21/32] [mobile] › tests\browser\farm-accounting-ui.spec.ts:152:1 › offline forms keep details and save once after reconnecting
+[22/32] [mobile] › tests\browser\farm-accounting-ui.spec.ts:161:1 › other farms, users and kinds are denied; revocation keeps the draft; expired sessions sign in again
+[WebServer] {"event":"request_failed","requestId":"0fcb7d00-dded-40fa-9b88-99fb5d83017d","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"d4901126-bf01-442d-82c5-2b45335ce863","code":"UNAUTHENTICATED"}
+
+[23/32] [mobile] › tests\browser\voice-ui.spec.ts:25:1 › AC001 reviews the source total, creates nothing until confirmed, and opens the one saved expense
+[24/32] [mobile] › tests\browser\voice-ui.spec.ts:34:1 › AC001 a mistaken amount must be reviewed again and discarding posts no expense
+[25/32] [mobile] › tests\browser\voice-ui.spec.ts:41:1 › AC002 a lost response is retried as the same confirmation, with one financial effect
+[26/32] [mobile] › tests\browser\voice-ui.spec.ts:50:1 › AC002 a pending review resumes after refresh but never carries confirmation consent
+[27/32] [mobile] › tests\browser\voice-ui.spec.ts:54:1 › AC002 retrying the same confirmation response remains available
+[28/32] [mobile] › tests\browser\voice-ui.spec.ts:62:1 › AC002 access revoked after review prevents confirmation
+[WebServer] {"event":"request_failed","requestId":"1046d464-ee51-4572-8ca9-12d5ed1ab3a5","code":"FORBIDDEN"}
+
+[29/32] [mobile] › tests\browser\voice-ui.spec.ts:68:1 › AC002 editing invalidates a copied confirmation and expiry requires fresh review
+[WebServer] {"event":"request_failed","requestId":"02e41cca-19e4-4c91-b7a8-bd2f1fd304b2","code":"CONFLICT"}
+
+[30/32] [mobile] › tests\browser\voice-ui.spec.ts:82:1 › AC002 an expired session cannot commit, and offline review keeps input for reconnect
+[WebServer] {"event":"request_failed","requestId":"998f8f19-6e90-49e2-9d3e-fa4260df4b89","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"5ff9f788-cdd9-4783-80a6-65d833a7d66f","code":"UNAUTHENTICATED"}
+
+[31/32] [mobile] › tests\browser\voice-ui.spec.ts:91:1 › AC003 language choices promise no speech and fall back to text; the source example reviews two bags as one total
+[32/32] [mobile] › tests\browser\voice-ui.spec.ts:111:1 › AC002 editing a review already confirmed in another window recovers its receipt instead of posting a duplicate
+[WebServer] {"event":"request_failed","requestId":"13acb05d-e6cb-467e-a771-530b21f50b35","code":"CONFLICT"}
+
+  32 passed (1.8m)

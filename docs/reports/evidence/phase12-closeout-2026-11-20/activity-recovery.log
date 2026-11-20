@@ -1,0 +1,2 @@
+$ node tests/support/phase06-recovery.mjs
+PASS: real dump/restore retains activities, series, cost links, photo records and audit receipts, the one-occurrence-per-date key, the lifecycle check, RLS and runtime/browser grants.

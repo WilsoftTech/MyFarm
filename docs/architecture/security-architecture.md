@@ -1,13 +1,13 @@
 # Security architecture
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED - Phase 5 task-relevant contracts, implementation, status and evidence; historical sections preserved.
-- Implementation status: Phase 1-4 accepted with documented conditions; Phase 5 T001-T013 verified locally and in hosted CI; deployment conditions remain. No whole-architecture completion percentage claimed.
-- Last reviewed: 2026-11-03 (Africa/Nairobi), Phase 7 T013 audit.
-- Related phase/task IDs: Phase01 MYF-P01-T001–T013; Phase02 MYF-P02-T001–T013.
-- Verified completed work: Phase01 scope as previously verified; Phase02: farmer registry contracts/policies/migration/API/tests in this document's area verified (see the Phase 2 implementation section).
-- Remaining work/blockers: Phase 7 awaits owner acceptance; real-device measurement, hosted CI and the hosted photo schema remain, with inherited production conditions.
-- Evidence/report links: [Current Phase 5 audit](../reports/phase-05-closeout-2026-10-29.md); [document review](../reports/phase-05-document-review-2026-10-29.md). Historical task evidence remains linked below.
+- Documentation review: REVIEWED - Phase 12 task-relevant implementation, security/offline boundaries and evidence; historical sections preserved.
+- Implementation status: REFERENCE ONLY - architecture record; Phase 12 test/text implementation verified locally below, with release conditions.
+- Last reviewed: 2026-11-20 (Africa/Nairobi), Phase 12 task-relevant implementation review.
+- Related phase/task IDs: MYF-P12-T003 through T010; D-P12-001 through D-P12-003; historical task references retained in the body.
+- Verified completed work: Phase 12 approved test-adapter/text-fallback software and relevant exact-confirmation boundaries verified locally; no real speech or hosted claim.
+- Remaining work/blockers: P12-C1 through C6 and inherited release conditions; real speech/language accuracy, hosted work and owner acceptance remain.
+- Evidence/report links: [Phase 12 closeout](../reports/phase-12-closeout-2026-11-20.md); historical reports remain linked in their dated sections.
 <!-- MYFARM-STATUS-END -->
 
 Baseline security starts Phase 1; Phase 24 validates scale/recovery. Threats include cross-farm IDOR, shared-device leakage, privilege changes, malicious uploads, prompt injection, forged/replayed provider events, duplicate financial writes, stolen sessions/secrets and accidental backup exposure.
@@ -63,3 +63,7 @@ Final Phase 5 audit: T001-T013 and the hosted quality workflow pass at f999449 (
 Phase 6 reuses current session, FARMER and farm checks, scoped nested IDs and strict commands. Runtime updates are limited to lifecycle and series-progress columns while a record is open, browser roles have no access, and foreign records are refused with no receipt. Final Phase 6 audit: [hosted run 41524090703](https://github.com/WilsoftTech/MyFarm/actions/runs/41524090703); [closeout](../reports/phase-06-closeout-2026-11-03.md).
 
 Phase 7 keeps server authorization on every synced command. The service worker never stores signed-in pages or API responses. Local data is per account but not encrypted, and anyone holding a signed-in phone can see its cache (D-P07-003). [Closeout](../reports/phase-07-closeout-2026-11-03.md).
+
+## Phase 12 staged implementation - 2026-11-20
+
+Voice uses scoped private draft/receipt reads, strict untrusted suggestion schemas and a separate exact actor/farm/version/hash/expiry confirmation. Current account, role and farm membership are checked again inside the transaction after waits. Conflicting-window and lost-response recovery returns the existing receipt before permitting another intent. Text/synthetic adapters have no financial write capability; trusted measured provider/model/language/corpus approval gates speech advertising. Default speech is unavailable, no raw transcript/audio is retained, and microphone Permissions-Policy remains disabled. [Closeout and limitations](../reports/phase-12-closeout-2026-11-20.md).

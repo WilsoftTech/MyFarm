@@ -92,6 +92,7 @@ model User {
   recordPhotos RecordPhoto[]
   acknowledgedInsights FarmInsight[]
   assistantQuestions AssistantQuestion[]
+  voiceExpenseDrafts VoiceExpenseDraft[]
   batchFeedItems BatchFeedItem[]
   pilotCohorts PilotCohort[]
   pilotParticipations PilotParticipation[] @relation("PilotParticipant")
@@ -176,6 +177,7 @@ model Farm {
   recordPhotos RecordPhoto[]
   insights FarmInsight[]
   assistantQuestions AssistantQuestion[]
+  voiceExpenseDrafts VoiceExpenseDraft[]
   assistantUsage AssistantUsage[]
   @@unique([id, tenantId])
   @@index([tenantId, createdAt, id])
@@ -478,6 +480,7 @@ model AccountingRecord {
   stockOperation StockOperation?
   activities ProductionActivity[]
   photos RecordPhoto[]
+  voiceDrafts VoiceExpenseDraft[]
 }
 // A payment only settles sale/purchase obligations; its allocations share its status.
 model PaymentRecord {
@@ -1260,4 +1263,25 @@ model AssistantUsage {
   createdAt DateTime @default(now()) @db.Timestamptz(6)
   farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
   @@index([tenantId, farmId, createdAt])
+}
+
+// D-P12-002: no transcript/audio; a completed draft is also the immutable confirmation receipt.
+model VoiceExpenseDraft {
+  id String @id @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  actorId String @db.Uuid
+  requestId String @db.Uuid
+  review Json
+  payloadHash String @db.Char(64)
+  version Int @default(1)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  expiresAt DateTime @default(dbgenerated("(CURRENT_TIMESTAMP + '00:30:00'::interval)")) @db.Timestamptz(6)
+  confirmedAt DateTime? @db.Timestamptz(6)
+  accountingRecordId String? @unique @db.Uuid
+  farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  actor User @relation(fields: [actorId], references: [id], onDelete: Restrict)
+  record AccountingRecord? @relation(fields: [accountingRecordId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
+  @@unique([actorId, requestId])
+  @@index([farmId, tenantId])
 }

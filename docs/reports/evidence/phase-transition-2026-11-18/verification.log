@@ -1,0 +1,13 @@
+CHECK fresh isolated PostgreSQL
+a5bac761bfcdab0bf5025011b4043ed11c5587b8e799533ca603230998a4da25
+PASS fresh isolated PostgreSQL
+CHECK lint
+
+> myfarm@0.1.0 lint
+> eslint . --max-warnings=0
+
+PASS lint
+CHECK typecheck
+
+> myfarm@0.1.0 typecheck
+> prisma generate && tsc --noEmit

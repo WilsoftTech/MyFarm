@@ -1,0 +1,18 @@
+CHECK production-audit
+npm.cmd : npm warn audit request to https://registry.npmjs.org/-/npm/v1/security/advisories/bulk failed, reason:
+At D:\Myfarm\.cache\phase-transition-20261118\verify-postpatch.ps1:13 char:28
++ Check 'production-audit' { npm.cmd audit --omit=dev --json }
++                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm warn audit ...ailed, reason: :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+npm error audit endpoint returned an error
+{
+  "message": "request to https://registry.npmjs.org/-/npm/v1/security/advisories/bulk failed, reason: ",
+  "error": {
+    "summary": "",
+    "detail": ""
+  }
+}
+npm error A complete log of this run can be found in:
+C:\Users\willi\AppData\Local\npm-cache\_logs\2026-11-18T19_10_33_674Z-debug-0.log

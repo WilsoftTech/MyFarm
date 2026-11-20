@@ -1,16 +1,16 @@
 # Phase 11 AI Farm Assistant
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED - Phase 11 start to T009 evidence (2026-11-12).
-- Implementation status: PARTIALLY COMPLETE - 90% (9/10 verified tasks): MYF-P11-T001 to T009 verified locally; MYF-P11-AC001 to AC003 verified locally.
-- Last reviewed: 2026-11-12 (Africa/Nairobi).
-- Related phase/task IDs: Phase 11; MYF-P11-T001 through MYF-P11-T010; Q20; D-P10-008; D-P11-001 through D-P11-006.
-- Verified completed work: T001-T003 R001 (AC001); T004-T006 R002 (AC002); T007-T009 R003 (AC003): label rules, contradictory sources, groundedness gate met, labels explained on screen.
-- Remaining work/blockers: T010-T010 and AC001-AC003; migration 202611120003 not on hosted. Pushes per verified task (D-P11-006); a provider must be chosen before farmers see answers (D-P11-002); Phase 10 conditions P10-C1, C2, C3, C5 carry over.
-- Evidence/report links: [Phase 11 T009](../reports/phase-11-t009-2026-11-13.md); [Phase 11 T008](../reports/phase-11-t008-2026-11-13.md); [Phase 11 T007](../reports/phase-11-t007-2026-11-13.md); [Phase 11 T006](../reports/phase-11-t006-2026-11-13.md); [Phase 11 T005](../reports/phase-11-t005-2026-11-13.md); [Phase 11 T004](../reports/phase-11-t004-2026-11-13.md); [Phase 11 T003](../reports/phase-11-t003-2026-11-12.md); [Phase 11 T002](../reports/phase-11-t002-2026-11-12.md); [Phase 11 start and T001](../reports/phase-11-t001-2026-11-12.md); [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
+- Documentation review: REVIEWED - Phase 11 closeout and authorized Phase 12 contract start; historical evidence preserved.
+- Implementation status: COMPLETED - 100% (10/10); PASS WITH CONDITIONS, owner accepted 2026-11-18.
+- Last reviewed: 2026-11-18 (Africa/Nairobi).
+- Related phase/task IDs: MYF-P11-T001 through T010; MYF-P11-AC001 through AC003; D-P11-007; D-P12-001.
+- Verified completed work: T001-T010 and AC001-AC003 verified; audit completed and owner confirmed existing behaviors.
+- Remaining work/blockers: P11-C1/C2/C3/C6/C7 remain; real provider and hosted use are not approved.
+- Evidence/report links: [Transition and verification](../reports/phase-11-12-transition-2026-11-18.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **IN PROGRESS - 9/10**; started 2026-11-12 (D-P11-001); Q20 decided (D-P11-002 to D-P11-005). Date: 2026-10-08. This is a specification, not implementation approval. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **COMPLETED - 10/10, PASS WITH CONDITIONS; accepted 2026-11-18**; started 2026-11-12 (D-P11-001); Q20 decided (D-P11-002 to D-P11-005). Date: 2026-10-08. This is a specification, not implementation approval. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
@@ -208,17 +208,17 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 
 ## O. Completion Checklist
 
-- [ ] MYF-P11-T001 complete with evidence.
-- [ ] MYF-P11-T002 complete with evidence.
-- [ ] MYF-P11-T003 complete with evidence.
-- [ ] MYF-P11-T004 complete with evidence.
-- [ ] MYF-P11-T005 complete with evidence.
-- [ ] MYF-P11-T006 complete with evidence.
-- [ ] MYF-P11-T007 complete with evidence.
-- [ ] MYF-P11-T008 complete with evidence.
-- [ ] MYF-P11-T009 complete with evidence.
-- [ ] MYF-P11-T010 complete with evidence.
-- [ ] Every K criterion verified.
-- [ ] Security/integrity audit, remediation and retest complete.
-- [ ] Applicable quality/E2E/integration/migration evidence recorded.
-- [ ] L gate approved; closeout/status updated from evidence.
+- [x] MYF-P11-T001 complete with evidence.
+- [x] MYF-P11-T002 complete with evidence.
+- [x] MYF-P11-T003 complete with evidence.
+- [x] MYF-P11-T004 complete with evidence.
+- [x] MYF-P11-T005 complete with evidence.
+- [x] MYF-P11-T006 complete with evidence.
+- [x] MYF-P11-T007 complete with evidence.
+- [x] MYF-P11-T008 complete with evidence.
+- [x] MYF-P11-T009 complete with evidence.
+- [x] MYF-P11-T010 complete with evidence.
+- [x] Every K criterion verified.
+- [x] Security/integrity audit, remediation and retest complete.
+- [x] Applicable quality/E2E/integration/migration evidence recorded.
+- [x] L gate approved; closeout/status updated from evidence.

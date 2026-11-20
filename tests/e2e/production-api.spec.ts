@@ -92,3 +92,17 @@ test("offline pull and photo routes deny anonymous callers without leaking data"
   const invalidOrigins: Record<string, string>[] = [{ origin: "https://untrusted.test" }, {}];
   for (const headers of invalidOrigins) expect((await request.post(`/api/v1/farms/${farm}/photos`, { headers, multipart: { requestId: record } })).status()).toBe(403);
 });
+test("assistant questions deny anonymous callers and cross-origin writes without leaking data (P11)", async ({ request }) => {
+  const base = `/api/v1/farms/${farm}/assistant/questions`, origin = { origin: "http://127.0.0.1:3101" };
+  const list = await request.get(base);
+  expect(list.status()).toBe(401); expect(list.headers()["cache-control"]).toContain("no-store");
+  expect(await list.json()).toEqual({ error: "UNAUTHENTICATED", requestId: expect.any(String) });
+  const ask = await request.post(base, { headers: origin, data: { requestId: record, question: "Which enterprise made me the most money?" } });
+  expect(ask.status()).toBe(401); expect(await ask.json()).toEqual({ error: "UNAUTHENTICATED", requestId: expect.any(String) });
+  expect((await request.delete(`${base}/${record}`, { headers: origin })).status()).toBe(401);
+  const invalidOrigins: Record<string, string>[] = [{ origin: "https://untrusted.test" }, {}];
+  for (const headers of invalidOrigins) {
+    expect((await request.post(base, { headers, data: { requestId: record, question: "x" } })).status()).toBe(403);
+    expect((await request.delete(`${base}/${record}`, { headers })).status()).toBe(403);
+  }
+});

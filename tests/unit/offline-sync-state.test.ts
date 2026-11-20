@@ -73,6 +73,14 @@ describe("MYF-P07-AC003 crash during SYNCING", () => {
     expect(recoverIfAbandoned(row, later(SYNC_TIMING.leaseMs - 1))).toBe(row);
     expect(recoverIfAbandoned(row, later(SYNC_TIMING.leaseMs))).toMatchObject({ syncStatus: "PENDING", leaseUntil: null, nextAttemptAt: null, attemptCount: 0 });
   });
+  it("recovers an unexpired lease only when an exclusive sender lock proves the prior worker stopped", () => {
+    const row = sending();
+    expect(recoverIfAbandoned(row, later(1))).toBe(row);
+    const recovered = recoverIfAbandoned(row, later(1), true);
+    expect(recovered).toMatchObject({ clientMutationId: row.clientMutationId, payload: row.payload, syncStatus: "PENDING", leaseUntil: null, nextAttemptAt: null, attemptCount: 0 });
+    expect(recovered.version).toBe(row.version + 1);
+    expect(readyEntries([recovered], later(1))).toEqual([recovered]);
+  });
   it("leaves other states alone", () => {
     const pending = entry();
     expect(recoverIfAbandoned(pending, later(SYNC_TIMING.leaseMs * 2))).toBe(pending);

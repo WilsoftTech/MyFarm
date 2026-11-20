@@ -1,0 +1,60 @@
+== commit
+34d1ce6 feat(assistant): complete T009 labels explained on screen and AC003
+== npm ci
+powershell : npm warn install-scripts   prisma@7.10.0 (preinstall: node scripts/preinstall-entry.js)
+At line:1 char:370
++ ... | Out-Null; powershell -NoProfile -ExecutionPolicy Bypass -File .cach ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm warn instal...stall-entry.js):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+npm warn install-scripts
+npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+== generate
+
+✔ Generated Prisma Client (7.10.0) to .\src\generated\prisma in 625ms
+== lint
+> myfarm@0.1.0 lint
+> eslint . --max-warnings=0
+
+lint exit 0
+== typecheck
+typecheck exit 0
+== boundaries
+PASS: domain/provider and client/persistence import boundaries
+== unit
+ Test Files  76 passed (76)
+      Tests  1299 passed (1299)
+   Duration  23.40s (tests 49%, environment 28%, import 12%, setup 7%, transform 3%, worker 1%)
+== migrate fresh
+25 migrations found in prisma/migrations
+All migrations have been successfully applied.
+== integration
+ Test Files  38 passed (38)
+      Tests  400 passed (400)
+   Duration  101.19s (tests 90%, import 8%, transform 2%)
+== non-UTC
+ Test Files  18 passed (18)
+      Tests  242 passed (242)
+   Duration  52.80s (tests 88%, import 10%, transform 2%)
+== drift
+
+drift exit 0
+== recovery
+PASS: real dump/restore retains exact maximum stock, immutable operation/approval/audit provenance, unique approval, RLS and runtime/browser grants.
+phase05 exit 0
+PASS: real dump/restore retains activities, series, cost links, photo records and audit receipts, the one-occurrence-per-date key, the lifecycle check, RLS and runtime/browser grants.
+phase06 exit 0
+== audit
+found 0 vulnerabilities
+== ordinary build
+✓ Compiled successfully in 8.9s
+build exit 0
+== anonymous
+  66 passed (13.6s)
+== fixture build
+✓ Compiled successfully in 2.6s
+fixture build exit 0
+== signed-in
+  214 passed (14.6m)
+== done

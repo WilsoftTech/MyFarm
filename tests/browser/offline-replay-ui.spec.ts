@@ -250,3 +250,23 @@ test("a service worker replaced while entries wait leaves them intact and they s
     expect(await expenseCount(context, base, farm, "878787")).toBe(1);
   } finally { await server.stop(); await clearInventoryBrowser(f); }
 });
+
+test("an exclusive browser sender recovers a reload's unexpired lease and records the expense once", async ({ page, context }) => {
+  const f = await prepareInventoryBrowser(), server = offlineServer(3103), base = server.baseURL, farm = f.farms.a, account = f.users.a;
+  await server.start();
+  try {
+    await prepared(context, page, base, f);
+    await openOffline(page, base, farm);
+    expect(await page.evaluate(() => Boolean(navigator.locks))).toBe(true);
+    await server.stop();
+    await recordExpense(page, "868686");
+    const [row] = await outbox(page, account);
+    // The prior tab died after claiming this entry. Its lease is deliberately still valid.
+    await inDatabase(page, account, "outbox", { ...row, syncStatus: "SYNCING", leaseUntil: new Date(Date.now() + 120_000).toISOString() });
+    await server.start();
+    await page.reload();
+    await expect(page.getByText(allSent)).toBeVisible({ timeout: 20_000 });
+    expect((await outbox(page, account))[0].syncStatus).toBe("SYNCED");
+    expect(await expenseCount(context, base, farm, "868686")).toBe(1);
+  } finally { await server.stop(); await clearInventoryBrowser(f); }
+});

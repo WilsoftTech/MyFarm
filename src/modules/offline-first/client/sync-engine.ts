@@ -9,11 +9,11 @@ const toCommand = (row: OutboxEntry) => pushCommandSchema.parse({ clientMutation
 const isPhoto = (row: OutboxEntry) => row.operation === "ATTACH_PHOTO";
 
 /** force is the farmer pressing Send now, which skips any retry wait. */
-async function recover(db: LocalDatabase, now: Date, force: boolean) {
+async function recover(db: LocalDatabase, now: Date, force: boolean, exclusiveSender: boolean) {
   await db.transaction("rw", db.outbox, async () => {
     const rows = await db.outbox.toArray();
     for (const row of rows) {
-      const next = recoverIfAbandoned(row, now);
+      const next = recoverIfAbandoned(row, now, exclusiveSender);
       if (force && next.syncStatus === "PENDING" && next.nextAttemptAt) await db.outbox.put({ ...next, nextAttemptAt: null });
       else if (next !== row) await db.outbox.put(next);
     }
@@ -89,8 +89,8 @@ async function sendPhoto(db: LocalDatabase, row: OutboxEntry, all: Map<string, O
   await settle(db, [{ row: claimed, outcome: failure === "SIGNED_OUT" ? { status: "RETRYABLE" } : failure }]);
   return failure === "SIGNED_OUT" ? "SIGNED_OUT" : failure.status === "RETRYABLE" ? "OFFLINE" : "OK";
 }
-async function run(db: LocalDatabase, keepGoing: () => boolean, force: boolean): Promise<SyncResult> {
-  await recover(db, new Date(), force);
+async function run(db: LocalDatabase, keepGoing: () => boolean, force: boolean, exclusiveSender = false): Promise<SyncResult> {
+  await recover(db, new Date(), force, exclusiveSender);
   for (;;) {
     if (!keepGoing()) return "DONE";
     const all = await db.outbox.toArray();
@@ -107,5 +107,5 @@ async function run(db: LocalDatabase, keepGoing: () => boolean, force: boolean):
 /** One sender per account across tabs. Leases and server receipts still protect a browser without this API. */
 export async function syncNow(db: LocalDatabase, keepGoing: () => boolean = () => true, force = false): Promise<SyncResult> {
   if (!navigator.locks) return run(db, keepGoing, force);
-  return navigator.locks.request("sync:" + db.name, { ifAvailable: true }, lock => lock ? run(db, keepGoing, force) : "BUSY");
+  return navigator.locks.request("sync:" + db.name, { ifAvailable: true }, lock => lock ? run(db, keepGoing, force, true) : "BUSY");
 }

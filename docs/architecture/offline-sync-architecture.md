@@ -1,13 +1,13 @@
 # Offline synchronization architecture
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — T013 metadata/status scope and evidence-link relevance; historical and future-phase facts unchanged.
-- Implementation status: COMPLETED - Phase 7 (13/13), PASS WITH CONDITIONS - LOCAL VERIFICATION, awaiting owner acceptance. Sections above the final paragraphs are the original proposal; the closing paragraph records the differences.
-- Last reviewed: 2026-11-03 (Africa/Nairobi), Phase 7 start.
-- Related phase/task IDs: MYF-P07-T001 through MYF-P07-T013; D-P07-001 through D-P07-008.
-- Verified completed work: Client database, service worker, push, pull, Sync Center and photos verified from a clean checkout; real-device behavior not measured.
-- Remaining work/blockers: P7-C1 real-device measurement; P7-C2 hosted CI; P7-C3 hosted photo schema.
-- Evidence/report links: [Closeout](../reports/phase-07-closeout-2026-11-03.md); [Plan](../reports/phase-07-start-2026-11-03.md).
+- Documentation review: REVIEWED - Phase 12 task-relevant implementation, security/offline boundaries and evidence; historical sections preserved.
+- Implementation status: REFERENCE ONLY - architecture record; Phase 12 test/text implementation verified locally below, with release conditions.
+- Last reviewed: 2026-11-20 (Africa/Nairobi), Phase 12 task-relevant implementation review.
+- Related phase/task IDs: MYF-P12-T003 through T010; D-P12-001 through D-P12-003; historical task references retained in the body.
+- Verified completed work: Phase 12 approved test-adapter/text-fallback software and relevant exact-confirmation boundaries verified locally; no real speech or hosted claim.
+- Remaining work/blockers: P12-C1 through C6 and inherited release conditions; real speech/language accuracy, hosted work and owner acceptance remain.
+- Evidence/report links: [Phase 12 closeout](../reports/phase-12-closeout-2026-11-20.md); historical reports remain linked in their dated sections.
 <!-- MYFARM-STATUS-END -->
 
 Offline farmer experience is mandatory by MVP Phase 8. Source P0456–P0479 requires expense/income/harvest/activity/task/photo recording and cached farm/record viewing; clientMutationId, deviceId, createdAt, updatedAt, syncStatus, version; six source states. Foundation prepares command boundaries, but complete sync is Phase 7.
@@ -54,3 +54,11 @@ Test eight actions offline/reload, quota denial, crash during write/sync, duplic
 Approved Q16 rules (D-P07-002 to D-P07-005): 14 days and 500 unsent entries per device, separate local data per account with no PIN, sign-out keeps unsent entries, and warnings plus an unencrypted download rather than any guarantee of recovery. Signed-in pages and API responses are never stored by the service worker; offline data lives only in the account's local database. [Plan](../reports/phase-07-start-2026-11-03.md).
 
 Implemented differences from the proposal (D-P07-007): receipts stay in `AuditEvent` rather than a `MutationReceipt` table, with a check that refuses a key reused on another operation. Pull reuses the authorized list services with bounded snapshots rather than a change log with tombstones, because records are only appended or change status. There is no device registration: the device ID stays on the phone. Offline work happens on a static `/offline` shell, and the service worker never stores signed-in pages or API responses.
+
+## Crash lease recovery correction - 2026-11-18
+
+The phase audit reproduced a reload leaving an unexpired sending lease in IndexedDB. An exclusive same-account Web Lock proves the previous browser sender is gone, so a worker holding it now returns abandoned SYNCING entries to PENDING immediately before replay. Without Web Locks, recovery still waits for lease expiry. Mutation IDs, payloads, base versions and server duplicate receipts are preserved; the local queue version advances by the normal recovery transition; no database or IndexedDB migration. The failing queue-limit journey and a new explicit unexpired-lease regression pass in the focused offline browser suites. This does not measure real phones or close inherited field conditions. [Evidence](../reports/phase-11-12-transition-2026-11-18.md).
+
+## Phase 12 staged implementation - 2026-11-20
+
+Voice review/confirmation remains online. An open page retains typed details across connectivity loss; the saved draft ID in the URL resumes a private server review or completed receipt after refresh, without persisting raw words or confirmation consent. Uncertain financial responses retain the original grant and retry/recover the same outcome. Offline work uses the existing typed expense/outbox path; no voice outbox operation or IndexedDB migration is added. [Closeout and limitations](../reports/phase-12-closeout-2026-11-20.md).

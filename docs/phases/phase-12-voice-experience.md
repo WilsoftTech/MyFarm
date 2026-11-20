@@ -1,16 +1,16 @@
 # Phase 12 Voice First Farmer Experience
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — T013 metadata/status scope and evidence-link relevance; historical and future-phase facts unchanged.
-- Implementation status: NOT STARTED — 0% (0/10 verified tasks).
-- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
-- Related phase/task IDs: Phase 12; MYF-P12-T001 through MYF-P12-T010; review session Phase01; Phase02 review session (MYF-P02-T001–T013).
-- Verified completed work: No tasks implemented or verified in this phase; status/provider applicability reviewed only.
-- Remaining work/blockers: All 10 tasks and their acceptance/exit gates pending; Phase01 completion and future phase authorization required.
-- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
+- Documentation review: REVIEWED - Phase 12 T003-T010 implementation, full local audit and approved staged scope; historical evidence preserved.
+- Implementation status: COMPLETED - 100% (10/10), approved test-adapter/text-fallback software scope; PASS WITH CONDITIONS - LOCAL VERIFICATION.
+- Last reviewed: 2026-11-20 (Africa/Nairobi).
+- Related phase/task IDs: MYF-P12-T001 through T010; MYF-P12-AC001 through AC003; D-P12-003.
+- Verified completed work: All ten software tasks, scoped AC001-AC003 and exact-confirmation exit invariant verified locally; no real speech/accuracy claim.
+- Remaining work/blockers: P12-C1 through C6; real speech/language release, physical cleanup policy, hosted CI/provisioning, owner acceptance and inherited gates.
+- Evidence/report links: [Phase 12 closeout](../reports/phase-12-closeout-2026-11-20.md); [document review](../reports/phase-12-document-review-2026-11-20.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **NOT STARTED**. Date: 2026-10-08. This is a specification, not implementation approval. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **SOFTWARE COMPLETED - 10/10 (100%), PASS WITH CONDITIONS - LOCAL VERIFICATION**, within approved test-adapter/text-fallback scope; authorized 2026-11-18 with test adapters, text fallback and no retained audio. Date: 2026-10-08. This is a specification, not implementation approval. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
 
 ## A. Phase Overview
 
@@ -64,9 +64,11 @@ Offline: see [sync](../architecture/offline-sync-architecture.md); Phases 1–6 
 
 ## F. Database Design
 
-**Proposal until implementation approval. No migrations created now.**
+**Original broad proposal. Only the D-P12-002 subset below is approved and implemented locally.**
 
 VoiceDraft(id UUID,tenantId UUID,actorId UUID,transcript text,parsedCommand json,confidence numeric,expiresAt timestamp,status enum); Confirmation(id UUID,draftId UUID,payloadHash text,confirmedBy UUID,confirmedAt timestamp,mutationId UUID unique); AudioAsset(id UUID,tenantId UUID,objectKey text,retentionUntil timestamp?) only with consent.
+
+Approved T002 subset (D-P12-002, verified 2026-11-20): one VoiceExpenseDraft holds the actor/farm/tenant-bound validated review, hash, version, fixed 30-minute expiry and optional immutable confirmed expense reference/time. A completed row is its confirmation receipt; no separate Confirmation or AudioAsset table, raw transcript or audio is stored. Confirmation, the ordinary expense and audit receipts commit in one transaction. Edits preserve expiry and invalidate prior confirmation; identical successful replay after expiry rechecks current access. The broader model examples above remain proposals. [Evidence](../reports/phase-12-t002-2026-11-20.md).
 
 Shared tenant-owned fields: id UUID, tenantId UUID, relevant farmId UUID, createdAt/updatedAt timestamptz, version integer >=1, createdBy UUID. Global catalogs, append histories and research evidence declare distinct ownership. Quantity uses numeric(18,6) plus unit; money numeric(20,4) plus currency pending precision approval. JSON evidence/contracts versioned and validated.
 
@@ -84,7 +86,7 @@ Loading announced; recoverable errors retain input and safe retry. Empty states 
 
 ## H. Implementation Tasks
 
-Execute these small stages sequentially after authorization. Field/model/provider policies remain proposals until affected decisions are resolved. Each capability separates contract/domain work, authorized service/evidence work, and user-visible acceptance. All task IDs remain pending.
+Execute these small stages sequentially after authorization. Field/model/provider policies remain proposals until affected decisions are resolved. Each capability separates contract/domain work, authorized service/evidence work, and user-visible acceptance. T001-T010 are verified for the approved test-adapter/text-fallback scope in O; real speech, real-language accuracy and hosted release remain conditions.
 
 ### MYF-P12-T001 — Specify and implement domain contract for MYF-P12-R001
 
@@ -200,7 +202,7 @@ Proposed gate (source has no explicit exit gate): Financial voice command requir
 
 ## M. Risks and Limitations
 
-Technical: concurrency, browser/provider compatibility and unbounded queries. Operational: support/training, shared-device privacy and recovery ownership. Integrity: wrong scope/unit/currency, missing history, duplicated retries, misunderstood metrics. Specific unknowns: Q21 language accuracy/audio privacy/offline transcription/accessibility. Deferred: later phases and unapproved provider capabilities; schemas/policies remain proposals.
+Technical: concurrency, browser/provider compatibility and unbounded queries. Operational: support/training, shared-device privacy and recovery ownership. Integrity: wrong scope/unit/currency, missing history, duplicated retries, misunderstood metrics. Specific unknowns: Q21 language accuracy/audio privacy/offline transcription/accessibility. Deferred: later phases and unapproved provider capabilities; schemas/policies outside the approved D-P12-002 subset remain proposals.
 
 ## N. Deliverables
 
@@ -208,17 +210,21 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 
 ## O. Completion Checklist
 
-- [ ] MYF-P12-T001 complete with evidence.
-- [ ] MYF-P12-T002 complete with evidence.
-- [ ] MYF-P12-T003 complete with evidence.
-- [ ] MYF-P12-T004 complete with evidence.
-- [ ] MYF-P12-T005 complete with evidence.
-- [ ] MYF-P12-T006 complete with evidence.
-- [ ] MYF-P12-T007 complete with evidence.
-- [ ] MYF-P12-T008 complete with evidence.
-- [ ] MYF-P12-T009 complete with evidence.
-- [ ] MYF-P12-T010 complete with evidence.
-- [ ] Every K criterion verified.
-- [ ] Security/integrity audit, remediation and retest complete.
-- [ ] Applicable quality/E2E/integration/migration evidence recorded.
-- [ ] L gate approved; closeout/status updated from evidence.
+- [x] MYF-P12-T001 complete with evidence; domain stage only ([report](../reports/phase-12-t001-2026-11-18.md)).
+- [x] MYF-P12-T002 complete with local evidence ([report](../reports/phase-12-t002-2026-11-20.md)); T003 UI acceptance is now verified in the closeout.
+- [x] MYF-P12-T003 complete with local staged-scope evidence ([closeout](../reports/phase-12-closeout-2026-11-20.md)).
+- [x] MYF-P12-T004 complete with local staged-scope evidence ([closeout](../reports/phase-12-closeout-2026-11-20.md)).
+- [x] MYF-P12-T005 complete with local staged-scope evidence ([closeout](../reports/phase-12-closeout-2026-11-20.md)).
+- [x] MYF-P12-T006 complete with local staged-scope evidence ([closeout](../reports/phase-12-closeout-2026-11-20.md)).
+- [x] MYF-P12-T007 complete with local staged-scope evidence ([closeout](../reports/phase-12-closeout-2026-11-20.md)).
+- [x] MYF-P12-T008 complete with local staged-scope evidence ([closeout](../reports/phase-12-closeout-2026-11-20.md)).
+- [x] MYF-P12-T009 complete with local staged-scope evidence ([closeout](../reports/phase-12-closeout-2026-11-20.md)).
+- [x] MYF-P12-T010 complete with local staged-scope evidence ([closeout](../reports/phase-12-closeout-2026-11-20.md)).
+- [x] Every K invariant verified for the approved test/text scope; no real-language accuracy claim.
+- [x] Security/integrity audit, remediation and retest complete locally.
+- [x] Applicable local quality/E2E/integration/migration/recovery evidence recorded.
+- [x] L exact-confirmation invariant verified locally under D-P12-001/002/003; owner acceptance remains pending.
+
+## Verified implementation and scoped closeout - 2026-11-20
+
+All ten software task IDs are complete under the explicitly approved test-adapter/text-fallback scope. Exact confirmation and safe receipts are verified through the UI, DB and HTTP; trusted measured language readiness gates exist, but default speech registrations are empty and all languages offer manual text. Microphone capture/record/pause/cancel, real speech/accuracy and hosted release remain unimplemented/unverified conditions, not completed claims. No additional T003-T010 migration, IndexedDB change, paid provider or translation was introduced. [Closeout and conditions](../reports/phase-12-closeout-2026-11-20.md). Owner acceptance and Phase 13 authorization remain pending.

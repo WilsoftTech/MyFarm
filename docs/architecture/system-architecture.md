@@ -1,13 +1,13 @@
 # System architecture
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — T013 task-relevant content, status and evidence.
-- Implementation status: Phase01 scope COMPLETED — 100% (13/13 verified Phase01 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); Phase02 scope COMPLETED — 100% (13/13 verified Phase02 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); later-phase scope not counted.
-- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
-- Related phase/task IDs: Phase01 MYF-P01-T001–T013; Phase02 MYF-P02-T001–T013.
-- Verified completed work: Phase01 scope as previously verified; Phase02: farmer registry contracts/policies/migration/API/tests in this document's area verified (see the Phase 2 implementation section).
-- Remaining work/blockers: Phase02 conditions P2-C1–P2-C8 where applicable; later-phase scope pending authorization.
-- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
+- Documentation review: REVIEWED - Phase 12 task-relevant implementation, security/offline boundaries and evidence; historical sections preserved.
+- Implementation status: REFERENCE ONLY - architecture record; Phase 12 test/text implementation verified locally below, with release conditions.
+- Last reviewed: 2026-11-20 (Africa/Nairobi), Phase 12 task-relevant implementation review.
+- Related phase/task IDs: MYF-P12-T003 through T010; D-P12-001 through D-P12-003; historical task references retained in the body.
+- Verified completed work: Phase 12 approved test-adapter/text-fallback software and relevant exact-confirmation boundaries verified locally; no real speech or hosted claim.
+- Remaining work/blockers: P12-C1 through C6 and inherited release conditions; real speech/language accuracy, hosted work and owner acceptance remain.
+- Evidence/report links: [Phase 12 closeout](../reports/phase-12-closeout-2026-11-20.md); historical reports remain linked in their dated sections.
 <!-- MYFARM-STATUS-END -->
 
 Baseline required by source/request: Next.js App Router/React/TypeScript PWA, server application services/domain/repositories, Prisma and PostgreSQL/Supabase, Vercel, private object storage, Dexie/IndexedDB and custom sync. Proposed deployment is one modular application, not microservices.
@@ -57,3 +57,7 @@ CropCycleService reuses extracted production farm authorization; its lazy reposi
 ## Phase 3 T012 capability presentation (2026-10-25)
 
 Enterprise list/detail screens and both production selectors consume the authorized T011 workflow capability. `EnterpriseWorkflow` contains presentation for supported workflow IDs; it does not map enterprise types to workflows. `enterpriseChoice` shares labels and disabled states across initial, paginated and preset choices. Unsupported or closed presets are visible but not preselected for submission. Existing page guards, server actions and start-service authorization remain authoritative; form drafts, retries and feedback reuse the existing production components. No application-service, persistence, provider, dependency or schema change is required. [Implementation and acceptance evidence](../reports/phase-03-t012-2026-10-25.md).
+
+## Phase 12 staged implementation - 2026-11-20
+
+Voice input is a bounded read-only service with provider-independent ports and strict suggestion output. A separate authorized draft/confirmation service applies deterministic accounting validation and commits expense, confirmation state and receipts atomically. The review UI composes the existing expense form, choices and formatting. Synthetic marker transcription and example parsing demonstrate the adapter flow; real speech registrations remain empty and manual text fallback is explicit. [Closeout and limitations](../reports/phase-12-closeout-2026-11-20.md).
