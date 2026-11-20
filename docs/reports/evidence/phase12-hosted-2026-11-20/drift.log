@@ -1,0 +1,8 @@
+
+[-] Removed tables
+  - LivestockBatch
+
+[*] Changed the `LivestockBatch` table
+  [-] Removed foreign key on columns (createdBy)
+  [-] Removed foreign key on columns (enterpriseId, farmId, tenantId)
+Loaded Prisma config from prisma.config.ts.

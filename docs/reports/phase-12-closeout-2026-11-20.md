@@ -122,4 +122,6 @@ Visual QA: [desktop review](evidence/phase12-closeout-2026-11-20/review-desktop.
 
 ## Status-update evidence
 
+Hosted follow-up, 2026-11-20: under D-P12-004 and explicit local backup/restore approval, all pending Phase 10-12 migrations and ordered provider policies were applied to hosted development. Backup/application-schema restore, record preservation, new checksums, RLS and runtime/browser checks pass; migration status is up to date. Only the documented Phase 3 legacy table drift remains. Hosted CI passed at `6ad820a`. This advances the schema/policy and CI portions of P12-C2/C6; full hosted application verification, owner acceptance and other conditions remain. Earlier local-only statements above describe the original audit. [Detailed outcome and evidence](phase-12-migration-push-2026-11-20.md#successful-authorized-retry---2026-11-20).
+
 Progress is 10 verified task IDs out of 10, not a whole-project percentage. Project status, active phase checklist, roadmap checkpoint, requirements traceability, decision log and affected architecture notes are updated with verified local facts. The [document review inventory](phase-12-document-review-2026-11-20.md) distinguishes deeper task-relevant review from metadata-only scanning; unrelated historical claims and the immutable source extract were not rewritten.

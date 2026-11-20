@@ -1,5 +1,7 @@
 # Project status
 
+Hosted development follow-up, 2026-11-20: all five pending Phase 10-12 migrations and all 18 ordered provider policy files applied after an approved backup and successful 43-table application restore rehearsal. Existing records preserved; restricted runtime and browser denial checks pass; migration status is up to date. Drift remains limited to the documented Phase 3 legacy `LivestockBatch` table, preserved intentionally. Hosted CI passed for `6ad820a`; full hosted application journeys and production deployment remain unverified. [Evidence and limits](reports/phase-12-migration-push-2026-11-20.md#successful-authorized-retry---2026-11-20).
+
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - Phase 12 T003-T010 implementation, full local audit and approved staged scope; historical evidence preserved.
 - Implementation status: REFERENCE ONLY - N/A (verified project progress).

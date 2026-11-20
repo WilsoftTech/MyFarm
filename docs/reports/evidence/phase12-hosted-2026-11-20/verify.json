@@ -1,0 +1,82 @@
+{
+  "changed": [],
+  "newTables": [
+    "AssistantQuestion",
+    "AssistantUsage",
+    "BatchFeedItem",
+    "FarmInsight",
+    "VoiceExpenseDraft"
+  ],
+  "pending": [],
+  "noRls": [],
+  "browserGrants": 0,
+  "draft": {
+    "sel": true,
+    "ins": true,
+    "edit": true,
+    "del": false,
+    "change_actor": false
+  },
+  "runtime": {
+    "rolcanlogin": true,
+    "rolsuper": false,
+    "rolbypassrls": false,
+    "rolcreatedb": false,
+    "rolcreaterole": false
+  },
+  "migrations": 27,
+  "newChecksums": [
+    {
+      "name": "202611120001_farm_insights",
+      "checksum": "f4176eee8ba1c655ecd2923985b76a079903ee0434d9534e03029d19f4f9877f",
+      "exact": true
+    },
+    {
+      "name": "202611120002_threshold_insights",
+      "checksum": "2bd7d66dfbfa2e076aa9cdc4f6d113f65916dd969f1cf984a81f4bf55b5a1fe1",
+      "exact": true
+    },
+    {
+      "name": "202611120003_assistant_questions",
+      "checksum": "66ad1f2a392ff0d2c570fbf4ac700f62599016781f260fcecde621ce9b76e275",
+      "exact": true
+    },
+    {
+      "name": "202611130001_assistant_question_types",
+      "checksum": "18c16177333c2d7e5a88400249e383e5c6fae457c9db2b0cf1bca90e87c1a7a2",
+      "exact": true
+    },
+    {
+      "name": "202611190001_voice_expense_drafts",
+      "checksum": "c068ac1472661399c0d5a9721d53fe1b879a19f8afec3033b1cc43a6d4771037",
+      "exact": true
+    }
+  ],
+  "newTableProtection": [
+    {
+      "relname": "AssistantQuestion",
+      "relrowsecurity": true,
+      "policies": 3
+    },
+    {
+      "relname": "AssistantUsage",
+      "relrowsecurity": true,
+      "policies": 2
+    },
+    {
+      "relname": "BatchFeedItem",
+      "relrowsecurity": true,
+      "policies": 3
+    },
+    {
+      "relname": "FarmInsight",
+      "relrowsecurity": true,
+      "policies": 3
+    },
+    {
+      "relname": "VoiceExpenseDraft",
+      "relrowsecurity": true,
+      "policies": 3
+    }
+  ]
+}
