@@ -2,15 +2,15 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - Phase 13 T002-T007 staged implementation and local audit.
-- Implementation status: COMPLETED - 7/7 (100%), PASS WITH CONDITIONS - LOCAL VERIFICATION, synthetic scope.
+- Implementation status: CLOSED - 7/7 (100%) approved synthetic software scope; owner-accepted PASS WITH CONDITIONS - LOCAL AND HOSTED CI VERIFICATION.
 - Last reviewed: 2026-11-21 (Africa/Nairobi).
 - Related phase/task IDs: MYF-P13-T001 through T007; D-P13-001 through D-P13-004.
 - Verified completed work: All seven software tasks verified in the approved synthetic-forecast scope; no live weather or reviewed agronomic thresholds claimed.
-- Remaining work/blockers: P13-C1 through C5, inherited release conditions and owner acceptance; Phase 14 not authorized.
+- Remaining work/blockers: P13-C1 through C4 and inherited release conditions remain; P13-C5 resolved; Phase 14 authorized under D-P14-001.
 - Evidence/report links: [Phase 13 closeout](../reports/phase-13-closeout-2026-11-21.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **SOFTWARE COMPLETED - 7/7 (100%), PASS WITH CONDITIONS - LOCAL VERIFICATION**, 2026-11-21, approved synthetic-forecast scope under D-P13-001 through D-P13-004. Real weather and agronomic release conditions remain. [Closeout](../reports/phase-13-closeout-2026-11-21.md).
+Status: **CLOSED - 7/7 (100%), PASS WITH CONDITIONS - LOCAL AND HOSTED CI VERIFICATION**, accepted 2026-11-21 under D-P13-005. Synthetic scope only; P13-C1 through C4 remain. [Transition](../reports/phase-13-14-transition-2026-11-21.md).
 
 ## A. Phase Overview
 

@@ -29,6 +29,12 @@ const { service, repository } = fixture();
 await expect(service.scope("../other")).rejects.toMatchObject({ code: "INVALID_INPUT" });
 expect(repository.scopeForUser).not.toHaveBeenCalled();
 });
+it("authenticates even when a caller supplies a malformed scope", async () => {
+const { service, repository } = fixture({}, { currentIdentity: async () => null });
+await expect(service.scope("../other")).rejects.toMatchObject({ code: "UNAUTHENTICATED" });
+expect(repository.accountBySubject).not.toHaveBeenCalled();
+expect(repository.scopeForUser).not.toHaveBeenCalled();
+});
 it("rechecks membership on every request", async () => {
 const read = vi.fn().mockResolvedValueOnce(scope).mockResolvedValueOnce({ ...scope, status: "REVOKED" });
 const { service } = fixture({ scopeForUser: read });

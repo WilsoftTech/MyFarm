@@ -1,5 +1,6 @@
 "use client";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { OfficerOfflinePanel } from "../officers/visit-work";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/farmer-registry/field";
 import { Select } from "@/components/ui/select";
@@ -103,6 +104,6 @@ export function OfflineApp() {
     {state.status === "loading" && <p role="status">Opening your saved work…</p>}
     {state.status === "no-account" && <p>Sign in while connected to get this phone ready for offline work. <a className="underline" href="/sign-in">Sign in</a></p>}
     {state.status === "blocked" && <p role="alert">This browser is not allowing MyFarm to store data, which can happen in private browsing. You can still use MyFarm while connected.</p>}
-    {state.status === "ready" && <><StoragePanel health={state.health} /><SyncCenter db={state.db} online={online} refreshKey={refreshKey} onChanged={onChanged} /><OfflineWork db={state.db} online={online} health={state.health} refreshKey={refreshKey} onChanged={onChanged} /></>}
+    {state.status === "ready" && <><StoragePanel health={state.health} /><OfficerOfflinePanel accountId={currentOfflineAccount() ?? ""} /><SyncCenter db={state.db} online={online} refreshKey={refreshKey} onChanged={onChanged} /><OfflineWork db={state.db} online={online} health={state.health} refreshKey={refreshKey} onChanged={onChanged} /></>}
   </section>;
 }

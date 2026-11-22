@@ -1,0 +1,48 @@
+
+> myfarm@0.1.0 test:e2e
+> playwright test --config playwright.production.config.ts tests/browser/officer-dashboard-ui.spec.ts tests/browser/officer-work-ui.spec.ts --reporter=line
+
+[WebServer] (node:6680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:4936) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 10 tests using 1 worker
+
+(node:20572) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/10] [desktop] › tests\browser\officer-dashboard-ui.spec.ts:25:1 › owner consent grants one farm, dashboard shows actual counts, revocation removes it
+[WebServer] {"event":"request_failed","requestId":"47a6adbd-271a-4780-8147-9a043bc6c920","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"b1a1aef5-1702-4b58-9911-cf6d21d77637","code":"FORBIDDEN"}
+
+[2/10] [desktop] › tests\browser\officer-dashboard-ui.spec.ts:51:1 › unassigned dashboard exposes no farmer directory and guessed owner pages deny
+[WebServer] {"event":"request_failed","requestId":"bbf6b476-9c1c-4ec9-af3b-edb6b54bf511","code":"FORBIDDEN"}
+
+[3/10] [desktop] › tests\browser\officer-dashboard-ui.spec.ts:59:1 › offline consent is disabled and typed details survive reconnect
+[4/10] [desktop] › tests\browser\officer-work-ui.spec.ts:29:1 › officer prepares a draft; only the named farmer reviews and accepts the exact details
+[5/10] [desktop] › tests\browser\officer-work-ui.spec.ts:53:1 › offline visit and photo survive reload, sync once, and revoked work stays recoverable
+[WebServer] {"event":"request_failed","requestId":"f1ec4dc1-b9d2-4294-8bc5-78cbd9f06f9b","code":"FORBIDDEN"}
+
+(node:7276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[6/10] [mobile] › tests\browser\officer-dashboard-ui.spec.ts:25:1 › owner consent grants one farm, dashboard shows actual counts, revocation removes it
+[WebServer] {"event":"request_failed","requestId":"d6590d57-b1a7-4473-bb1f-c20b2d48fd3a","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"80bc7cd9-641f-42a6-81b0-0f20853d084c","code":"FORBIDDEN"}
+
+[7/10] [mobile] › tests\browser\officer-dashboard-ui.spec.ts:51:1 › unassigned dashboard exposes no farmer directory and guessed owner pages deny
+[WebServer] {"event":"request_failed","requestId":"4ecda61f-a079-46f7-bcb4-b14fc237cdac","code":"FORBIDDEN"}
+
+[8/10] [mobile] › tests\browser\officer-dashboard-ui.spec.ts:59:1 › offline consent is disabled and typed details survive reconnect
+[9/10] [mobile] › tests\browser\officer-work-ui.spec.ts:29:1 › officer prepares a draft; only the named farmer reviews and accepts the exact details
+[10/10] [mobile] › tests\browser\officer-work-ui.spec.ts:53:1 › offline visit and photo survive reload, sync once, and revoked work stays recoverable
+[WebServer] {"event":"request_failed","requestId":"9f6b4261-05e4-457d-b596-5059e7e0a78a","code":"FORBIDDEN"}
+
+  10 passed (40.7s)

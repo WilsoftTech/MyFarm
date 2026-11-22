@@ -1,0 +1,5 @@
+
+> myfarm@0.1.0 check:boundaries
+> node scripts/check-boundaries.mjs
+
+PASS: domain/provider and client/persistence import boundaries

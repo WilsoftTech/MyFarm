@@ -103,6 +103,10 @@ model User {
   pilotObservations PilotObservation[]
   pilotFindings PilotFinding[]
   pilotReviews PilotReview[]
+  officerAssignments OfficerAssignment[] @relation("AssignedOfficer")
+  ownerAssignments OfficerAssignment[] @relation("AssigningOwner")
+  preparedRegistrations OfficerRegistrationDraft[] @relation("RegistrationOfficer")
+  receivedRegistrations OfficerRegistrationDraft[] @relation("RegistrationTarget")
 }
 model Organization {
   id String @id @default(uuid()) @db.Uuid
@@ -116,6 +120,7 @@ model Organization {
   plots Plot[]
   pilotCohorts PilotCohort[]
   pilotUsage PilotUsageEvent[]
+  officerRegistrationDrafts OfficerRegistrationDraft[]
 }
 // Phase2 registry (Q05: one farmer per user, owned by one PERSONAL organization).
 model Farmer {
@@ -188,6 +193,8 @@ model Farm {
   productionEvents ProductionEvent[]
   stockOperations StockOperation[]
   stockAdjustments StockAdjustment[]
+  officerAssignments OfficerAssignment[]
+  acceptedOfficerRegistration OfficerRegistrationDraft?
 }
 model Plot {
   id String @id @db.Uuid
@@ -245,6 +252,90 @@ model AuditEvent {
   @@unique([tenantId, requestId, action])
   @@index([tenantId, occurredAt, id])
   @@index([actorId, occurredAt])
+}
+
+// Phase 14: explicit owner consent, separate from owner-only FarmMember.
+model OfficerAssignment {
+  id String @id @default(uuid()) @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  farmerId String @db.Uuid
+  officerId String @db.Uuid
+  grantedByOwnerId String @db.Uuid
+  permissions String[]
+  validFrom DateTime @default(now()) @db.Timestamptz(6)
+  expiresAt DateTime? @db.Timestamptz(6)
+  revokedAt DateTime? @db.Timestamptz(6)
+  version Int @default(1)
+  requestHash String @db.VarChar(64)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  officer User @relation("AssignedOfficer", fields: [officerId], references: [id], onDelete: Restrict)
+  owner User @relation("AssigningOwner", fields: [grantedByOwnerId], references: [id], onDelete: Restrict)
+  visits OfficerVisit[]
+  @@unique([id, farmId, tenantId, officerId])
+  @@index([officerId, farmId, validFrom, id])
+  @@index([tenantId, farmId, createdAt, id])
+  @@index([grantedByOwnerId])
+}
+
+// R001 dashboard projections; visit creation/workflow is T004-T006.
+model OfficerVisit {
+  id String @id @default(uuid()) @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  officerId String @db.Uuid
+  assignmentId String @db.Uuid
+  scheduledOn DateTime @db.Date
+  status String @db.VarChar(16)
+  observations String @db.VarChar(2000)
+  recommendation String @db.VarChar(2000)
+  latitude Decimal? @db.Decimal(9,6)
+  longitude Decimal? @db.Decimal(9,6)
+  version Int @default(1)
+  requestHash String @db.VarChar(64)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  assignment OfficerAssignment @relation(fields: [assignmentId, farmId, tenantId, officerId], references: [id, farmId, tenantId, officerId], onDelete: Restrict)
+  followUps OfficerFollowUp[]
+  problems OfficerProblem[]
+  photos OfficerVisitPhoto[]
+  @@unique([id, farmId, tenantId, officerId])
+  @@index([assignmentId, farmId, tenantId, officerId])
+  @@index([officerId, scheduledOn, id])
+}
+model OfficerFollowUp {
+  id String @id @default(uuid()) @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  officerId String @db.Uuid
+  visitId String @db.Uuid
+  dueOn DateTime @db.Date
+  status String @db.VarChar(16)
+  notes String @db.VarChar(1000)
+  version Int @default(1)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  visit OfficerVisit @relation(fields: [visitId, farmId, tenantId, officerId], references: [id, farmId, tenantId, officerId], onDelete: Restrict)
+  @@index([visitId, farmId, tenantId, officerId])
+  @@index([officerId, status, dueOn, id])
+}
+model OfficerProblem {
+  id String @id @default(uuid()) @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  officerId String @db.Uuid
+  visitId String @db.Uuid
+  explicitlyFlagged Boolean
+  resolved Boolean @default(false)
+  description String @db.VarChar(1000)
+  version Int @default(1)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(6)
+  visit OfficerVisit @relation(fields: [visitId, farmId, tenantId, officerId], references: [id, farmId, tenantId, officerId], onDelete: Restrict)
+  @@index([visitId, farmId, tenantId, officerId])
+  @@index([officerId, resolved, id])
 }
 
 // Phase3 T001 foundation subset. CropCycle/LivestockBatch detail is added by its own task.
@@ -1266,6 +1357,45 @@ model AssistantUsage {
 }
 
 // D-P12-002: no transcript/audio; a completed draft is also the immutable confirmation receipt.
+model OfficerRegistrationDraft {
+  id String @id @db.Uuid
+  organizationId String @db.Uuid
+  officerId String @db.Uuid
+  targetUserId String @db.Uuid
+  review Json
+  payloadHash String @db.Char(64)
+  version Int @default(1)
+  expiresAt DateTime @default(dbgenerated("(CURRENT_TIMESTAMP + '7 days'::interval)")) @db.Timestamptz(6)
+  farmId String? @unique @db.Uuid
+  tenantId String? @db.Uuid
+  acceptedAt DateTime? @db.Timestamptz(6)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  officer User @relation("RegistrationOfficer", fields: [officerId], references: [id], onDelete: Restrict)
+  target User @relation("RegistrationTarget", fields: [targetUserId], references: [id], onDelete: Restrict)
+  acceptedFarm Farm? @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  @@unique([farmId, tenantId])
+  @@index([organizationId, officerId, createdAt])
+  @@index([targetUserId, createdAt])
+  @@index([farmId, tenantId])
+}
+
+model OfficerVisitPhoto {
+  id String @id @db.Uuid
+  tenantId String @db.Uuid
+  farmId String @db.Uuid
+  officerId String @db.Uuid
+  visitId String @db.Uuid
+  contentType String @db.VarChar(40)
+  byteSize Int
+  sha256 String @db.Char(64)
+  uploadedAt DateTime? @db.Timestamptz(6)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  visit OfficerVisit @relation(fields: [visitId, farmId, tenantId, officerId], references: [id, farmId, tenantId, officerId], onDelete: Restrict)
+  @@index([visitId, farmId, tenantId, officerId])
+  @@index([tenantId, farmId, createdAt])
+}
+
 model VoiceExpenseDraft {
   id String @id @db.Uuid
   tenantId String @db.Uuid

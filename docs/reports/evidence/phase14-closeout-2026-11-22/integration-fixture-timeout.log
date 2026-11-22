@@ -1,0 +1,31 @@
+
+> myfarm@0.1.0 test:integration
+> vitest run --project integration
+
+
+ RUN  v5.0.3 D:/Myfarm
+
+ ❯ |integration| tests/integration/request-limits.test.ts (11 tests | 1 failed) 11885ms
+   ❯ request limits under the restricted runtime role (D-P09-014) (10)
+     × every window must have room: photos are 30 an hour and 200 a day 5029ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| tests/integration/request-limits.test.ts > request limits under the restricted runtime role (D-P09-014) > every window must have room: photos are 30 an hour and 200 a day
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/integration/request-limits.test.ts:72:3
+     70|   });
+     71|
+     72|   it("every window must have room: photos are 30 an hour and 200 a day…
+       |   ^
+     73|     const hourly = person();
+     74|     await backdate(hourly, "PHOTO_UPLOAD", Array.from({ length: 30 }, …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 42 passed (43)
+      Tests  1 failed | 459 passed (460)
+   Start at  09:26:16
+   Duration  240.42s (tests 93%, import 5%, transform 1%)

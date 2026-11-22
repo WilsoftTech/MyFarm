@@ -36,8 +36,8 @@ describe("request limits under the restricted runtime role (D-P09-014)", () => {
   const person = () => { const subject = id(); subjects.push(subject); return subject; };
   const limits = () => requestLimits(f.runtime);
   // The owner connection writes old counts directly, standing in for time passing.
-  const backdate = (subject: string, action: string, ages: string[]) => Promise.all(ages.map(age =>
-    f.owner.$executeRawUnsafe(`INSERT INTO "RequestCount" (id, subject, action, "occurredAt") VALUES (gen_random_uuid(), $1::uuid, $2, clock_timestamp() - $3::interval)`, subject, action, age)));
+  const backdate = (subject: string, action: string, ages: string[]) =>
+    f.owner.$executeRawUnsafe(`INSERT INTO "RequestCount" (id, subject, action, "occurredAt") SELECT gen_random_uuid(), $1::uuid, $2, clock_timestamp() - age::interval FROM unnest($3::text[]) AS ages(age)`, subject, action, ages);
   const count = async (subject: string, action?: string) => Number((await f.owner.$queryRawUnsafe<{ n: bigint }[]>(`SELECT count(*) AS n FROM "RequestCount" WHERE subject = $1::uuid` + (action ? ` AND action = $2` : ""), ...(action ? [subject, action] : [subject])))[0].n);
   beforeAll(async () => { f = await inventoryFixture(); }, 60_000);
   afterAll(async () => {

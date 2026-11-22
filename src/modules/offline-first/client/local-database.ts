@@ -31,8 +31,9 @@ export function localDatabase(accountId: string): LocalDatabase {
 
 /** D-P07-003: cached farm data goes; outbox and photos stay, hidden until this account signs in again. */
 export async function clearCachedData(db: LocalDatabase): Promise<void> {
-  await db.transaction("rw", OFFLINE_STORES.cached.map(name => db.table(name)), async () => {
+  await db.transaction("rw", [...OFFLINE_STORES.cached.map(name => db.table(name)), db.meta], async () => {
     await Promise.all(OFFLINE_STORES.cached.map(name => db.table(name).clear()));
+    await db.meta.bulkDelete(["officer:farms", "officer:scope"]);
   });
 }
 

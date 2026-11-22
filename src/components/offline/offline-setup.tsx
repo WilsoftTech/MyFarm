@@ -19,6 +19,8 @@ export function OfflineSetup() {
       // Sends anything left over from time offline, then refreshes saved copies. Opening a signed-in page is when a send
       // is most likely to work, so, like opening Offline work, it skips any retry wait left from earlier failures.
       await syncNow(localDatabase(accountId), () => accountGeneration() === startedAt, true);
+      const { syncOfficer } = await import("@/modules/extension-officers/client/work");
+      await syncOfficer(localDatabase(accountId), () => accountGeneration() === startedAt, true);
     }
     prepare().catch(() => undefined);
   }, []);

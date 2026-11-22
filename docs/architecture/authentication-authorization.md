@@ -1,13 +1,13 @@
 # Authentication and authorization
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — T013 metadata/status scope and evidence-link relevance; historical and future-phase facts unchanged.
-- Implementation status: Phase01 scope COMPLETED — 100% (13/13 verified Phase01 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); Phase02 scope COMPLETED — 100% (13/13 verified Phase02 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); later-phase scope not counted.
-- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
-- Related phase/task IDs: Phase01 MYF-P01-T001–T013; Phase02 MYF-P02-T001–T013.
-- Verified completed work: Phase01 scope as previously verified; Phase02: farmer registry contracts/policies/migration/API/tests in this document's area verified (see the Phase 2 implementation section).
-- Remaining work/blockers: Phase02 conditions P2-C1–P2-C8 where applicable; later-phase scope pending authorization.
-- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
+- Documentation review: REVIEWED - Phase 14 affected architecture and local evidence; historical sections retained.
+- Implementation status: REFERENCE ONLY - architecture record; Phase 14 locally verified with release conditions.
+- Last reviewed: 2026-11-22 (Africa/Nairobi).
+- Related phase/task IDs: MYF-P14-T001 through T007; earlier references retained in dated sections.
+- Verified completed work: Phase 14 local software acceptance, security, compatibility and recovery checks pass; see dated section.
+- Remaining work/blockers: P14-C1 through C4 and inherited release conditions; hosted rollout/owner acceptance pending.
+- Evidence/report links: [Phase 14 closeout](../reports/phase-14-closeout-2026-11-22.md); historical reports retained below.
 <!-- MYFARM-STATUS-END -->
 
 Authentication provider is Supabase Auth (approved by user); existing-account email/password foundation implemented. Recovery and final credential/shared-device policy remain Q03. Investigate farmer phone availability, shared devices and language; do not assume email-only accounts. Session security needs secure/HttpOnly cookies, appropriate SameSite, expiry/rotation/revocation and CSRF/origin protections for cookie-authenticated mutations.
@@ -65,3 +65,7 @@ Implemented and verified ([closeout](../reports/phase-02-closeout-2026-10-09.md)
 - **Server-derived scope:** registration derives the actor from the verified session. Tenant, farmer and farm are always server-derived; strict schemas reject client scope claims.
 - **Early redirect:** the proxy now returns a real 307 for anonymous requests to protected pages ([D-P02-008](../DECISION-LOG.md#d-p02-008--phase-1-condition-c5-resolved-for-anonymous-visitors)). Pages and APIs still verify the session server-side.
 - **Database layer:** the restricted `myfarm_runtime` role gains only the registry grants in [D-P02-007](../DECISION-LOG.md#d-p02-007--runtime-role-privileges-for-registry-writes), with RLS write checks as defense in depth.
+
+## Phase 14 local implementation - 2026-11-22
+
+Named owner consent grants farm-specific officer permissions independently of FarmMember. Farmer-confirmed assisted registration commits exact reviewed records, assignment and audit receipts atomically. Current session/assignment/parent checks apply to visits, follow-ups, private namespaced media and sync. The existing account-partitioned outbox preserves denied work, with visible offline readiness and no IndexedDB version change. Six additive officer tables, column-limited guarded writes and composite parent constraints retain the shared runtime-role architecture; application queries enforce actor isolation. Local checks and recovery pass; hosted SQL/storage/application rollout and owner acceptance remain pending. [Scope, migrations, security evidence and limits](../reports/phase-14-closeout-2026-11-22.md).

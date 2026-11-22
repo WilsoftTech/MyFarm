@@ -730,3 +730,39 @@ AUTHORIZED, owner 2026-11-20: "proceed to next T002 - T007, AFTER FINISHING COMM
 ## D-P13-004 - Staged weather persistence and confirmed date-change policy
 
 APPROVED, owner 2026-11-20 selected "Approve staged policy (Recommended)": test forecasts and farmer-entered stages remain in memory only; all six capabilities use clearly labeled synthetic signals; a real activity-date change requires a separate exact review/confirmation, current access/version/forecast-expiry checks and an audit receipt. Live provider terms and expert agronomic thresholds remain required before live advice. Engineering uses 15-minute deterministic synthetic fixture epochs, the existing farm calendar, one-off spraying date moves and existing immutable audit rows retaining dates and a payload digest, not raw stage/forecast. Recurring work stays in the existing series workflow. No new table or real-weather rule is invented. Seven software tasks pass local verification with the explicit release conditions in the [closeout](reports/phase-13-closeout-2026-11-21.md); owner acceptance remains pending.
+
+## D-P13-005 - Phase 13 conditional closeout accepted
+
+ACCEPTED, owner 2026-11-21: "close and start phase 14" following review of progress, successful final-commit CI and remaining conditions. Phase 13 is CLOSED, 7/7 software tasks, PASS WITH CONDITIONS - LOCAL AND HOSTED CI VERIFICATION, within D-P13-002/004's synthetic scope. Quality run 44821325550 passed on `79b1e20f9e94be142433be384424ee634829ae8b`; P13-C5 is resolved. P13-C1 through C4 remain and no live-weather, agronomic, hosted-policy or inherited production gate is waived. [Transition evidence](reports/phase-13-14-transition-2026-11-21.md).
+
+## D-P14-001 - Phase 14 start
+
+AUTHORIZED, owner 2026-11-21: "close and start phase 14". Begin Extension Officer and Field Agent Platform task by task, starting with MYF-P14-T001. Q23's consent, assignment scope, dashboard semantics, delegated onboarding and offline revocation decisions must precede dependent implementation. Role/organization membership alone confers no farm-data access. Phase 13's remaining release conditions carry forward; no Phase 15, hosted database write, production deployment, paid service or new-phase push is inferred. [Preparation and requested decisions](reports/phase-13-14-transition-2026-11-21.md).
+
+## D-P14-002 - Initial officer access and dashboard definitions
+
+APPROVED, owner 2026-11-21 replied "approved" to the two pending policy requests. An active farm owner explicitly grants/revokes a named officer per farm; access covers the assigned-farmer dashboard, visits and follow-ups only. No finance, export or unassigned-farmer search is granted. Each server read and sync must recheck current assignment; revoked uploads are refused while recoverable local drafts are preserved. Assisted registration remains a separate decision before T004.
+
+Dashboard definitions: My farmers counts distinct currently permitted farmers; Visits today counts the officer's planned/completed visits scheduled for the existing farm-calendar day, excluding cancelled visits; Follow-ups counts open items due today or overdue; Problems counts explicitly flagged unresolved visit issues. No problem or diagnosis is inferred. T001 implements pure validated contracts and deterministic rules, not executable server access, grants or offline handling. Persistence/consent evidence and role-eligibility details are reviewed before T002. [Task evidence](reports/phase-14-t001-2026-11-21.md).
+
+## D-P14-003 - Remaining phase work and Git publication authorized
+
+AUTHORIZED, owner 2026-11-21: "implement T002-T007. commit and push". Continue within D-P14-002's approved named-assignment/dashboard scope and publish verified changes. The technical T002 consent record is the active owner's explicit authenticated same-origin grant/revocation, retained atomically with its audit receipt, named officer UUID and permission set. An active account and active AGENT membership are required; an AGENT/ADMIN role alone grants no farm access. Assignment is separate from FarmMember; the officer receives no ownership or farmer-tenant membership. The new additive schema is exercised only against isolated synthetic PostgreSQL; hosted SQL/deployment is not implied.
+
+Assisted registration and visit/media/offline privacy proposals were requested during this session and remain unanswered. The request to implement the tasks is not recorded as approval of those new policies. T004-T007 and phase closure remain pending their prerequisite decisions and implementation evidence; no incomplete task is counted. [Observed scope, tests and pending questions](reports/phase-14-t002-t003-2026-11-21.md).
+
+## D-P14-004 - Farmer-confirmed assisted registration
+
+APPROVED, owner 2026-11-21 selected "Approve farmer-confirmed registration (Recommended)" during continuation. The farmer uses their own existing login and explicitly reviews and accepts an officer-prepared draft before any farmer/farm record or access grant is created. Officers must not create credentials or impersonate farmers. This resolves the assisted-registration consent principle left open in D-P14-003. Exact target actor, payload identity, version and server expiry must be checked; persistence and atomic record/grant execution remain T005 work. The registration review-window/discard/receipt policy in D-P14-006 remains a separate pending decision and is not inferred from this approval.
+
+## D-P14-005 - Visit privacy and revoked offline work
+
+APPROVED, owner 2026-11-21 selected "Approve visit privacy policy (Recommended)" during continuation. GPS is optional. Photos are private and use the existing upload limits. Current assignment is rechecked on every read/upload/sync; revocation refuses unauthorized work while preserving blocked local drafts for recovery. This resolves the visit/media/offline privacy principle left open in D-P14-003. T004 defines strict visit/parent/coordinate/photo and offline provenance contracts, without enabling a write route, photo grant, local queue or new database privilege. Actual upload, storage-policy, revocation/retry and offline persistence acceptance remain T005-T006 obligations.
+
+## D-P14-006 - Registration draft review window and disposal
+
+APPROVED, owner 2026-11-21 selected "Approve 7-day drafts (Recommended)": seven-day review window, either participant may discard an unaccepted draft, and completed consent receipts follow existing audit-history retention. Drafts never create farmer records automatically. Completed receipts retain the digest and resulting farm reference while removing the copied profile. Expired drafts cannot be accepted; lazy deletion is not a scheduled purge or a claim about backup retention. This resolves the pending retention decision referenced in D-P14-004.
+
+## D-P14-007 - Local software verification checkpoint
+
+Engineering record, 2026-11-22: T001-T007 and both acceptance criteria pass local software verification under D-P14-002 through D-P14-006. Verdict PASS WITH CONDITIONS - LOCAL VERIFICATION; [closeout](reports/phase-14-closeout-2026-11-22.md) records commands, migrations, security/recovery evidence and P14-C1 through C4. This records observed implementation, not a new owner policy approval or acceptance. Git publication is authorized by D-P14-003. Hosted SQL/deployment and Phase 15 are not authorized by this checkpoint.

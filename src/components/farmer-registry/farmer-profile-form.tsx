@@ -14,7 +14,7 @@ type Failure = { ok: false; message: string };
 // Land arrangement starts unset so the farmer must choose it explicitly.
 const empty: DefaultValues<FarmerProfileInput> = { name: "", phone: "", alternativePhone: "", district: "", subcounty: "", village: "", preferredLanguage: "en", mainActivities: [] };
 
-export function FarmerProfileForm({ submit, defaults, expectedVersion }: { submit: (input: unknown) => Promise<Failure | undefined>; defaults?: FarmerProfileInput; expectedVersion?: number }) {
+export function FarmerProfileForm({ submit, defaults, expectedVersion, submitLabel }: { submit: (input: unknown) => Promise<Failure | undefined>; defaults?: FarmerProfileInput; expectedVersion?: number; submitLabel?: string }) {
 // One request ID per form visit: retries after a lost response replay instead of duplicating.
 const [requestId] = useState(() => crypto.randomUUID());
 const [message, setMessage] = useState("");
@@ -38,6 +38,6 @@ catch { setMessage("Connection interrupted. Your details are still here. Try aga
 <div className="grid gap-2 sm:grid-cols-2">{FARM_ACTIVITIES.map(value => <label key={value} className="flex min-h-12 items-center gap-3 rounded-xl border border-border bg-background px-4"><input type="checkbox" value={value} className="size-5" aria-invalid={!!errors.mainActivities} {...register("mainActivities")} />{activityLabels[value]}</label>)}</div>
 {errors.mainActivities && <p id="mainActivities-error" role="alert" className="field-error">{errors.mainActivities.message ?? errors.mainActivities.root?.message}</p>}</fieldset>
 {message && <p role="alert" className="field-error">{message}</p>}
-<Button type="submit" disabled={isSubmitting} className="w-full">{isSubmitting ? "Saving…" : editing ? "Save profile" : "Register"}</Button>
+<Button type="submit" disabled={isSubmitting} className="w-full">{isSubmitting ? "Saving…" : submitLabel ?? (editing ? "Save profile" : "Register")}</Button>
 </form>;
 }

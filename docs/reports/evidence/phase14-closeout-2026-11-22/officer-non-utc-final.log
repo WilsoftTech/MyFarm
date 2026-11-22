@@ -1,0 +1,12 @@
+
+> myfarm@0.1.0 test:integration
+> vitest run --project integration tests/integration/extension-officers.test.ts tests/integration/officer-work.test.ts
+
+
+ RUN  v5.0.3 D:/Myfarm
+
+
+ Test Files  2 passed (2)
+      Tests  21 passed (21)
+   Start at  22:33:07
+   Duration  6.54s (tests 84%, import 8%, transform 7%)

@@ -57,7 +57,7 @@ return withCookies(NextResponse.json({ error: "RATE_LIMITED", requestId: crypto.
 request.headers.set(REQUEST_LIMITED_HEADER, "1");
 return withCookies(NextResponse.next({ request }), response);
 }
-const PROTECTED_PAGES = ["/workspace", "/admin", "/agent", "/farmer", "/farms", "/pilot"];
+const PROTECTED_PAGES = ["/workspace", "/admin", "/agent", "/farmer", "/farms", "/pilot", "/registration-review"];
 function isProtectedPage(pathname: string) {
 return PROTECTED_PAGES.some(prefix => pathname === prefix || pathname.startsWith(prefix + "/"));
 }

@@ -20,6 +20,13 @@ const time = (header: string, sql = header) => col(header, sql, "time");
 const created = time("createdAt");
 
 export const EXPORT_FILES: readonly ExportFile[] = Object.freeze([
+  { file: "officer-registration-receipts.csv", table: "OfficerRegistrationDraft", scope: "farm", description: "Completed farmer-confirmed registration receipts, without copied profile data", columns: [col("draftId", "id"), time("acceptedAt"), created] },
+  { file: "officer-visit-photos.csv", table: "OfficerVisitPhoto", scope: "farm", only: '"uploadedAt" IS NOT NULL', description: "Private photos attached to officer visits", columns: [col("photoId", "id"), col("visitId"), col("contentType"), col("byteSize"), col("sha256"), time("uploadedAt"), created] },
+  // Owner-only farm export; officer account IDs and internal consent/request hashes stay out.
+  { file: "officer-assignments.csv", table: "OfficerAssignment", scope: "farm", description: "Officer access grants and revocations", columns: [col("assignmentId", "id"), col("permissions"), time("validFrom"), time("expiresAt"), time("revokedAt"), created] },
+  { file: "officer-visits.csv", table: "OfficerVisit", scope: "farm", description: "Officer visits", columns: [col("visitId", "id"), col("assignmentId"), col("scheduledOn"), col("status"), col("observations"), col("recommendation"), col("latitude"), col("longitude"), created] },
+  { file: "officer-follow-ups.csv", table: "OfficerFollowUp", scope: "farm", description: "Officer follow-ups", columns: [col("followUpId", "id"), col("visitId"), col("dueOn"), col("status"), col("notes"), created] },
+  { file: "officer-problems.csv", table: "OfficerProblem", scope: "farm", description: "Explicitly flagged visit issues", columns: [col("problemId", "id"), col("visitId"), col("explicitlyFlagged"), col("resolved"), col("description"), created] },
   { file: "farm.csv", table: "Farm", scope: "self", description: "The farm's details", columns: [col("farmId", "id"), col("name"), col("district"), col("subcounty"), col("village"), col("approximateAcreage"), col("ownershipType"), col("primaryActivity"), col("latitude"), col("longitude"), created] },
   { file: "plots.csv", table: "Plot", scope: "farm", description: "Plots", columns: [col("plotId", "id"), col("name"), col("area"), col("areaUnit"), created] },
   { file: "enterprises.csv", table: "Enterprise", scope: "farm", description: "Enterprises such as maize or poultry", columns: [col("enterpriseId", "id"), col("name"), col("type"), col("status"), created] },

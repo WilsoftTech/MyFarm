@@ -1,0 +1,928 @@
+
+> myfarm@0.1.0 test:e2e
+> playwright test --config playwright.production.config.ts --reporter=line
+
+[WebServer] (node:4780) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:18660) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 268 tests using 1 worker
+
+(node:23152) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/268] [desktop] › tests\browser\activity-calendar-ui.spec.ts:7:1 › MYF-P06-AC002 Plot B fertilizer due tomorrow is upcoming, and completion records the worker and time
+[WebServer] {"event":"request_failed","requestId":"194c57b6-35e8-44a4-b536-bf996f90d5e3","code":"CONFLICT"}
+
+[WebServer] {"event":"request_failed","requestId":"4a5d2fa8-9d0b-49d0-a969-20647831f249","code":"FORBIDDEN"}
+
+[2/268] [desktop] › tests\browser\activity-series-ui.spec.ts:7:1 › MYF-P06-AC003 repeating feeding creates one activity per date and stopping ends future entries
+[WebServer] {"event":"request_failed","requestId":"f79f79f6-3c32-4fc1-8cbc-d86f23b0ad7c","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"e4a2043c-4d9f-48e4-bc48-1ad0b21cd7d5","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"371f582e-9269-45e4-88f8-cc7414554c28","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"e3925a03-322c-451b-9474-f8a77bc4ecef","code":"FORBIDDEN"}
+
+[3/268] [desktop] › tests\browser\activity-ui.spec.ts:5:1 › MYF-P06-AC001 schedules allowed activities, keeps input offline and states limits clearly
+[WebServer] {"event":"request_failed","requestId":"c3c4f294-1768-4f04-be02-01d2c148ddaa","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"cd98ecfe-b62e-4d4e-9e27-2851f0578d55","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"a0101aef-ed11-4c94-a507-501bd1bc4672","code":"FORBIDDEN"}
+
+[4/268] [desktop] › tests\browser\analytics-dashboard-ui.spec.ts:57:1 › MYF-P08-AC001 the farm opens on its season and shows the source dashboard
+[5/268] [desktop] › tests\browser\analytics-dashboard-ui.spec.ts:76:1 › filters: all records counts the shared cost, dates narrow it, and a bad choice explains itself
+[6/268] [desktop] › tests\browser\analytics-dashboard-ui.spec.ts:106:1 › an empty farm and an unlinked season each say so instead of showing zeros
+[7/268] [desktop] › tests\browser\analytics-dashboard-ui.spec.ts:120:1 › a reversed record leaves the figures
+[8/268] [desktop] › tests\browser\analytics-dashboard-ui.spec.ts:132:1 › another farmer, a guessed season, and an ended session cannot see the figures
+[WebServer] {"event":"request_failed","requestId":"224676ac-4a41-4813-aa27-3edfdb573963","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"62a691a0-8d36-4212-b17a-3acb756d0da0","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"58744716-5230-4ed7-a691-f380b327ab3e","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"2fded43f-4bc9-441a-a7f8-4c35ecd1034a","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"d6f81362-4373-4255-83e3-2175ab2ab1e2","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"aeef5dfe-77b4-438e-99a0-310a6e90a687","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"83897d26-4c78-41aa-928c-968d6d0a89f7","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"d12ec6d5-75b6-4390-b2d8-5f210128043a","code":"UNAUTHENTICATED"}
+
+[9/268] [desktop] › tests\browser\analytics-dashboard-ui.spec.ts:163:1 › D-P08-008 with no connection it points to offline work, and unsent entries count only once sent
+[10/268] [desktop] › tests\browser\analytics-dashboard-ui.spec.ts:204:1 › MYF-P08-AC002 the approved crop and bird examples show on screen, with stock as an estimate
+[11/268] [desktop] › tests\browser\analytics-dashboard-ui.spec.ts:240:1 › MYF-P08-AC003 trends show +18% against the earlier season and the previous batch, and say when there is nothing to compare
+[12/268] [desktop] › tests\browser\analytics-dashboard-ui.spec.ts:272:1 › D-P08-010 a second crop and a date range each say why there is no per-acre figure
+[13/268] [desktop] › tests\browser\analytics-dashboard-ui.spec.ts:289:1 › D-P08-003 a purchase names its batch on the form, and unlinked costs are called out
+[14/268] [desktop] › tests\browser\analytics-dashboard-ui.spec.ts:308:1 › an expense with no batch keeps working, and income has no batch field
+[15/268] [desktop] › tests\browser\analytics-dashboard-ui.spec.ts:322:1 › D-P08-003 an expense saved offline with a batch sends once and counts for that batch
+[16/268] [desktop] › tests\browser\analytics-dashboard-ui.spec.ts:347:1 › MYF-P08-AC004 the source farmer journey: entries made offline send once, and the farm screen adds up
+[17/268] [desktop] › tests\browser\analytics-dashboard-ui.spec.ts:403:47 › the metrics endpoint denies another farmer, a guessed season and an ended session
+[WebServer] {"event":"request_failed","requestId":"ea72cb80-1a05-4761-8ad7-7c44b178e4e1","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"88d0488e-10ff-411b-a376-80b472119a03","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"1c5ce355-38bf-457e-8a7c-aca3f7b3e47a","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"4a6529cd-e468-43c3-a116-7605c8266ec9","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"f08de645-d210-4bff-b7e2-b37501033201","code":"UNAUTHENTICATED"}
+
+[18/268] [desktop] › tests\browser\analytics-dashboard-ui.spec.ts:403:47 › the trends endpoint denies another farmer, a guessed season and an ended session
+[WebServer] {"event":"request_failed","requestId":"bc07ed26-5410-488f-bcdc-7613c32573fc","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"53fdfdf1-3a58-4a61-b82f-e0c4c05cc0bb","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"c9b45e5c-a060-4551-82e9-b9167fcb8347","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"ca05e2bc-e3c5-4bb6-a9f6-6a34d5bf811a","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"960e6901-d49e-4834-b5f8-cc2b4c85e948","code":"UNAUTHENTICATED"}
+
+[19/268] [desktop] › tests\browser\assistant-labels-ui.spec.ts:40:1 › MYF-P11-AC003 each statement carries its label, the figures match the farm screen, and the labels are explained
+[20/268] [desktop] › tests\browser\assistant-labels-ui.spec.ts:65:1 › agronomic questions are labeled not certain and point to an extension officer, never advice
+[21/268] [desktop] › tests\browser\assistant-questions-ui.spec.ts:73:1 › MYF-P11-AC002 every question type answers from this farm's records, says where from, and links to the full page
+[22/268] [desktop] › tests\browser\assistant-questions-ui.spec.ts:105:1 › comparing needs one season; the question box still works offline-safe and a new question keeps the season chosen
+[23/268] [desktop] › tests\browser\assistant-ui.spec.ts:48:1 › MYF-P11-AC001 the highest-profit answer cites the period, the farm's records and the exact result
+[24/268] [desktop] › tests\browser\assistant-ui.spec.ts:66:1 › advice gets the extension-officer referral and other questions say what can be asked
+[25/268] [desktop] › tests\browser\assistant-ui.spec.ts:73:1 › an injected question only ever gets this farm's figures; another farmer cannot see, ask or delete here
+[WebServer] {"event":"request_failed","requestId":"af7248c3-93f5-4318-8a2f-0f2f0302548d","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"c031f46f-f688-4d4e-947d-71e01c16f40f","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"a8e99634-a7da-4301-9edc-2bb4fe34c632","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"4915ab00-8b95-47ea-9ff2-90a837ca05db","code":"INVALID_INPUT"}
+
+[26/268] [desktop] › tests\browser\assistant-ui.spec.ts:97:1 › a farm with no money records gets no conclusion; the farmer can delete a question
+[27/268] [desktop] › tests\browser\crop-cycle-api.spec.ts:34:1 › authenticated crop API creates, lists, reads and replays a committed normalized command
+[28/268] [desktop] › tests\browser\crop-cycle-api.spec.ts:51:1 › released catalog data can be selected and planted through the authorized API
+[WebServer] {"event":"request_failed","requestId":"7209fee6-89c9-4e85-94d8-62095d484600","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"6cbff2a1-c928-474c-941d-9f8778229355","code":"FORBIDDEN"}
+
+[29/268] [desktop] › tests\browser\crop-cycle-api.spec.ts:69:1 › enterprise API derives capabilities on create, detail and list within authorized farm scope
+[WebServer] {"event":"request_failed","requestId":"91efd16c-6af4-43de-9758-a334f283adf1","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"b87727fb-a48a-4904-9784-fb3f45716efd","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"3a958957-445c-4389-a9fa-0b6107a6cef6","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"d0ba57e9-b3b0-4fc3-93d0-0a82f581b661","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"3b594c43-8f75-424f-999b-87c8cd0d9cdf","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"be03a3ff-ab24-41f7-9785-4456115bbcdd","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"26413b3f-003d-4341-9e3f-d596f556e697","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"bdb7884e-68b5-404d-ad6f-dd272a405b5d","code":"FORBIDDEN"}
+
+[30/268] [desktop] › tests\browser\crop-cycle-api.spec.ts:86:1 › crop API rejects IDOR, forged scope, CSRF and changed replay payloads
+[WebServer] {"event":"request_failed","requestId":"f146538d-fa1f-4283-985e-b80752482375","code":"CONFLICT"}
+
+[WebServer] {"event":"request_failed","requestId":"babbc07e-cce9-48a0-90b7-8042b124a8ca","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"07bcf47e-1d76-4736-9242-7580f53036bd","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"40bf4fb8-5604-4aa6-a0ee-842fdf8dc1ee","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"74a7ea2f-c9c6-4ef5-8b99-f529b1ef11e5","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"02ee5e9c-4483-4639-ac6e-eb3663be4fd2","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"c29b41d8-7e89-4479-b805-0558371d6071","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"ee3c80c3-f5d6-4629-8853-5e860f8994af","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"9b08da9b-4b2e-4b6e-8017-e88f0d4d2b64","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"24a084e2-b728-479f-a401-6e1ff498157c","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"fb284b85-6dae-49bc-b90a-6b01d6398322","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"0aef7d64-efc9-45cb-b38d-f6c893574033","code":"FORBIDDEN"}
+
+[31/268] [desktop] › tests\browser\crop-cycle-api.spec.ts:99:1 › crop API preserves atomic failure and checks a revoked server session
+[WebServer] {"event":"request_failed","requestId":"6ddd7930-29a4-45a6-bf5f-09e1529b9bfe","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"152befe5-439c-4f16-b3be-7c297bddc43b","code":"UNAUTHENTICATED"}
+
+[32/268] [desktop] › tests\browser\crop-cycle-ui.spec.ts:44:1 › empty/setup states → planting with dates/units → perennial → separate farm histories
+[33/268] [desktop] › tests\browser\crop-cycle-ui.spec.ts:78:1 › all released catalog crops can be planted through the same form without crop-specific behavior
+[34/268] [desktop] › tests\browser\crop-cycle-ui.spec.ts:101:1 › unsupported capabilities stay unavailable on detail, list and both production selectors
+[35/268] [desktop] › tests\browser\crop-cycle-ui.spec.ts:151:1 › excess area fails without an effect, retains draft, then records the explicit reason
+[WebServer] {"event":"request_failed","requestId":"f6731972-fc62-4ca8-9de8-625fcb232d82","code":"INVALID_INPUT"}
+
+[36/268] [desktop] › tests\browser\crop-cycle-ui.spec.ts:162:1 › offline open form reconnects without losing details or creating duplicate cycles
+[37/268] [desktop] › tests\browser\crop-cycle-ui.spec.ts:170:1 › lost response after committing a crop retries exactly once with its original request identity
+[38/268] [desktop] › tests\browser\crop-cycle-ui.spec.ts:184:1 › nested farm links, foreign presets and other users deny access; revocation retains an unsaved draft
+[WebServer] {"event":"request_failed","requestId":"e3c7816b-3a1b-4796-af22-ff10eef729e0","code":"FORBIDDEN"}
+
+[39/268] [desktop] › tests\browser\crop-cycle-ui.spec.ts:199:1 › provider failures remain errors, recover with retry, and never imply a saved record
+[WebServer] ⨯ Error [FoundationError]: UNAVAILABLE
+[WebServer]     at d (D:\Myfarm\.next\server\chunks\ssr\[root-of-the-server]__1f0pufoym0267._.js:1:2357)
+[WebServer]     at async m (D:\Myfarm\.next\server\chunks\ssr\src_0humf6br7abfv._.js:1:766) {
+[WebServer]   code: 'UNAVAILABLE',
+[WebServer]   digest: '3398718053'
+[WebServer] }
+
+[WebServer] {"event":"request_failed","requestId":"8e80f8ca-18e7-4e88-9c63-20cd2b24c979","code":"UNAVAILABLE"}
+
+[40/268] [desktop] › tests\browser\crop-cycle-ui.spec.ts:212:1 › later parent choices preserve the draft and crop list pagination stays scoped
+[41/268] [desktop] › tests\browser\crop-cycle-ui.spec.ts:229:1 › unknown plot area and inactive parents block setup; expired sessions cannot open it
+[WebServer] {"event":"request_failed","requestId":"30fd0e6e-00df-4055-ad7d-c7e39ac78e98","code":"UNAUTHENTICATED"}
+
+[42/268] [desktop] › tests\browser\farm-accounting-api.spec.ts:29:1 › authenticated accounting API records a sale, a partial payment and replays exactly once (AC001 via HTTP)
+[WebServer] {"event":"request_failed","requestId":"dbd20adf-a4ed-4f55-944a-d96ed2349fd3","code":"UNAUTHENTICATED"}
+
+[43/268] [desktop] › tests\browser\farm-accounting-api.spec.ts:51:1 › accounting API rejects floats, forged scope, CSRF, IDOR, other users and changed replays
+[WebServer] {"event":"request_failed","requestId":"38786409-59be-45ea-bcea-fc27dc5fbddf","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"08c1a11d-0271-4c9b-908b-9bd55062dba7","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"a1923f81-4c8d-4717-9937-7410cb31a08e","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"a45b6f8b-296c-4ac4-bea1-52e78884ce05","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"e414020f-bf16-4e8c-9eda-c9e640146be0","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"4a2f8b07-a48b-4ef8-8355-68fee37c2f06","code":"CONFLICT"}
+
+[WebServer] {"event":"request_failed","requestId":"657ec77d-f8d9-4537-a17b-588647c1d86d","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"4d10caf0-cab2-4295-a9c8-8ea9a452d013","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"f23da525-5187-47a8-81d5-c280ed41f70d","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"c52d0d32-3ef2-4f33-8ba0-398007574944","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"528c198b-2784-405b-a9bb-16728b8f0747","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"4015a8ac-2a12-4269-ba3b-b8fe31fcfd64","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"ad1fcb03-8fe2-4282-a9b0-6c49c4755243","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"4c0d3797-f1b2-4bae-bd15-7c326a9f3504","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"26c4c68f-3580-4f1d-8823-ff834fb25277","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"1b1c323b-2871-4dc2-9aa3-52a2de7ffc5b","code":"FORBIDDEN"}
+
+[44/268] [desktop] › tests\browser\farm-accounting-api.spec.ts:70:1 › accounting API checks a revoked server session
+[WebServer] {"event":"request_failed","requestId":"2f5bd5a6-8410-436f-8299-5aa3612fccee","code":"UNAUTHENTICATED"}
+
+[45/268] [desktop] › tests\browser\farm-accounting-api.spec.ts:77:1 › archived category: history keeps its name over HTTP while new records and the picker exclude it (P04-T005)
+[WebServer] {"event":"request_failed","requestId":"c5568072-a947-4674-8962-0a5e55b9a083","code":"CONFLICT"}
+
+[46/268] [desktop] › tests\browser\farm-accounting-reports-ui.spec.ts:43:1 › AC003: link UGX 150,000 fertilizer to maize 2027A; a link matching no crop cycle keeps the draft
+[WebServer] {"event":"request_failed","requestId":"5cb1ca2a-cd8d-49e2-a61d-3ea2d1b04994","code":"INVALID_INPUT"}
+
+[47/268] [desktop] › tests\browser\farm-accounting-reports-ui.spec.ts:68:1 › AC004 and AC005: gross margin 350,000, summary answers, ties, filters and an audited CSV
+[48/268] [desktop] › tests\browser\farm-accounting-reports-ui.spec.ts:107:1 › AC002: an archived category stays readable on past records and leaves the picker
+[49/268] [desktop] › tests\browser\farm-accounting-reports-ui.spec.ts:121:1 › reports and exports are denied to other users and admins
+[WebServer] {"event":"request_failed","requestId":"fa1323fd-5873-47a0-98a6-d40de36a8efa","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"c3294671-2138-4a1a-a567-8c5d138c8e4b","code":"FORBIDDEN"}
+
+[50/268] [desktop] › tests\browser\farm-accounting-ui.spec.ts:45:1 › AC001: one sale, a partial payment, UGX 120,000 still to receive and one revenue record
+[51/268] [desktop] › tests\browser\farm-accounting-ui.spec.ts:77:1 › an expense records how it was paid; a purchase is paid in full; farms stay separate
+[52/268] [desktop] › tests\browser\farm-accounting-ui.spec.ts:102:1 › overpayment and a lost response keep the draft and never duplicate a payment
+[WebServer] {"event":"request_failed","requestId":"ff9317aa-6f5c-4930-82c0-f97849ea0732","code":"CONFLICT"}
+
+[53/268] [desktop] › tests\browser\farm-accounting-ui.spec.ts:128:1 › payments are reversed before the sale; reversals keep history and restore what is due
+[54/268] [desktop] › tests\browser\farm-accounting-ui.spec.ts:152:1 › offline forms keep details and save once after reconnecting
+[55/268] [desktop] › tests\browser\farm-accounting-ui.spec.ts:161:1 › other farms, users and kinds are denied; revocation keeps the draft; expired sessions sign in again
+[WebServer] {"event":"request_failed","requestId":"22113c9f-c26d-4f9f-844d-ac5b54a5c3f2","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"713568b6-e3a4-4a4d-8b67-8f687c2bd69b","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"2509ebc3-4526-44a6-8399-047034c4e2e1","code":"UNAUTHENTICATED"}
+
+[56/268] [desktop] › tests\browser\farm-export-ui.spec.ts:29:1 › D-P09-013 a farmer downloads everything on the farm as one ZIP of spreadsheet files, audited
+[57/268] [desktop] › tests\browser\farm-export-ui.spec.ts:50:1 › D-P09-014 the export is limited to 3 a day; another farmer and anonymous visitors get nothing
+[WebServer] {"event":"request_failed","requestId":"4d6ae31b-03f7-4c4f-83e1-33194e2de9ee","code":"RATE_LIMITED"}
+
+[WebServer] {"event":"request_failed","requestId":"1b95fb19-74e1-4661-b018-201817dc0967","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"107bf6f8-9b11-421e-a097-f2da150eb378","code":"UNAUTHENTICATED"}
+
+[58/268] [desktop] › tests\browser\harvest-ui.spec.ts:7:1 › harvest entry preserves offline input, posts once and denies foreign farm access
+[WebServer] {"event":"request_failed","requestId":"72de2677-2826-434d-9d80-7612fc642572","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"7832fa3f-8f62-42af-b3a6-5d31c0191929","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"c9616f88-42f3-4103-b090-f51f07d2e699","code":"FORBIDDEN"}
+
+[59/268] [desktop] › tests\browser\insights-ui.spec.ts:59:1 › MYF-P10-AC001 an alert shows its values, both periods, the rule version and the coverage, and can be marked as seen
+[60/268] [desktop] › tests\browser\insights-ui.spec.ts:87:1 › thin records are listed with the reason, and a farm without batches says so
+[61/268] [desktop] › tests\browser\insights-ui.spec.ts:99:1 › another farmer cannot see or acknowledge this farm's alerts; a stale acknowledgement is refused
+[WebServer] {"event":"request_failed","requestId":"3a44a1f4-0875-48ae-9994-61fbc4979fc0","code":"CONFLICT"}
+
+[WebServer] {"event":"request_failed","requestId":"233d98b9-c365-43f8-be0f-e2ee0661081d","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"24fb6e1c-5f0c-4a4d-b312-2eb1abb28ea6","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"d089b906-353d-4584-b040-58e519a00897","code":"FORBIDDEN"}
+
+[62/268] [desktop] › tests\browser\insights-ui.spec.ts:115:1 › D-P10-009 past 30 checks a minute, the Alerts page says to wait and the API answers 429; other farmers are not affected
+[WebServer] {"event":"request_failed","requestId":"f44726c3-e849-447c-bc1b-1c646809decf","code":"RATE_LIMITED"}
+
+[63/268] [desktop] › tests\browser\insights-ui.spec.ts:143:1 › MYF-P10-AC002 thresholds and the feed in stock are stated, and units must match before feed is judged
+[64/268] [desktop] › tests\browser\insights-ui.spec.ts:184:1 › offline, the alert stays readable and marking it as seen waits for a connection
+[65/268] [desktop] › tests\browser\officer-dashboard-ui.spec.ts:25:1 › owner consent grants one farm, dashboard shows actual counts, revocation removes it
+[WebServer] {"event":"request_failed","requestId":"58f8535b-ece0-49dd-929f-4a8018ffeef0","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"7ce2cb62-62d8-4dd6-80f2-b2c9eb0f121a","code":"FORBIDDEN"}
+
+[66/268] [desktop] › tests\browser\officer-dashboard-ui.spec.ts:51:1 › unassigned dashboard exposes no farmer directory and guessed owner pages deny
+[WebServer] {"event":"request_failed","requestId":"70379c06-cd78-4222-bf61-7a8bc1105c14","code":"FORBIDDEN"}
+
+[67/268] [desktop] › tests\browser\officer-dashboard-ui.spec.ts:59:1 › offline consent is disabled and typed details survive reconnect
+[68/268] [desktop] › tests\browser\officer-work-ui.spec.ts:29:1 › officer prepares a draft; only the named farmer reviews and accepts the exact details
+[69/268] [desktop] › tests\browser\officer-work-ui.spec.ts:53:1 › offline visit and photo survive reload, sync once, and revoked work stays recoverable
+[WebServer] {"event":"request_failed","requestId":"dcd2d5a9-251f-41aa-b95f-7d22ca3f76e6","code":"FORBIDDEN"}
+
+[70/268] [desktop] › tests\browser\offline-actions-ui.spec.ts:53:1 › MYF-P07-AC002 all eight actions work with the server stopped and survive a reload
+[71/268] [desktop] › tests\browser\offline-actions-ui.spec.ts:143:1 › MYF-P07-AC001 a full phone says nothing was saved and keeps the farmer's input
+[72/268] [desktop] › tests\browser\offline-replay-ui.spec.ts:14:1 › MYF-P07-AC004 the source's critical test: offline expense, lost acknowledgement, reconnect, one transaction
+[73/268] [desktop] › tests\browser\offline-replay-ui.spec.ts:42:1 › MYF-P07-AC004 two tabs sending at once create one transaction
+[74/268] [desktop] › tests\browser\offline-replay-ui.spec.ts:60:1 › MYF-P07-AC004 two phones finishing one task: one is accepted and the other asks for review
+[75/268] [desktop] › tests\browser\offline-replay-ui.spec.ts:86:1 › MYF-P07-AC004 a revoked member keeps their entry but cannot commit it, and an ended session asks to sign in
+[76/268] [desktop] › tests\browser\offline-replay-ui.spec.ts:114:1 › MYF-P07-AC004 an interrupted or expired pull keeps saved copies and unsent entries
+[77/268] [desktop] › tests\browser\offline-replay-ui.spec.ts:141:1 › D-P07-002 entries older than the support window warn clearly and still send once, and a full queue refuses new ones
+[78/268] [desktop] › tests\browser\offline-replay-ui.spec.ts:191:1 › D-P07-003 a shared phone keeps accounts apart, and unsent entries wait for their own account
+[79/268] [desktop] › tests\browser\offline-replay-ui.spec.ts:229:1 › a service worker replaced while entries wait leaves them intact and they still send
+[80/268] [desktop] › tests\browser\offline-replay-ui.spec.ts:254:1 › an exclusive browser sender recovers a reload's unexpired lease and records the expense once
+[81/268] [desktop] › tests\browser\offline-shell-ui.spec.ts:21:1 › MYF-P07-AC001 the shell reopens with no network and signed-in pages are never stored
+[82/268] [desktop] › tests\browser\offline-shell-ui.spec.ts:57:1 › MYF-P07-AC001 storage warnings are visible and a phone with no prepared account says so
+[83/268] [desktop] › tests\browser\offline-shell-ui.spec.ts:75:1 › MYF-P07-AC001 eviction leaves a working empty shell, and sign-out clears cached data but keeps unsent entries
+[WebServer] {"event":"request_failed","requestId":"fba3b94e-446c-4681-bf79-cfa2fdef7b7c","code":"UNAUTHENTICATED"}
+
+[84/268] [desktop] › tests\browser\offline-sync-ui.spec.ts:7:1 › MYF-P07-AC003 entries saved offline send on reconnecting, with a photo after its parent
+[85/268] [desktop] › tests\browser\offline-sync-ui.spec.ts:53:1 › MYF-P07-AC003 a send abandoned by a crash goes again, once
+[86/268] [desktop] › tests\browser\offline-sync-ui.spec.ts:71:1 › MYF-P07-AC003 a refused entry stays for repair, holds its child, and sends after fixing
+[87/268] [desktop] › tests\browser\offline-sync-ui.spec.ts:109:1 › MYF-P07-AC003 a stale edit asks for review and never overwrites the newer change
+[88/268] [desktop] › tests\browser\offline-sync-ui.spec.ts:140:1 › MYF-P07-AC003 a passing server failure retries, and a copy of unsent entries can be downloaded
+[89/268] [desktop] › tests\browser\pilot-ui.spec.ts:43:1 › MYF-P09-AC001 staff open a cohort, a farmer joins and is counted once, and leaving removes them
+[WebServer] {"event":"request_failed","requestId":"d3852c16-03ea-4a8a-97d8-c4233572d7a8","code":"FORBIDDEN"}
+
+[90/268] [desktop] › tests\browser\pilot-ui.spec.ts:131:1 › a wrong code is refused plainly and joins nothing
+[WebServer] {"event":"request_failed","requestId":"fd1db1d0-0e00-4435-8df5-1a1d3812ba51","code":"INVALID_INPUT"}
+
+[91/268] [desktop] › tests\browser\pilot-ui.spec.ts:141:1 › MYF-P09-AC002 staff record what they see, write findings on it, and decide only what the evidence allows
+[WebServer] {"event":"request_failed","requestId":"ec9ca7a6-34ed-43a0-af32-dd267f524701","code":"CONFLICT"}
+
+[92/268] [desktop] › tests\browser\poultry-batch-api.spec.ts:29:1 › authenticated poultry API creates, lists, reads and replays a committed normalized command
+[93/268] [desktop] › tests\browser\poultry-batch-api.spec.ts:45:1 › poultry API rejects fractional birds, duplicate labels, IDOR, forged scope, CSRF and changed replays
+[WebServer] {"event":"request_failed","requestId":"0a4d2515-e0ed-4c97-a698-c18c471bc614","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"0ce0e041-af11-4dfc-a885-92e851748e10","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"08f65982-065c-4578-b833-72a7d945423a","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"636c4023-d400-4117-9a2d-d676e80311e9","code":"CONFLICT"}
+
+[WebServer] {"event":"request_failed","requestId":"9594d0cd-e67e-45c8-a031-799a5a488fcc","code":"CONFLICT"}
+
+[WebServer] {"event":"request_failed","requestId":"2d1aa170-2b01-4cec-9d8b-899f1e5c0759","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"537b6d78-1987-4b45-a811-346e20cfc6de","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"10b3af5d-98b2-4e66-904f-1a457e2d1bcc","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"359a0025-c881-43a9-9af2-dba5fb0e3da6","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"2aeb2b16-35df-4cce-ae78-182ea8f46086","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"c9c45d00-ef8a-40d8-a5e1-78fad01a5b7c","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"849aa882-1e8b-4004-ba59-7607522e0178","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"977c93d1-278b-44ae-a753-d18434921074","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"6c1f5d6d-bfa9-4ef8-b74b-9b9550cff3c4","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"9cae4d48-0392-4e11-b38e-22f14e976fe8","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"952fe764-e883-460a-ab6a-dcf7ad1cf8fb","code":"FORBIDDEN"}
+
+[94/268] [desktop] › tests\browser\poultry-batch-api.spec.ts:63:1 › poultry API checks a revoked server session
+[WebServer] {"event":"request_failed","requestId":"ff4e0d48-433d-4ab7-a74f-7737ad9b4ad4","code":"UNAUTHENTICATED"}
+
+[95/268] [desktop] › tests\browser\poultry-batch-ui.spec.ts:42:1 › empty/setup states → batch with whole count and provenance → separate farm histories
+[96/268] [desktop] › tests\browser\poultry-batch-ui.spec.ts:79:1 › a duplicate batch name on the farm fails without an effect, keeps the draft, then saves when renamed
+[WebServer] {"event":"request_failed","requestId":"564cf426-da67-44f4-bebb-9ceb18c7e2ef","code":"CONFLICT"}
+
+[97/268] [desktop] › tests\browser\poultry-batch-ui.spec.ts:92:1 › offline open form reconnects without losing details or creating duplicate batches
+[98/268] [desktop] › tests\browser\poultry-batch-ui.spec.ts:100:1 › lost response after committing a batch retries exactly once with its original request identity
+[99/268] [desktop] › tests\browser\poultry-batch-ui.spec.ts:114:1 › nested farm links, foreign presets and other users deny access; revocation retains an unsaved draft
+[WebServer] {"event":"request_failed","requestId":"d4289239-e68c-4af1-a756-6030e4464f02","code":"FORBIDDEN"}
+
+[100/268] [desktop] › tests\browser\poultry-batch-ui.spec.ts:129:1 › provider failures remain errors, recover with retry, and never imply a saved record
+[WebServer] ⨯ Error [FoundationError]: UNAVAILABLE
+[WebServer]     at d (D:\Myfarm\.next\server\chunks\ssr\[root-of-the-server]__1f0pufoym0267._.js:1:2357)
+[WebServer]     at async m (D:\Myfarm\.next\server\chunks\ssr\src_1pb-72qb3-2tq._.js:1:762) {
+[WebServer]   code: 'UNAVAILABLE',
+[WebServer]   digest: '1524788020'
+[WebServer] }
+
+[WebServer] {"event":"request_failed","requestId":"8fc3ecaf-6b0d-4842-982d-744da81fd384","code":"UNAVAILABLE"}
+
+[101/268] [desktop] › tests\browser\poultry-batch-ui.spec.ts:142:1 › later enterprise choices preserve the draft and batch list pagination stays scoped
+[102/268] [desktop] › tests\browser\poultry-batch-ui.spec.ts:155:1 › closed or crop-only enterprises block setup; expired sessions cannot open it
+[WebServer] {"event":"request_failed","requestId":"48290ae7-7469-4247-841a-4c4eaa63e91f","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"e132113b-562a-4069-8f80-164a6654fb0a","code":"UNAUTHENTICATED"}
+
+[103/268] [desktop] › tests\browser\poultry-production-ui.spec.ts:4:1 › source flock reconstructs 105 birds after purchase, mortality and an atomic sale
+[104/268] [desktop] › tests\browser\production-acceptance.spec.ts:7:1 › AC001: two farms retain multi-enterprise, multi-season histories and separate quantities after retries
+[WebServer] {"event":"request_failed","requestId":"6ba5bafa-2e26-4c8c-9278-f708cd029144","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"d9985cb5-9dee-41ad-ad08-6e6005bd4cd7","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"e49486fb-0037-4109-89ff-729546ea09c8","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"091d6fff-b743-4b83-8f53-92a9f8cb10f5","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"6b1aa86c-f1e0-4988-99fd-c9c3edb16bc5","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"94919e5a-fcfe-410e-a2a8-50d6ea703258","code":"CONFLICT"}
+
+[105/268] [desktop] › tests\browser\production-ui.spec.ts:33:1 › farm → empty production lists → enterprise and overlapping seasons → correct farm histories
+[106/268] [desktop] › tests\browser\production-ui.spec.ts:73:1 › offline save remains on the open form and succeeds exactly once after reconnecting
+[107/268] [desktop] › tests\browser\production-ui.spec.ts:92:1 › a lost response after commit retries the same intent without duplicating the record
+[108/268] [desktop] › tests\browser\production-ui.spec.ts:111:1 › another user and ADMIN cannot view farm production, even with guessed nested URLs
+[109/268] [desktop] › tests\browser\production-ui.spec.ts:122:1 › membership revoked after the form opens denies the action and retains the farmer's input
+[WebServer] {"event":"request_failed","requestId":"07dff0f9-3181-4fc1-860b-2a1448af1c8b","code":"FORBIDDEN"}
+
+[110/268] [desktop] › tests\browser\production-ui.spec.ts:132:1 › expired server sessions cannot open the production forms
+[WebServer] {"event":"request_failed","requestId":"2b3089c5-c73d-4e5b-9722-77f9a0ae0f13","code":"UNAUTHENTICATED"}
+
+[111/268] [desktop] › tests\browser\production-ui.spec.ts:139:1 › an unsupported enterprise type is saved with clear limits and no dead workflow controls
+[112/268] [desktop] › tests\browser\production-ui.spec.ts:146:1 › list pagination works on both production lists without crossing farms
+[113/268] [desktop] › tests\browser\production-ui.spec.ts:162:1 › provider failure is recoverable and is never shown as an empty season list
+[WebServer] ⨯ Error [FoundationError]: UNAVAILABLE
+[WebServer]     at d (D:\Myfarm\.next\server\chunks\ssr\[root-of-the-server]__1f0pufoym0267._.js:1:2357)
+[WebServer]     at async m (D:\Myfarm\.next\server\chunks\ssr\src_app_farms_[farmId]_seasons_page_tsx_0cbqtvjg07dhq._.js:1:325) {
+[WebServer]   code: 'UNAVAILABLE',
+[WebServer]   digest: '180865460'
+[WebServer] }
+
+[114/268] [desktop] › tests\browser\voice-api.spec.ts:17:1 › a reviewed source expense needs explicit confirmation and replays one real financial record through the API
+[WebServer] {"event":"request_failed","requestId":"448893a9-c049-4c5f-a7b4-51d358d92b56","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"faeb71c9-a351-4faa-ab0e-04e578ac2589","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"581cfa83-f5f5-456f-8dae-6eee27e0880c","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"a783a130-870a-426e-befd-7d2e692c932a","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"17894171-1c12-4791-87d5-b1371cd675d3","code":"FORBIDDEN"}
+
+[115/268] [desktop] › tests\browser\voice-ui.spec.ts:25:1 › AC001 reviews the source total, creates nothing until confirmed, and opens the one saved expense
+[116/268] [desktop] › tests\browser\voice-ui.spec.ts:34:1 › AC001 a mistaken amount must be reviewed again and discarding posts no expense
+[117/268] [desktop] › tests\browser\voice-ui.spec.ts:41:1 › AC002 a lost response is retried as the same confirmation, with one financial effect
+[118/268] [desktop] › tests\browser\voice-ui.spec.ts:50:1 › AC002 a pending review resumes after refresh but never carries confirmation consent
+[119/268] [desktop] › tests\browser\voice-ui.spec.ts:54:1 › AC002 retrying the same confirmation response remains available
+[120/268] [desktop] › tests\browser\voice-ui.spec.ts:62:1 › AC002 access revoked after review prevents confirmation
+[WebServer] {"event":"request_failed","requestId":"0bea8dae-9795-4636-afe1-a08080955a95","code":"FORBIDDEN"}
+
+[121/268] [desktop] › tests\browser\voice-ui.spec.ts:68:1 › AC002 editing invalidates a copied confirmation and expiry requires fresh review
+[WebServer] {"event":"request_failed","requestId":"b71f04a0-f724-4e1a-8bb5-8ee72f914cea","code":"CONFLICT"}
+
+[122/268] [desktop] › tests\browser\voice-ui.spec.ts:82:1 › AC002 an expired session cannot commit, and offline review keeps input for reconnect
+[WebServer] {"event":"request_failed","requestId":"2e1c1108-29c8-4f30-8776-f5c949b0ef96","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"9119b8d2-5bc0-48f2-932a-1ad7a8c8ace1","code":"UNAUTHENTICATED"}
+
+[123/268] [desktop] › tests\browser\voice-ui.spec.ts:91:1 › AC003 language choices promise no speech and fall back to text; the source example reviews two bags as one total
+[124/268] [desktop] › tests\browser\voice-ui.spec.ts:111:1 › AC002 editing a review already confirmed in another window recovers its receipt instead of posting a duplicate
+[WebServer] {"event":"request_failed","requestId":"a99fd38b-4bab-459d-bab0-423fc6e89317","code":"CONFLICT"}
+
+[125/268] [desktop] › tests\browser\weather-ui.spec.ts:38:1 › AC001/AC002 names the task/time and changes one date only after exact separate confirmation
+[126/268] [desktop] › tests\browser\weather-ui.spec.ts:51:1 › all six capabilities use synthetic fixtures and provider failure makes no weather claim
+[127/268] [desktop] › tests\browser\weather-ui.spec.ts:60:1 › editing a reviewed date clears consent and discarding makes no change
+[128/268] [desktop] › tests\browser\weather-ui.spec.ts:68:1 › a lost response retries the same confirmation without a second date move
+[129/268] [desktop] › tests\browser\weather-ui.spec.ts:75:1 › revocation after review refuses the move
+[WebServer] {"event":"request_failed","requestId":"bfab1e17-8015-427b-a0f6-4c886caa7e1b","code":"FORBIDDEN"}
+
+[130/268] [desktop] › tests\browser\weather-ui.spec.ts:80:1 › expired review disables confirmation
+[131/268] [desktop] › tests\browser\weather-ui.spec.ts:84:1 › a revoked session after review cannot confirm
+[WebServer] {"event":"request_failed","requestId":"6d4be987-d9f7-4b1c-9f1a-6a981f0b7573","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"37c90d7d-d20f-45e3-9ae8-e8d29db1cfb3","code":"UNAUTHENTICATED"}
+
+[132/268] [desktop] › tests\browser\weather-ui.spec.ts:89:1 › offline check is explicit and never queues a date move
+[133/268] [desktop] › tests\browser\weather-ui.spec.ts:93:1 › another farm and nested activity cannot be read through the weather endpoint
+[WebServer] {"event":"request_failed","requestId":"47ce4290-5c28-4882-90cd-8a0bfb34ba43","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"f83f1f0e-ff1f-45e5-9672-e5c82e989209","code":"FORBIDDEN"}
+
+[134/268] [desktop] › tests\browser\weather-ui.spec.ts:100:1 › an older selected activity remains available through paged choices
+(node:9640) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[135/268] [mobile] › tests\browser\activity-calendar-ui.spec.ts:7:1 › MYF-P06-AC002 Plot B fertilizer due tomorrow is upcoming, and completion records the worker and time
+[WebServer] {"event":"request_failed","requestId":"59c172b7-916f-462e-87f9-626b34dab1ce","code":"CONFLICT"}
+
+[WebServer] {"event":"request_failed","requestId":"f752dde6-979d-4328-902b-4953faea8795","code":"FORBIDDEN"}
+
+[136/268] [mobile] › tests\browser\activity-series-ui.spec.ts:7:1 › MYF-P06-AC003 repeating feeding creates one activity per date and stopping ends future entries
+[WebServer] {"event":"request_failed","requestId":"e32ff3a6-2f6a-493f-a36a-c0a0d71a0c8d","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"3ba93d01-1a41-4ea1-9a94-ffc6b163b738","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"0a7ec13a-2836-4361-bd7e-4435c1f5bd7a","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"49db2d32-4ab8-43fd-9b7e-59ea6f8c286e","code":"FORBIDDEN"}
+
+[137/268] [mobile] › tests\browser\activity-ui.spec.ts:5:1 › MYF-P06-AC001 schedules allowed activities, keeps input offline and states limits clearly
+[WebServer] {"event":"request_failed","requestId":"eeeac69b-171d-4ac7-9346-91d8811bd933","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"3795c169-2b8e-470a-ab01-2ef722991947","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"f04703dc-90bf-43af-9602-cdc035363fdd","code":"FORBIDDEN"}
+
+[138/268] [mobile] › tests\browser\analytics-dashboard-ui.spec.ts:57:1 › MYF-P08-AC001 the farm opens on its season and shows the source dashboard
+[139/268] [mobile] › tests\browser\analytics-dashboard-ui.spec.ts:76:1 › filters: all records counts the shared cost, dates narrow it, and a bad choice explains itself
+[140/268] [mobile] › tests\browser\analytics-dashboard-ui.spec.ts:106:1 › an empty farm and an unlinked season each say so instead of showing zeros
+[141/268] [mobile] › tests\browser\analytics-dashboard-ui.spec.ts:120:1 › a reversed record leaves the figures
+[142/268] [mobile] › tests\browser\analytics-dashboard-ui.spec.ts:132:1 › another farmer, a guessed season, and an ended session cannot see the figures
+[WebServer] {"event":"request_failed","requestId":"b141d092-cd0d-4a19-a39d-3302a2172279","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"164778af-2008-4e41-ae1e-2427d4ae6641","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"854b7eeb-481c-4dfb-be60-be6760f7c7a3","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"7aee4212-4e93-49d7-8d12-ebad368bc7f2","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"30de5544-3fb9-4a58-966d-18062311f4b2","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"1c201d79-7d24-4ea1-a681-35f6ca92be40","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"fcb1d64b-ffef-4b71-affe-3400caa6a667","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"b5f76223-1da3-4f1b-8744-5b15b1c5015d","code":"UNAUTHENTICATED"}
+
+[143/268] [mobile] › tests\browser\analytics-dashboard-ui.spec.ts:163:1 › D-P08-008 with no connection it points to offline work, and unsent entries count only once sent
+[144/268] [mobile] › tests\browser\analytics-dashboard-ui.spec.ts:204:1 › MYF-P08-AC002 the approved crop and bird examples show on screen, with stock as an estimate
+[145/268] [mobile] › tests\browser\analytics-dashboard-ui.spec.ts:240:1 › MYF-P08-AC003 trends show +18% against the earlier season and the previous batch, and say when there is nothing to compare
+[146/268] [mobile] › tests\browser\analytics-dashboard-ui.spec.ts:272:1 › D-P08-010 a second crop and a date range each say why there is no per-acre figure
+[147/268] [mobile] › tests\browser\analytics-dashboard-ui.spec.ts:289:1 › D-P08-003 a purchase names its batch on the form, and unlinked costs are called out
+[148/268] [mobile] › tests\browser\analytics-dashboard-ui.spec.ts:308:1 › an expense with no batch keeps working, and income has no batch field
+[149/268] [mobile] › tests\browser\analytics-dashboard-ui.spec.ts:322:1 › D-P08-003 an expense saved offline with a batch sends once and counts for that batch
+[150/268] [mobile] › tests\browser\analytics-dashboard-ui.spec.ts:347:1 › MYF-P08-AC004 the source farmer journey: entries made offline send once, and the farm screen adds up
+[151/268] [mobile] › tests\browser\analytics-dashboard-ui.spec.ts:403:47 › the metrics endpoint denies another farmer, a guessed season and an ended session
+[WebServer] {"event":"request_failed","requestId":"8c2f2d7e-c1b4-47fb-802a-9274d04b0c7f","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"02246a3a-0cdc-4dd0-98f7-1f08fcff551b","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"681d9c25-3b7a-497a-a7fa-1c022b465697","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"8c24af16-2205-41f0-b5f6-77b89056125d","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"e4bfaecd-1458-41ad-bd2f-6db111eee78d","code":"UNAUTHENTICATED"}
+
+[152/268] [mobile] › tests\browser\analytics-dashboard-ui.spec.ts:403:47 › the trends endpoint denies another farmer, a guessed season and an ended session
+[WebServer] {"event":"request_failed","requestId":"64320931-0e58-4b8a-aa48-9de76baab5c7","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"0004e8d7-dd3a-4f66-9e13-472bb08f8169","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"a1ed7e6b-de29-46d0-b532-1cf7e319cacc","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"4648b00a-f908-4591-97d3-ea23d7a5a365","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"683f6430-912e-4a06-a5ee-e7b250d6a3d7","code":"UNAUTHENTICATED"}
+
+[153/268] [mobile] › tests\browser\assistant-labels-ui.spec.ts:40:1 › MYF-P11-AC003 each statement carries its label, the figures match the farm screen, and the labels are explained
+[154/268] [mobile] › tests\browser\assistant-labels-ui.spec.ts:65:1 › agronomic questions are labeled not certain and point to an extension officer, never advice
+[155/268] [mobile] › tests\browser\assistant-questions-ui.spec.ts:73:1 › MYF-P11-AC002 every question type answers from this farm's records, says where from, and links to the full page
+[156/268] [mobile] › tests\browser\assistant-questions-ui.spec.ts:105:1 › comparing needs one season; the question box still works offline-safe and a new question keeps the season chosen
+[157/268] [mobile] › tests\browser\assistant-ui.spec.ts:48:1 › MYF-P11-AC001 the highest-profit answer cites the period, the farm's records and the exact result
+[158/268] [mobile] › tests\browser\assistant-ui.spec.ts:66:1 › advice gets the extension-officer referral and other questions say what can be asked
+[159/268] [mobile] › tests\browser\assistant-ui.spec.ts:73:1 › an injected question only ever gets this farm's figures; another farmer cannot see, ask or delete here
+[WebServer] {"event":"request_failed","requestId":"5df49d6f-2cc9-47a5-bc11-96ab1d62081b","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"4edc10ea-1c17-4b5f-b819-19660884187e","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"4c512544-dfe0-4001-b134-5f6b0c90037d","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"557319b6-0cda-4ac8-b852-eb800fd84b11","code":"INVALID_INPUT"}
+
+[160/268] [mobile] › tests\browser\assistant-ui.spec.ts:97:1 › a farm with no money records gets no conclusion; the farmer can delete a question
+[161/268] [mobile] › tests\browser\crop-cycle-api.spec.ts:34:1 › authenticated crop API creates, lists, reads and replays a committed normalized command
+[162/268] [mobile] › tests\browser\crop-cycle-api.spec.ts:51:1 › released catalog data can be selected and planted through the authorized API
+[WebServer] {"event":"request_failed","requestId":"f6d07650-45fd-4a2d-9038-3cf258fd6018","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"f86e24df-1411-41a6-a370-8db9add6b0b5","code":"FORBIDDEN"}
+
+[163/268] [mobile] › tests\browser\crop-cycle-api.spec.ts:69:1 › enterprise API derives capabilities on create, detail and list within authorized farm scope
+[WebServer] {"event":"request_failed","requestId":"89e8c35a-2925-4d01-90d3-4c9815af14b5","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"673b2584-24f3-4ea8-9331-4acede0b251c","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"9fe72e5a-a306-46b5-988d-fc72729c354f","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"24c89bb3-85cd-49ab-9004-a1eeae71d52b","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"3efd1740-c0f9-4bbd-adb0-3654e8b57df8","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"c8c77309-ccb9-4431-873b-9a99e0d2b4c8","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"11d71939-78d4-4282-8614-17e386c6997a","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"269e1659-b3de-4f07-965e-4f71e02f5c16","code":"FORBIDDEN"}
+
+[164/268] [mobile] › tests\browser\crop-cycle-api.spec.ts:86:1 › crop API rejects IDOR, forged scope, CSRF and changed replay payloads
+[WebServer] {"event":"request_failed","requestId":"85d25fea-d107-4577-b906-91c58fc3267c","code":"CONFLICT"}
+
+[WebServer] {"event":"request_failed","requestId":"78d36070-932f-4af4-aefe-79bfcc403fb6","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"6d58c2af-0f87-45f7-b718-461da5da6848","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"b30ac7ac-43dd-4262-a8f5-aaec17c010e0","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"bae9aab4-1032-4e61-af43-d8966a6639da","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"b1d16ce6-7a62-4b42-a7cf-8dd49654f05d","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"96244427-2842-4be3-a1e1-3115258f9bd9","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"d560d228-121f-4247-bd9b-d9c573c3a606","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"e2693998-73cd-403b-a339-18e0f4809518","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"369839e3-c67e-4520-9ec1-548d5d7042b8","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"ade04651-c5d1-4e53-b4ea-b451f040ed65","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"3c46fd16-aec3-4003-bca7-4a9fdda9a079","code":"FORBIDDEN"}
+
+[165/268] [mobile] › tests\browser\crop-cycle-api.spec.ts:99:1 › crop API preserves atomic failure and checks a revoked server session
+[WebServer] {"event":"request_failed","requestId":"dcdee0ac-b6d2-4289-8def-0cdc89c19996","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"8ee7fd83-80aa-4146-8b08-6ad475fa8af0","code":"UNAUTHENTICATED"}
+
+[166/268] [mobile] › tests\browser\crop-cycle-ui.spec.ts:44:1 › empty/setup states → planting with dates/units → perennial → separate farm histories
+[167/268] [mobile] › tests\browser\crop-cycle-ui.spec.ts:78:1 › all released catalog crops can be planted through the same form without crop-specific behavior
+[168/268] [mobile] › tests\browser\crop-cycle-ui.spec.ts:101:1 › unsupported capabilities stay unavailable on detail, list and both production selectors
+[169/268] [mobile] › tests\browser\crop-cycle-ui.spec.ts:151:1 › excess area fails without an effect, retains draft, then records the explicit reason
+[WebServer] {"event":"request_failed","requestId":"4049cc07-89c3-4f9f-bf43-2242d2070dda","code":"INVALID_INPUT"}
+
+[170/268] [mobile] › tests\browser\crop-cycle-ui.spec.ts:162:1 › offline open form reconnects without losing details or creating duplicate cycles
+[171/268] [mobile] › tests\browser\crop-cycle-ui.spec.ts:170:1 › lost response after committing a crop retries exactly once with its original request identity
+[172/268] [mobile] › tests\browser\crop-cycle-ui.spec.ts:184:1 › nested farm links, foreign presets and other users deny access; revocation retains an unsaved draft
+[WebServer] {"event":"request_failed","requestId":"7415f3aa-00d4-47c1-a098-8dfd34ad50fb","code":"FORBIDDEN"}
+
+[173/268] [mobile] › tests\browser\crop-cycle-ui.spec.ts:199:1 › provider failures remain errors, recover with retry, and never imply a saved record
+[WebServer] ⨯ Error [FoundationError]: UNAVAILABLE
+[WebServer]     at d (D:\Myfarm\.next\server\chunks\ssr\[root-of-the-server]__1f0pufoym0267._.js:1:2357)
+[WebServer]     at async m (D:\Myfarm\.next\server\chunks\ssr\src_0humf6br7abfv._.js:1:766) {
+[WebServer]   code: 'UNAVAILABLE',
+[WebServer]   digest: '3398718053'
+[WebServer] }
+
+[WebServer] {"event":"request_failed","requestId":"a61c280f-fcdf-4f56-ac87-4bc51db2af83","code":"UNAVAILABLE"}
+
+[174/268] [mobile] › tests\browser\crop-cycle-ui.spec.ts:212:1 › later parent choices preserve the draft and crop list pagination stays scoped
+[175/268] [mobile] › tests\browser\crop-cycle-ui.spec.ts:229:1 › unknown plot area and inactive parents block setup; expired sessions cannot open it
+[WebServer] {"event":"request_failed","requestId":"ec580626-51a8-478e-b37f-f4f1ee397315","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"d166dcd3-0fe3-4d29-b613-f3e4083c3b33","code":"UNAUTHENTICATED"}
+
+[176/268] [mobile] › tests\browser\farm-accounting-api.spec.ts:29:1 › authenticated accounting API records a sale, a partial payment and replays exactly once (AC001 via HTTP)
+[177/268] [mobile] › tests\browser\farm-accounting-api.spec.ts:51:1 › accounting API rejects floats, forged scope, CSRF, IDOR, other users and changed replays
+[WebServer] {"event":"request_failed","requestId":"0933e81f-42cc-44d7-a8a3-7efb9f9787ec","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"051c6f1e-5394-4a35-b114-38131c78301f","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"a3e9c166-1ca6-4a9c-8f7c-61052bfe2cf8","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"a605ad52-0524-4ff8-8609-556d192479e4","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"e03cd527-8f15-4682-959d-fbcbd3870218","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"101e505b-0953-4f0d-9949-f91cdb9a7816","code":"CONFLICT"}
+
+[WebServer] {"event":"request_failed","requestId":"08f89fe3-8c4a-48eb-9192-c525d7f48be5","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"0e88d474-676c-461a-af3e-02622545740e","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"6e670fc1-85d0-49d7-bd34-f92790ca862d","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"607ea689-997e-4c88-8fe9-1b96af9fc362","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"fbcadede-fe77-4ab7-9228-20dd8dd3e0fa","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"c9a283fb-8a43-440f-9ea7-a28c899580ce","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"3b9674bd-ddbb-401c-a7c2-a1c1a642bb58","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"caeeeedb-54ad-4f8f-955f-b3b57144178d","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"15d00aaf-77ea-4cf8-9929-6f6b49bd0cb1","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"728c4a0a-db66-4300-8fbd-60a235019bd9","code":"FORBIDDEN"}
+
+[178/268] [mobile] › tests\browser\farm-accounting-api.spec.ts:70:1 › accounting API checks a revoked server session
+[WebServer] {"event":"request_failed","requestId":"387e84ba-d174-4b07-b19b-708632ad0bd1","code":"UNAUTHENTICATED"}
+
+[179/268] [mobile] › tests\browser\farm-accounting-api.spec.ts:77:1 › archived category: history keeps its name over HTTP while new records and the picker exclude it (P04-T005)
+[WebServer] {"event":"request_failed","requestId":"8c60c76d-d2ba-42bd-ae0b-f9837e0f1524","code":"CONFLICT"}
+
+[180/268] [mobile] › tests\browser\farm-accounting-reports-ui.spec.ts:43:1 › AC003: link UGX 150,000 fertilizer to maize 2027A; a link matching no crop cycle keeps the draft
+[WebServer] {"event":"request_failed","requestId":"98b578cf-357c-4bab-befc-d99c17b164a5","code":"INVALID_INPUT"}
+
+[181/268] [mobile] › tests\browser\farm-accounting-reports-ui.spec.ts:68:1 › AC004 and AC005: gross margin 350,000, summary answers, ties, filters and an audited CSV
+[182/268] [mobile] › tests\browser\farm-accounting-reports-ui.spec.ts:107:1 › AC002: an archived category stays readable on past records and leaves the picker
+[183/268] [mobile] › tests\browser\farm-accounting-reports-ui.spec.ts:121:1 › reports and exports are denied to other users and admins
+[WebServer] {"event":"request_failed","requestId":"5bfa5f0d-dff9-40de-baa2-cb0c8a65be0b","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"8260bd77-d057-4977-9b68-0ede07bcbdff","code":"FORBIDDEN"}
+
+[184/268] [mobile] › tests\browser\farm-accounting-ui.spec.ts:45:1 › AC001: one sale, a partial payment, UGX 120,000 still to receive and one revenue record
+[185/268] [mobile] › tests\browser\farm-accounting-ui.spec.ts:77:1 › an expense records how it was paid; a purchase is paid in full; farms stay separate
+[186/268] [mobile] › tests\browser\farm-accounting-ui.spec.ts:102:1 › overpayment and a lost response keep the draft and never duplicate a payment
+[WebServer] {"event":"request_failed","requestId":"03ca379f-4b4a-44b3-80fd-c38a46f18ab6","code":"CONFLICT"}
+
+[187/268] [mobile] › tests\browser\farm-accounting-ui.spec.ts:128:1 › payments are reversed before the sale; reversals keep history and restore what is due
+[188/268] [mobile] › tests\browser\farm-accounting-ui.spec.ts:152:1 › offline forms keep details and save once after reconnecting
+[189/268] [mobile] › tests\browser\farm-accounting-ui.spec.ts:161:1 › other farms, users and kinds are denied; revocation keeps the draft; expired sessions sign in again
+[WebServer] {"event":"request_failed","requestId":"503434de-88de-460f-bb95-60ea0ef52a42","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"8547fd85-d323-418f-9f27-338fc3b7e73a","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"f7ea730b-afe9-43fa-a9da-56ffccaebfaf","code":"UNAUTHENTICATED"}
+
+[190/268] [mobile] › tests\browser\farm-export-ui.spec.ts:29:1 › D-P09-013 a farmer downloads everything on the farm as one ZIP of spreadsheet files, audited
+[191/268] [mobile] › tests\browser\farm-export-ui.spec.ts:50:1 › D-P09-014 the export is limited to 3 a day; another farmer and anonymous visitors get nothing
+[WebServer] {"event":"request_failed","requestId":"3f74b506-2fc0-4659-a6e4-47471b8db8c8","code":"RATE_LIMITED"}
+
+[WebServer] {"event":"request_failed","requestId":"2262bc5d-dbf7-426b-bdc5-d19dd2dcb4b2","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"04321fcd-62d5-4bde-bb61-c7af5bebf539","code":"UNAUTHENTICATED"}
+
+[192/268] [mobile] › tests\browser\harvest-ui.spec.ts:7:1 › harvest entry preserves offline input, posts once and denies foreign farm access
+[WebServer] {"event":"request_failed","requestId":"de382b05-3bce-4bf1-bb35-3630529f6355","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"4ce5e742-7903-4d17-8c89-0bcdae8d6ad1","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"d75b8325-c9ca-4115-be80-f08443d46d0c","code":"FORBIDDEN"}
+
+[193/268] [mobile] › tests\browser\insights-ui.spec.ts:59:1 › MYF-P10-AC001 an alert shows its values, both periods, the rule version and the coverage, and can be marked as seen
+[194/268] [mobile] › tests\browser\insights-ui.spec.ts:87:1 › thin records are listed with the reason, and a farm without batches says so
+[195/268] [mobile] › tests\browser\insights-ui.spec.ts:99:1 › another farmer cannot see or acknowledge this farm's alerts; a stale acknowledgement is refused
+[WebServer] {"event":"request_failed","requestId":"783b9bf7-3271-4068-a1e3-5e2b6f572395","code":"CONFLICT"}
+
+[WebServer] {"event":"request_failed","requestId":"4b4fdf57-fe69-4fe2-9480-cf6cf0184ea4","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"4a7a2e09-97a0-4929-af41-add985e4cf16","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"763c8857-8e62-4555-ada6-3f9d7b5856d6","code":"FORBIDDEN"}
+
+[196/268] [mobile] › tests\browser\insights-ui.spec.ts:115:1 › D-P10-009 past 30 checks a minute, the Alerts page says to wait and the API answers 429; other farmers are not affected
+[WebServer] {"event":"request_failed","requestId":"01be4d78-c8ff-4daa-8c11-815be98add09","code":"RATE_LIMITED"}
+
+[197/268] [mobile] › tests\browser\insights-ui.spec.ts:143:1 › MYF-P10-AC002 thresholds and the feed in stock are stated, and units must match before feed is judged
+[198/268] [mobile] › tests\browser\insights-ui.spec.ts:184:1 › offline, the alert stays readable and marking it as seen waits for a connection
+[199/268] [mobile] › tests\browser\officer-dashboard-ui.spec.ts:25:1 › owner consent grants one farm, dashboard shows actual counts, revocation removes it
+[WebServer] {"event":"request_failed","requestId":"143e52d9-51a3-4c25-87ae-b12a854f7be1","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"c5024524-968f-494b-ae4d-9a70ca4db851","code":"FORBIDDEN"}
+
+[200/268] [mobile] › tests\browser\officer-dashboard-ui.spec.ts:51:1 › unassigned dashboard exposes no farmer directory and guessed owner pages deny
+[WebServer] {"event":"request_failed","requestId":"4dbc3033-c7b9-4010-b531-6e3aecc41200","code":"FORBIDDEN"}
+
+[201/268] [mobile] › tests\browser\officer-dashboard-ui.spec.ts:59:1 › offline consent is disabled and typed details survive reconnect
+[202/268] [mobile] › tests\browser\officer-work-ui.spec.ts:29:1 › officer prepares a draft; only the named farmer reviews and accepts the exact details
+[203/268] [mobile] › tests\browser\officer-work-ui.spec.ts:53:1 › offline visit and photo survive reload, sync once, and revoked work stays recoverable
+[WebServer] {"event":"request_failed","requestId":"ff4c05fb-dd20-434d-8f08-d3b4df67f5df","code":"FORBIDDEN"}
+
+[204/268] [mobile] › tests\browser\offline-actions-ui.spec.ts:53:1 › MYF-P07-AC002 all eight actions work with the server stopped and survive a reload
+[205/268] [mobile] › tests\browser\offline-actions-ui.spec.ts:143:1 › MYF-P07-AC001 a full phone says nothing was saved and keeps the farmer's input
+[206/268] [mobile] › tests\browser\offline-replay-ui.spec.ts:14:1 › MYF-P07-AC004 the source's critical test: offline expense, lost acknowledgement, reconnect, one transaction
+[207/268] [mobile] › tests\browser\offline-replay-ui.spec.ts:42:1 › MYF-P07-AC004 two tabs sending at once create one transaction
+[208/268] [mobile] › tests\browser\offline-replay-ui.spec.ts:60:1 › MYF-P07-AC004 two phones finishing one task: one is accepted and the other asks for review
+[209/268] [mobile] › tests\browser\offline-replay-ui.spec.ts:86:1 › MYF-P07-AC004 a revoked member keeps their entry but cannot commit it, and an ended session asks to sign in
+[210/268] [mobile] › tests\browser\offline-replay-ui.spec.ts:114:1 › MYF-P07-AC004 an interrupted or expired pull keeps saved copies and unsent entries
+[211/268] [mobile] › tests\browser\offline-replay-ui.spec.ts:141:1 › D-P07-002 entries older than the support window warn clearly and still send once, and a full queue refuses new ones
+[212/268] [mobile] › tests\browser\offline-replay-ui.spec.ts:191:1 › D-P07-003 a shared phone keeps accounts apart, and unsent entries wait for their own account
+[213/268] [mobile] › tests\browser\offline-replay-ui.spec.ts:229:1 › a service worker replaced while entries wait leaves them intact and they still send
+[214/268] [mobile] › tests\browser\offline-replay-ui.spec.ts:254:1 › an exclusive browser sender recovers a reload's unexpired lease and records the expense once
+[215/268] [mobile] › tests\browser\offline-shell-ui.spec.ts:21:1 › MYF-P07-AC001 the shell reopens with no network and signed-in pages are never stored
+[216/268] [mobile] › tests\browser\offline-shell-ui.spec.ts:57:1 › MYF-P07-AC001 storage warnings are visible and a phone with no prepared account says so
+[217/268] [mobile] › tests\browser\offline-shell-ui.spec.ts:75:1 › MYF-P07-AC001 eviction leaves a working empty shell, and sign-out clears cached data but keeps unsent entries
+[WebServer] {"event":"request_failed","requestId":"6b578292-dc42-4509-8e52-1f21d1cc886e","code":"UNAUTHENTICATED"}
+
+[218/268] [mobile] › tests\browser\offline-sync-ui.spec.ts:7:1 › MYF-P07-AC003 entries saved offline send on reconnecting, with a photo after its parent
+[219/268] [mobile] › tests\browser\offline-sync-ui.spec.ts:53:1 › MYF-P07-AC003 a send abandoned by a crash goes again, once
+[220/268] [mobile] › tests\browser\offline-sync-ui.spec.ts:71:1 › MYF-P07-AC003 a refused entry stays for repair, holds its child, and sends after fixing
+[221/268] [mobile] › tests\browser\offline-sync-ui.spec.ts:109:1 › MYF-P07-AC003 a stale edit asks for review and never overwrites the newer change
+[222/268] [mobile] › tests\browser\offline-sync-ui.spec.ts:140:1 › MYF-P07-AC003 a passing server failure retries, and a copy of unsent entries can be downloaded
+[223/268] [mobile] › tests\browser\pilot-ui.spec.ts:43:1 › MYF-P09-AC001 staff open a cohort, a farmer joins and is counted once, and leaving removes them
+[WebServer] {"event":"request_failed","requestId":"ef14e7f3-3e91-4d42-94b2-f63a7fc6487c","code":"FORBIDDEN"}
+
+[224/268] [mobile] › tests\browser\pilot-ui.spec.ts:131:1 › a wrong code is refused plainly and joins nothing
+[WebServer] {"event":"request_failed","requestId":"7aebf15f-9ffb-43c2-9efb-5e160c65bb8c","code":"INVALID_INPUT"}
+
+[225/268] [mobile] › tests\browser\pilot-ui.spec.ts:141:1 › MYF-P09-AC002 staff record what they see, write findings on it, and decide only what the evidence allows
+[WebServer] {"event":"request_failed","requestId":"0c33e313-b1d0-4de0-8811-9a70a97b1791","code":"CONFLICT"}
+
+[226/268] [mobile] › tests\browser\poultry-batch-api.spec.ts:29:1 › authenticated poultry API creates, lists, reads and replays a committed normalized command
+[227/268] [mobile] › tests\browser\poultry-batch-api.spec.ts:45:1 › poultry API rejects fractional birds, duplicate labels, IDOR, forged scope, CSRF and changed replays
+[WebServer] {"event":"request_failed","requestId":"4864f5b3-1b55-4486-b9dd-60be62a98e5b","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"2875aa47-ee4f-4bc7-8eaf-5cdf4fa84592","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"fb155a7c-dcdd-491a-9237-69c7add82a96","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"7b52e7bd-ce29-4bb8-b150-5c0fddce2b40","code":"CONFLICT"}
+
+[WebServer] {"event":"request_failed","requestId":"5796bb8c-ae27-4f0b-8f8d-ed3886ff4042","code":"CONFLICT"}
+
+[WebServer] {"event":"request_failed","requestId":"3e2b7724-9454-46a2-b6d3-d2b10ad0e7f2","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"0b520404-cc0f-4b29-bfb5-897299f49490","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"b8032a5e-0a12-49e9-a58a-981f3750301f","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"ba57c041-e225-47c4-b55a-5c3f2d16c75c","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"86a10af8-5c8d-4ccd-bbf7-3bdf5ec4dd61","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"8f88dd4d-ffa3-45e2-94e0-94ea228e1eb3","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"f30b7bc8-fe25-4368-9304-d1b1bcaa0198","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"24ff0c38-84d4-47a7-b924-9361ccec5fbf","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"692df216-871d-4d4e-9045-9707592c6bdf","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"3c325236-c2b7-4fc4-a52c-e1a92a38321d","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"e7f9d69d-52e7-4363-9e3e-411c1b469ac5","code":"FORBIDDEN"}
+
+[228/268] [mobile] › tests\browser\poultry-batch-api.spec.ts:63:1 › poultry API checks a revoked server session
+[WebServer] {"event":"request_failed","requestId":"6f49a1d6-a293-4095-8c46-718c5f7c2f46","code":"UNAUTHENTICATED"}
+
+[229/268] [mobile] › tests\browser\poultry-batch-ui.spec.ts:42:1 › empty/setup states → batch with whole count and provenance → separate farm histories
+[230/268] [mobile] › tests\browser\poultry-batch-ui.spec.ts:79:1 › a duplicate batch name on the farm fails without an effect, keeps the draft, then saves when renamed
+[WebServer] {"event":"request_failed","requestId":"1176da79-8b2d-4fc7-bff4-e33c1686599e","code":"CONFLICT"}
+
+[231/268] [mobile] › tests\browser\poultry-batch-ui.spec.ts:92:1 › offline open form reconnects without losing details or creating duplicate batches
+[232/268] [mobile] › tests\browser\poultry-batch-ui.spec.ts:100:1 › lost response after committing a batch retries exactly once with its original request identity
+[233/268] [mobile] › tests\browser\poultry-batch-ui.spec.ts:114:1 › nested farm links, foreign presets and other users deny access; revocation retains an unsaved draft
+[WebServer] {"event":"request_failed","requestId":"6e87b7c2-9ffc-4d58-a34d-68a0e366d5b3","code":"FORBIDDEN"}
+
+[234/268] [mobile] › tests\browser\poultry-batch-ui.spec.ts:129:1 › provider failures remain errors, recover with retry, and never imply a saved record
+[WebServer] ⨯ Error [FoundationError]: UNAVAILABLE
+[WebServer]     at d (D:\Myfarm\.next\server\chunks\ssr\[root-of-the-server]__1f0pufoym0267._.js:1:2357)
+[WebServer]     at async m (D:\Myfarm\.next\server\chunks\ssr\src_1pb-72qb3-2tq._.js:1:762) {
+[WebServer]   code: 'UNAVAILABLE',
+[WebServer]   digest: '1524788020'
+[WebServer] }
+
+[WebServer] {"event":"request_failed","requestId":"815c5f9d-373b-4c65-bdea-d05e9d1d07a4","code":"UNAVAILABLE"}
+
+[235/268] [mobile] › tests\browser\poultry-batch-ui.spec.ts:142:1 › later enterprise choices preserve the draft and batch list pagination stays scoped
+[236/268] [mobile] › tests\browser\poultry-batch-ui.spec.ts:155:1 › closed or crop-only enterprises block setup; expired sessions cannot open it
+[WebServer] {"event":"request_failed","requestId":"11705781-fca7-47f7-b985-55ea8aab293a","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"164fb620-b2b1-4fc5-af9c-ac353048fc07","code":"UNAUTHENTICATED"}
+
+[237/268] [mobile] › tests\browser\poultry-production-ui.spec.ts:4:1 › source flock reconstructs 105 birds after purchase, mortality and an atomic sale
+[238/268] [mobile] › tests\browser\production-acceptance.spec.ts:7:1 › AC001: two farms retain multi-enterprise, multi-season histories and separate quantities after retries
+[WebServer] {"event":"request_failed","requestId":"dd663c5a-6e50-4e57-9e57-b155bbbd8eb5","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"a909cbe1-d313-4a6b-b363-b40cdbec847a","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"5fe60057-951b-4fee-9789-292995d091e3","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"ac5c9202-3820-4a45-8c0e-af604e5c206d","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"c1b6cc13-796c-4b37-99f4-890482f81add","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"3258a25b-15f0-4a6a-8170-3325d9d4cbbd","code":"CONFLICT"}
+
+[239/268] [mobile] › tests\browser\production-ui.spec.ts:33:1 › farm → empty production lists → enterprise and overlapping seasons → correct farm histories
+[240/268] [mobile] › tests\browser\production-ui.spec.ts:73:1 › offline save remains on the open form and succeeds exactly once after reconnecting
+[241/268] [mobile] › tests\browser\production-ui.spec.ts:92:1 › a lost response after commit retries the same intent without duplicating the record
+[242/268] [mobile] › tests\browser\production-ui.spec.ts:111:1 › another user and ADMIN cannot view farm production, even with guessed nested URLs
+[243/268] [mobile] › tests\browser\production-ui.spec.ts:122:1 › membership revoked after the form opens denies the action and retains the farmer's input
+[WebServer] {"event":"request_failed","requestId":"f49ed07c-933d-404b-8284-5316a0fa6182","code":"FORBIDDEN"}
+
+[244/268] [mobile] › tests\browser\production-ui.spec.ts:132:1 › expired server sessions cannot open the production forms
+[WebServer] {"event":"request_failed","requestId":"12b81fbc-08e2-490f-aad3-9f3053742409","code":"UNAUTHENTICATED"}
+
+[245/268] [mobile] › tests\browser\production-ui.spec.ts:139:1 › an unsupported enterprise type is saved with clear limits and no dead workflow controls
+[246/268] [mobile] › tests\browser\production-ui.spec.ts:146:1 › list pagination works on both production lists without crossing farms
+[247/268] [mobile] › tests\browser\production-ui.spec.ts:162:1 › provider failure is recoverable and is never shown as an empty season list
+[WebServer] ⨯ Error [FoundationError]: UNAVAILABLE
+[WebServer]     at d (D:\Myfarm\.next\server\chunks\ssr\[root-of-the-server]__1f0pufoym0267._.js:1:2357)
+[WebServer]     at async m (D:\Myfarm\.next\server\chunks\ssr\src_app_farms_[farmId]_seasons_page_tsx_0cbqtvjg07dhq._.js:1:325) {
+[WebServer]   code: 'UNAVAILABLE',
+[WebServer]   digest: '180865460'
+[WebServer] }
+
+[248/268] [mobile] › tests\browser\voice-api.spec.ts:17:1 › a reviewed source expense needs explicit confirmation and replays one real financial record through the API
+[WebServer] {"event":"request_failed","requestId":"1c4e9b14-6591-416a-937c-4f65b521bb07","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"34acf29c-5726-4ad4-8add-eab373417ea3","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"aede2865-e8fb-4574-9ecb-cac450b5709f","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"731a280d-1361-4671-bf72-c561bec30e14","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"4575e3ce-0b9b-48dc-9674-c6c17c978d0f","code":"FORBIDDEN"}
+
+[249/268] [mobile] › tests\browser\voice-ui.spec.ts:25:1 › AC001 reviews the source total, creates nothing until confirmed, and opens the one saved expense
+[250/268] [mobile] › tests\browser\voice-ui.spec.ts:34:1 › AC001 a mistaken amount must be reviewed again and discarding posts no expense
+[251/268] [mobile] › tests\browser\voice-ui.spec.ts:41:1 › AC002 a lost response is retried as the same confirmation, with one financial effect
+[252/268] [mobile] › tests\browser\voice-ui.spec.ts:50:1 › AC002 a pending review resumes after refresh but never carries confirmation consent
+[253/268] [mobile] › tests\browser\voice-ui.spec.ts:54:1 › AC002 retrying the same confirmation response remains available
+[254/268] [mobile] › tests\browser\voice-ui.spec.ts:62:1 › AC002 access revoked after review prevents confirmation
+[WebServer] {"event":"request_failed","requestId":"3af1909e-076e-4c68-8d56-e39485a33da3","code":"FORBIDDEN"}
+
+[255/268] [mobile] › tests\browser\voice-ui.spec.ts:68:1 › AC002 editing invalidates a copied confirmation and expiry requires fresh review
+[WebServer] {"event":"request_failed","requestId":"ae8984d0-3182-4982-8ded-acbfb77fb8d9","code":"CONFLICT"}
+
+[256/268] [mobile] › tests\browser\voice-ui.spec.ts:82:1 › AC002 an expired session cannot commit, and offline review keeps input for reconnect
+[WebServer] {"event":"request_failed","requestId":"453b7de1-d2a4-4232-a854-4c3167c2d27b","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"e75aa167-b3b9-40c2-b8f7-f8e1adacf7e0","code":"UNAUTHENTICATED"}
+
+[257/268] [mobile] › tests\browser\voice-ui.spec.ts:91:1 › AC003 language choices promise no speech and fall back to text; the source example reviews two bags as one total
+[258/268] [mobile] › tests\browser\voice-ui.spec.ts:111:1 › AC002 editing a review already confirmed in another window recovers its receipt instead of posting a duplicate
+[WebServer] {"event":"request_failed","requestId":"79e42c57-9523-4a71-980a-a9c81ab79748","code":"CONFLICT"}
+
+[259/268] [mobile] › tests\browser\weather-ui.spec.ts:38:1 › AC001/AC002 names the task/time and changes one date only after exact separate confirmation
+[260/268] [mobile] › tests\browser\weather-ui.spec.ts:51:1 › all six capabilities use synthetic fixtures and provider failure makes no weather claim
+[261/268] [mobile] › tests\browser\weather-ui.spec.ts:60:1 › editing a reviewed date clears consent and discarding makes no change
+[262/268] [mobile] › tests\browser\weather-ui.spec.ts:68:1 › a lost response retries the same confirmation without a second date move
+[263/268] [mobile] › tests\browser\weather-ui.spec.ts:75:1 › revocation after review refuses the move
+[WebServer] {"event":"request_failed","requestId":"39ef077e-436a-4f0f-86e4-2767f3de2697","code":"FORBIDDEN"}
+
+[264/268] [mobile] › tests\browser\weather-ui.spec.ts:80:1 › expired review disables confirmation
+[265/268] [mobile] › tests\browser\weather-ui.spec.ts:84:1 › a revoked session after review cannot confirm
+[WebServer] {"event":"request_failed","requestId":"604d7c61-1224-4877-8886-26547a815a5f","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"57d92fa7-4905-4729-aef2-6e043cf71a2c","code":"UNAUTHENTICATED"}
+
+[266/268] [mobile] › tests\browser\weather-ui.spec.ts:89:1 › offline check is explicit and never queues a date move
+[267/268] [mobile] › tests\browser\weather-ui.spec.ts:93:1 › another farm and nested activity cannot be read through the weather endpoint
+[WebServer] {"event":"request_failed","requestId":"a0e15105-7a9f-4ab0-b63e-ffc9f1275765","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"2d30d7ea-0c4d-491a-90f8-33241f0dd751","code":"FORBIDDEN"}
+
+[268/268] [mobile] › tests\browser\weather-ui.spec.ts:100:1 › an older selected activity remains available through paged choices
+  268 passed (21.0m)

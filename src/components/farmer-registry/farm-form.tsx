@@ -12,7 +12,7 @@ import { activityLabels, ownershipLabels } from "./labels";
 
 type Failure = { ok: false; message: string };
 
-export function FarmForm({ submit, defaults }: { submit: (input: unknown) => Promise<Failure | undefined>; defaults?: DefaultValues<FarmInput> }) {
+export function FarmForm({ submit, defaults, submitLabel }: { submit: (input: unknown) => Promise<Failure | undefined>; defaults?: DefaultValues<FarmInput>; submitLabel?: string }) {
 const [requestId] = useState(() => crypto.randomUUID());
 const [message, setMessage] = useState("");
 const form = useRef<HTMLFormElement>(null);
@@ -37,6 +37,6 @@ catch { setMessage("Connection interrupted. Your details are still here. Try aga
 <Field id="longitude" label="Longitude" error={errors.longitude?.message}>{aria => <Input inputMode="decimal" {...aria} {...register("longitude")} />}</Field>
 </div></details>
 {message && <p role="alert" className="field-error">{message}</p>}
-<Button type="submit" disabled={isSubmitting} className="w-full">{isSubmitting ? "Saving…" : "Save farm"}</Button>
+<Button type="submit" disabled={isSubmitting} className="w-full">{isSubmitting ? "Saving…" : (submitLabel ?? "Save farm")}</Button>
 </form>;
 }

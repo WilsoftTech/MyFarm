@@ -1,0 +1,68 @@
+[
+  {
+    "name": "officer-non-utc-final",
+    "command": "npm run test:integration -- tests/integration/extension-officers.test.ts tests/integration/officer-work.test.ts",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "drift-final",
+    "command": "node node_modules/prisma/build/index.js migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "recovery-final",
+    "command": "node tests/support/phase14-recovery.mjs",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "officer-browser-final",
+    "command": "npm run test:e2e -- --config playwright.production.config.ts tests/browser/officer-dashboard-ui.spec.ts tests/browser/officer-work-ui.spec.ts --reporter=line",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "signed-in-browser-final",
+    "command": "npm run test:e2e -- --config playwright.production.config.ts --reporter=line",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "anonymous-browser-final",
+    "command": "npm run test:e2e -- --reporter=line",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "lint-final",
+    "command": "npm run lint",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "typecheck-final",
+    "command": "npm run typecheck",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "boundaries-final",
+    "command": "npm run check:boundaries",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "unit-final",
+    "command": "npm test -- --maxWorkers=2",
+    "exitCode": 0,
+    "error": null
+  },
+  {
+    "name": "build-final",
+    "command": "npm run build",
+    "exitCode": 0,
+    "error": null
+  }
+]

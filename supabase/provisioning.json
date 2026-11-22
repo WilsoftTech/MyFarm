@@ -20,6 +20,8 @@
     "supabase/policies/ai-assistant-runtime.sql",
     "supabase/policies/voice-experience-runtime.sql",
     "supabase/policies/weather-runtime.sql",
+    "supabase/policies/extension-officers-runtime.sql",
+    "supabase/policies/officer-work-runtime.sql",
     "supabase/policies/browser-role-lockdown.sql"
   ]
 }

@@ -1,0 +1,16 @@
+
+> myfarm@0.1.0 test
+> vitest run --project unit --project component
+
+
+ RUN  v5.0.3 D:/Myfarm
+
+
+ Test Files  86 passed (86)
+      Tests  1431 passed (1431)
+   Start at  22:02:58
+   Duration  60.02s (environment 44%, tests 27%, import 14%, setup 11%, transform 3%)
+
+Environment  |component| jsdom was created 21 times · 120.71s total, 50% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments

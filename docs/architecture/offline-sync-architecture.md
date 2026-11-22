@@ -1,13 +1,13 @@
 # Offline synchronization architecture
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED - Phase 12 task-relevant implementation, security/offline boundaries and evidence; historical sections preserved.
-- Implementation status: REFERENCE ONLY - architecture record; Phase 12 test/text implementation verified locally below, with release conditions.
-- Last reviewed: 2026-11-20 (Africa/Nairobi), Phase 12 task-relevant implementation review.
-- Related phase/task IDs: MYF-P12-T003 through T010; D-P12-001 through D-P12-003; historical task references retained in the body.
-- Verified completed work: Phase 12 approved test-adapter/text-fallback software and relevant exact-confirmation boundaries verified locally; no real speech or hosted claim.
-- Remaining work/blockers: P12-C1 through C6 and inherited release conditions; real speech/language accuracy, hosted work and owner acceptance remain.
-- Evidence/report links: [Phase 12 closeout](../reports/phase-12-closeout-2026-11-20.md); historical reports remain linked in their dated sections.
+- Documentation review: REVIEWED - Phase 14 affected architecture and local evidence; historical sections retained.
+- Implementation status: REFERENCE ONLY - architecture record; Phase 14 locally verified with release conditions.
+- Last reviewed: 2026-11-22 (Africa/Nairobi).
+- Related phase/task IDs: MYF-P14-T001 through T007; earlier references retained in dated sections.
+- Verified completed work: Phase 14 local software acceptance, security, compatibility and recovery checks pass; see dated section.
+- Remaining work/blockers: P14-C1 through C4 and inherited release conditions; hosted rollout/owner acceptance pending.
+- Evidence/report links: [Phase 14 closeout](../reports/phase-14-closeout-2026-11-22.md); historical reports retained below.
 <!-- MYFARM-STATUS-END -->
 
 Offline farmer experience is mandatory by MVP Phase 8. Source P0456–P0479 requires expense/income/harvest/activity/task/photo recording and cached farm/record viewing; clientMutationId, deviceId, createdAt, updatedAt, syncStatus, version; six source states. Foundation prepares command boundaries, but complete sync is Phase 7.
@@ -67,3 +67,7 @@ Voice review/confirmation remains online. An open page retains typed details acr
 ## Phase 13 staged weather implementation - 2026-11-21
 
 Six ephemeral synthetic forecast capabilities reuse current authorized farm/activity/crop services and approximate district context, never GPS or inferred stage. The weather page does not cache private responses or queue weather changes offline. A separately reviewed exact one-off spraying date change is server-validated, versioned and atomically audited, with current access checks after locks and DB-clock expiry. Dates and a payload digest remain in the existing immutable audit receipt; raw stage/forecast does not. Successful retries recover the same receipt; changed replays conflict. The additive manifest-listed weather runtime policy/trigger permits only the guarded scheduled date move and remains unapplied to hosted. Existing offline activity commands still use their original versions, so a stale version cannot silently overwrite the moved task. No new application table, external provider, paid service or live agronomic rule is introduced. [Closeout](../reports/phase-13-closeout-2026-11-21.md).
+
+## Phase 14 local implementation - 2026-11-22
+
+Named owner consent grants farm-specific officer permissions independently of FarmMember. Farmer-confirmed assisted registration commits exact reviewed records, assignment and audit receipts atomically. Current session/assignment/parent checks apply to visits, follow-ups, private namespaced media and sync. The existing account-partitioned outbox preserves denied work, with visible offline readiness and no IndexedDB version change. Six additive officer tables, column-limited guarded writes and composite parent constraints retain the shared runtime-role architecture; application queries enforce actor isolation. Local checks and recovery pass; hosted SQL/storage/application rollout and owner acceptance remain pending. [Scope, migrations, security evidence and limits](../reports/phase-14-closeout-2026-11-22.md).

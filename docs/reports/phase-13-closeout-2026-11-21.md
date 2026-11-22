@@ -2,11 +2,11 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - Phase 13 T002-T007 staged implementation and local audit.
-- Implementation status: COMPLETED - 7/7, PASS WITH CONDITIONS - LOCAL VERIFICATION.
+- Implementation status: CLOSED - 7/7, owner-accepted PASS WITH CONDITIONS - LOCAL AND HOSTED CI VERIFICATION.
 - Last reviewed: 2026-11-21 (Africa/Nairobi).
 - Related phase/task IDs: MYF-P13-T001 through T007; D-P13-001 through D-P13-004.
 - Verified completed work: All seven software tasks verified in the approved synthetic-forecast scope; no live weather or reviewed agronomic thresholds claimed.
-- Remaining work/blockers: P13-C1 through C5, inherited release conditions and owner acceptance; Phase 14 not authorized.
+- Remaining work/blockers: P13-C1 through C4 and inherited release conditions remain; P13-C5 resolved; Phase 14 authorized.
 - Evidence/report links: [Phase 13 closeout](phase-13-closeout-2026-11-21.md).
 <!-- MYFARM-STATUS-END -->
 
@@ -100,5 +100,9 @@ Console captures are decoded from their original UTF-8 (Node) or UTF-16LE (Power
 No failed mandatory software check is waived. This verdict covers all seven software tasks in the owner's explicitly approved synthetic scope, not empirical agronomic suitability. Next: owner review of this closeout and separately authorized hosted policy rollout/verification; Phase 14 requires its own authorization.
 
 ## Status-update evidence
+
+### Owner acceptance and hosted CI - 2026-11-21
+
+The owner accepted this conditional synthetic-scope closeout and authorized Phase 14 under D-P13-005/D-P14-001. [Quality run 44821325550](https://github.com/WilsoftTech/MyFarm/actions/runs/44821325550) passed every required quality step for final commit `79b1e20f9e94be142433be384424ee634829ae8b`, including the complete final-code database and desktop/mobile browser suites. Phase 13 is **CLOSED - 7/7, PASS WITH CONDITIONS - LOCAL AND HOSTED CI VERIFICATION**. P13-C5 is resolved; P13-C1 through C4 remain. Earlier pending-owner/CI statements describe the original local closeout and are superseded by this addendum. Actual hosted weather-policy rollout and live agronomic acceptance are not claimed. [Transition](phase-13-14-transition-2026-11-21.md).
 
 Phase checklist, roadmap, project checkpoint, requirements traceability, decisions and affected architecture notes are updated from these results. The [document review inventory](phase-13-document-review-2026-11-21.md) distinguishes deeper task review from metadata scans; historical source/phase evidence is preserved. The final commit/push result is reported after the observed Git operation; no unobserved deployment is claimed here.

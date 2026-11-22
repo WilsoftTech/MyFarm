@@ -35,11 +35,8 @@ throw error;
 }
 }
 
-export function registryRepository(db: PrismaClient): RegistryRepository {
-return {
-farmerForUser: userId => readFarmer(db, { userId }),
-
-registerFarmer: ({ userId, requestId, profile }) => translateConstraint(() => db.$transaction(async tx => {
+/** Reused by farmer-confirmed registration without nesting transactions or impersonating an officer. */
+export async function registerFarmerWithin(tx: Tx, { userId, requestId, profile }: Parameters<RegistryRepository["registerFarmer"]>[0]) {
 const tenantId = crypto.randomUUID(), farmerId = crypto.randomUUID();
 await tx.organization.create({ data: { id: tenantId, name: profile.name, kind: "PERSONAL" } });
 await tx.membership.create({ data: { userId, organizationId: tenantId, role: "FARMER" } });
@@ -50,7 +47,25 @@ await claimReceipt(tx, { actorId: userId, tenantId, action: "FARMER_REGISTERED",
 const farmer = await readFarmer(tx, { id: farmerId });
 if (!farmer) throw new FoundationError("UNAVAILABLE");
 return farmer;
-})),
+}
+
+export async function createFarmWithin(tx: Tx, { tenantId, farmerId, actorId, requestId, farm }: Parameters<RegistryRepository["createFarm"]>[0]) {
+const farmId = crypto.randomUUID();
+const replayed = await claimReceipt(tx, { actorId, tenantId, action: "FARM_CREATED", targetId: farmId, requestId });
+if (replayed) return { farmId: replayed };
+await tx.farm.create({ data: {
+id: farmId, tenantId, ownerFarmerId: farmerId, createdBy: actorId, name: farm.name, district: farm.district,
+subcounty: farm.subcounty ?? null, village: farm.village ?? null, ownershipType: farm.ownershipType, primaryActivity: farm.primaryActivity,
+approximateAcreage: farm.approximateAcreage ?? null, latitude: farm.latitude ?? null, longitude: farm.longitude ?? null,
+} });
+await tx.farmMember.create({ data: { farmId, userId: actorId, tenantId, role: "OWNER" } });
+return { farmId };
+}
+
+export function registryRepository(db: PrismaClient): RegistryRepository {
+return {
+farmerForUser: userId => readFarmer(db, { userId }),
+registerFarmer: input => translateConstraint(() => db.$transaction(tx => registerFarmerWithin(tx, input))),
 
 async registeredByRequest({ userId, tenantId, requestId }) {
 const receipt = await db.auditEvent.findUnique({ where: { tenantId_requestId_action: { tenantId, requestId, action: "FARMER_REGISTERED" } }, select: { actorId: true } });
@@ -99,18 +114,7 @@ plotsTruncated: row.plots.length > PLOT_LIMIT,
 };
 },
 
-createFarm: ({ tenantId, farmerId, actorId, requestId, farm }) => translateConstraint(() => db.$transaction(async tx => {
-const farmId = crypto.randomUUID();
-const replayed = await claimReceipt(tx, { actorId, tenantId, action: "FARM_CREATED", targetId: farmId, requestId });
-if (replayed) return { farmId: replayed };
-await tx.farm.create({ data: {
-id: farmId, tenantId, ownerFarmerId: farmerId, createdBy: actorId, name: farm.name, district: farm.district,
-subcounty: farm.subcounty ?? null, village: farm.village ?? null, ownershipType: farm.ownershipType, primaryActivity: farm.primaryActivity,
-approximateAcreage: farm.approximateAcreage ?? null, latitude: farm.latitude ?? null, longitude: farm.longitude ?? null,
-} });
-await tx.farmMember.create({ data: { farmId, userId: actorId, tenantId, role: "OWNER" } });
-return { farmId };
-})),
+createFarm: input => translateConstraint(() => db.$transaction(tx => createFarmWithin(tx, input))),
 
 createPlot: ({ tenantId, farmId, actorId, requestId, plot }) => translateConstraint(() => db.$transaction(async tx => {
 const plotId = crypto.randomUUID();

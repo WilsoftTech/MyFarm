@@ -1,13 +1,13 @@
 COMPLETED, hosted CI verified, owner accepted 2026-11-09; AC004 PASS locally; Phase 0 gate rests on owner acceptance, not farmer evidence ([audit](reports/phase-08-closeout-2026-11-08.md)) |COMPLETED, hosted CI verified, owner accepted 2026-11-09; AC003 PASS locally ([audit](reports/phase-08-closeout-2026-11-08.md)) |COMPLETED, hosted CI verified, owner accepted 2026-11-09; AC002 PASS locally ([audit](reports/phase-08-closeout-2026-11-08.md)) |COMPLETED, hosted CI verified, owner accepted 2026-11-09; AC001 PASS locally ([audit](reports/phase-08-closeout-2026-11-08.md)) |# Requirements traceability
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED - Phase 12 T003-T010 implementation, full local audit and approved staged scope; historical evidence preserved.
+- Documentation review: REVIEWED - Phase 14 R001/R002 and AC001/AC002 final local evidence; historical rows preserved.
 - Implementation status: REFERENCE ONLY - N/A.
-- Last reviewed: 2026-11-20 (Africa/Nairobi).
-- Related phase/task IDs: MYF-P12-R001 through R003; MYF-P12-T001 through T010.
-- Verified completed work: Phase 12 software tasks and AC invariants verified locally in the approved test/text scope.
-- Remaining work/blockers: Real speech/language accuracy and P12-C1 through C6; no hosted/farmer-release claim.
-- Evidence/report links: [Phase 12 closeout](reports/phase-12-closeout-2026-11-20.md).
+- Last reviewed: 2026-11-22 (Africa/Nairobi).
+- Related phase/task IDs: MYF-P14-R001/R002; MYF-P14-T001 through T007.
+- Verified completed work: Phase 14 T001-T007 software tasks locally verified (7/7); PASS WITH CONDITIONS - LOCAL VERIFICATION. Owner acceptance and hosted rollout remain pending.
+- Remaining work/blockers: Owner acceptance, hosted rollout and P14-C1 through C4 remain.
+- Evidence/report links: [Phase 14 closeout](reports/phase-14-closeout-2026-11-22.md).
 <!-- MYFARM-STATUS-END -->
 
 Status date: 2026-10-08. Grouped explicit capabilities map to unique requirements/tasks/acceptance tests below. Phase0 is COMPLETED100% by owner acceptance, without empirical research verification. Phase1 is BLOCKED30.77% (4/13 verified tasks); Phases2–24 remain NOT STARTED0%. Proposed safeguards/schema are identified in phase F and [decisions](DECISION-LOG.md). Paragraph locators refer to [complete normalized source](reports/source-extract.md), not guessed page numbers.
@@ -137,8 +137,8 @@ Status date: 2026-10-08. Grouped explicit capabilities map to unique requirement
 
 | ID | Source | Requirement | Phase/task | Acceptance | Test expectation | Status |
 |---|---|---|---|---|---|---|
-| MYF-P14-R001 | P0719–P0731 | Dashboard assigned farmers, visits today, follow-ups and problems. | [Phase 14](phases/phase-14-extension-officers.md) / MYF-P14-T001, MYF-P14-T002, MYF-P14-T003 | MYF-P14-AC001: Counts use permitted assignments only; 248/12/8/5 not live facts. | Scoped counts, reassignment and denied search/export. | NOT STARTED |
-| MYF-P14-R002 | P0732–P0743 | Register farmer/farm, visits/GPS/observations/recommendations/photos/follow-ups; offline then sync. | [Phase 14](phases/phase-14-extension-officers.md) / MYF-P14-T004, MYF-P14-T005, MYF-P14-T006 | MYF-P14-AC002: Visit/media belongs to assigned farm; revocation denies upload visibly and preserves recoverable draft. | Registration, absent GPS, photo retry, revoked offline replay and follow-up. | NOT STARTED |
+| MYF-P14-R001 | P0719–P0731 | Dashboard assigned farmers, visits today, follow-ups and problems. | [Phase 14](phases/phase-14-extension-officers.md) / MYF-P14-T001, MYF-P14-T002, MYF-P14-T003 | MYF-P14-AC001: Counts use permitted assignments only; 248/12/8/5 not live facts. | Scoped counts, reassignment and denied search/export. | COMPLETED locally: T001-T003 and AC001 verified; hosted rollout pending. [Evidence](reports/phase-14-closeout-2026-11-22.md). |
+| MYF-P14-R002 | P0732–P0743 | Register farmer/farm, visits/GPS/observations/recommendations/photos/follow-ups; offline then sync. | [Phase 14](phases/phase-14-extension-officers.md) / MYF-P14-T004, MYF-P14-T005, MYF-P14-T006 | MYF-P14-AC002: Visit/media belongs to assigned farm; revocation denies upload visibly and preserves recoverable draft. | Registration, absent GPS, photo retry, revoked offline replay and follow-up. | COMPLETED locally: T004-T006 and AC002 verified; hosted rollout pending. [Evidence](reports/phase-14-closeout-2026-11-22.md). |
 
 ## Phase 15 Cooperative and Agribusiness Platform
 

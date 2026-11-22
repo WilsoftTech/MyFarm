@@ -1,0 +1,1238 @@
+[
+  {
+    "file": "docs/DECISION-LOG.md",
+    "metadataPresent": true,
+    "depth": "task-relevant content/status/evidence",
+    "sha256": "b10cc7450ec8aa76cb26b64b140997ceff4561b26f5ef3d44ca69dcb43d3e383"
+  },
+  {
+    "file": "docs/MASTER-IMPLEMENTATION-ROADMAP.md",
+    "metadataPresent": true,
+    "depth": "task-relevant content/status/evidence",
+    "sha256": "eed2bec41b92e754db04e043b2175751f1509275a1ddb713f2677d92f97bd646"
+  },
+  {
+    "file": "docs/PROJECT-STATUS.md",
+    "metadataPresent": true,
+    "depth": "task-relevant content/status/evidence",
+    "sha256": "a06e34141d4105284f603a3783ef80925ee70d4a927c63a03f9ae4ba79ff2aaa"
+  },
+  {
+    "file": "docs/README.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "468d4d12c10ada5fbc3213f1922c22705f7a59c7379a5b63d7e17780e79c46e0"
+  },
+  {
+    "file": "docs/REQUIREMENTS-TRACEABILITY.md",
+    "metadataPresent": true,
+    "depth": "task-relevant content/status/evidence",
+    "sha256": "4a59e503f2c9278bdcf2f02f2723273f796e89c5449ca9fe06542008b16b5d3a"
+  },
+  {
+    "file": "docs/architecture/api-design-standards.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "211f63960412359dc08e8209b6553e08f1bbf8eafc0a86c5fbb79c27821f1a08"
+  },
+  {
+    "file": "docs/architecture/architecture-decisions.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "1a7bf56478782e6ef00100bf2d6f3606ae2a1839264410df69db1c4742fa456d"
+  },
+  {
+    "file": "docs/architecture/authentication-authorization.md",
+    "metadataPresent": true,
+    "depth": "task-relevant content/status/evidence",
+    "sha256": "a3e92ed7069e3552b742d4a150e1c6e693885a544ca0100aaf80cb21dfb3de90"
+  },
+  {
+    "file": "docs/architecture/database-architecture.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "c3e1a8e8d995a85fc9d39c9eeece9bed662772cf8c719b292f92d3829137a7a3"
+  },
+  {
+    "file": "docs/architecture/deployment-infrastructure.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "f18dd36cc4358f146a91f1cba99d284a7471c6fefdba632a2380c4c06d0455a3"
+  },
+  {
+    "file": "docs/architecture/domain-model.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "2e6abe3420666f8d296ddf9b024941d775170eb2a5d84a6066ab936d8502c546"
+  },
+  {
+    "file": "docs/architecture/financial-integrity.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "f2ebab765549721043aaa5ea9943ff0db5e3536598789064fc3b59b142531ca0"
+  },
+  {
+    "file": "docs/architecture/metric-formulas.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "8e63a39d9cf91d33d7e257efaf1453e5e59a1b2e6380b02e05d859215d8867d9"
+  },
+  {
+    "file": "docs/architecture/multi-tenancy.md",
+    "metadataPresent": true,
+    "depth": "task-relevant content/status/evidence",
+    "sha256": "8ea1bb63638f01b58af766db1dcffbb89dda5eb655393e3327a94f85b02cfe53"
+  },
+  {
+    "file": "docs/architecture/observability.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "0dd6057e5e17c6ca875e644b3b5c6dc83f81fb7dfd3289bdc859b2aacb546229"
+  },
+  {
+    "file": "docs/architecture/offline-sync-architecture.md",
+    "metadataPresent": true,
+    "depth": "task-relevant content/status/evidence",
+    "sha256": "04cc0ac6637464b26625dc5087729186d0fed58dd6d231b98b180efa4a3768a9"
+  },
+  {
+    "file": "docs/architecture/security-architecture.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "699a3b6c7425e6843bc9a0608724f60a28b4212d652ad3ed22703e3fb48f74ba"
+  },
+  {
+    "file": "docs/architecture/system-architecture.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "7ea72f653fe2be7ff78bc1d6d58374a2900b822e639732365d8a65d30529a6e4"
+  },
+  {
+    "file": "docs/architecture/technology-stack.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "7c75d70b4b0efca599672485b7eda080881637191098ff862b63db230e57c759"
+  },
+  {
+    "file": "docs/architecture/testing-strategy.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "9cee65d2454f4063b4671717aae3dc18c4a0a51ee2486ea76192d93c917d5e5c"
+  },
+  {
+    "file": "docs/engineering/ai-agent-instructions.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "8651e83e7b7132985531c41031385a6ae8b72e47777f2819befc3b3bd84fefde"
+  },
+  {
+    "file": "docs/engineering/coding-standards.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "2757122215d0eb378fe635043433b14286ac4a1934689e436a08908aab4cdf64"
+  },
+  {
+    "file": "docs/engineering/definition-of-done.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "5eb58bd8714b8563288b68c79d46dac0f0ada9abdc6a0dc3a8e0057358c707a7"
+  },
+  {
+    "file": "docs/engineering/document-status-policy.md",
+    "metadataPresent": true,
+    "depth": "task-relevant content/status/evidence",
+    "sha256": "dd8be36ff40b0d118a7528e2f8b70fc1290fb5aa42e376a083c01639e1b2dbb7"
+  },
+  {
+    "file": "docs/engineering/foundation-dependencies.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "55f829de30f4b57280046826e806e644082c7a6e65cb7851ccc75c58b0594549"
+  },
+  {
+    "file": "docs/engineering/foundation-local-setup.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "fa9a547d94e417d6efee9e34dae9d3cbc84b9370046a26161c8d3317ed44ba2a"
+  },
+  {
+    "file": "docs/engineering/git-workflow.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "ee5001cf1ecee5d29464d7554237450a1eeb3964a28bdef44268fa6ff604dd12"
+  },
+  {
+    "file": "docs/engineering/migration-policy.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "5af805d52958ad206b902b7ac318debc863688d20320c83b6c46af087b68aea2"
+  },
+  {
+    "file": "docs/engineering/phase-audit-template.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "8593e36418728a2db4ae396edca6312462945d1ae687fb6eba9e4baa8f0bc160"
+  },
+  {
+    "file": "docs/engineering/phase-closeout-template.md",
+    "metadataPresent": true,
+    "depth": "task-relevant content/status/evidence",
+    "sha256": "3b98f89a02b00a05339446fc199740968fca08e84b1b6630c8e957299ed1ae9c"
+  },
+  {
+    "file": "docs/engineering/security-checklist.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "974131fef8c39a6481a008173c818e5593304bbeae2910c256dce9f61df0017a"
+  },
+  {
+    "file": "docs/phases/phase-00-product-discovery.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "9c8008413fa08db7d9dde8985dcd7a78e6e9205ca9f60fe3117170bb4d2866b8"
+  },
+  {
+    "file": "docs/phases/phase-01-engineering-foundation.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "b83e336d4fc5a623135e6cb3f9c2263617b60ec7b70ab5ad346a2902aa9f6405"
+  },
+  {
+    "file": "docs/phases/phase-02-farmer-registry.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "c4332b5eed83f0ebcf7e2f6d166e3434648d9e0be0d0d02752b95b4787acd989"
+  },
+  {
+    "file": "docs/phases/phase-03-enterprises-seasons.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "7ab893acd138f57cbc1a0371a3dadb4de636702ef549efd4c502ccb94812de7f"
+  },
+  {
+    "file": "docs/phases/phase-04-farm-accounting.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "7ac112d7b9bb937ad91bcbe4f0250462e1f5a6eb6bc4f63c01034938a5a8a0a1"
+  },
+  {
+    "file": "docs/phases/phase-05-harvest-inventory.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "dcdba393853da7fb93bf378c181e3d6d1217fc98572f99b9caa46755697f0f24"
+  },
+  {
+    "file": "docs/phases/phase-06-farm-activities.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "61fe4e9da9b9612ffd5f2bb6ada21c32b1cde0343d2cbc099d9da5d5bc09bd9f"
+  },
+  {
+    "file": "docs/phases/phase-07-offline-first.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "ad001435cb890532de1a7802f58a92c21ecb92eeba479b80d5fd23f4e3f14131"
+  },
+  {
+    "file": "docs/phases/phase-08-analytics-profitability.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "2a000fbefc952f24f1e9e4f25469dde6f6332171ea80ea177719af109dd55f6e"
+  },
+  {
+    "file": "docs/phases/phase-09-field-pilot.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "f72a41211612098d2a11c0d02d736869e1075a7e454933055342cfddf732a82d"
+  },
+  {
+    "file": "docs/phases/phase-10-farm-intelligence.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "ae750c87c203606ee1e6c43b9aa61f7424040598102cb0a030f5ddad39e997fd"
+  },
+  {
+    "file": "docs/phases/phase-11-ai-assistant.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "82ea83ec4cf41644a331f3bd36adc4a2ffefa47ed70f72f3c0f0322912a4e237"
+  },
+  {
+    "file": "docs/phases/phase-12-voice-experience.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "d1ff48a9ddd0fe704b45ecc88c56cf28127ed665be622d3c3708bca2f136077c"
+  },
+  {
+    "file": "docs/phases/phase-13-weather-intelligence.md",
+    "metadataPresent": true,
+    "depth": "task-relevant content/status/evidence",
+    "sha256": "5ea02d1bafbff03a05273936b80080a8e2606684a9bb2b5f8219312bea52acd9"
+  },
+  {
+    "file": "docs/phases/phase-14-extension-officers.md",
+    "metadataPresent": true,
+    "depth": "task-relevant content/status/evidence",
+    "sha256": "482c21ac95cd3330747eb4f7faef524a822f68f86abd6a178d3f034a4f8145f1"
+  },
+  {
+    "file": "docs/phases/phase-15-cooperatives.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "4dd4a0a7534d5c461b5541087b79f2943e574ce42edcdf22d1bcbd9f9e3a6a40"
+  },
+  {
+    "file": "docs/phases/phase-16-market-linkages.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "d0c300cc57efac4901883d6d162305ae1904193b8c204ee0dddc301d637295d5"
+  },
+  {
+    "file": "docs/phases/phase-17-payments-wallet.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "9381e447e1e636e9b06ceae857422a510aedb5962a0e32fb69edca14af41a3c2"
+  },
+  {
+    "file": "docs/phases/phase-18-economic-profile.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "23642af8f8cefb7ec6317d9fbed218e587ce00f5ae5be36e1f2e85c65c771561"
+  },
+  {
+    "file": "docs/phases/phase-19-financing-insurance.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "bc6ec24447714719e2a39c061102b34ea0f0a30e51f06ff6325d570e75113337"
+  },
+  {
+    "file": "docs/phases/phase-20-image-intelligence.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "f4a9236057e0b147b26b9d766eb3dd55e6c2591069c94df26a0932d08cdeaf5a"
+  },
+  {
+    "file": "docs/phases/phase-21-traceability.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "2103dedf31c1876c95b7a0e73f0701f192f7689215b49729297db3e4d1c493ee"
+  },
+  {
+    "file": "docs/phases/phase-22-advanced-intelligence.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "ab5871d1872bf7de88636f74e87d25df8d6068ef1b1d86a6404b70c84cf5d6c5"
+  },
+  {
+    "file": "docs/phases/phase-23-saas-commercialization.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "ae0a76111806f9fa5bf5ab3d31f743438722446dde4644108db3d4ab44d10fd7"
+  },
+  {
+    "file": "docs/phases/phase-24-production-hardening.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "a2a4c38da266af225688451bfbfb7d78f8f34a33eaf203b6fb88e29deed0a8a8"
+  },
+  {
+    "file": "docs/product/discovery-decision.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "47b4e41b4d1db74471ff365a8e6298379de2a51ff4cd6c3dbf02524b826557a0"
+  },
+  {
+    "file": "docs/product/farmer-personas.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "892095d5c004b1b2fada625b23641c3a095cf5055a8d25cc457978480a93e8c2"
+  },
+  {
+    "file": "docs/product/field-research.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "8c28f4c177c5059f9461e2c1744fcb7618fb62eb4e3766f83a5e4aafcbad0856"
+  },
+  {
+    "file": "docs/product/glossary.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "734a1a1801cf8db53c5a524b512253fa687e3781d8122233593c6b56ddc4b278"
+  },
+  {
+    "file": "docs/product/mvp-scope.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "83971387e85dad7ba17b69b716d9167f15e068f1830cadd784081f98c9defdd4"
+  },
+  {
+    "file": "docs/product/non-goals.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "fce815e3aec1c06f777329aa0266eb4351c7d3323e0367e22a798160c491f821"
+  },
+  {
+    "file": "docs/product/problem-statements.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "6f55c203a47cea5a64f74eefb5cf586d6b4cc9dd29d26052e2857444b88c1c79"
+  },
+  {
+    "file": "docs/product/product-requirements.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "2c2c4e0403b0d780c474ad9ab94aa77d3f95725fa94c1aa007ec93c81d1c5a42"
+  },
+  {
+    "file": "docs/product/product-vision.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "f142cfa2dfa7bf1bf0e7faa3c31d87dfb167e319c2a2f48a10a1a2da229213cf"
+  },
+  {
+    "file": "docs/product/research-evidence-register.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "ab78301241c91028d206ad401ea1c21b547a04c43ac2761f83300da1e7da2493"
+  },
+  {
+    "file": "docs/product/research-operations.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "a7041ff7fd06714023f1de66dc4d38bbb91f34fbbd4e7eac53e19e1398861923"
+  },
+  {
+    "file": "docs/reports/README.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "abd6289f02bc13953716b5b7a175bda8b3e47dfe92f7d2ea16e279e6c7382da3"
+  },
+  {
+    "file": "docs/reports/documentation-audit.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "6716aec0f24d600f3a41ad5919e6288cae6028d03f028191720404695e890981"
+  },
+  {
+    "file": "docs/reports/nextjs-security-upgrade-2026-10-24.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "136ce4a5bba71e7153ab4c97f7c329d6bc601918c2dbdea7f18830ab98606cd8"
+  },
+  {
+    "file": "docs/reports/phase-00-audit-2026-10-08.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "ab050bce7fb5d0fad411437b5db6b8385abc55e0efd1bdc214d2b1e4b243eed3"
+  },
+  {
+    "file": "docs/reports/phase-00-closeout-2026-10-08.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "18931d1895bfd1035146d255313c6f75ef4b8bf1bf30dd7838bbba3f181170a2"
+  },
+  {
+    "file": "docs/reports/phase-00-document-review-2026-10-08.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "b13a23e0da0098afe06fc383e244a41c189ed09aa53659bd63c1d571a0876e33"
+  },
+  {
+    "file": "docs/reports/phase-00-owner-approval-2026-10-08.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "27a1b032c06c4ed41e6dda49ff4f615272069efda2c1bdbea994d8f8a0294d7e"
+  },
+  {
+    "file": "docs/reports/phase-01-02-integration-2026-10-09.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "167b25b43ee51241e6a14a573de2944b430768ed95c29f7af3cd274b5982fd8b"
+  },
+  {
+    "file": "docs/reports/phase-01-audit-2026-10-08.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "b41d2fc3b4bb84983a719a01ee7789f91c3c665bcd057b73efc3fecce0e386da"
+  },
+  {
+    "file": "docs/reports/phase-01-closeout-2026-10-08.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "77a074567c20069573d3c9fad1b0e01c29a4dc0754ffcdcd327f4afe3bf0f935"
+  },
+  {
+    "file": "docs/reports/phase-01-document-review-2026-10-08.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "43b9bfc208907b7362847166e836d3cf132cc09413da6458bc2b733c44fbf571"
+  },
+  {
+    "file": "docs/reports/phase-01-hosted-verification-2026-10-08.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "7671224e15b983a7a4a36a0126547d7620cf044abf5bb191237d2468332541c3"
+  },
+  {
+    "file": "docs/reports/phase-01-local-verification.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "490bc240a64f55ace34d82a0980a20c11eae5abc179692d4c5f4a9a963558b5f"
+  },
+  {
+    "file": "docs/reports/phase-01-provider-verification-2026-10-08.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "78e645ff359ae15b742afaee1f9aa2dcdf22d0d06608f33094b259231cfd4912"
+  },
+  {
+    "file": "docs/reports/phase-02-closeout-2026-10-08.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "392c6c4b78f41a0684e75a46ecdd2e38e6457ed9fd59641cc3a5e4f3e31515bc"
+  },
+  {
+    "file": "docs/reports/phase-02-closeout-2026-10-09.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "a77c36ec332f928f4118f4a956375b10ece8725b3f97ca04cbb9c1cae2d49408"
+  },
+  {
+    "file": "docs/reports/phase-02-document-review-2026-10-09.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "0494f477b7d3ddd121ba76613095ebfaaeaee7b20e4ba0e8d0bbeaa42ad8b78d"
+  },
+  {
+    "file": "docs/reports/phase-03-closeout-2026-10-25.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "f4296274a1f8fcb73b402063bce99f7a09cf358c2ea11493dd7a4a519a8d06b8"
+  },
+  {
+    "file": "docs/reports/phase-03-document-review-2026-10-25.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "3106e12a7c8df5fa3600a57f37b29c0c8bfffcc151c5c387c969b46b8686000e"
+  },
+  {
+    "file": "docs/reports/phase-03-runtime-permissions-2026-10-25.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "4c4b7b4c37104a1cd0058f84d9a4b9796d458c1a75d4809eb5e55e683d5a4ce3"
+  },
+  {
+    "file": "docs/reports/phase-03-start-2026-10-18.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "de5f2c682b4f707ddc34ee0ea2a03b2dcdf0a418821e00eec9379b1afeca990b"
+  },
+  {
+    "file": "docs/reports/phase-03-t002-2026-10-18.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "a6e6e5c6bf93977f07d993daf378387e8af17de81036dc8a497f984a1c9ed651"
+  },
+  {
+    "file": "docs/reports/phase-03-t003-2026-10-18.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "7e5aeb4b5fec650b0655dc5862d1ab7bff1dcc8257b2ac3d99cf0a5814448de0"
+  },
+  {
+    "file": "docs/reports/phase-03-t004-2026-10-18.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "174f357ef53d65646be5359ef5217da1683d524afe827da4ed0e6a0ee88b3489"
+  },
+  {
+    "file": "docs/reports/phase-03-t005-2026-10-18.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "ac3b2f5c8ad9dc2bfbff988dc5e0814210db8ea5e2d8c2f18b621c87e43adbae"
+  },
+  {
+    "file": "docs/reports/phase-03-t006-2026-10-19.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "ecf47d108392470ad6b14fc00e70e8b4d861700cc97b56945eab2bf01cd853f0"
+  },
+  {
+    "file": "docs/reports/phase-03-t007-2026-10-19.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "968eb9f0b48deb3a97e6fb3afc2fa3534ec9c6d2ad3cbc914f9072ce9974c785"
+  },
+  {
+    "file": "docs/reports/phase-03-t007-2026-10-24.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "ca0150a5fc566253e698f4250cd8100c967a8c9475750ec7516602d499882d78"
+  },
+  {
+    "file": "docs/reports/phase-03-t008-2026-10-19.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "e1e96c9544b896cd12f2607fb0310b1c8d49a920c70312ec8abb543158313b00"
+  },
+  {
+    "file": "docs/reports/phase-03-t008-2026-10-24.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "6af92d2da55f28cfa899bf657d148a45b98ae4b9d9d4ad2bc0e5cc90cfc6d1a4"
+  },
+  {
+    "file": "docs/reports/phase-03-t009-2026-10-19.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "6cc9782002d3a575b98910e82c70b77775eba63008754b26b5d26bf4d5c4cb11"
+  },
+  {
+    "file": "docs/reports/phase-03-t010-2026-10-19.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "9945c6633ca17c93a387e0a87b998fdddf1e487c8741e470185b7618234bfa76"
+  },
+  {
+    "file": "docs/reports/phase-03-t011-2026-10-25.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "bd42f1a8ba23c0f0c60ec718d679114664dd229a243d7d05b9f50a16d45d84d9"
+  },
+  {
+    "file": "docs/reports/phase-03-t012-2026-10-25.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "af44244aa655f2c5d50fa9d436f90e25040bf1eb4a9b71c272b57f4c620938b2"
+  },
+  {
+    "file": "docs/reports/phase-04-closeout-2026-10-26.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "db0f33ff57502d782d2ef4092ebdd462c072f517cfa7b713f9c0adaaee1d1df5"
+  },
+  {
+    "file": "docs/reports/phase-04-t001-2026-10-25.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "9b7c24441f8011e74554930434d1203038b5e7f7b41d53eb83ea3754323b2fe5"
+  },
+  {
+    "file": "docs/reports/phase-04-t002-2026-10-25.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "6d88c7970cca8a36c225cb422e4ea4b747e3308638da7f301e0e453d98635b2e"
+  },
+  {
+    "file": "docs/reports/phase-04-t003-2026-10-26.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "68aaa9086ff5726513042074d96c72b9abd81b6b655552217cdf5e9c621633ac"
+  },
+  {
+    "file": "docs/reports/phase-04-t004-2026-10-26.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "4d1fbcd0a3c133f5f87068b119f03d3b2e0b3b4bbfa4819f45b0df5ef09363b9"
+  },
+  {
+    "file": "docs/reports/phase-04-t005-2026-10-26.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "f41172001d7156761313bc1293a02393629cb33c3ef2f9585c396c269dcb0e29"
+  },
+  {
+    "file": "docs/reports/phase-04-t006-t015-2026-10-26.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "b30f923a70c8405e3cfcb56903493f3bd8c0baa14f14f81e32e21938771edd7f"
+  },
+  {
+    "file": "docs/reports/phase-05-closeout-2026-10-29.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "b5f8511f05d2d557ed825b5cfbf52177f728aaa5cb7101c220e5a584370279fd"
+  },
+  {
+    "file": "docs/reports/phase-05-document-review-2026-10-29.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "db1733afeba07190b0fc691fcaa1a76f45d3ed5fbd0b2fbaf71dad36190a3c0d"
+  },
+  {
+    "file": "docs/reports/phase-05-start-2026-10-29.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "f8b187fb8af4cc504a9cdbe68fb7b335270110c5a7d0a1ef57e4e86dcb5e3c49"
+  },
+  {
+    "file": "docs/reports/phase-05-t001-2026-10-29.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "4635e722acb2977c1690004c6e193ee146324c0f9fea9b46cb3b0e9167856d1a"
+  },
+  {
+    "file": "docs/reports/phase-05-t002-2026-10-29.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "c56fb27dc4b9de6373c16d3fc29b3d32e674e8c1ec1be48a885b5c5754e6f8db"
+  },
+  {
+    "file": "docs/reports/phase-05-t003-2026-10-29.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "b26b47d6a04415fea1012d805454c3488e1617f33069234e24c4e9f11c758e1c"
+  },
+  {
+    "file": "docs/reports/phase-05-t004-2026-10-29.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "0e247de11eaecc61aee3bb8bb6ff3a7ccbe602423f1dcc615378a01e799a7477"
+  },
+  {
+    "file": "docs/reports/phase-05-t005-2026-10-29.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "5d00ce87e271a062a1270bba0d58f644be6fbc2b9cf7fb1c5625f3982c592b97"
+  },
+  {
+    "file": "docs/reports/phase-05-t006-2026-10-29.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "2bd135b136fae8652ddca78d7c3ccdff93c5417e97f5aaa74aa5788043a36473"
+  },
+  {
+    "file": "docs/reports/phase-05-t007-2026-10-29.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "13905a36ae97c466ed1e2606bf1dddf90ce9eda8ed67a285b68a22595f98ed18"
+  },
+  {
+    "file": "docs/reports/phase-05-t008-2026-10-29.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "a493b4e2e80355b66b01e37941a8ed6e640d73b58eb8ab0cd0389ec7bd5e7ef7"
+  },
+  {
+    "file": "docs/reports/phase-05-t009-2026-10-29.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "db10d1a925236ae0235a83ca455974171c0f6baa9603021a669fc0fd1b241274"
+  },
+  {
+    "file": "docs/reports/phase-05-t010-2026-10-29.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "d04e0d4387e4e8a6ead412aefc0f08b5c404486e9ee4b0b86ddd34a2fa606e22"
+  },
+  {
+    "file": "docs/reports/phase-05-t011-2026-10-29.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "271ce3ffd3938c281f996b1016cf711acff34d87afb348a1ea87aad5a98eb2a7"
+  },
+  {
+    "file": "docs/reports/phase-05-t012-2026-10-29.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "25d107949551f9c7b56d41c0807b5aa1ec30389f7fadaf88747559d774b1e454"
+  },
+  {
+    "file": "docs/reports/phase-06-closeout-2026-11-03.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "455ff21c3a633e1cfcdea45c5fa83debbe5d0b46914700bb40cb455eb30a79ac"
+  },
+  {
+    "file": "docs/reports/phase-06-document-review-2026-11-03.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "96c17ec14714573fd204d9d660184409bce7f9f7b1fe6e10caa089062f4a04c2"
+  },
+  {
+    "file": "docs/reports/phase-06-t001-2026-11-02.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "88c0ee9f666a27dbc6082c688e7232ce93cb3322cdf80d7054a019b5db762e09"
+  },
+  {
+    "file": "docs/reports/phase-06-t002-2026-11-02.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "78dce33b0c7a9a2e5ad50f5eca998ba5bf8385d120e491bf98f311515f2e687a"
+  },
+  {
+    "file": "docs/reports/phase-06-t003-2026-11-02.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "eaf6c9473b8ac4876fdfd3bc514f73b8d5b2608ce66a953a441d93f83422db8a"
+  },
+  {
+    "file": "docs/reports/phase-06-t004-2026-11-02.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "e6615fb16aecfa446ee8d9d66c5b55807574e5d75a79eb05b1c0416b29850e9d"
+  },
+  {
+    "file": "docs/reports/phase-06-t005-2026-11-02.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "bafcbe2fb393f51a4e298de08fddcecaf56caa453386aff2077be214a0fb408c"
+  },
+  {
+    "file": "docs/reports/phase-06-t006-2026-11-02.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "bc5ef5fedfa9900936dd684d523af3eebcbe79265190e1ac9c73d6ebd5389af3"
+  },
+  {
+    "file": "docs/reports/phase-06-t007-2026-11-02.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "7d37d9118125b32a063aa2ccb307f98156c0e14ce11e06bb4c38f677bf2f6980"
+  },
+  {
+    "file": "docs/reports/phase-06-t008-2026-11-02.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "92a353924b5e4ac1c84e6c95da424a29c43bb846ab59b235324368acefdc24cb"
+  },
+  {
+    "file": "docs/reports/phase-06-t009-2026-11-02.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "36e7a01fe69d902126d5ff6ced11c678bd087251b82a30c318bb8457b589a7d8"
+  },
+  {
+    "file": "docs/reports/phase-07-closeout-2026-11-03.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "ef52456d9d95845767a61fd3877d96f235aa11c8e3ad08c68bb3c3f55cb7b307"
+  },
+  {
+    "file": "docs/reports/phase-07-document-review-2026-11-03.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "8f6d23811192f06b88ac492d88a627a207e5fdedffe1da219ac90f8b4e359cfd"
+  },
+  {
+    "file": "docs/reports/phase-07-start-2026-11-03.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "7d24d6cfdb22df6245e3f2f193623a508d1685e4ec87179d2cab899a5ae3e0e5"
+  },
+  {
+    "file": "docs/reports/phase-07-t002-2026-11-03.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "04d9930b3da0a618c24a1b9c34d77cfb4e2ac9db53cdf7fd94b15b6662241dff"
+  },
+  {
+    "file": "docs/reports/phase-07-t003-2026-11-03.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "a16f33537ad1bc72136c45267e61347ad5693ac3d39fc29664e840173fb29e27"
+  },
+  {
+    "file": "docs/reports/phase-07-t004-2026-11-03.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "bef27cf52796dc98e513ced9503bbf25349eb60bdbff7926149cf7b0597d6fad"
+  },
+  {
+    "file": "docs/reports/phase-07-t005-2026-11-03.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "0c0d3727761a61280891a3cecd7b35cf51bd9d98cc1c9fcce4362d2e00f928b3"
+  },
+  {
+    "file": "docs/reports/phase-07-t006-2026-11-03.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "2c9ed4252fbc6a2b72304151144ce28b619ccdbe97b0419e96dafa5ebf590378"
+  },
+  {
+    "file": "docs/reports/phase-07-t007-2026-11-03.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "10826e7bbbe5331215fc753bc417c4c235d71701ac0d7f8bd5dc781f005d09c6"
+  },
+  {
+    "file": "docs/reports/phase-07-t008-2026-11-03.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "e4d944ac1fff60d66b05f762d55b9ee70f26d7197f5d893328ec5f2a644a4c56"
+  },
+  {
+    "file": "docs/reports/phase-07-t009-2026-11-03.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "4277906f88081e7fac3bac8ed10c3d236b78dc53d0dd5a35b635bda3db4e1cdd"
+  },
+  {
+    "file": "docs/reports/phase-07-t010-2026-11-03.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "be466d93d579ae903737342d099abcd64f73200b8d2d6422cbcad7e279313b19"
+  },
+  {
+    "file": "docs/reports/phase-07-t011-2026-11-03.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "bf9097abe7d74c4f64c0077d4d32a955706e5c4c066b533bc9282279859840ac"
+  },
+  {
+    "file": "docs/reports/phase-07-t012-2026-11-03.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "b83348e6ca914bfd5bface68081b1e9981cf288577a1699578e59ca94dbc92e2"
+  },
+  {
+    "file": "docs/reports/phase-08-closeout-2026-11-08.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "28ef6288a7c1e505dfed5338984d3d60cdce1e961d33d7801207144a40f6dc0e"
+  },
+  {
+    "file": "docs/reports/phase-08-document-review-2026-11-08.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "d6627dd304e09b7e4e3104a32452b16291afad4594516a1240e054c05c6e1707"
+  },
+  {
+    "file": "docs/reports/phase-08-formula-review-pack-2026-11-09.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "d4441351386553a1e3a963fb5b5d8374da502a142f1f01abdce5b4594c6f2fb7"
+  },
+  {
+    "file": "docs/reports/phase-08-start-2026-11-03.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "ff9045a9bc9f72ee97e504fc898af97d0f53ba3e872f604707497ebec02ad0f1"
+  },
+  {
+    "file": "docs/reports/phase-08-t002-2026-11-03.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "abae245d2fbabc747a6e706f9c56ebeb16b5d3e672ed4c17940941e35176daae"
+  },
+  {
+    "file": "docs/reports/phase-08-t003-2026-11-03.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "e773bf26d033ae2ad9bab34c37034a6989a6f1e4b56a432d28ef635f3c6f7f8e"
+  },
+  {
+    "file": "docs/reports/phase-08-t004-2026-11-04.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "cf8b14810404c368008bdfe0d9fc26e239e5f667ad575b08f4ba8dcee971da6c"
+  },
+  {
+    "file": "docs/reports/phase-08-t005-2026-11-04.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "3be63fd49c7f44b1678a2bf813a43053d9f255cb0bcf37877a05e9be208b5a13"
+  },
+  {
+    "file": "docs/reports/phase-08-t006-2026-11-05.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "11d6251f42fdd9a2308530f53e50eada7d2aa0151e1d548886008518e3706cba"
+  },
+  {
+    "file": "docs/reports/phase-08-t007-2026-11-07.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "873b73c04865eb1c6a6c9bb834f0d1d43e95e418263564191daa7933d47188c1"
+  },
+  {
+    "file": "docs/reports/phase-08-t008-2026-11-07.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "947e0155817e654c8b46f669e37c59c10d33a5ee5c2e2aa93bc7856c924ea7ea"
+  },
+  {
+    "file": "docs/reports/phase-08-t009-2026-11-07.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "6cc491bd98120c41064e1a336b583bcce91dce84981fbfc84d4462494a8370a0"
+  },
+  {
+    "file": "docs/reports/phase-08-t010-2026-11-07.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "83985b816c2eee6220ef0363b17faa669d2c2a09586063ce8f001da73b7c4d12"
+  },
+  {
+    "file": "docs/reports/phase-08-t011-2026-11-08.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "9bac8799a39bd1cd129dd8220cabab3b435d051d973e090dab270d6568a7bcc0"
+  },
+  {
+    "file": "docs/reports/phase-08-t012-2026-11-08.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "ec979dae3fc11b5ca2d82281ceb9064b792e4d0ea9e5e49abffd02b14f904c9d"
+  },
+  {
+    "file": "docs/reports/phase-09-closeout-2026-11-10.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "7412f802b26e0fbb2f0478f2e6b25d2053be7c6e505e970e4a08bc238ce429cc"
+  },
+  {
+    "file": "docs/reports/phase-09-document-review-2026-11-10.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "8fd04449098d542107f452ddcc6e60a55c47926869ce7f498e2ea9e198c20e13"
+  },
+  {
+    "file": "docs/reports/phase-09-farm-export-2026-11-10.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "d63c5099c5b3767ead5418468de8a63b33eeb167b583bcc4dfb8e55c379f3e0a"
+  },
+  {
+    "file": "docs/reports/phase-09-pilot-start-pack-2026-11-10.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "22a3b5baf8f2f8ad30e2347f9cf9d7291720ec1dca5198774df5824f6eeeb057"
+  },
+  {
+    "file": "docs/reports/phase-09-request-limits-2026-11-10.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "48a8c75816da34a7b08b77bbd338b1ff4554881a203d1bd269aa34f781a4b646"
+  },
+  {
+    "file": "docs/reports/phase-09-start-2026-11-09.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "9fd5c6f69d7070a3b4c6893b8fb27c1863eb77f93c0b88281aa71ffa67d597ea"
+  },
+  {
+    "file": "docs/reports/phase-09-t001-2026-11-09.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "425af8e05148b5753d836921a4fabd4ec36226252a2daa38a7039d7916e5b9da"
+  },
+  {
+    "file": "docs/reports/phase-09-t002-2026-11-10.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "1278e2bcb37f8b1734ea39f8116225f4b5f13b2d6576fa38b722f42446eb33c2"
+  },
+  {
+    "file": "docs/reports/phase-09-t003-2026-11-10.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "efca5ac347e1fa587c93afcf4eb0e83f36c899887dd416b0d4f7a4a03e6f0caf"
+  },
+  {
+    "file": "docs/reports/phase-09-t004-2026-11-10.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "387c2a8e89379cc215dfe615cb2ffdb181122b2c71fef057494585a45178d844"
+  },
+  {
+    "file": "docs/reports/phase-09-t005-2026-11-10.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "3413f7bb3c53d44df604e87fd04b8cca9e46565219bc3734364752fa66af0fcd"
+  },
+  {
+    "file": "docs/reports/phase-09-t006-2026-11-10.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "0f857551004e4ec0e78c478617124d26052f6cd08a5a1c05f859383091c4414b"
+  },
+  {
+    "file": "docs/reports/phase-10-closeout-2026-11-12.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "d0464e28dab9acac6d0a10b0e0d0f14bf9c46cff674f1f4175ee799dd9a3cb7e"
+  },
+  {
+    "file": "docs/reports/phase-10-t001-2026-11-12.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "d0eb08cf03fde9fb869c936a75d33c1e36f5c3394312d5df07dc08338b66badb"
+  },
+  {
+    "file": "docs/reports/phase-10-t002-2026-11-12.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "2510b3d1d7519ff504fdb4bdd07fe1668ef6356a4b745023b1f79ffc51078aba"
+  },
+  {
+    "file": "docs/reports/phase-10-t003-2026-11-12.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "f366fc68247cefde362c89525655c4dbd4ae545fb271aecba8af40254c6b2665"
+  },
+  {
+    "file": "docs/reports/phase-10-t004-2026-11-12.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "8e64b7c1c00222fc1c0a79437a4ea05cbb0ec7cfa574ab598db06154b8bd925d"
+  },
+  {
+    "file": "docs/reports/phase-10-t005-2026-11-12.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "b11bad9b1d6fa7ebddbac9a04977cacbe696eaa0fccb29557d0c87475e63c8ce"
+  },
+  {
+    "file": "docs/reports/phase-10-t006-2026-11-12.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "8c51bab90fee4de1b812f2f679dde3088b771b2719be2c23378cfbe1f7e709e7"
+  },
+  {
+    "file": "docs/reports/phase-11-12-document-review-2026-11-18.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "a3dfad1251de753b523ca2abef3db05e1524a663178524d1fdab157bac0bcee1"
+  },
+  {
+    "file": "docs/reports/phase-11-12-transition-2026-11-18.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "510b21fc7a61c95de5f105fa16d45d89b408a378415584d23d7a10eb3293d8be"
+  },
+  {
+    "file": "docs/reports/phase-11-closeout-2026-11-13.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "5f09bd87d1cba8be9ef8fa5b5133d8158e8c9a4d4a14d548cbad29c7cd749529"
+  },
+  {
+    "file": "docs/reports/phase-11-t001-2026-11-12.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "7b34cdd2a03b176c647d982b2d49c0a2c980d9b9dd822e551bd96b1d9e5576bb"
+  },
+  {
+    "file": "docs/reports/phase-11-t002-2026-11-12.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "b1d29f40326c3c7b679594e3ad9d44d50fe6f2d7dee284b4b0e7fb82a158c1b2"
+  },
+  {
+    "file": "docs/reports/phase-11-t003-2026-11-12.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "fd8e486a19ef6e55f116993e989f041d0e1e3f87abbaae5cbaf61af99c09ccaf"
+  },
+  {
+    "file": "docs/reports/phase-11-t004-2026-11-13.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "c44388fb32f557ea88fcbc26ac0409d8ab0747f576ebf60f920a1bbf6e2dc4c2"
+  },
+  {
+    "file": "docs/reports/phase-11-t005-2026-11-13.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "1629b00eed5b9d47e9216fd04bdfe8a2a859ebea61176fba605bc928a281f46f"
+  },
+  {
+    "file": "docs/reports/phase-11-t006-2026-11-13.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "6eeb3235f59862d24a6f106db9e5263256ff3f7fea4155b906ca183a666cddf9"
+  },
+  {
+    "file": "docs/reports/phase-11-t007-2026-11-13.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "5261a00d988cc9d287e58ea6e27cf0dc78298b839f1914af6b30c7b5e459109d"
+  },
+  {
+    "file": "docs/reports/phase-11-t008-2026-11-13.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "7a58a6a99f120993d6af4dc07c3f2bfc93ef7cfac7ef3a8f2d5dac2704ac0ad0"
+  },
+  {
+    "file": "docs/reports/phase-11-t009-2026-11-13.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "6e11769d570a8d218ca22e1ed3b933dc7496b843d561ee6b920d8ec7b4f7273f"
+  },
+  {
+    "file": "docs/reports/phase-12-closeout-2026-11-20.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "0b0d95c20e71fd8f47e9d0478ee63d28e370fa7d4ccd3d555aa4309d67ea7201"
+  },
+  {
+    "file": "docs/reports/phase-12-document-review-2026-11-20.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "ae6076b2215684d1d84d66994d407512124da477cb08777bd1e6792d019f2a70"
+  },
+  {
+    "file": "docs/reports/phase-12-migration-push-2026-11-20.md",
+    "metadataPresent": false,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "99c27e031429a3f56feac5cd7d2e82bfcd9c0567a07c3469f1c2664694a30f07"
+  },
+  {
+    "file": "docs/reports/phase-12-t001-2026-11-18.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "21475c887ef68ea141dd950de080ba5eb697715a5fdbc42866663c86e77ca6b7"
+  },
+  {
+    "file": "docs/reports/phase-12-t002-2026-11-20.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "5d1a4a0e0223fa9132e7e4310b6d74abdd8156a09a4213d201782126ad0ecc7a"
+  },
+  {
+    "file": "docs/reports/phase-13-14-transition-2026-11-21.md",
+    "metadataPresent": true,
+    "depth": "task-relevant content/status/evidence",
+    "sha256": "ed492c94630d73ba49716e83c650ac614a89d00de3cb092b8d0123f83900b3d2"
+  },
+  {
+    "file": "docs/reports/phase-13-closeout-2026-11-21.md",
+    "metadataPresent": true,
+    "depth": "task-relevant content/status/evidence",
+    "sha256": "ebaae6d51d02d876fcf879b242f38984f469b100cf0397e62cbf16cde6329654"
+  },
+  {
+    "file": "docs/reports/phase-13-document-review-2026-11-21.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "23f8eb89ac186eb1b351615cac3a1f9148dd73a8e82cd66621f5f0a2faf0874e"
+  },
+  {
+    "file": "docs/reports/phase-13-t001-2026-11-20.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "e9e145bd3be47530a38c98e0a59d3ded006addda51950e1bec35dc8a782bf7c1"
+  },
+  {
+    "file": "docs/reports/phase-14-t001-2026-11-21.md",
+    "metadataPresent": true,
+    "depth": "task-relevant content/status/evidence",
+    "sha256": "d63fdaa5d2977c33305b3bd40a84d39e820230c37580b7aac4a797c02e92f9c8"
+  },
+  {
+    "file": "docs/reports/source-analysis.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "b31beaa2232d5f4b01658c92400b423c5b630180d50a3fda3a6b4011da09d538"
+  },
+  {
+    "file": "docs/reports/source-extract.md",
+    "metadataPresent": true,
+    "depth": "metadata/title/scope scan only; historical and future body unchanged",
+    "sha256": "d32cdcba8ff8c02491e1a89dea5eb2932a595c6d96147a63326a6a4552c4d75e"
+  }
+]

@@ -1,0 +1,44 @@
+
+> myfarm@0.1.0 test:integration
+> vitest run --project integration
+
+
+ RUN  v5.0.3 D:/Myfarm
+
+ ❯ |integration| tests/integration/request-limits.test.ts (11 tests | 1 failed) 3780ms
+   ❯ request limits under the restricted runtime role (D-P09-014) (10)
+     × every window must have room: photos are 30 an hour and 200 a day 444ms
+npm.cmd :
+At line:2 char:176
++ ... TABASE_URL; npm.cmd run test:integration *> .cache/p14-final/integrat ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| tests/integration/request-limits.test.ts > request limits under the restricted runtime role
+(D-P09-014) > every window must have room: photos are 30 an hour and 200 a day
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ tests/integration/request-limits.test.ts:78:62
+     76|     const daily = person();
+     77|     await backdate(daily, "PHOTO_UPLOAD", Array.from({ length: 200 }, …
+     78|     expect(await limits().take(daily, "PHOTO_UPLOAD", null)).toBe(fals…
+       |                                                              ^
+     79|     const rested = person();
+     80|     await backdate(rested, "PHOTO_UPLOAD", Array.from({ length: 199 },…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 42 passed (43)
+      Tests  1 failed | 458 passed (459)
+   Start at  08:50:31
+   Duration  240.38s (tests 89%, import 9%, transform 2%)

@@ -1,0 +1,42 @@
+
+> myfarm@0.1.0 test
+> vitest run --project unit --project component
+
+
+ RUN  v5.0.3 D:/Myfarm
+
+ ❯ |component| tests/component/accounting-forms.test.tsx (17 tests | 1 failed) 20159ms
+   ❯ transaction form (P04-T003) (7)
+     × labels errors, focuses the first invalid control and never submits invalid money 5103ms
+npm.cmd :
+At line:16 char:1
++ npm.cmd test *> .cache/p14-final/unit-resume.log; exit $LASTEXITCODE
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |component| tests/component/accounting-forms.test.tsx > transaction form (P04-T003) > labels errors, focuses
+the first invalid control and never submits invalid money
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/component/accounting-forms.test.tsx:41:3
+
+ Test Files  1 failed | 89 passed (90)
+      Tests  1 failed | 1468 passed (1469)
+   Start at  08:53:44
+     39|     expect(recordSaleSchema.parse(submit.mock.calls[0][0])).toMatchObj…
+     40|   });
+     41|   it("labels errors, focuses the first invalid control and never submi…
+       |   ^
+     42|     const submit = vi.fn(failed); render(<TransactionForm kind="EXPENS…
+     43|     await saveExpense();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+   Duration  74.79s (tests 36%, environment 32%, import 14%, setup 14%, transform 4%)
+
+Environment  |component| jsdom was created 23 times · 107.87s total, 35% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments

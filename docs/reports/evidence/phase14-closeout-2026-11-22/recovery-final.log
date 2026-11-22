@@ -1,0 +1,1 @@
+PASS: actual dump/restore preserves consent receipt, assignment, visit, follow-up, problem, photo metadata, audits, RLS/browser denial, runtime grants and duplicate rejection. Object bytes are outside this database rehearsal.

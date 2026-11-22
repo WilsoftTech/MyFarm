@@ -1,0 +1,105 @@
+
+> myfarm@0.1.0 test:e2e
+> playwright test --config playwright.production.config.ts tests/browser/officer-dashboard-ui.spec.ts tests/browser/officer-work-ui.spec.ts --reporter=line
+
+[WebServer] (node:13652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+[WebServer] (node:10048) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 10 tests using 1 worker
+
+(node:19960) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/10] [desktop] › tests\browser\officer-dashboard-ui.spec.ts:25:1 › owner consent grants one farm, dashboard shows actual counts, revocation removes it
+[WebServer] {"event":"request_failed","requestId":"fa252ba0-fa67-48fb-9d32-3dbd4cc61ed2","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"9cc20456-ddcf-49d3-86ea-ac021cc6ef9a","code":"FORBIDDEN"}
+
+[2/10] [desktop] › tests\browser\officer-dashboard-ui.spec.ts:51:1 › unassigned dashboard exposes no farmer directory and guessed owner pages deny
+[WebServer] {"event":"request_failed","requestId":"16047663-e93f-4f73-8090-cbfcd0eb54f6","code":"FORBIDDEN"}
+
+[3/10] [desktop] › tests\browser\officer-dashboard-ui.spec.ts:59:1 › offline consent is disabled and typed details survive reconnect
+[4/10] [desktop] › tests\browser\officer-work-ui.spec.ts:29:1 › officer prepares a draft; only the named farmer reviews and accepts the exact details
+[5/10] [desktop] › tests\browser\officer-work-ui.spec.ts:53:1 › offline visit and photo survive reload, sync once, and revoked work stays recoverable
+  1) [desktop] › tests\browser\officer-work-ui.spec.ts:53:1 › offline visit and photo survive reload, sync once, and revoked work stays recoverable
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByLabel('Follow-up date', { exact: true })
+
+
+      60 |   await context.setOffline(true); await page.reload();
+      61 |   await page.getByLabel("Visit date", { exact: true }).fill("2026-11-21"); await page.getByLabel("Visit completed", { exact: true }).check();
+    > 62 |   await page.getByLabel("Observations", { exact: true }).fill("Offline crop inspection"); await page.getByLabel("Follow-up date", { exact: true }).fill("2026-11-23");
+         |                                                                                                                                                    ^
+      63 |   await page.getByLabel("Visit photo", { exact: true }).setInputFiles({ name: "visit.png", mimeType: "image/png", buffer: PNG });
+      64 |   await page.getByRole("button", { name: "Save visit on this phone" }).click(); await expect(page.getByText("Visit and photo saved on this phone. Waiting to send.")).toBeVisible();
+      65 |   await page.reload(); expect((await outbox(page, f.users.b)).filter(row => row.operation.startsWith("OFFICER_")).length).toBe(2);
+        at D:\Myfarm\tests\browser\officer-work-ui.spec.ts:62:148
+
+    Error Context: test-results\officer-work-ui-offline-vi-5ee43-oked-work-stays-recoverable-desktop\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\officer-work-ui-offline-vi-5ee43-oked-work-stays-recoverable-desktop\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\officer-work-ui-offline-vi-5ee43-oked-work-stays-recoverable-desktop\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+(node:23364) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[6/10] [mobile] › tests\browser\officer-dashboard-ui.spec.ts:25:1 › owner consent grants one farm, dashboard shows actual counts, revocation removes it
+[WebServer] {"event":"request_failed","requestId":"09648c6e-8f5a-43cc-8623-5e820430f5cf","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"d2b2d4b4-c0b3-4284-b1f4-4ab578510847","code":"FORBIDDEN"}
+
+[7/10] [mobile] › tests\browser\officer-dashboard-ui.spec.ts:51:1 › unassigned dashboard exposes no farmer directory and guessed owner pages deny
+[WebServer] {"event":"request_failed","requestId":"2ef1a38b-8d1a-40e5-8882-2fb4f6eeb34c","code":"FORBIDDEN"}
+
+[8/10] [mobile] › tests\browser\officer-dashboard-ui.spec.ts:59:1 › offline consent is disabled and typed details survive reconnect
+[9/10] [mobile] › tests\browser\officer-work-ui.spec.ts:29:1 › officer prepares a draft; only the named farmer reviews and accepts the exact details
+[10/10] [mobile] › tests\browser\officer-work-ui.spec.ts:53:1 › offline visit and photo survive reload, sync once, and revoked work stays recoverable
+  2) [mobile] › tests\browser\officer-work-ui.spec.ts:53:1 › offline visit and photo survive reload, sync once, and revoked work stays recoverable
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.fill: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByLabel('Follow-up date', { exact: true })
+
+
+      60 |   await context.setOffline(true); await page.reload();
+      61 |   await page.getByLabel("Visit date", { exact: true }).fill("2026-11-21"); await page.getByLabel("Visit completed", { exact: true }).check();
+    > 62 |   await page.getByLabel("Observations", { exact: true }).fill("Offline crop inspection"); await page.getByLabel("Follow-up date", { exact: true }).fill("2026-11-23");
+         |                                                                                                                                                    ^
+      63 |   await page.getByLabel("Visit photo", { exact: true }).setInputFiles({ name: "visit.png", mimeType: "image/png", buffer: PNG });
+      64 |   await page.getByRole("button", { name: "Save visit on this phone" }).click(); await expect(page.getByText("Visit and photo saved on this phone. Waiting to send.")).toBeVisible();
+      65 |   await page.reload(); expect((await outbox(page, f.users.b)).filter(row => row.operation.startsWith("OFFICER_")).length).toBe(2);
+        at D:\Myfarm\tests\browser\officer-work-ui.spec.ts:62:148
+
+    Error Context: test-results\officer-work-ui-offline-vi-5ee43-oked-work-stays-recoverable-mobile\error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\officer-work-ui-offline-vi-5ee43-oked-work-stays-recoverable-mobile\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\officer-work-ui-offline-vi-5ee43-oked-work-stays-recoverable-mobile\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  2 failed
+    [desktop] › tests\browser\officer-work-ui.spec.ts:53:1 › offline visit and photo survive reload, sync once, and revoked work stays recoverable
+    [mobile] › tests\browser\officer-work-ui.spec.ts:53:1 › offline visit and photo survive reload, sync once, and revoked work stays recoverable
+  8 passed (1.5m)

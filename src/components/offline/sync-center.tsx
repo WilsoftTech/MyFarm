@@ -2,6 +2,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { LocalDatabase } from "@/modules/offline-first/client/local-database";
+import { syncOfficer } from "@/modules/extension-officers/client/work";
+import { accountGeneration } from "@/modules/offline-first/client/account";
 import { syncNow, type SyncResult } from "@/modules/offline-first/client/sync-engine";
 import { discardEntry, replaceEntry, unsentCopy } from "@/modules/offline-first/client/sync-center";
 import { OPERATION_LABELS, type OfflineOperation } from "@/modules/offline-first/domain/commands";
@@ -32,11 +34,12 @@ function EntryRow({ db, entry, all, onChanged }: { db: LocalDatabase; entry: Out
     await replaceEntry(db, entry, editablePayload(entry), current.version);
     onChanged();
   }
-  return <li className="rounded-xl border p-4"><p>{OPERATION_LABELS[entry.operation as OfflineOperation]} · saved {stamp(entry.createdAt)}</p><p className="font-semibold">{syncStatusLabels[entry.syncStatus]}{blocked ? " · waiting for another entry to be sorted out" : ""}</p>
-    {entry.lastError && <p className="mt-1">{entry.lastError}</p>}
+  return <li className="rounded-xl border p-4"><p>{OPERATION_LABELS[entry.operation as OfflineOperation] ?? entry.operation.replaceAll("_", " ").toLowerCase()} · saved {stamp(entry.createdAt)}</p><p className="font-semibold">{syncStatusLabels[entry.syncStatus]}{blocked ? " · waiting for another entry to be sorted out" : ""}</p>
+    {entry.operation.startsWith("OFFICER_") && entry.result && typeof entry.result.draftId === "string" && <a className="underline" href={`/registration-review/${entry.result.draftId}`}>Open registration review</a>}{entry.operation.startsWith("OFFICER_") && entry.syncStatus === "FAILED" && <p>Access may have changed. Your draft and photo remain on this phone. Ask the farmer to restore access, then retry.</p>}{entry.lastError && <p className="mt-1">{entry.lastError}</p>}
     {entry.syncStatus === "CONFLICT" && !reopen && <p className="mt-1">It was already finished elsewhere, so this entry can be discarded.</p>}
     <div className="mt-3 flex flex-wrap gap-3">
-      {entry.syncStatus === "FAILED" && entry.operation !== "ATTACH_PHOTO" && <Button variant="outline" onClick={() => setFixing(value => !value)}>Fix details</Button>}
+      {entry.operation.startsWith("OFFICER_") && entry.syncStatus === "FAILED" && <Button variant="outline" onClick={() => void db.outbox.update(entry.clientMutationId, { syncStatus: "PENDING", nextAttemptAt: null }).then(onChanged)}>Retry after access is restored</Button>}
+      {entry.syncStatus === "FAILED" && entry.operation !== "ATTACH_PHOTO" && !entry.operation.startsWith("OFFICER_") && <Button variant="outline" onClick={() => setFixing(value => !value)}>Fix details</Button>}
       {reopen && <Button variant="outline" onClick={() => void retryOnLatest()}>Try again on the latest version</Button>}
       {(entry.syncStatus === "FAILED" || entry.syncStatus === "CONFLICT") && (confirming ? <><Button variant="outline" onClick={() => void discardEntry(db, entry).then(onChanged)}>Yes, discard it</Button><Button variant="outline" onClick={() => setConfirming(false)}>Keep it</Button></> : <Button variant="outline" onClick={() => setConfirming(true)}>Discard</Button>)}
     </div>
@@ -56,7 +59,7 @@ export function SyncCenter({ db, online, onChanged, refreshKey }: { db: LocalDat
   const send = useCallback(async (force: boolean) => {
     if (busy.current) return;
     busy.current = true; setSending(true);
-    try { setResult(await syncNow(db, () => true, force)); } catch { setResult("OFFLINE"); }
+    try { const generation = accountGeneration(), keepGoing = () => generation === accountGeneration(); const regular = await syncNow(db, keepGoing, force); const officer = await syncOfficer(db, keepGoing, force); setResult(officer === "DONE" ? regular : officer); } catch { setResult("OFFLINE"); }
     busy.current = false; setSending(false);
     await load(); onChanged();
   }, [db, load, onChanged]);

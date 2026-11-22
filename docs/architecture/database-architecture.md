@@ -1,13 +1,13 @@
 # Database architecture
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED - Phase 5 task-relevant contracts, implementation, status and evidence; historical sections preserved.
-- Implementation status: Phase 1-4 accepted with documented conditions; Phase 5 T001-T013 verified locally and in hosted CI; deployment conditions remain. No whole-architecture completion percentage claimed.
-- Last reviewed: 2026-11-03 (Africa/Nairobi), Phase 7 T013 audit.
-- Related phase/task IDs: Phase01 MYF-P01-T001–T013; Phase02 MYF-P02-T001–T013.
-- Verified completed work: Phase01 scope as previously verified; Phase02: farmer registry contracts/policies/migration/API/tests in this document's area verified (see the Phase 2 implementation section).
-- Remaining work/blockers: Phase 7 awaits owner acceptance; real-device measurement, hosted CI and the hosted photo schema remain, with inherited production conditions.
-- Evidence/report links: [Current Phase 5 audit](../reports/phase-05-closeout-2026-10-29.md); [document review](../reports/phase-05-document-review-2026-10-29.md). Historical task evidence remains linked below.
+- Documentation review: REVIEWED - Phase 14 affected architecture and local evidence; historical sections retained.
+- Implementation status: REFERENCE ONLY - architecture record; Phase 14 locally verified with release conditions.
+- Last reviewed: 2026-11-22 (Africa/Nairobi).
+- Related phase/task IDs: MYF-P14-T001 through T007; earlier references retained in dated sections.
+- Verified completed work: Phase 14 local software acceptance, security, compatibility and recovery checks pass; see dated section.
+- Remaining work/blockers: P14-C1 through C4 and inherited release conditions; hosted rollout/owner acceptance pending.
+- Evidence/report links: [Phase 14 closeout](../reports/phase-14-closeout-2026-11-22.md); historical reports retained below.
 <!-- MYFARM-STATUS-END -->
 
 ## Phase 3 foundation subset — 2026-10-18
@@ -92,3 +92,7 @@ Final Phase 5 audit: T001-T013 and the hosted quality workflow pass at f999449 (
 Phase 6 adds three additive 20261102 migrations for `ProductionActivity` and `ActivityRecurrence`. The specification's `FarmActivity` name was already an enum, and occurrences are activity rows with a unique series and due-date key rather than a separate table. Manifest-listed farm-activities-runtime.sql grants updates only on lifecycle and series-progress columns. Applied to hosted development on 2026-11-03 under D-P06-010. Final Phase 6 audit: [hosted run 41524090703](https://github.com/WilsoftTech/MyFarm/actions/runs/41524090703); [closeout](../reports/phase-06-closeout-2026-11-03.md).
 
 Phase 7 adds additive migration `202611030001_record_photos` and manifest-listed `offline-photos-runtime.sql`, with append-only rows and a tenant-prefixed storage insert policy. Not applied to hosted. [Closeout](../reports/phase-07-closeout-2026-11-03.md).
+
+## Phase 14 local implementation - 2026-11-22
+
+Named owner consent grants farm-specific officer permissions independently of FarmMember. Farmer-confirmed assisted registration commits exact reviewed records, assignment and audit receipts atomically. Current session/assignment/parent checks apply to visits, follow-ups, private namespaced media and sync. The existing account-partitioned outbox preserves denied work, with visible offline readiness and no IndexedDB version change. Six additive officer tables, column-limited guarded writes and composite parent constraints retain the shared runtime-role architecture; application queries enforce actor isolation. Local checks and recovery pass; hosted SQL/storage/application rollout and owner acceptance remain pending. [Scope, migrations, security evidence and limits](../reports/phase-14-closeout-2026-11-22.md).

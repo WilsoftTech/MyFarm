@@ -1,0 +1,1 @@
+PASS: both officer migrations are completed, not rolled back, and match the exact local SQL SHA-256 checksums.

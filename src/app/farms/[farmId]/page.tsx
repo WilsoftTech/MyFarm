@@ -12,7 +12,7 @@ const { farmId } = await params;
 const farm = await loadPage(() => farmerRegistryService().farm(farmId));
 const added = (await searchParams).plot === "added";
 const location = [farm.village, farm.subcounty, farm.district].filter(Boolean).join(", ");
-return <section><Link href="/farms" className="text-sm underline">Back to my farms</Link><h1 className="mt-3 text-3xl font-bold">{farm.name}</h1>
+return <section><Link href="/farms" className="text-sm underline">Back to my farms</Link><h1 className="mt-3 text-3xl font-bold">{farm.name}</h1><Link href={`/farms/${farm.farmId}/officers`} className="mt-4 inline-block underline">Manage officer access</Link>
 <dl className="mt-6 grid gap-4 rounded-2xl border border-border bg-white p-6 sm:grid-cols-2">
 <div><dt className="text-sm text-foreground/70">Location</dt><dd className="font-semibold">{location}</dd></div>
 <div><dt className="text-sm text-foreground/70">Main activity</dt><dd className="font-semibold">{activityLabels[farm.primaryActivity]}</dd></div>

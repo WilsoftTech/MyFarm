@@ -15,9 +15,9 @@ const scopes = (await this.repository.scopesForUser(account.id)).filter(scope =>
 return { accountId: account.id, scopes };
 }
 async scope(organizationId: unknown, roles?: readonly Role[]) {
+const account = await this.account();
 const parsed = idSchema.safeParse(organizationId);
 if (!parsed.success) throw new FoundationError("INVALID_INPUT");
-const account = await this.account();
 return authorizeScope(account, await this.repository.scopeForUser(account.id, parsed.data), roles);
 }
 }

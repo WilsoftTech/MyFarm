@@ -1,16 +1,16 @@
 # Master implementation roadmap
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED - Phase 13 T002-T007 staged implementation and local audit.
+- Documentation review: REVIEWED - Phase 14 final implementation, approved decisions, acceptance and local evidence.
 - Implementation status: REFERENCE ONLY - verified execution checkpoint.
-- Last reviewed: 2026-11-21 (Africa/Nairobi).
-- Related phase/task IDs: MYF-P13-T001 through T007; D-P13-001 through D-P13-004.
-- Verified completed work: All seven software tasks verified in the approved synthetic-forecast scope; no live weather or reviewed agronomic thresholds claimed.
-- Remaining work/blockers: P13-C1 through C5, inherited release conditions and owner acceptance; Phase 14 not authorized.
-- Evidence/report links: [Phase 13 closeout](reports/phase-13-closeout-2026-11-21.md).
+- Last reviewed: 2026-11-22 (Africa/Nairobi).
+- Related phase/task IDs: MYF-P14-T001 through T007; D-P14-001 through D-P14-006.
+- Verified completed work: Phase 14 T001-T007 software tasks locally verified (7/7); PASS WITH CONDITIONS - LOCAL VERIFICATION. Owner acceptance and hosted rollout remain pending.
+- Remaining work/blockers: P14-C1 through C4; no Phase 15 authorization, hosted SQL or deployment.
+- Evidence/report links: [Phase 14 closeout](reports/phase-14-closeout-2026-11-22.md).
 <!-- MYFARM-STATUS-END -->
 
-**Current execution checkpoint - 2026-11-21:** Phase 13 software complete (7/7), **PASS WITH CONDITIONS - LOCAL VERIFICATION**, approved synthetic scope. Six test capabilities and contextual task notices, current authorized exact reviewed one-off date changes, atomic audit/retry/expiry controls and desktop/mobile acceptance pass. 1384 unit/component, 439 integration, 43 non-UTC, 82 anonymous, 20 focused weather and 258 full signed-in desktop/mobile tests pass; builds, zero fresh drift, three recovery rehearsals and production audit pass. No live weather/agronomic claim or hosted weather-policy application. Owner acceptance and release conditions remain; Phase 14 not authorized. [Closeout](reports/phase-13-closeout-2026-11-21.md).
+**Current execution checkpoint - 2026-11-22:** Phase 14 T001-T007 software tasks locally verified (7/7); PASS WITH CONDITIONS - LOCAL VERIFICATION. Owner acceptance and hosted rollout remain pending. 1469 unit/component, 460 integration, 21 non-UTC officer, 88 anonymous and 268 signed-in desktop/mobile tests pass; normal/fixture builds, zero drift and actual officer dump/restore pass. Migrations/policies are local synthetic only. Phase 13 remains owner-accepted closed with its carried conditions. [Closeout](reports/phase-14-closeout-2026-11-22.md).
 
 **Previous execution checkpoint - 2026-11-20:** Phase 12 software COMPLETED (10/10), PASS WITH CONDITIONS - LOCAL VERIFICATION, within the approved test-adapter/text-fallback scope. Real speech, measured language support, hosted CI/provisioning and owner acceptance remain conditions. Phase 13 is not started or authorized. [Closeout](reports/phase-12-closeout-2026-11-20.md).
 

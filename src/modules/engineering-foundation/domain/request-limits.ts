@@ -33,8 +33,8 @@ const WRITES = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 const FARM = "^/api/v1/farms/[^/]+";
 const MONEY_EXPORT = new RegExp(FARM + "/accounting/summary/export$");
 const FARM_EXPORT = new RegExp(FARM + "/export$");
-const PHOTO_UPLOAD = new RegExp(FARM + "/photos$");
-const PRIVATE_FILE_READ = [new RegExp(FARM + "/photos/[^/]+/view$"), /^\/api\/v1\/scopes\/[^/]+\/files\//];
+const PHOTO_UPLOAD = new RegExp(FARM + "/(?:photos|officer-photos)$");
+const PRIVATE_FILE_READ = [new RegExp(FARM + "/(?:photos|officer-photos)/[^/]+/view$"), /^\/api\/v1\/scopes\/[^/]+\/files\//];
 const PILOT_STAFF_API = /^\/api\/v1\/scopes\/[^/]+\/pilot\//;
 const under = (pathname: string, prefix: string) => pathname === prefix || pathname.startsWith(prefix + "/");
 

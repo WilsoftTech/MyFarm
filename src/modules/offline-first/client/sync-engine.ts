@@ -9,7 +9,7 @@ const toCommand = (row: OutboxEntry) => pushCommandSchema.parse({ clientMutation
 const isPhoto = (row: OutboxEntry) => row.operation === "ATTACH_PHOTO";
 
 /** force is the farmer pressing Send now, which skips any retry wait. */
-async function recover(db: LocalDatabase, now: Date, force: boolean, exclusiveSender: boolean) {
+export async function recover(db: LocalDatabase, now: Date, force: boolean, exclusiveSender: boolean) {
   await db.transaction("rw", db.outbox, async () => {
     const rows = await db.outbox.toArray();
     for (const row of rows) {
@@ -21,7 +21,7 @@ async function recover(db: LocalDatabase, now: Date, force: boolean, exclusiveSe
   });
 }
 /** Takes the send lease in one transaction, re-reading first so another tab's claim is respected. */
-async function claim(db: LocalDatabase, rows: OutboxEntry[]): Promise<OutboxEntry[]> {
+export async function claim(db: LocalDatabase, rows: OutboxEntry[]): Promise<OutboxEntry[]> {
   return db.transaction("rw", db.outbox, async () => {
     const claimed: OutboxEntry[] = [];
     for (const row of rows) {
@@ -34,17 +34,17 @@ async function claim(db: LocalDatabase, rows: OutboxEntry[]): Promise<OutboxEntr
     return claimed;
   });
 }
-async function settle(db: LocalDatabase, outcomes: { row: OutboxEntry; outcome: PushOutcome }[]) {
+export async function settle(db: LocalDatabase, outcomes: { row: OutboxEntry; outcome: PushOutcome }[]) {
   await db.transaction("rw", db.outbox, db.photos, async () => {
     const now = new Date();
     for (const { row, outcome } of outcomes) {
       await db.outbox.put(applyOutcome(row, outcome, now));
       // The server holds the photo now; the phone's copy only takes up scarce space.
-      if (isPhoto(row) && outcome.status === "COMMITTED") await db.photos.where("clientMutationId").equals(row.clientMutationId).delete();
+      if ((isPhoto(row) || row.operation === "OFFICER_ATTACH_PHOTO") && outcome.status === "COMMITTED") await db.photos.where("clientMutationId").equals(row.clientMutationId).delete();
     }
   });
 }
-function outcomeFor(status: number): PushOutcome | "SIGNED_OUT" {
+export function outcomeFor(status: number): PushOutcome | "SIGNED_OUT" {
   if (status === 401) return "SIGNED_OUT";
   if (status === 409) return { status: "CONFLICT" };
   if (status === 400 || status === 413) return { status: "INVALID" };
@@ -94,7 +94,7 @@ async function run(db: LocalDatabase, keepGoing: () => boolean, force: boolean, 
   for (;;) {
     if (!keepGoing()) return "DONE";
     const all = await db.outbox.toArray();
-    const ready = readyEntries(all, new Date());
+    const ready = readyEntries(all, new Date()).filter(row => !row.operation.startsWith("OFFICER_"));
     if (ready.length === 0) break;
     const commands = ready.filter(row => !isPhoto(row)).slice(0, SYNC_TIMING.batchSize);
     const photo = commands.length === 0 ? ready.find(isPhoto) : undefined;
