@@ -5,7 +5,7 @@ import { Client } from "pg";
 import { applyCatalogRelease, type CatalogEntry } from "@/modules/enterprises-seasons/domain/catalog";
 import { catalogReleaseSchema } from "@/modules/enterprises-seasons/contracts/catalog";
 import { providerSqlFiles, runSqlFile, supabaseEmulation } from "../support/provisioning";
-const laterProviderFiles = ["supabase/policies/farm-accounting-runtime.sql", "supabase/policies/harvest-inventory-runtime.sql", "supabase/policies/farm-activities-runtime.sql", "supabase/policies/offline-photos-runtime.sql", "supabase/policies/field-pilot-runtime.sql", "supabase/policies/request-limits-runtime.sql", "supabase/policies/farm-intelligence-runtime.sql", "supabase/policies/ai-assistant-runtime.sql", "supabase/policies/voice-experience-runtime.sql", "supabase/policies/weather-runtime.sql", "supabase/policies/extension-officers-runtime.sql", "supabase/policies/officer-work-runtime.sql"];
+const laterProviderFiles = ["supabase/policies/farm-accounting-runtime.sql", "supabase/policies/harvest-inventory-runtime.sql", "supabase/policies/farm-activities-runtime.sql", "supabase/policies/offline-photos-runtime.sql", "supabase/policies/field-pilot-runtime.sql", "supabase/policies/request-limits-runtime.sql", "supabase/policies/farm-intelligence-runtime.sql", "supabase/policies/ai-assistant-runtime.sql", "supabase/policies/voice-experience-runtime.sql", "supabase/policies/weather-runtime.sql", "supabase/policies/extension-officers-runtime.sql", "supabase/policies/officer-work-runtime.sql", "supabase/policies/cooperatives-runtime.sql"];
 
 config({ path: ".env.test.local", quiet: true });
 const url = process.env.TEST_DATABASE_URL;

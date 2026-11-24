@@ -1,16 +1,22 @@
 # Master implementation roadmap
 
+**Current execution checkpoint - 2026-11-24:** Phase 15 T001-T007 software tasks locally verified (7/7), PASS WITH CONDITIONS - LOCAL VERIFICATION. 1496 unit/component, 481 integration, 21 non-UTC cooperative, 92 anonymous and 274 signed-in desktop/mobile tests pass; normal/fixture builds, zero drift and actual organization-ledger dump/restore pass. Owner phase acceptance and P15-C1 through C4 remain pending. Phase 14 stays owner-accepted closed. Migrations/policies are synthetic local only. Git publication is authorized under D-P15-004; hosted rollout, deployment and Phase 16 remain separate. [Closeout and evidence](reports/phase-15-closeout-2026-11-24.md).
+
+**Previous execution checkpoint - 2026-11-23:** Owner accepted and closed Phase 14 at 7/7 tasks, PASS WITH CONDITIONS - LOCAL AND HOSTED CI VERIFICATION. P14-C1 is resolved; C2-C4 persist. Phase 15 implementation is authorized, with Q24 policy decisions pending before dependent work; 0/7 tasks verified. [Transition and plan](reports/phase-14-15-transition-2026-11-23.md).
+
+**Hosted CI follow-up - 2026-11-23:** Final Phase 14 implementation `73dddd0` passed [MyFarm quality run 44995078487](https://github.com/WilsoftTech/MyFarm/actions/runs/44995078487). P14-C1's CI requirement is verified; owner acceptance and P14-C2 through C4 remain pending. No Phase 15 authorization, hosted-development SQL or deployment is inferred. [Evidence](reports/phase-14-closeout-2026-11-22.md#hosted-ci-follow-up---2026-11-23).
+
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED - Phase 14 final implementation, approved decisions, acceptance and local evidence.
+- Documentation review: REVIEWED - Phase 15 final approved scope, implementation, local acceptance and evidence.
 - Implementation status: REFERENCE ONLY - verified execution checkpoint.
-- Last reviewed: 2026-11-22 (Africa/Nairobi).
-- Related phase/task IDs: MYF-P14-T001 through T007; D-P14-001 through D-P14-006.
-- Verified completed work: Phase 14 T001-T007 software tasks locally verified (7/7); PASS WITH CONDITIONS - LOCAL VERIFICATION. Owner acceptance and hosted rollout remain pending.
-- Remaining work/blockers: P14-C1 through C4; no Phase 15 authorization, hosted SQL or deployment.
-- Evidence/report links: [Phase 14 closeout](reports/phase-14-closeout-2026-11-22.md).
+- Last reviewed: 2026-11-24 (Africa/Nairobi).
+- Related phase/task IDs: MYF-P15-T001 through T007; D-P14-008; D-P15-001 through D-P15-003.
+- Verified completed work: Phase 15 T001-T007 software tasks locally verified (7/7); PASS WITH CONDITIONS - LOCAL VERIFICATION. Phase 14 remains owner-accepted CLOSED.
+- Remaining work/blockers: P15-C1 through C4; owner acceptance, hosted CI/publication/rollout and inherited release gates remain separate; no Phase 16 authorization.
+- Evidence/report links: [Phase 15 closeout](reports/phase-15-closeout-2026-11-24.md); [document review](reports/phase-15-document-review-2026-11-24.md).
 <!-- MYFARM-STATUS-END -->
 
-**Current execution checkpoint - 2026-11-22:** Phase 14 T001-T007 software tasks locally verified (7/7); PASS WITH CONDITIONS - LOCAL VERIFICATION. Owner acceptance and hosted rollout remain pending. 1469 unit/component, 460 integration, 21 non-UTC officer, 88 anonymous and 268 signed-in desktop/mobile tests pass; normal/fixture builds, zero drift and actual officer dump/restore pass. Migrations/policies are local synthetic only. Phase 13 remains owner-accepted closed with its carried conditions. [Closeout](reports/phase-14-closeout-2026-11-22.md).
+**Previous execution checkpoint - 2026-11-22:** Phase 14 T001-T007 software tasks locally verified (7/7); PASS WITH CONDITIONS - LOCAL VERIFICATION. Owner acceptance and hosted rollout remain pending. 1469 unit/component, 460 integration, 21 non-UTC officer, 88 anonymous and 268 signed-in desktop/mobile tests pass; normal/fixture builds, zero drift and actual officer dump/restore pass. Migrations/policies are local synthetic only. Phase 13 remains owner-accepted closed with its carried conditions. [Closeout](reports/phase-14-closeout-2026-11-22.md).
 
 **Previous execution checkpoint - 2026-11-20:** Phase 12 software COMPLETED (10/10), PASS WITH CONDITIONS - LOCAL VERIFICATION, within the approved test-adapter/text-fallback scope. Real speech, measured language support, hosted CI/provisioning and owner acceptance remain conditions. Phase 13 is not started or authorized. [Closeout](reports/phase-12-closeout-2026-11-20.md).
 

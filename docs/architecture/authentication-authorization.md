@@ -1,13 +1,13 @@
 # Authentication and authorization
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED - Phase 14 affected architecture and local evidence; historical sections retained.
-- Implementation status: REFERENCE ONLY - architecture record; Phase 14 locally verified with release conditions.
-- Last reviewed: 2026-11-22 (Africa/Nairobi).
-- Related phase/task IDs: MYF-P14-T001 through T007; earlier references retained in dated sections.
-- Verified completed work: Phase 14 local software acceptance, security, compatibility and recovery checks pass; see dated section.
-- Remaining work/blockers: P14-C1 through C4 and inherited release conditions; hosted rollout/owner acceptance pending.
-- Evidence/report links: [Phase 14 closeout](../reports/phase-14-closeout-2026-11-22.md); historical reports retained below.
+- Documentation review: REVIEWED - affected Phase 15 scope, ownership, current access, ledger and connectivity behavior; historical evidence retained below.
+- Implementation status: Phase 15 COMPLETED - 7/7 software tasks locally verified; conditional phase acceptance pending.
+- Last reviewed: 2026-11-24 (Africa/Nairobi).
+- Related phase/task IDs: MYF-P15-T001 through T007; D-P15-001 and D-P15-002; earlier references retained in dated sections.
+- Verified completed work: Phase 15 acceptance, cumulative local quality/browser/integration, zero drift and actual recovery checks pass; see closeout for counts and limits.
+- Remaining work/blockers: P15-C1 through C4; owner acceptance, hosted CI/rollout and inherited release conditions remain separate.
+- Evidence/report links: [Phase 15 closeout](../reports/phase-15-closeout-2026-11-24.md).
 <!-- MYFARM-STATUS-END -->
 
 Authentication provider is Supabase Auth (approved by user); existing-account email/password foundation implemented. Recovery and final credential/shared-device policy remain Q03. Investigate farmer phone availability, shared devices and language; do not assume email-only accounts. Session security needs secure/HttpOnly cookies, appropriate SameSite, expiry/rotation/revocation and CSRF/origin protections for cookie-authenticated mutations.
@@ -69,3 +69,8 @@ Implemented and verified ([closeout](../reports/phase-02-closeout-2026-10-09.md)
 ## Phase 14 local implementation - 2026-11-22
 
 Named owner consent grants farm-specific officer permissions independently of FarmMember. Farmer-confirmed assisted registration commits exact reviewed records, assignment and audit receipts atomically. Current session/assignment/parent checks apply to visits, follow-ups, private namespaced media and sync. The existing account-partitioned outbox preserves denied work, with visible offline readiness and no IndexedDB version change. Six additive officer tables, column-limited guarded writes and composite parent constraints retain the shared runtime-role architecture; application queries enforce actor isolation. Local checks and recovery pass; hosted SQL/storage/application rollout and owner acceptance remain pending. [Scope, migrations, security evidence and limits](../reports/phase-14-closeout-2026-11-22.md).
+
+
+## Phase 15 organization implementation - 2026-11-24
+
+Institutional MANAGER/FARMER/AGENT/BUYER roles require active accounts and accepted CooperativeMember rows, independently of foundational roles. Managers invite existing users; targets accept; owners separately confirm sharing. Canonical lowercase UUIDs prevent splitting the organization lock/receipt namespace. After acquiring the transaction lock, services reload current authorization. Institutional agents do not acquire Phase 14 visit privileges by role. Browser-table access stays denied; the existing trusted shared-runtime role still relies on application end-user scoping. [Implementation, verification and release limits](../reports/phase-15-closeout-2026-11-24.md).

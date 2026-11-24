@@ -1,0 +1,11 @@
+{
+  "migration": {
+    "migration_name": "20261124000100_cooperative_operations",
+    "checksum": "829d20d52d2176c8ab2a8527ee1bfc3e080957bde8d4c6c224bff85a4ca41244",
+    "finished_at": "2026-11-24T04:37:02.490Z",
+    "rolled_back_at": null
+  },
+  "checksumMatches": true,
+  "orderedProviderFiles": 22,
+  "providerFileSha256": "313ed29844bdfb6254f4aba8154fa0e33506d6d6b4a88f4b75e5aae306e7a4c5"
+}

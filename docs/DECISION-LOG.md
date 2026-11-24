@@ -20,7 +20,7 @@ MyFarm naming; Uganda first/global extensibility; initial poultry/crops; source 
 
 | ID | Type / status | Interpretation and consequence | Validation |
 |---|---|---|---|
-| A01 | Assumption, unresolved | Personal farmer workspace and organization workspace share tenant abstraction | Q05/Q24, ADR-02 |
+| A01 | Resolved for the approved Phase 2/15 scope | Personal and institutional workspaces share Organization identity; institutional roles and farm sharing remain separate | Q05/Q24, ADR-02, D-P15-002 |
 | A02 | Interpretation, needs confirmation | Financial record always owned by farm; source optional Farm attribution means analytical selection optional, never unowned money | Q05/Q09, security requirement |
 | A03 | Proposal | Exact decimal schema precision 20,4 and quantity18,6; configurable currency/unit rounding | Q08/Q09/Q12 |
 | A04 | Proposal | Immutable posted accounting corrections and balanced wallet journals | Q09/Q27; source immutable wallet minimum preserved |
@@ -62,7 +62,7 @@ Q01 is **PARTIALLY RESOLVED**: user selected Rukungiri. Remaining components and
 | Q21 | Speech/language accuracy, confirmation/accessibility, audio retention/offline provider | Product/AI/privacy owner | 12 | Measured language support and exact-payload confirmation |
 | Q22 | Weather source/license, accuracy/location, growth-stage input, agronomic thresholds | Agronomic/product owner | 13 | Reviewed provider/rule/freshness contracts |
 | Q23 | Officer assignment/on-behalf onboarding/consent and offline revocation | Product/security owner | 14 | Current scoped grant model and denial/recovery tests |
-| Q24 | Organization vs private farmer ownership/sharing, procurement and forecasts | Product/domain/security owner | 15 | Consent scope and ledger/forecast semantics approved |
+| Q24 | Organization vs private farmer ownership/sharing, procurement and forecasts | Product/domain/security owner | 15 | Approved D-P15-002: scoped consent, institutional bookkeeping and farmer-declared estimates; later custody/payment execution remain phased |
 | Q25 | Order reserve/expiry, delivery, buyer verification, weight/grade disputes | Commerce/product owner | 16 | State machine, stock reservation and bilateral access contract |
 | Q26 | Payment provider, custody/legal role, KYC responsibility, fees/refunds/settlement/region | Product/legal/accounting owner | 17 | Current official/qualified review and sandbox evidence before activation |
 | Q27 | Wallet chart/counteraccounts, pending/available/settled balances and reconciliation | Accounting owner | 17 | Balanced journal/state machine proposal reviewed |
@@ -766,3 +766,27 @@ APPROVED, owner 2026-11-21 selected "Approve 7-day drafts (Recommended)": seven-
 ## D-P14-007 - Local software verification checkpoint
 
 Engineering record, 2026-11-22: T001-T007 and both acceptance criteria pass local software verification under D-P14-002 through D-P14-006. Verdict PASS WITH CONDITIONS - LOCAL VERIFICATION; [closeout](reports/phase-14-closeout-2026-11-22.md) records commands, migrations, security/recovery evidence and P14-C1 through C4. This records observed implementation, not a new owner policy approval or acceptance. Git publication is authorized by D-P14-003. Hosted SQL/deployment and Phase 15 are not authorized by this checkpoint.
+
+## D-P14-008 - Phase 14 conditional closeout accepted
+
+ACCEPTED, owner 2026-11-23: "close 14 and implement phase 15", following the final implementation's successful hosted CI and request for acceptance. Phase 14 is CLOSED, 7/7 software tasks, PASS WITH CONDITIONS - LOCAL AND HOSTED CI VERIFICATION. Quality run 44995078487 passed on `73dddd04a26709dafe42ab4b67254e67b9085a78`; P14-C1 is resolved. P14-C2 through C4 carry forward, including hosted officer provisioning/application/storage acceptance, actual phones/field recovery and inherited release conditions. [Transition](reports/phase-14-15-transition-2026-11-23.md).
+
+## D-P15-001 - Phase 15 implementation authorization
+
+AUTHORIZED, owner 2026-11-23: "close 14 and implement phase 15". Implement Cooperative and Agribusiness Platform T001-T007 in order under the approved Phase 15 specification. Q24's organization ownership/sharing, procurement and forecast policies remain decisions before dependent implementation; authorization to work does not invent those decisions. Preserve personal farmer ownership, explicit current consent, exact quantities/money and append-only history. Phase 15 payment records are bookkeeping only; payment execution and full custody remain Phases 17 and 21. No hosted database/policy application, deployment, paid provider, Phase 16 start or new-phase Git publication is inferred. [Plan and pending decisions](reports/phase-14-15-transition-2026-11-23.md).
+
+## D-P15-002 - Q24 scoped consent, bookkeeping and declared forecasts
+
+APPROVED, owner replied "approved" to all three proposals during the Phase 15 continuation (2026-11-24 implementation session, Africa/Nairobi). Managers invite existing users and users accept membership. A farm owner separately grants/revokes named farm sharing for registry, optional location and production summaries; private finances stay private. Buyers see explicitly published organization produce summaries only. Agent farm visits/assistance retain Phase 14 named assignments.
+
+Accepted produce enters the organization's own append-only stock ledger, retaining farm/farmer/optional harvest origin references without silently deducting farmer stock. Quantities, prices and currency are confirmed together. Payments are bookkeeping only, never wallet/provider execution. Corrections are linked reversals, with nonnegative stock and no overpayment. Forecasts are farmer-entered quantities, units and harvest windows, visibly labeled estimates, aggregated only for matching product/unit/window. Mapping uses explicitly shared optional coordinates without AI or paid maps.
+
+Implementation choices within this policy: an authenticated user explicitly creates an organization and its first manager; institutional roles are separate from personal FARMER/AGENT/ADMIN memberships. Managers administer invitations and institutional ledgers; farmers see their own shares, forecasts and procurement; organization agents see consented registry/forecast summaries; buyers see only the publication projection. The final active manager cannot be revoked. Reads and writes recheck current access; withdrawn membership revokes associated sharing. Organization-owned historical procurement/payment records remain as audit history after sharing withdrawal. Money/quantity precision reuses the approved four/six-place rules, with one half-up price multiplication. Organization mutations require online confirmation; interrupted retries retain the same request ID, with no unapproved organization outbox added.
+
+## D-P15-003 - Local software verification checkpoint
+
+Engineering record, 2026-11-24: T001-T007 and both acceptance criteria pass local verification in D-P15-002's approved scoped-consent, declared-estimate, institutional-bookkeeping and origin-reference scope. Verdict **PASS WITH CONDITIONS - LOCAL VERIFICATION**. 1496 unit/component, 481 integration, 21 non-UTC cooperative, 92 anonymous and 274 signed-in desktop/mobile checks pass, as do both builds, exact schema drift and actual dump/restore. The [closeout](reports/phase-15-closeout-2026-11-24.md) records corrected failures, evidence and P15-C1 through C4. This is an engineering result, not owner acceptance, hosted rollout, Git publication, production readiness or Phase 16 authorization.
+
+## D-P15-004 - Commit and push authorized
+
+AUTHORIZED, owner 2026-11-24: "commit and push". Commit the verified Phase 15 implementation, tests, additive migration/provider artifacts and evidence, including the preserved Phase 14 acceptance/CI documentation, and push to `origin/main`. This supersedes the earlier Git-publication restriction for this work. Owner phase acceptance, hosted migration/policy application, production deployment and Phase 16 remain separate; no hosted CI success is inferred from publication.

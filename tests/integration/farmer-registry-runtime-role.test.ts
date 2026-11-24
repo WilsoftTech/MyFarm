@@ -70,7 +70,12 @@ await expect(serviceFor("b").farm(farmA)).rejects.toMatchObject({ code: "FORBIDD
 it("cannot join, escalate or revoke memberships", async () => {
 await expect(runtime.membership.create({ data: { userId: users.b, organizationId: tenantA, role: "FARMER" } })).rejects.toThrow(denied);
 await expect(runtime.membership.create({ data: { userId: users.b, organizationId: tenantA, role: "ADMIN" } })).rejects.toThrow(denied);
-await expect(runtime.organization.create({ data: { name: "Co-op", kind: "ORGANIZATION" } })).rejects.toThrow(denied);
+// Phase 15 explicitly permits organization creation, but never grants personal farm roles.
+const cooperative = await runtime.organization.create({ data: { name: "Co-op", kind: "ORGANIZATION" } });
+try {
+await expect(runtime.membership.create({ data: { userId: users.b, organizationId: cooperative.id, role: "ADMIN" } })).rejects.toThrow(denied);
+expect(await owner.membership.count({ where: { organizationId: cooperative.id } })).toBe(0);
+} finally { await owner.organization.delete({ where: { id: cooperative.id } }); }
 await expect(runtime.membership.updateMany({ where: { userId: users.a }, data: { status: "REVOKED" } })).rejects.toThrow(denied);
 expect(await owner.membership.count({ where: { organizationId: tenantA } })).toBe(1);
 });

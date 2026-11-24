@@ -1,13 +1,13 @@
 # System architecture
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED - Phase 12 task-relevant implementation, security/offline boundaries and evidence; historical sections preserved.
-- Implementation status: REFERENCE ONLY - architecture record; Phase 12 test/text implementation verified locally below, with release conditions.
-- Last reviewed: 2026-11-20 (Africa/Nairobi), Phase 12 task-relevant implementation review.
-- Related phase/task IDs: MYF-P12-T003 through T010; D-P12-001 through D-P12-003; historical task references retained in the body.
-- Verified completed work: Phase 12 approved test-adapter/text-fallback software and relevant exact-confirmation boundaries verified locally; no real speech or hosted claim.
-- Remaining work/blockers: P12-C1 through C6 and inherited release conditions; real speech/language accuracy, hosted work and owner acceptance remain.
-- Evidence/report links: [Phase 12 closeout](../reports/phase-12-closeout-2026-11-20.md); historical reports remain linked in their dated sections.
+- Documentation review: REVIEWED - affected Phase 15 scope, ownership, current access, ledger and connectivity behavior; historical evidence retained below.
+- Implementation status: Phase 15 COMPLETED - 7/7 software tasks locally verified; conditional phase acceptance pending.
+- Last reviewed: 2026-11-24 (Africa/Nairobi).
+- Related phase/task IDs: MYF-P15-T001 through T007; D-P15-001 and D-P15-002; earlier references retained in dated sections.
+- Verified completed work: Phase 15 acceptance, cumulative local quality/browser/integration, zero drift and actual recovery checks pass; see closeout for counts and limits.
+- Remaining work/blockers: P15-C1 through C4; owner acceptance, hosted CI/rollout and inherited release conditions remain separate.
+- Evidence/report links: [Phase 15 closeout](../reports/phase-15-closeout-2026-11-24.md).
 <!-- MYFARM-STATUS-END -->
 
 Baseline required by source/request: Next.js App Router/React/TypeScript PWA, server application services/domain/repositories, Prisma and PostgreSQL/Supabase, Vercel, private object storage, Dexie/IndexedDB and custom sync. Proposed deployment is one modular application, not microservices.
@@ -71,3 +71,8 @@ Weather intelligence starts with pure validated synthetic forecasts and context,
 ## Phase 13 staged weather implementation - 2026-11-21
 
 Six ephemeral synthetic forecast capabilities reuse current authorized farm/activity/crop services and approximate district context, never GPS or inferred stage. The weather page does not cache private responses or queue weather changes offline. A separately reviewed exact one-off spraying date change is server-validated, versioned and atomically audited, with current access checks after locks and DB-clock expiry. Dates and a payload digest remain in the existing immutable audit receipt; raw stage/forecast does not. Successful retries recover the same receipt; changed replays conflict. The additive manifest-listed weather runtime policy/trigger permits only the guarded scheduled date move and remains unapplied to hosted. Existing offline activity commands still use their original versions, so a stale version cannot silently overwrite the moved task. No new application table, external provider, paid service or live agronomic rule is introduced. [Closeout](../reports/phase-13-closeout-2026-11-21.md).
+
+
+## Phase 15 organization implementation - 2026-11-24
+
+The cooperatives module follows UI -> application service -> deterministic domain -> scoped Prisma repository. Organization pages/API use existing current-session authorization, private responses, SAVE limits and shared UI. Institutional role membership is distinct from private farm membership; no new provider or dependency is introduced. [Implementation, verification and release limits](../reports/phase-15-closeout-2026-11-24.md).

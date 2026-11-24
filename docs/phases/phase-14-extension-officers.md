@@ -2,15 +2,17 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - Phase 14 final implementation, approved decisions, acceptance and local evidence.
-- Implementation status: COMPLETED - 7/7 software tasks locally verified; phase acceptance pending.
-- Last reviewed: 2026-11-22 (Africa/Nairobi).
-- Related phase/task IDs: MYF-P14-T001 through T007; D-P14-001 through D-P14-006.
-- Verified completed work: Phase 14 T001-T007 software tasks locally verified (7/7); PASS WITH CONDITIONS - LOCAL VERIFICATION. Owner acceptance and hosted rollout remain pending.
-- Remaining work/blockers: P14-C1 through C4; no Phase 15 authorization, hosted SQL or deployment.
+- Implementation status: COMPLETED - 7/7 software tasks verified locally and in hosted CI; owner-accepted CLOSED.
+- Last reviewed: 2026-11-23 (Africa/Nairobi).
+- Related phase/task IDs: MYF-P14-T001 through T007; D-P14-001 through D-P14-008.
+- Verified completed work: Phase 14 T001-T007 software tasks verified locally and in hosted CI (7/7); PASS WITH CONDITIONS. Owner accepted closure on 2026-11-23; hosted rollout remains pending.
+- Remaining work/blockers: P14-C2 through C4; Phase 15 authorized under D-P15-001; no hosted SQL or deployment.
 - Evidence/report links: [Phase 14 closeout](../reports/phase-14-closeout-2026-11-22.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **SOFTWARE COMPLETE - 7/7 tasks locally verified**, 2026-11-22; **PASS WITH CONDITIONS - LOCAL VERIFICATION**. Owner phase acceptance and hosted rollout remain pending. [Closeout](../reports/phase-14-closeout-2026-11-22.md). The proposal sections below are historical design; the closeout records the implemented subset and constraints.
+Status: **CLOSED - 7/7 tasks verified locally and in hosted CI**, owner-accepted 2026-11-23; **PASS WITH CONDITIONS - LOCAL AND HOSTED CI VERIFICATION**. Hosted rollout and P14-C2 through C4 remain pending. [Closeout](../reports/phase-14-closeout-2026-11-22.md). The proposal sections below are historical design; the closeout records the implemented subset and constraints.
+
+Owner-accepted closure, 2026-11-23: **CLOSED - PASS WITH CONDITIONS - LOCAL AND HOSTED CI VERIFICATION** under D-P14-008. P14-C1 is resolved; C2-C4 persist. [Transition](../reports/phase-14-15-transition-2026-11-23.md). Earlier pending-acceptance wording below is historical.
 
 ## A. Phase Overview
 
@@ -185,4 +187,4 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 - [x] Every K criterion verified locally.
 - [x] Security/integrity audit, remediation and local retest complete.
 - [x] Applicable local quality/E2E/integration/migration evidence recorded.
-- [ ] Owner accepts L gate/conditional closeout; local evidence and status updated.
+- [x] Owner accepts L gate/conditional closeout under D-P14-008; local and hosted CI evidence recorded.

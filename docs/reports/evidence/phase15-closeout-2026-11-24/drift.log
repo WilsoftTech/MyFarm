@@ -1,0 +1,9 @@
+node : Loaded Prisma config from prisma.config.ts.
+At line:2 char:138
++ ... DIRECT_URL; node node_modules/prisma/build/index.js migrate diff --fr ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Loaded Prisma c...isma.config.ts.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+
+No difference detected.

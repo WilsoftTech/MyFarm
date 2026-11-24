@@ -1,0 +1,217 @@
+
+> myfarm@0.1.0 build
+> prisma generate && next build
+
+npm.cmd : Loaded Prisma config from prisma.config.ts.
+At line:2 char:125
++ ... hable-key'; npm.cmd run build *> .cache/phase15/fixture-build-final.l ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Loaded Prisma c...isma.config.ts.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+
+Prisma schema loaded from prisma\schema.prisma.
+
+✔ Generated Prisma Client (7.10.0) to .\src\generated\prisma in 826ms
+
+▲ Next.js 16.4.6 (Turbopack)
+- Environments: .env.local
+✓ Running next.config.ts took 32ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 5.8s
+  Running TypeScript ...
+  Finished TypeScript in 8.7s ...
+  Collecting page data using 5 workers ...
+  Generating static pages using 5 workers (0/12) ...
+  Generating static pages using 5 workers (3/12)
+  Generating static pages using 5 workers (6/12)
+  Generating static pages using 5 workers (9/12)
+✓ Generating static pages using 5 workers (12/12) in 409ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /admin
+├ ƒ /admin/pilot
+├ ƒ /admin/pilot/[cohortId]
+├ ƒ /admin/pilot/[cohortId]/evidence
+├ ƒ /agent
+├ ƒ /agent/registration
+├ ƒ /agent/work
+├ ƒ /api/health
+├ ƒ /api/v1/agent/dashboard
+├ ƒ /api/v1/agent/registrations
+├ ƒ /api/v1/agent/registrations/[draftId]
+├ ƒ /api/v1/agent/registrations/[draftId]/accept
+├ ƒ /api/v1/agent/sync
+├ ƒ /api/v1/cooperatives
+├ ƒ /api/v1/cooperatives/[organizationId]
+├ ƒ /api/v1/cooperatives/[organizationId]/operations
+├ ƒ /api/v1/cooperatives/[organizationId]/relationships
+├ ƒ /api/v1/farmer
+├ ƒ /api/v1/farms
+├ ƒ /api/v1/farms/[farmId]
+├ ƒ /api/v1/farms/[farmId]/accounting/categories
+├ ƒ /api/v1/farms/[farmId]/accounting/expenses
+├ ƒ /api/v1/farms/[farmId]/accounting/gross-margin
+├ ƒ /api/v1/farms/[farmId]/accounting/income
+├ ƒ /api/v1/farms/[farmId]/accounting/payment-methods
+├ ƒ /api/v1/farms/[farmId]/accounting/payments
+├ ƒ /api/v1/farms/[farmId]/accounting/payments/[paymentId]
+├ ƒ /api/v1/farms/[farmId]/accounting/purchases
+├ ƒ /api/v1/farms/[farmId]/accounting/records
+├ ƒ /api/v1/farms/[farmId]/accounting/records/[recordId]
+├ ƒ /api/v1/farms/[farmId]/accounting/reversals
+├ ƒ /api/v1/farms/[farmId]/accounting/sales
+├ ƒ /api/v1/farms/[farmId]/accounting/summary
+├ ƒ /api/v1/farms/[farmId]/accounting/summary/export
+├ ƒ /api/v1/farms/[farmId]/activities
+├ ƒ /api/v1/farms/[farmId]/activities/[activityId]
+├ ƒ /api/v1/farms/[farmId]/activities/[activityId]/cancel
+├ ƒ /api/v1/farms/[farmId]/activities/[activityId]/complete
+├ ƒ /api/v1/farms/[farmId]/activities/capabilities
+├ ƒ /api/v1/farms/[farmId]/activity-series
+├ ƒ /api/v1/farms/[farmId]/activity-series/[seriesId]
+├ ƒ /api/v1/farms/[farmId]/activity-series/[seriesId]/change
+├ ƒ /api/v1/farms/[farmId]/activity-series/[seriesId]/stop
+├ ƒ /api/v1/farms/[farmId]/activity-series/expand
+├ ƒ /api/v1/farms/[farmId]/animal-types
+├ ƒ /api/v1/farms/[farmId]/assistant/questions
+├ ƒ /api/v1/farms/[farmId]/assistant/questions/[questionId]
+├ ƒ /api/v1/farms/[farmId]/crop-cycles
+├ ƒ /api/v1/farms/[farmId]/crop-cycles/[cycleId]
+├ ƒ /api/v1/farms/[farmId]/crop-cycles/[cycleId]/close
+├ ƒ /api/v1/farms/[farmId]/crops
+├ ƒ /api/v1/farms/[farmId]/enterprises
+├ ƒ /api/v1/farms/[farmId]/enterprises/[enterpriseId]
+├ ƒ /api/v1/farms/[farmId]/export
+├ ƒ /api/v1/farms/[farmId]/harvests
+├ ƒ /api/v1/farms/[farmId]/harvests/[harvestId]
+├ ƒ /api/v1/farms/[farmId]/insights
+├ ƒ /api/v1/farms/[farmId]/insights/[insightId]/acknowledge
+├ ƒ /api/v1/farms/[farmId]/inventory-items
+├ ƒ /api/v1/farms/[farmId]/inventory-items/[itemId]/history
+├ ƒ /api/v1/farms/[farmId]/inventory-items/[itemId]/reconstruction
+├ ƒ /api/v1/farms/[farmId]/officer-photos
+├ ƒ /api/v1/farms/[farmId]/officer-photos/[photoId]/view
+├ ƒ /api/v1/farms/[farmId]/officer-work
+├ ƒ /api/v1/farms/[farmId]/officer-work/[kind]/[recordId]
+├ ƒ /api/v1/farms/[farmId]/officers
+├ ƒ /api/v1/farms/[farmId]/officers/revoke
+├ ƒ /api/v1/farms/[farmId]/photos
+├ ƒ /api/v1/farms/[farmId]/photos/[photoId]/view
+├ ƒ /api/v1/farms/[farmId]/plots
+├ ƒ /api/v1/farms/[farmId]/poultry-batches
+├ ƒ /api/v1/farms/[farmId]/poultry-batches/[batchId]
+├ ƒ /api/v1/farms/[farmId]/poultry-batches/[batchId]/feed-item
+├ ƒ /api/v1/farms/[farmId]/poultry-production
+├ ƒ /api/v1/farms/[farmId]/poultry-production/[batchId]
+├ ƒ /api/v1/farms/[farmId]/poultry-production/[batchId]/events
+├ ƒ /api/v1/farms/[farmId]/profitability
+├ ƒ /api/v1/farms/[farmId]/profitability/metrics
+├ ƒ /api/v1/farms/[farmId]/profitability/trends
+├ ƒ /api/v1/farms/[farmId]/seasons
+├ ƒ /api/v1/farms/[farmId]/seasons/[seasonId]
+├ ƒ /api/v1/farms/[farmId]/seasons/[seasonId]/close
+├ ƒ /api/v1/farms/[farmId]/stock-operations
+├ ƒ /api/v1/farms/[farmId]/stock-reversals
+├ ƒ /api/v1/farms/[farmId]/storage-locations
+├ ƒ /api/v1/farms/[farmId]/voice/capabilities
+├ ƒ /api/v1/farms/[farmId]/voice/drafts
+├ ƒ /api/v1/farms/[farmId]/voice/drafts/[draftId]
+├ ƒ /api/v1/farms/[farmId]/voice/drafts/[draftId]/confirm
+├ ƒ /api/v1/farms/[farmId]/voice/drafts/[draftId]/status
+├ ƒ /api/v1/farms/[farmId]/voice/intent
+├ ƒ /api/v1/farms/[farmId]/weather/check
+├ ƒ /api/v1/farms/[farmId]/weather/confirm
+├ ƒ /api/v1/farms/[farmId]/weather/review
+├ ƒ /api/v1/health
+├ ƒ /api/v1/pilot/participations
+├ ƒ /api/v1/pilot/participations/[participationId]/withdraw
+├ ƒ /api/v1/scopes/[scopeId]
+├ ƒ /api/v1/scopes/[scopeId]/files/[objectId]
+├ ƒ /api/v1/scopes/[scopeId]/pilot/cohorts
+├ ƒ /api/v1/scopes/[scopeId]/pilot/cohorts/[cohortId]
+├ ƒ /api/v1/scopes/[scopeId]/pilot/cohorts/[cohortId]/evidence
+├ ƒ /api/v1/scopes/[scopeId]/pilot/cohorts/[cohortId]/findings
+├ ƒ /api/v1/scopes/[scopeId]/pilot/cohorts/[cohortId]/findings/[findingId]/close
+├ ƒ /api/v1/scopes/[scopeId]/pilot/cohorts/[cohortId]/incidents
+├ ƒ /api/v1/scopes/[scopeId]/pilot/cohorts/[cohortId]/incidents/[incidentId]/resolve
+├ ƒ /api/v1/scopes/[scopeId]/pilot/cohorts/[cohortId]/observations
+├ ƒ /api/v1/scopes/[scopeId]/pilot/cohorts/[cohortId]/participations/[participationId]/paper-consent
+├ ƒ /api/v1/scopes/[scopeId]/pilot/cohorts/[cohortId]/prompts
+├ ƒ /api/v1/scopes/[scopeId]/pilot/cohorts/[cohortId]/reviews
+├ ƒ /api/v1/session
+├ ƒ /api/v1/sync/account
+├ ƒ /api/v1/sync/pull
+├ ƒ /api/v1/sync/push
+├ ƒ /cooperatives
+├ ƒ /cooperatives/[organizationId]
+├ ƒ /farmer
+├ ƒ /farmer/edit
+├ ƒ /farms
+├ ƒ /farms/[farmId]
+├ ƒ /farms/[farmId]/accounting
+├ ƒ /farms/[farmId]/accounting/gross-margin
+├ ƒ /farms/[farmId]/accounting/how-the-farm-is-doing
+├ ƒ /farms/[farmId]/accounting/new/[kind]
+├ ƒ /farms/[farmId]/accounting/payments/[paymentId]
+├ ƒ /farms/[farmId]/accounting/records/[recordId]
+├ ƒ /farms/[farmId]/accounting/records/[recordId]/payments/new
+├ ƒ /farms/[farmId]/accounting/summary
+├ ƒ /farms/[farmId]/activities
+├ ƒ /farms/[farmId]/activities/[activityId]
+├ ƒ /farms/[farmId]/activities/calendar
+├ ƒ /farms/[farmId]/activities/new
+├ ƒ /farms/[farmId]/activities/series
+├ ƒ /farms/[farmId]/activities/series/[seriesId]
+├ ƒ /farms/[farmId]/activities/series/new
+├ ƒ /farms/[farmId]/assistant
+├ ƒ /farms/[farmId]/crop-cycles
+├ ƒ /farms/[farmId]/crop-cycles/[cycleId]
+├ ƒ /farms/[farmId]/crop-cycles/new
+├ ƒ /farms/[farmId]/enterprises
+├ ƒ /farms/[farmId]/enterprises/[enterpriseId]
+├ ƒ /farms/[farmId]/enterprises/new
+├ ƒ /farms/[farmId]/export
+├ ƒ /farms/[farmId]/harvests
+├ ƒ /farms/[farmId]/harvests/[harvestId]
+├ ƒ /farms/[farmId]/harvests/new
+├ ƒ /farms/[farmId]/insights
+├ ƒ /farms/[farmId]/inventory
+├ ƒ /farms/[farmId]/inventory/items/[itemId]
+├ ƒ /farms/[farmId]/inventory/items/[itemId]/history
+├ ƒ /farms/[farmId]/inventory/items/new
+├ ƒ /farms/[farmId]/inventory/new
+├ ƒ /farms/[farmId]/inventory/operations
+├ ƒ /farms/[farmId]/inventory/reverse/[targetType]/[targetId]
+├ ƒ /farms/[farmId]/officers
+├ ƒ /farms/[farmId]/poultry-batches
+├ ƒ /farms/[farmId]/poultry-batches/[batchId]
+├ ƒ /farms/[farmId]/poultry-batches/new
+├ ƒ /farms/[farmId]/poultry-production/[batchId]
+├ ƒ /farms/[farmId]/poultry-production/[batchId]/events
+├ ƒ /farms/[farmId]/poultry-production/new
+├ ƒ /farms/[farmId]/seasons
+├ ƒ /farms/[farmId]/seasons/[seasonId]
+├ ƒ /farms/[farmId]/seasons/new
+├ ƒ /farms/[farmId]/storage-locations
+├ ƒ /farms/[farmId]/voice
+├ ƒ /farms/[farmId]/weather
+├ ƒ /farms/new
+├ ○ /forbidden
+├ ○ /icon.svg
+├ ○ /manifest.webmanifest
+├ ○ /offline
+├ ƒ /pilot
+├ ƒ /registration-review/[draftId]
+├ ƒ /sign-in
+└ ƒ /workspace
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand

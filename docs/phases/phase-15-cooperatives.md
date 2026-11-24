@@ -1,16 +1,16 @@
 # Phase 15 Cooperative and Agribusiness Platform
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — T013 metadata/status scope and evidence-link relevance; historical and future-phase facts unchanged.
-- Implementation status: NOT STARTED — 0% (0/7 verified tasks).
-- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
-- Related phase/task IDs: Phase 15; MYF-P15-T001 through MYF-P15-T007; review session Phase01; Phase02 review session (MYF-P02-T001–T013).
-- Verified completed work: No tasks implemented or verified in this phase; status/provider applicability reviewed only.
-- Remaining work/blockers: All 7 tasks and their acceptance/exit gates pending; Phase01 completion and future phase authorization required.
-- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
+- Documentation review: REVIEWED - approved Q24 scope, source P0745-P0769 and observed implementation/evidence.
+- Implementation status: COMPLETED - 7/7 software tasks locally verified; conditional phase acceptance pending.
+- Last reviewed: 2026-11-24 (Africa/Nairobi).
+- Related phase/task IDs: MYF-P15-T001 through T007; D-P15-001 through D-P15-003.
+- Verified completed work: Consented institutional roles, shared registry/location, declared estimates, procurement/stock/payment ledgers, origin references, reports and scoped UI acceptance.
+- Remaining work/blockers: P15-C1 through C4; owner acceptance, hosted CI/rollout and inherited release conditions remain separate.
+- Evidence/report links: [Phase 15 closeout](../reports/phase-15-closeout-2026-11-24.md).
 <!-- MYFARM-STATUS-END -->
 
-Status: **NOT STARTED**. Date: 2026-10-08. This is a specification, not implementation approval. Related: [architecture](../architecture/system-architecture.md), [security](../architecture/security-architecture.md), [testing](../architecture/testing-strategy.md), [decisions](../DECISION-LOG.md), [traceability](../REQUIREMENTS-TRACEABILITY.md).
+Status: **SOFTWARE COMPLETE - 7/7 tasks locally verified**, 2026-11-24; **PASS WITH CONDITIONS - LOCAL VERIFICATION**. Owner phase acceptance and hosted rollout remain pending. Q24 is resolved for this scope under D-P15-002. [Implementation and limits](../reports/phase-15-closeout-2026-11-24.md). The proposal sections below are historical design; the closeout records the implemented subset. Farmer-declared forecasts, optional shared coordinates, institutional bookkeeping and origin references are delivered; payment execution and full custody remain later phases.
 
 ## A. Phase Overview
 
@@ -79,7 +79,7 @@ Loading announced; recoverable errors retain input and safe retry. Empty states 
 
 ## H. Implementation Tasks
 
-Execute these small stages sequentially after authorization. Field/model/provider policies remain proposals until affected decisions are resolved. Each capability separates contract/domain work, authorized service/evidence work, and user-visible acceptance. All task IDs remain pending.
+Execute these small stages sequentially after authorization. Field/model/provider policies remain proposals until affected decisions are resolved. Each capability separates contract/domain work, authorized service/evidence work, and user-visible acceptance. T001-T007 are locally verified; owner acceptance and hosted rollout remain pending.
 
 ### MYF-P15-T001 — Specify and implement domain contract for MYF-P15-R001
 
@@ -175,14 +175,14 @@ Reviewed phase module/mobile UI, approved/rehearsed migrations where needed, API
 
 ## O. Completion Checklist
 
-- [ ] MYF-P15-T001 complete with evidence.
-- [ ] MYF-P15-T002 complete with evidence.
-- [ ] MYF-P15-T003 complete with evidence.
-- [ ] MYF-P15-T004 complete with evidence.
-- [ ] MYF-P15-T005 complete with evidence.
-- [ ] MYF-P15-T006 complete with evidence.
-- [ ] MYF-P15-T007 complete with evidence.
-- [ ] Every K criterion verified.
-- [ ] Security/integrity audit, remediation and retest complete.
-- [ ] Applicable quality/E2E/integration/migration evidence recorded.
-- [ ] L gate approved; closeout/status updated from evidence.
+- [x] MYF-P15-T001 complete with [local evidence](../reports/phase-15-closeout-2026-11-24.md).
+- [x] MYF-P15-T002 complete with [local evidence](../reports/phase-15-closeout-2026-11-24.md).
+- [x] MYF-P15-T003 complete with [local evidence](../reports/phase-15-closeout-2026-11-24.md).
+- [x] MYF-P15-T004 complete with [local evidence](../reports/phase-15-closeout-2026-11-24.md).
+- [x] MYF-P15-T005 complete with [local evidence](../reports/phase-15-closeout-2026-11-24.md).
+- [x] MYF-P15-T006 complete with [local evidence](../reports/phase-15-closeout-2026-11-24.md).
+- [x] MYF-P15-T007 complete with [local audit evidence](../reports/phase-15-closeout-2026-11-24.md).
+- [x] Every K criterion verified locally.
+- [x] Security/integrity audit, remediation and local retest complete.
+- [x] Applicable local quality/E2E/integration/migration/recovery evidence recorded.
+- [ ] Owner accepts L gate/conditional closeout; local evidence and status are updated.

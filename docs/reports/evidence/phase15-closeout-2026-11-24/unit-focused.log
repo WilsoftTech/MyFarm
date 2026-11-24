@@ -1,0 +1,8 @@
+
+ RUN  v5.0.3 D:/Myfarm
+
+
+ Test Files  2 passed (2)
+      Tests  27 passed (27)
+   Start at  00:54:20
+   Duration  6.08s (tests 39%, environment 33%, import 13%, setup 9%, transform 6%)

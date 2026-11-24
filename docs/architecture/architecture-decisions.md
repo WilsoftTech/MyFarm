@@ -1,13 +1,13 @@
 # Architecture decisions
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — T013 metadata/status scope and evidence-link relevance; historical and future-phase facts unchanged.
-- Implementation status: REFERENCE ONLY — N/A (navigation/protocol/template/decision/evidence record; no directly implementable scope).
-- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
-- Related phase/task IDs: Phase01 review session; MYF-P01-T001 through MYF-P01-T013; Phase00 owner acceptance where referenced; Phase02 review session (MYF-P02-T001–T013).
-- Verified completed work: Reference content/status/evidence links reviewed; document existence or review does not complete implementation tasks.
-- Remaining work/blockers: Maintain alignment after Phase01 live verification; historical results stay historical and source body remains immutable.
-- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
+- Documentation review: REVIEWED - affected Phase 15 scope, ownership, current access, ledger and connectivity behavior; historical evidence retained below.
+- Implementation status: Phase 15 COMPLETED - 7/7 software tasks locally verified; conditional phase acceptance pending.
+- Last reviewed: 2026-11-24 (Africa/Nairobi).
+- Related phase/task IDs: MYF-P15-T001 through T007; D-P15-001 and D-P15-002; earlier references retained in dated sections.
+- Verified completed work: Phase 15 acceptance, cumulative local quality/browser/integration, zero drift and actual recovery checks pass; see closeout for counts and limits.
+- Remaining work/blockers: P15-C1 through C4; owner acceptance, hosted CI/rollout and inherited release conditions remain separate.
+- Evidence/report links: [Phase 15 closeout](../reports/phase-15-closeout-2026-11-24.md).
 <!-- MYFARM-STATUS-END -->
 
 [Decision log](../DECISION-LOG.md) is the canonical record of status/owner/blockers. This file supplies ADR reasoning. Baseline selected by request is different from approval of a proposed schema or provider.
@@ -15,7 +15,7 @@
 | ADR | Decision / status | Reason and alternatives | Consequence / validation |
 |---|---|---|---|
 | ADR-01 | Modular Next.js app — request baseline | Low solo-developer overhead; microservices deferred | Import boundaries and isolated domain tests |
-| ADR-02 | Personal/organization isolation workspace — proposed | Shared policy abstraction; alternative farmer-only owner keys complicate later institutions | Q05/Q24; composite scope and consent tests before migrations |
+| ADR-02 | Personal/organization isolation workspace — implemented in the approved Phase 2/15 scope | Personal records remain farmer-owned; institutional roles and consent are separate under D-P15-002 | Q24 resolved for this scope; composite parent/consent/IDOR tests and local migration/recovery evidence in Phase 15 closeout |
 | ADR-03 | Exact decimal money/typed units — proposed enforcement of required integrity | Avoid floats/unit ambiguity; precision remains Q09/Q12 | Golden round trip, currency/unit guards |
 | ADR-04 | Append stock ledger and source-linked corrections — required principle, schema proposed | Mutable balances lose auditability | Rebuild/concurrent negative-stock tests |
 | ADR-05 | Command receipt + custom push/pull sync — proposed contract | Retry-safe server authority; local-only DB not durable synchronization | Q16; replay/version/tombstone/eviction cases |

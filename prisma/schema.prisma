@@ -66,6 +66,13 @@ model User {
   authSubject String @unique @db.Uuid
   status AccountStatus @default(ACTIVE)
   createdAt DateTime @default(now()) @db.Timestamptz(6)
+  cooperativeMembers CooperativeMember[] @relation("CooperativeUser")
+  cooperativeInvites CooperativeMember[] @relation("CooperativeInviter")
+  cooperativeShares CooperativeShare[]
+  cooperativeForecasts CooperativeForecast[]
+  cooperativeLots CooperativeLot[]
+  cooperativeEntries CooperativeEntry[]
+  cooperativeReceipts CooperativeReceipt[]
   memberships Membership[]
   audits AuditEvent[]
   farmer Farmer?
@@ -113,6 +120,12 @@ model Organization {
   name String @db.VarChar(120)
   kind OrganizationKind
   createdAt DateTime @default(now()) @db.Timestamptz(6)
+  cooperativeMembers CooperativeMember[]
+  cooperativeShares CooperativeShare[]
+  cooperativeForecasts CooperativeForecast[]
+  cooperativeLots CooperativeLot[]
+  cooperativeEntries CooperativeEntry[]
+  cooperativeReceipts CooperativeReceipt[]
   memberships Membership[]
   audits AuditEvent[]
   farmer Farmer?
@@ -194,6 +207,7 @@ model Farm {
   stockOperations StockOperation[]
   stockAdjustments StockAdjustment[]
   officerAssignments OfficerAssignment[]
+  cooperativeShares CooperativeShare[]
   acceptedOfficerRegistration OfficerRegistrationDraft?
 }
 model Plot {
@@ -716,6 +730,7 @@ model Harvest {
   @@index([itemId, farmId, tenantId])
   @@index([createdBy])
   @@unique([id, itemId, storageLocationId, farmId, tenantId])
+  cooperativeLots CooperativeLot[]
 }
 model StockMovement {
   id String @id @default(uuid()) @db.Uuid
@@ -1414,4 +1429,133 @@ model VoiceExpenseDraft {
   record AccountingRecord? @relation(fields: [accountingRecordId, farmId, tenantId], references: [id, farmId, tenantId], onDelete: Restrict)
   @@unique([actorId, requestId])
   @@index([farmId, tenantId])
+}
+
+// Phase 15: institutional permissions never confer ownership of personal farms.
+model CooperativeMember {
+  id String @id @default(uuid()) @db.Uuid
+  organizationId String @db.Uuid
+  userId String @db.Uuid
+  invitedBy String @db.Uuid
+  role String @db.VarChar(16)
+  status String @db.VarChar(16)
+  version Int @default(1)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  user User @relation("CooperativeUser", fields: [userId], references: [id], onDelete: Restrict)
+  inviter User @relation("CooperativeInviter", fields: [invitedBy], references: [id], onDelete: Restrict)
+  @@unique([organizationId, userId])
+  @@index([userId, status, id])
+  @@index([organizationId, id])
+  @@index([invitedBy])
+}
+model CooperativeShare {
+  id String @id @default(uuid()) @db.Uuid
+  organizationId String @db.Uuid
+  farmId String @db.Uuid
+  tenantId String @db.Uuid
+  grantedBy String @db.Uuid
+  shareLocation Boolean
+  shareProduction Boolean
+  revokedAt DateTime? @db.Timestamptz(6)
+  version Int @default(1)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  farm Farm @relation(fields: [farmId, tenantId], references: [id, tenantId], onDelete: Restrict)
+  owner User @relation(fields: [grantedBy], references: [id], onDelete: Restrict)
+  forecasts CooperativeForecast[]
+  lots CooperativeLot[]
+  @@unique([id, organizationId])
+  @@index([organizationId, id])
+  @@index([farmId, tenantId])
+  @@index([grantedBy])
+}
+model CooperativeForecast {
+  id String @id @default(uuid()) @db.Uuid
+  organizationId String @db.Uuid
+  shareId String @db.Uuid
+  createdBy String @db.Uuid
+  product String @db.VarChar(120)
+  unit String @db.VarChar(8)
+  quantity Decimal @db.Decimal(18,6)
+  harvestFrom DateTime @db.Date
+  harvestTo DateTime @db.Date
+  cancelledAt DateTime? @db.Timestamptz(6)
+  version Int @default(1)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  share CooperativeShare @relation(fields: [shareId, organizationId], references: [id, organizationId], onDelete: Restrict)
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  @@index([organizationId, id])
+  @@index([shareId, organizationId])
+  @@index([createdBy])
+}
+model CooperativeLot {
+  id String @id @default(uuid()) @db.Uuid
+  organizationId String @db.Uuid
+  shareId String @db.Uuid
+  harvestId String? @db.Uuid
+  createdBy String @db.Uuid
+  product String @db.VarChar(120)
+  unit String @db.VarChar(8)
+  quantity Decimal @db.Decimal(18,6)
+  unitPrice Decimal @db.Decimal(20,4)
+  currency String @db.VarChar(3)
+  total Decimal @db.Decimal(20,4)
+  grade String @db.VarChar(80)
+  occurredOn DateTime @db.Date
+  published Boolean @default(false)
+  version Int @default(1)
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  share CooperativeShare @relation(fields: [shareId, organizationId], references: [id, organizationId], onDelete: Restrict)
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  harvest Harvest? @relation(fields: [harvestId], references: [id], onDelete: Restrict)
+  entries CooperativeEntry[]
+  @@unique([id, organizationId])
+  @@index([organizationId, id])
+  @@index([shareId, organizationId])
+  @@index([harvestId])
+  @@index([createdBy])
+}
+model CooperativeEntry {
+  id String @id @default(uuid()) @db.Uuid
+  organizationId String @db.Uuid
+  lotId String @db.Uuid
+  operationId String @db.Uuid
+  createdBy String @db.Uuid
+  kind String @db.VarChar(8)
+  location String @db.VarChar(120)
+  quantityDelta Decimal @db.Decimal(18,6)
+  amountDelta Decimal @db.Decimal(20,4)
+  occurredOn DateTime @db.Date
+  reason String @db.VarChar(500)
+  reversalOfId String? @unique @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  lot CooperativeLot @relation(fields: [lotId, organizationId], references: [id, organizationId], onDelete: Restrict)
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Restrict)
+  reversalOf CooperativeEntry? @relation("CooperativeReversal", fields: [reversalOfId, lotId, organizationId], references: [id, lotId, organizationId], onDelete: Restrict)
+  reversals CooperativeEntry[] @relation("CooperativeReversal")
+  @@unique([id, lotId, organizationId])
+  @@unique([id, organizationId])
+  @@index([organizationId, id])
+  @@index([operationId, organizationId])
+  @@index([lotId, organizationId])
+  @@index([createdBy])
+}
+model CooperativeReceipt {
+  id String @id @default(uuid()) @db.Uuid
+  organizationId String @db.Uuid
+  actorId String @db.Uuid
+  requestId String @db.Uuid
+  action String @db.VarChar(32)
+  requestHash String @db.VarChar(64)
+  targetId String @db.Uuid
+  targetVersion Int
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Restrict)
+  actor User @relation(fields: [actorId], references: [id], onDelete: Restrict)
+  @@unique([organizationId, requestId])
+  @@index([actorId])
 }

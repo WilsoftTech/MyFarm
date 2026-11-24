@@ -1,13 +1,13 @@
 # Offline synchronization architecture
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED - Phase 14 affected architecture and local evidence; historical sections retained.
-- Implementation status: REFERENCE ONLY - architecture record; Phase 14 locally verified with release conditions.
-- Last reviewed: 2026-11-22 (Africa/Nairobi).
-- Related phase/task IDs: MYF-P14-T001 through T007; earlier references retained in dated sections.
-- Verified completed work: Phase 14 local software acceptance, security, compatibility and recovery checks pass; see dated section.
-- Remaining work/blockers: P14-C1 through C4 and inherited release conditions; hosted rollout/owner acceptance pending.
-- Evidence/report links: [Phase 14 closeout](../reports/phase-14-closeout-2026-11-22.md); historical reports retained below.
+- Documentation review: REVIEWED - affected Phase 15 scope, ownership, current access, ledger and connectivity behavior; historical evidence retained below.
+- Implementation status: Phase 15 COMPLETED - 7/7 software tasks locally verified; conditional phase acceptance pending.
+- Last reviewed: 2026-11-24 (Africa/Nairobi).
+- Related phase/task IDs: MYF-P15-T001 through T007; D-P15-001 and D-P15-002; earlier references retained in dated sections.
+- Verified completed work: Phase 15 acceptance, cumulative local quality/browser/integration, zero drift and actual recovery checks pass; see closeout for counts and limits.
+- Remaining work/blockers: P15-C1 through C4; owner acceptance, hosted CI/rollout and inherited release conditions remain separate.
+- Evidence/report links: [Phase 15 closeout](../reports/phase-15-closeout-2026-11-24.md).
 <!-- MYFARM-STATUS-END -->
 
 Offline farmer experience is mandatory by MVP Phase 8. Source P0456–P0479 requires expense/income/harvest/activity/task/photo recording and cached farm/record viewing; clientMutationId, deviceId, createdAt, updatedAt, syncStatus, version; six source states. Foundation prepares command boundaries, but complete sync is Phase 7.
@@ -71,3 +71,8 @@ Six ephemeral synthetic forecast capabilities reuse current authorized farm/acti
 ## Phase 14 local implementation - 2026-11-22
 
 Named owner consent grants farm-specific officer permissions independently of FarmMember. Farmer-confirmed assisted registration commits exact reviewed records, assignment and audit receipts atomically. Current session/assignment/parent checks apply to visits, follow-ups, private namespaced media and sync. The existing account-partitioned outbox preserves denied work, with visible offline readiness and no IndexedDB version change. Six additive officer tables, column-limited guarded writes and composite parent constraints retain the shared runtime-role architecture; application queries enforce actor isolation. Local checks and recovery pass; hosted SQL/storage/application rollout and owner acceptance remain pending. [Scope, migrations, security evidence and limits](../reports/phase-14-closeout-2026-11-22.md).
+
+
+## Phase 15 organization implementation - 2026-11-24
+
+Institutional writes require online confirmation. Unreviewed offline inputs are explicitly unsaved. Exact reviewed commands are retained in actor/organization/form-partitioned tab sessionStorage before submission; storage failure prevents sending. A lost response locks editing until the same request recovers, and reload retains its request ID. Account changes remount the form and hide the prior actor review. No organization Dexie outbox, background replay or IndexedDB migration is added. Tab closure, storage eviction and device loss can lose recovery data; current revocation may refuse replay. Existing farmer/officer offline contracts remain unchanged. [Implementation, verification and release limits](../reports/phase-15-closeout-2026-11-24.md).

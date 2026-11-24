@@ -1,0 +1,50 @@
+node : [WebServer] (node:16692) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+At line:2 char:187
++ ... TABASE_URL; node node_modules/@playwright/test/cli.js test --config p ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([WebServer] (no... env being set.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:18864) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Running 10 tests using 1 worker
+
+(node:12064) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/10] [desktop] › tests\browser\cooperatives-ui.spec.ts:31:1 › member accepts, farmer shares/forecasts, manager procures/pays and buyer sees only publication; withdrawal preserves history
+[WebServer] {"event":"request_failed","requestId":"34cdf537-a8d2-4160-97a0-38ffd4879a47","code":"FORBIDDEN"}
+
+[2/10] [desktop] › tests\browser\cooperatives-ui.spec.ts:83:1 › anonymous/foreign access, same-origin writes and offline feedback are enforced
+[WebServer] {"event":"request_failed","requestId":"e3c20d70-b531-4d8d-8544-c83864fb4a50","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"31de53e8-b248-4882-8762-9425140a4b57","code":"FORBIDDEN"}
+
+[3/10] [desktop] › tests\browser\cooperatives-ui.spec.ts:94:1 › an accepted member without a farmer profile gets a setup path and no private farm access
+[WebServer] {"event":"request_failed","requestId":"70147ec2-c245-4bcf-ac0b-6e3904366cbe","code":"FORBIDDEN"}
+
+[4/10] [desktop] › tests\browser\offline-replay-ui.spec.ts:141:1 › D-P07-002 entries older than the support window warn clearly and still send once, and a full queue refuses new ones
+[5/10] [desktop] › tests\browser\offline-replay-ui.spec.ts:254:1 › an exclusive browser sender recovers a reload's unexpired lease and records the expense once
+(node:18252) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[6/10] [mobile] › tests\browser\cooperatives-ui.spec.ts:31:1 › member accepts, farmer shares/forecasts, manager procures/pays and buyer sees only publication; withdrawal preserves history
+[WebServer] {"event":"request_failed","requestId":"d98f3b1f-6923-4db7-84db-b95b7fa996f0","code":"FORBIDDEN"}
+
+[7/10] [mobile] › tests\browser\cooperatives-ui.spec.ts:83:1 › anonymous/foreign access, same-origin writes and offline feedback are enforced
+
+[WebServer] {"event":"request_failed","requestId":"3c360976-fc83-44a9-bd07-42aab543e986","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"bed240ea-d512-4eaf-9130-bc627d6f4e5d","code":"FORBIDDEN"}
+[8/10] [mobile] › tests\browser\cooperatives-ui.spec.ts:94:1 › an accepted member without a farmer profile gets a setup path and no private farm access
+[WebServer] {"event":"request_failed","requestId":"6b853075-1c2f-4045-b4ba-c23df48ac5d7","code":"FORBIDDEN"}
+
+[9/10] [mobile] › tests\browser\offline-replay-ui.spec.ts:141:1 › D-P07-002 entries older than the support window warn clearly and still send once, and a full queue refuses new ones
+[10/10] [mobile] › tests\browser\offline-replay-ui.spec.ts:254:1 › an exclusive browser sender recovers a reload's unexpired lease and records the expense once
+  10 passed (1.2m)

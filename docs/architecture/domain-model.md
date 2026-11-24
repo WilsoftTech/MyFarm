@@ -1,13 +1,13 @@
 # Domain model
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED - Phase 5 task-relevant contracts, implementation, status and evidence; historical sections preserved.
-- Implementation status: Phase 1-4 accepted with documented conditions; Phase 5 T001-T013 verified locally and in hosted CI; deployment conditions remain. No whole-architecture completion percentage claimed.
-- Last reviewed: 2026-11-03 (Africa/Nairobi), Phase 7 T013 audit.
-- Related phase/task IDs: Phase02 MYF-P02-T001–T013; later phases per roadmap.
-- Verified completed work: Farmer, FarmerProfile, Farm, Plot, FarmMember implemented; User/Organization reused; Address/Contact as columns; Document deferred (D-P02-003).
-- Remaining work/blockers: Phase 7 awaits owner acceptance; real-device measurement, hosted CI and the hosted photo schema remain, with inherited production conditions.
-- Evidence/report links: [Current Phase 5 audit](../reports/phase-05-closeout-2026-10-29.md); [document review](../reports/phase-05-document-review-2026-10-29.md). Historical task evidence remains linked below.
+- Documentation review: REVIEWED - affected Phase 15 scope, ownership, current access, ledger and connectivity behavior; historical evidence retained below.
+- Implementation status: Phase 15 COMPLETED - 7/7 software tasks locally verified; conditional phase acceptance pending.
+- Last reviewed: 2026-11-24 (Africa/Nairobi).
+- Related phase/task IDs: MYF-P15-T001 through T007; D-P15-001 and D-P15-002; earlier references retained in dated sections.
+- Verified completed work: Phase 15 acceptance, cumulative local quality/browser/integration, zero drift and actual recovery checks pass; see closeout for counts and limits.
+- Remaining work/blockers: P15-C1 through C4; owner acceptance, hosted CI/rollout and inherited release conditions remain separate.
+- Evidence/report links: [Phase 15 closeout](../reports/phase-15-closeout-2026-11-24.md).
 <!-- MYFARM-STATUS-END -->
 
 ## Phase 3 foundation subset — 2026-10-18
@@ -85,3 +85,8 @@ Final Phase 5 audit: T001-T013 and the hosted quality workflow pass at f999449 (
 Phase 6 implements the planned farm activity as `ProductionActivity`, with `ActivityRecurrence` generating its occurrences. Stored status is the lifecycle; today, upcoming and missed derive from the due date in Africa/Kampala. Workers are free text and attachments stay deferred (D-P06-004, D-P06-008). Final Phase 6 audit: [hosted run 41524090703](https://github.com/WilsoftTech/MyFarm/actions/runs/41524090703); [closeout](../reports/phase-06-closeout-2026-11-03.md).
 
 Phase 7 adds `RecordPhoto` under the D-P07-004 interim rule. Offline commands reuse existing server schemas; the outbox and cached copies live only in the browser. [Closeout](../reports/phase-07-closeout-2026-11-03.md).
+
+
+## Phase 15 organization implementation - 2026-11-24
+
+CooperativeMember is an invited/accepted institutional role, not farmer ownership. CooperativeShare records a farmer-controlled organization grant with optional location/production flags. CooperativeForecast is a farmer-declared estimate. CooperativeLot is one immutable procurement origin/quantity/price/currency record with separately mutable publication/version. CooperativeEntry appends stock/payment effects and linked reversals; CooperativeReceipt binds actor, organization, canonical command hash, request and original result. Payment records settle derived obligations without affecting private farmer finances or stock, and origin references do not claim full custody. [Implementation, verification and release limits](../reports/phase-15-closeout-2026-11-24.md).

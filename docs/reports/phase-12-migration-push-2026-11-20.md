@@ -1,5 +1,15 @@
 # Phase 12 migration and push follow-up
 
+<!-- MYFARM-STATUS-START -->
+- Documentation review: REVIEWED - Phase 15 heading/status inventory and linked hosted-migration limits; historical evidence is not reverified here.
+- Implementation status: REFERENCE ONLY - historical operations evidence; not a new hosted verification claim.
+- Last reviewed: 2026-11-24 (Africa/Nairobi), Phase 15 document inventory.
+- Related phase/task IDs: Historical Phase 12 migration/push; Phase 15 review.
+- Verified completed work: Historical authorized retry, restore, migration/policy and runtime evidence retained unchanged below.
+- Remaining work/blockers: Original hosted application/release limits remain; no Phase 15 hosted work is implied.
+- Evidence/report links: [Phase 15 review](phase-15-document-review-2026-11-24.md); [Phase 15 closeout](phase-15-closeout-2026-11-24.md).
+<!-- MYFARM-STATUS-END -->
+
 On 2026-11-20 (Africa/Nairobi), the owner instructed: "RUM MIGRATIONS. COMMIT AND PUSH". This authorizes applying the existing reviewed migrations and ordered provider policies to the configured development database, recording the result, and pushing the completed Phase 12 work to `origin/main`. It does not authorize a production deployment, a new provider, or Phase 13.
 
 The application work is already committed as `a6e57b9` (Complete Phase 12 expense review and voice test adapters). The working tree was clean before this follow-up. The remote main branch was verified at `34d1ce602b0b615b7d6fe1e02227c3cec80ba633` before pushing.

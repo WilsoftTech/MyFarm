@@ -22,6 +22,7 @@
     "supabase/policies/weather-runtime.sql",
     "supabase/policies/extension-officers-runtime.sql",
     "supabase/policies/officer-work-runtime.sql",
+    "supabase/policies/cooperatives-runtime.sql",
     "supabase/policies/browser-role-lockdown.sql"
   ]
 }

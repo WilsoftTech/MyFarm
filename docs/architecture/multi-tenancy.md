@@ -1,13 +1,13 @@
 # Multi tenancy
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED — T013 metadata/status scope and evidence-link relevance; historical and future-phase facts unchanged.
-- Implementation status: Phase01 scope COMPLETED — 100% (13/13 verified Phase01 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); Phase02 scope COMPLETED — 100% (13/13 verified Phase02 tasks; PASS WITH CONDITIONS — LOCAL VERIFICATION); later-phase scope not counted.
-- Last reviewed: 2026-10-25 (Africa/Nairobi), T013 audit.
-- Related phase/task IDs: Phase01 MYF-P01-T001–T013; Phase02 MYF-P02-T001–T013.
-- Verified completed work: Phase01 scope as previously verified; Phase02: farmer registry contracts/policies/migration/API/tests in this document's area verified (see the Phase 2 implementation section).
-- Remaining work/blockers: Phase02 conditions where still applicable; Phase03 T002 read/write isolation verified locally; T003–T013 and hosted provisioning remain pending. [T002 evidence](../reports/phase-03-t002-2026-10-18.md).
-- Evidence/report links: [Phase02 closeout](../reports/phase-02-closeout-2026-10-09.md); [Phase02 every-document review](../reports/phase-02-document-review-2026-10-09.md); [Phase01 closeout](../reports/phase-01-closeout-2026-10-08.md); [every-document review](../reports/phase-01-document-review-2026-10-08.md); [latest provider/security report](../reports/phase-01-provider-verification-2026-10-08.md). [T013 audit](../reports/phase-03-closeout-2026-10-25.md).
+- Documentation review: REVIEWED - affected Phase 15 scope, ownership, current access, ledger and connectivity behavior; historical evidence retained below.
+- Implementation status: Phase 15 COMPLETED - 7/7 software tasks locally verified; conditional phase acceptance pending.
+- Last reviewed: 2026-11-24 (Africa/Nairobi).
+- Related phase/task IDs: MYF-P15-T001 through T007; D-P15-001 and D-P15-002; earlier references retained in dated sections.
+- Verified completed work: Phase 15 acceptance, cumulative local quality/browser/integration, zero drift and actual recovery checks pass; see closeout for counts and limits.
+- Remaining work/blockers: P15-C1 through C4; owner acceptance, hosted CI/rollout and inherited release conditions remain separate.
+- Evidence/report links: [Phase 15 closeout](../reports/phase-15-closeout-2026-11-24.md).
 <!-- MYFARM-STATUS-END -->
 
 ## Phase 3 T002 scope enforcement — 2026-10-18
@@ -54,3 +54,8 @@ Consequences:
 
 - Treat the application authorization tests (IDOR, revocation, administrator denial) as the primary isolation evidence; the runtime-role suite proves the database backstop.
 - Database-enforced caller identity would need a per-request actor context (for example `SET LOCAL` of the verified user and policies that read it). That is a design decision for a later phase, not implemented.
+
+
+## Phase 15 organization implementation - 2026-11-24
+
+CooperativeMember roles belong to an ORGANIZATION workspace and never add personal FarmMember or foundational Membership authority. Farmer-owned CooperativeShare rows bind the original personal farm/tenant to the recipient organization. Every current read/write checks membership, consent and owner eligibility; withdrawals hide registry/estimates and refuse future procurement. Institution-owned ledger history stays with its organization. Buyer queries select only published product/unit/stock summaries; farmer queries restrict their own origins before loading ledger records. [Implementation, verification and release limits](../reports/phase-15-closeout-2026-11-24.md).

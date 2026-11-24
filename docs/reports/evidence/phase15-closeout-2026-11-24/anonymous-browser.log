@@ -1,0 +1,1109 @@
+
+node : [WebServer] (node:17992) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+At line:2 char:135
++ ... m_runtime'; node node_modules/@playwright/test/cli.js test --workers= ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([WebServer] (no... env being set.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 92 tests using 1 worker
+
+(node:5080) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/92] [desktop] › tests\e2e\accounting-api.spec.ts:7:1 › accounting reads deny anonymous callers before query or ID validation (P04-T002)
+[WebServer] {"event":"request_failed","requestId":"7975a8fc-2234-49d1-8703-346e1da579a7","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"969b4ffa-fb7b-41a9-a872-4dd1d260c09e","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"cc49d84d-5704-436f-9976-7ffba206eb82","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"51e37aa8-241c-4163-ad93-246b509bcb9e","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"337ee3e2-7a47-48ca-b690-3e09f4bcb3cc","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"ec3540fa-9d05-4864-8b0f-e99ba1d3c90e","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"c13e8aec-f47b-4734-b5ba-b66996d04f5e","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"5317a7f6-7d12-4ff4-86d1-28a2acdfd806","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"98a0d54b-8ae6-412e-a79b-085ecb24a685","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"db126d0e-b9b1-4505-b953-588bc89ab785","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"d17787de-504a-4366-a592-8c1070dff99c","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"ce38716a-8909-49af-8d0d-d701b2d2ec49","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"50775c85-735e-4273-b179-c96ecbe13c66","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"a021d438-1e0b-4172-9bda-b813bbe768c8","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"91be7286-d47c-4be8-b087-942b8283049b","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"9158bf9b-2eee-45b0-aad7-ce0e14dbe002","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"9ca89fbd-43ec-440a-9d43-b9344e683d0e","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"726cb06a-ec49-4f6b-b35c-d6155a3d15b3","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"3a89b6b1-3f11-417c-811c-f7e693ab3b50","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"d71103fa-f698-4fe6-a33e-40cc5301e502","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"29316af1-85ed-43bb-bd20-7001010bf215","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"055da78b-183f-4242-9383-9fc8b652fb69","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"b939e467-ccea-411d-9e51-812cf231c03b","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"73680a83-1e62-43c5-8d2f-41d490803a51","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"b6b1cb3d-a935-42b3-85c4-da5e79fabf23","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"35b7fe67-c96c-4c5d-934f-5ef5e90f4bb9","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"d6058a67-388f-475b-a02e-a0bef20eee5d","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"7ff68a1c-9a38-4cc8-bf2f-60d8d340e521","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"d78462b2-5354-4567-ba0d-9c09f8e24f1a","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"46459c62-c05e-4213-a178-29bcf62baa16","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"aa26b938-5608-4a44-9e46-978e5fd6d14c","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"b8be4fd2-9119-489b-87a4-1df58d738667","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"b143c9fd-db50-4578-9f15-cacdd32f2c20","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"823cb795-8334-4a5b-b3f8-8665a0d922fe","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"b60808ed-e1e2-4d7e-9fd2-ffbf4f20cdfc","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"222d877c-b279-4434-bf1d-c94471195f81","code":"UNAUTHENTICATED"}
+[2/92] [desktop] › tests\e2e\accounting-api.spec.ts:16:1 › accounting writes require a session and fail without leaking data (P04-T002)
+[WebServer] {"event":"request_failed","requestId":"ca37dec1-588d-4135-8dff-85a2aea5f0f1","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"1b908b60-0633-43e6-b199-cd0220001a57","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"966b1432-18f1-462f-8d24-20a04d484e64","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"7c7c70d0-2293-49f5-b2dc-7df710b11e69","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"b852bad6-a488-4c1e-8b04-83cb26df45ea","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"d6f53ccc-9478-402b-baad-d0f4fcaf49f0","code":"UNAUTHENTICATED"}
+
+[3/92] [desktop] › tests\e2e\accounting-api.spec.ts:23:1 › accounting writes reject cross-origin, missing-origin and malformed JSON (P04-T002)
+[WebServer] {"event":"request_failed","requestId":"6d9cb830-3db1-4c90-ad38-e23dee69bc3b","code":"FORBIDDEN"}
+
+
+[WebServer] {"event":"request_failed","requestId":"5c78520e-a9d2-4552-9aeb-0efa79bd478a","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"11400998-6830-42f5-a2a8-23acc61fac74","code":"INVALID_INPUT"}
+
+
+[WebServer] {"event":"request_failed","requestId":"b86e579f-aa2a-4056-8de0-d6b85079511a","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"82ffffea-2a2a-4dae-bf36-662dbdda4a09","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"f404ba5e-28bd-49ee-ae60-3603c31418a0","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"9e5d64b5-1fa2-4c91-a4fd-13df11d7266c","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"afcd2dea-0b2d-481c-a728-aba04aaba431","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"67fc78ee-cd3f-4836-8cca-8633d236a246","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"6b8e1fae-b759-4aef-9589-89f24ed60033","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"a2002183-4162-4a05-9e37-85f9b9768aa6","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"12790078-8fbf-44b1-b438-b76bf5471c01","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"59f2031f-5d1c-4e75-b6e4-240a8bdc5ada","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"897d2592-b56c-4918-bbf7-253a918c9506","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"ddf0e099-b0aa-49a6-9797-c48a9175875a","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"170ce6a5-a29b-400e-a30e-21dd6c0fe810","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"4019af73-fa12-4f3b-a0b8-637466d816d2","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"83ca60f2-20e9-4f27-bb1b-f94e2216ecef","code":"INVALID_INPUT"}
+
+[4/92] [desktop] › tests\e2e\accounting-api.spec.ts:35:1 › accounting records are not writable or removable through unsupported methods (P04-T002)
+[5/92] [desktop] › tests\e2e\cooperatives-access.spec.ts:3:1 › organization reads authenticate before validating guessed scopes and never cache private data
+[WebServer] {"event":"request_failed","requestId":"ce1dc52c-bd76-4905-9786-e11bc6490d24","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"d31394c9-e7ea-4a33-b3b4-e7de1d49655b","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"2c1501d0-a8a9-4056-b31a-a5c331f07555","code":"UNAUTHENTICATED"}
+
+[6/92] [desktop] › tests\e2e\cooperatives-access.spec.ts:9:1 › organization creation, consent and ledger writes enforce session and same origin
+
+[WebServer] {"event":"request_failed","requestId":"e2983cd0-1850-4446-a399-f74d5011384c","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"6434d58e-0eaa-46e6-8872-9a88bb30eee1","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"e0b3738b-0cc3-4b17-a44d-2f3bbae9a554","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"b061ffc0-77ce-4aea-b332-4a3eadcb28ed","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"a9a6b12c-0dde-43ed-83f0-3ddf6de0736e","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"cea81285-594f-4cc6-93b4-9b6662d425ae","code":"FORBIDDEN"}
+
+[7/92] [desktop] › tests\e2e\farmer-registry.spec.ts:3:1 › anonymous users cannot open registry pages
+[8/92] [desktop] › tests\e2e\farmer-registry.spec.ts:8:1 › anonymous protected pages get a real redirect, not a streamed page
+[9/92] [desktop] › tests\e2e\farmer-registry.spec.ts:17:1 › header account link leads anonymous visitors to sign-in
+[10/92] [desktop] › tests\e2e\farmer-registry.spec.ts:23:1 › anonymous registry APIs fail closed with no caching or detail
+[WebServer] {"event":"request_failed","requestId":"3af4c004-ad66-465e-8a1f-72903a4c9246","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"1bd3a886-3879-4368-b92c-73b255909f6f","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"b873b987-225c-4f16-81de-865b0d623470","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"5d3240a3-0a31-47e3-a4e0-927f38bfe49c","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"983baa12-3748-457e-b2a2-5b2a07163075","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"30f886fa-31c1-4ec0-bcd0-282469060c80","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"3d99a0c4-d868-41d2-a630-cd15cfa0079c","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"13daa9b0-6102-476c-a598-00337190be0c","code":"UNAUTHENTICATED"}
+
+[11/92] [desktop] › tests\e2e\farmer-registry.spec.ts:34:1 › registry commands reject cross-origin requests
+[WebServer] {"event":"request_failed","requestId":"0956919f-c229-449d-a9b8-cca82bf7a38e","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"01640ec2-ec74-4b03-b8f4-e63153dd55fa","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"1594017b-7bdc-4b7a-96a9-6f8a70a19ff1","code":"FORBIDDEN"}
+
+[12/92] [desktop] › tests\e2e\foundation.spec.ts:2:1 › public shell works on desktop and mobile
+[13/92] [desktop] › tests\e2e\foundation.spec.ts:11:1 › anonymous users cannot open protected workspace
+[14/92] [desktop] › tests\e2e\foundation.spec.ts:16:1 › anonymous APIs fail closed with no caching
+[WebServer] {"event":"request_failed","requestId":"8583b3b0-94ff-432d-b3fe-ce0d6cf0625a","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"8c24319f-17ae-4d9f-91d6-fc86355631e6","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"f4d5b51d-06d7-4729-b8e5-64bf0eba67d0","code":"UNAUTHENTICATED"}
+
+[15/92] [desktop] › tests\e2e\foundation.spec.ts:22:1 › health and manifest expose no secrets
+[16/92] [desktop] › tests\e2e\foundation.spec.ts:27:1 › keyboard skip link targets content
+[17/92] [desktop] › tests\e2e\foundation.spec.ts:32:1 › invalid sign-in is rejected without auth request
+[18/92] [desktop] › tests\e2e\foundation.spec.ts:37:1 › private-file grants reject cross-origin requests
+[WebServer] {"event":"request_failed","requestId":"115425af-e3e5-40c2-9df5-07931eaff9ca","code":"FORBIDDEN"}
+
+[19/92] [desktop] › tests\e2e\officer-access.spec.ts:3:1 › officer dashboard and consent reads authenticate before scope validation
+[WebServer] {"event":"request_failed","requestId":"c07b4f0d-223c-4a63-81ca-309c0947dd92","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"5451c29d-a63b-4a84-b797-2d4e082520df","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"d5406bbd-b17a-44b4-bad7-5fafa9f8466f","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"7f9d911d-aa67-4bb4-8ed5-cb142da2d46f","code":"UNAUTHENTICATED"}
+[20/92] [desktop] › tests\e2e\officer-access.spec.ts:12:1 › registration and visit writes authenticate and reject cross-origin requests
+[WebServer] {"event":"request_failed","requestId":"f83bd346-1d17-4444-a89a-922ab87b84b2","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"90d9f44e-385f-4164-9dec-a5efb7149932","code":"FORBIDDEN"}
+
+
+[WebServer] {"event":"request_failed","requestId":"b6533ec0-77e1-461f-8c87-3fa9d50484ec","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"713e8ad0-0258-46f4-8489-0d536da4ebfe","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"ccf94fc0-ef97-457e-ad65-156798da7e46","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"2fe4937d-d11b-4042-8cea-24f1ea44cd26","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"0d64d9c1-343b-4729-bbd4-2d476981c30a","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"ccd2c148-c584-4631-9eb9-5bb45a06b39b","code":"FORBIDDEN"}
+[21/92] [desktop] › tests\e2e\officer-access.spec.ts:18:1 › officer consent writes require a current session and same origin
+
+[WebServer] {"event":"request_failed","requestId":"d15d4471-cf26-498e-9ea1-e6e3477400ef","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"890261b6-b785-4f6b-b457-77897b7d9910","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"c897528d-f350-4eb7-aa50-40c61b3382a8","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"677bfe7f-517a-4afb-8b19-e111e467bf8a","code":"FORBIDDEN"}
+
+[22/92] [desktop] › tests\e2e\pilot.spec.ts:5:1 › pilot pages send anonymous users to sign-in before showing anything (P09-T003)
+[23/92] [desktop] › tests\e2e\pilot.spec.ts:14:1 › pilot API routes deny anonymous callers and cross-origin writes without leaking data
+[WebServer] {"event":"request_failed","requestId":"51155c4c-a533-4678-b31a-d6c1ba76d132","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"38f64542-35f1-4405-8c01-c51a5971f932","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"9a5d9ce8-b835-42b7-97e8-4f0cb1c3da20","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"888cf020-ea95-4564-8399-bc05a877e45f","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"706e5336-c242-449a-b75b-33434660fa62","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"52549806-d61e-4814-8705-baf1ed321163","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"b828a3cc-4277-4cf9-b22c-f1027a76ca18","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"c18b5bc7-3d9a-4e08-bf59-b5e546d102b1","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"cf531224-47e0-48aa-8bb8-a64ca8ded16c","code":"FORBIDDEN"}
+
+
+[WebServer] {"event":"request_failed","requestId":"7b58667c-4c4e-4e88-9a39-d262215b8c55","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"9bbf70b2-0ab9-4cae-ba63-0a4965ad24f8","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"f46801d5-bf33-4a45-8d2d-992aba3e9f1c","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"537b4e0d-abcf-4060-834f-28bb47433171","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"3139f670-7051-4137-b99c-522f7792f0be","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"a6fe09a8-300b-4b79-993c-3ff5de2f13ab","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"febf775e-5ff5-4fea-a2cf-c9028b4b5598","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"9e83aba6-74aa-423c-90c8-286e72bffd6e","code":"FORBIDDEN"}
+
+[24/92] [desktop] › tests\e2e\pilot.spec.ts:26:1 › pilot evidence routes deny anonymous callers and cross-origin writes (P09-T006)
+[WebServer] {"event":"request_failed","requestId":"d015f049-db39-4b0f-934d-7218a0513aa0","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"e8d3aaa7-e9f2-4b45-ac77-da2904e6dfac","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"ba04ce68-6999-4e5c-8fff-eee971800135","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"8c03ea41-1bc1-4283-aec2-196fb67c1420","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"31fdc8aa-31dc-401d-a493-6361b08e760c","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"cea1a277-bbc9-49cd-bae5-8c4857e01e68","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"9b6d16e3-733b-4f60-9442-4a748fa70be3","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"0bc11867-b12c-4409-9dd3-c56dda7da8ff","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"039213ee-5ca5-47aa-87d7-06553febbf2f","code":"FORBIDDEN"}
+
+[25/92] [desktop] › tests\e2e\production-api.spec.ts:4:1 › weather checks and confirmations require authentication, same-origin JSON and private failures
+[WebServer] {"event":"request_failed","requestId":"b35623f6-7056-40db-bd1f-9d6b3e5f4be7","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"d566e89a-b94f-48a0-b842-3e4db7ffe68f","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"ec6c2cc0-caac-47a1-b3b9-a939a8cee4b6","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"19dacedb-4cf6-494b-82ca-ca1ddbb4e4cc","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"6cb39185-f83c-4070-bdef-4567d6e47283","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"8a5f204e-2304-45a7-b980-e55b1470d820","code":"FORBIDDEN"}
+
+[26/92] [desktop] › tests\e2e\production-api.spec.ts:12:1 › closure commands require authentication, same-origin JSON and private failures
+[WebServer] {"event":"request_failed","requestId":"bf56359a-419e-41a1-aac7-24198cd613a0","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"0086a102-9797-4651-bc9a-2d42da497c88","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"e77cdde2-4109-4e6e-80ab-1d1cdba5efa7","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"cf48d8cf-22eb-47d1-8318-62ba966317cd","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"3ba94c52-0264-4993-aa5e-18f4c1708954","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"2a9b36d3-37d4-4aaf-9104-c7bba1c54a8f","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"5f0f9cf2-09c1-4786-9208-429d3b59ca26","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"f6da5253-1974-43df-95c3-b6f9c2ab8bb2","code":"INVALID_INPUT"}
+
+[27/92] [desktop] › tests\e2e\production-api.spec.ts:24:1 › production reads deny anonymous callers before query or ID validation
+[WebServer] {"event":"request_failed","requestId":"fe50d27e-8ced-4bc5-856a-80ca02e18112","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"fae2de0c-9800-4630-8e6a-e3d1451e8fe9","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"1ae392e3-ba9c-4ac8-a232-8036494f33cc","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"a91a9a2a-161a-4ea6-91af-076ab2cd64b0","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"4fee0baf-158f-4e1f-a767-4866db53e3cd","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"50ecc76a-6a62-4852-89f3-f2c81c074122","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"f99a12b4-d10c-46fa-9121-f77b96146081","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"b76c6e7d-ae70-49b8-8d42-6b0c7b90f288","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"48b2ff05-5602-42d7-884d-6d2c165d3446","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"5f0d0afc-8f21-4691-8f9b-b4cde0cb1753","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"708e1c20-96ea-486b-8bc3-e2c04c9b6f6c","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"4a129db8-e7ac-4676-a6b4-149cb6534751","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"956ffd2b-2a4b-49ad-974d-f752ef8cad39","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"f3a3227c-9414-4b39-8eda-ce2096c939df","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"d328543a-c617-4b52-b163-2502a04966f7","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"cd41795a-d4c7-4f7e-bc27-791b06b5ed9d","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"71fe4e99-f1e4-47a0-9aac-be8c62be8f89","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"7756a0d2-4d38-4516-993a-fe820ffdde74","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"49ccab7c-ba5b-45d6-8c30-44bc5fde96a3","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"c9401a07-80f6-4040-a764-16e0ebc59a6b","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"c7982d85-a3d5-44f1-af1a-7c803d4d8d6f","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"b6bc81af-37fb-4cc3-b34c-1eed7210719e","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"ebfcfd29-f94c-41f2-a8be-000a20a706b5","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"0f48d4bb-a18f-4e2a-9c35-36b3f1135475","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"eea782fe-f5c1-47fc-934b-14cb340723a6","code":"UNAUTHENTICATED"}
+[28/92] [desktop] › tests\e2e\production-api.spec.ts:34:1 › production writes require a session and fail without leaking data
+[WebServer] {"event":"request_failed","requestId":"535f3006-2df0-4365-aeab-42bdb64fa8eb","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"921d0292-d5e7-4f20-9bd8-ba7cce437db6","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"ed210c52-6df8-4315-adfc-e493d54bdcec","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"e2e6e4a4-ddcc-4052-baed-e671bb743669","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"7e0a6052-1879-4757-8036-6a42e8975aff","code":"UNAUTHENTICATED"}
+[29/92] [desktop] › tests\e2e\production-api.spec.ts:41:1 › production writes reject cross-origin, missing-origin and malformed JSON
+
+[WebServer] {"event":"request_failed","requestId":"b3484e9b-c3bd-4478-8d95-3d69e10a86d6","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"94c610dd-9689-4570-a184-c14fd743d666","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"91079d4e-39e1-4168-ac78-57aa3c9c891d","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"2fc9fe16-eb69-4800-ac17-fb2eb456f7ba","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"34cba3aa-fbb3-4dfc-ad5b-ab4dc61ecf80","code":"FORBIDDEN"}
+
+
+[WebServer] {"event":"request_failed","requestId":"548ad96e-0cb2-419a-9f55-f35fc6ce655b","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"6a994165-30c3-4760-ad23-79a437cd4c69","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"439c14d8-9aee-4d0c-a863-aff1830777d6","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"d5a7a78d-bc8c-4754-8b2c-b743b912ccc1","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"56905ff9-ebe0-4965-90af-50cc9c211823","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"10c69fa4-f68a-4adf-a0b2-f71906c1ae43","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"02a5fe2b-25e8-4c44-895b-8a815eae4690","code":"INVALID_INPUT"}
+
+
+[WebServer] {"event":"request_failed","requestId":"ff8445cc-7143-4b24-8e3a-29ce0cdfd8ae","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"c250ecd3-8495-47ce-9774-3088aa05173b","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"9d938e51-4250-480e-a6c2-42c2aa99225e","code":"INVALID_INPUT"}
+
+[30/92] [desktop] › tests\e2e\production-api.spec.ts:54:1 › crop and animal-type catalog reads require farm authorization and remain private
+
+[WebServer] {"event":"request_failed","requestId":"3662d6ff-393d-4726-aece-ca061da08a47","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"bedba825-0960-4c01-84cb-06a1c67a4500","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"219cd9ab-737e-4524-a18e-138c60f37c8d","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"4e7172a2-dea7-4e84-8cf4-044eb4516a77","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"32a85342-dc10-4836-bb3b-14e0067265c9","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"21ed25f3-e74d-4632-b099-afed564dcc4f","code":"UNAUTHENTICATED"}
+
+[31/92] [desktop] › tests\e2e\production-api.spec.ts:63:1 › activity reads and writes deny anonymous callers without leaking data
+[WebServer] {"event":"request_failed","requestId":"7c0b143e-3699-47b8-a319-fcb2468f45d1","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"5adee98a-17ca-430a-b5fa-999fe80e9187","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"1a794c8c-8495-4cea-bdf3-03a8d67b794b","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"8ff7af3a-4349-4d9b-9f0f-527651f7ff51","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"32c97b5b-3d28-4073-a9de-471d7385ff3d","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"24ac65d9-9ecf-4282-a12a-b9fada56c94f","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"4a6c035d-74b5-4013-9b70-4a6fd16a9d6a","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"0d2b07da-a8e8-4315-a112-69abbc4a91cb","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"f4f6b8d6-881b-4a0a-8cf3-042a72a37b54","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"2f5830d0-da5a-4fd4-abef-93fb01f4f93a","code":"FORBIDDEN"}
+
+
+[WebServer] {"event":"request_failed","requestId":"2e3a9d76-645b-4564-bd05-8f0c0e692302","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"f389f864-46dc-4bbc-b1ba-93c7b801f592","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"47cd2ec0-82b8-4e48-b781-e7a329cf2205","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"14e92a29-e93a-4bdc-a4bb-65636562697e","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"7810de73-48c1-44d2-88ae-85d47262263a","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"bde8cf15-6cac-47a4-9379-52d05aeb1213","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"c7f4df5b-d00f-49ef-8035-d5bf62c83c8f","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"841e4374-9a5c-4729-b726-7289953407ff","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"603e8343-4cdc-4f26-aa93-bb280a92ba1a","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"4c8401da-3f7e-4345-bbd4-9ae8b37a3ab0","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"e611cb71-5e52-4d18-8af2-b742d946edc0","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"b1f9ea2f-085b-4036-9179-2dbf653a69f6","code":"FORBIDDEN"}
+
+[32/92] [desktop] › tests\e2e\production-api.spec.ts:78:1 › the offline account route denies anonymous callers without leaking data
+[WebServer] {"event":"request_failed","requestId":"f8cb4b5a-fe15-4381-89e0-d371f8f0c737","code":"UNAUTHENTICATED"}
+
+[33/92] [desktop] › tests\e2e\production-api.spec.ts:83:1 › the sync push route requires a session and same-origin JSON
+[WebServer] {"event":"request_failed","requestId":"d5436ed4-2ea5-4ea0-af4a-92ccb4deeae5","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"c1f4a3d4-91d8-4ca8-9fa5-09cd5181c014","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"b641de48-641d-452e-a818-9a4b187e5d1f","code":"FORBIDDEN"}
+
+[34/92] [desktop] › tests\e2e\production-api.spec.ts:90:1 › offline pull and photo routes deny anonymous callers without leaking data
+
+[WebServer] {"event":"request_failed","requestId":"1272462a-af45-42f2-9c79-d64ebba7ed15","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"6c47b0db-058a-4fd6-b400-d7a6c96dcaac","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"fcd69b7c-467f-4ad5-aa7a-afcd08f73b2a","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"0b8e4d83-c200-4872-b635-32eb739ab94f","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"c9c2549e-8bfe-42f7-ab1b-64d1dcd1fa2f","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"5eaf12ff-811b-46ec-9230-2f0ced03dac9","code":"FORBIDDEN"}
+
+
+[WebServer] {"event":"request_failed","requestId":"363aa879-4a36-4f6f-9566-4f08090e75a7","code":"FORBIDDEN"}
+[35/92] [desktop] › tests\e2e\production-api.spec.ts:104:1 › assistant questions deny anonymous callers and cross-origin writes without leaking data (P11)
+
+[WebServer] {"event":"request_failed","requestId":"b142943c-3316-41dd-ab84-aac1468bcb13","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"c485310e-a094-4d03-b168-ee8b460e74e9","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"68e756b5-d6cb-4d16-8cc8-e44b827e9cb6","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"70069628-d389-4444-a102-310ef23146bb","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"f8d15a6a-e3a2-488a-8c54-08bc199d17d4","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"3892fa6a-d787-4206-bfe4-e055812f3508","code":"FORBIDDEN"}
+
+
+[WebServer] {"event":"request_failed","requestId":"a020e355-448f-4c0f-8f96-7b1edd4e81ab","code":"FORBIDDEN"}
+[36/92] [desktop] › tests\e2e\production-pages.spec.ts:2:1 › weather tests redirect anonymous users before reading farm context
+[37/92] [desktop] › tests\e2e\production-pages.spec.ts:8:1 › production pages send anonymous users to sign-in before rendering farm records
+[38/92] [desktop] › tests\e2e\production-pages.spec.ts:17:1 › production pages return a private, real redirect for anonymous requests
+[39/92] [desktop] › tests\e2e\production-pages.spec.ts:25:1 › accounting pages send anonymous users to sign-in before rendering farm money records (P04-T003)
+[40/92] [desktop] › tests\e2e\production-pages.spec.ts:34:1 › activity calendar and repeating pages send anonymous users to sign-in
+[41/92] [desktop] › tests\e2e\production-pages.spec.ts:42:1 › the Ask page sends anonymous users to sign-in before rendering any question (P11)
+[42/92] [desktop] › tests\e2e\production-pages.spec.ts:49:1 › the offline shell is public, static and free of farm data
+[43/92] [desktop] › tests\e2e\voice-api.spec.ts:3:1 › voice draft reads authenticate before validation and remain private
+[WebServer] {"event":"request_failed","requestId":"49dd7944-833f-4908-a9aa-322df4a135d2","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"617a1aee-c5fb-47fb-8fd7-3f4cd328afc6","code":"UNAUTHENTICATED"}
+[44/92] [desktop] › tests\e2e\voice-api.spec.ts:11:1 › the expense review page requires sign-in and keeps microphone access disabled
+[45/92] [desktop] › tests\e2e\voice-api.spec.ts:18:1 › voice draft writes and confirmation enforce origin, JSON and authentication
+
+[WebServer] {"event":"request_failed","requestId":"f58b6328-dc3e-446d-a26b-afe195955308","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"12cb1298-a429-4c81-b306-10f6ed555402","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"7ecad665-9a21-448a-862a-9c96867d1a90","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"0316ecce-995f-4e14-afc8-c38e3bb29b8f","code":"INVALID_INPUT"}
+
+
+[WebServer] {"event":"request_failed","requestId":"ad1f5ef5-405e-4b80-9724-2cfc6d983e27","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"4bb2f08d-1e3e-4edb-b353-1ddf5c29271d","code":"FORBIDDEN"}
+
+
+[WebServer] {"event":"request_failed","requestId":"0c951715-e8c3-4327-9817-73eaf4df3209","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"c7a91ef8-dd56-4a5d-b287-1d9cdd53b937","code":"INVALID_INPUT"}
+
+
+[WebServer] {"event":"request_failed","requestId":"8639ae4f-140f-4bee-87ad-fa5727247616","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"2334eb8d-3a0d-49db-aef8-509693d0848c","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"be910e3d-270f-4ae1-90f5-27091d496eb2","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"e1e2f9f3-d183-4d8a-9608-2f07558081f3","code":"INVALID_INPUT"}
+
+[46/92] [desktop] › tests\e2e\voice-api.spec.ts:33:1 › voice input capabilities and suggestions are authenticated and cannot take scope from a body
+[WebServer] {"event":"request_failed","requestId":"58046232-4c60-49d6-9d3f-b83464f89350","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"b68dab7a-980d-4d8f-b789-a47407f9f4fa","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"67ca65cb-d67e-4cd8-940d-e321a41f7b38","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"ee7857da-381c-40e7-b401-970d91d36ef8","code":"FORBIDDEN"}
+
+(node:19076) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[47/92] [mobile] › tests\e2e\accounting-api.spec.ts:7:1 › accounting reads deny anonymous callers before query or ID validation (P04-T002)
+[WebServer] {"event":"request_failed","requestId":"570ffc38-404e-4dc8-9904-1ddc15476f10","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"c7a15eee-e5e5-4da5-847d-f869638d1f94","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"a796c9dc-1856-4ff6-b8b5-6c268b33995a","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"fdef98b3-3a5a-4fbf-b92e-27f93664567c","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"ee69ccc2-2ea2-47b2-8414-c71fe46b5ed8","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"d60162fa-1034-4af2-bc18-ed5f7cf7bc9f","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"23cd07c1-7c51-4f57-ae34-48d7d2688aad","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"d8b86dc0-dcf2-436f-97e7-52f02547f88d","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"42832e0f-d91a-4352-8822-44fbd466763c","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"7fc37125-ee99-4dc8-ade3-209f102c468a","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"2c5425c9-6009-4bb1-a1d3-96976f315774","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"6994c707-8f1c-4dc8-bda6-db5cb3c53412","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"aa628f2e-7966-4804-b4cf-7739159aa265","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"bd6ce4fc-13c4-471e-8eaf-dcc4d71ab8f4","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"a9479b66-7479-412e-b42f-bfed3dccb0de","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"7e954bf0-65b5-4fa6-8b5e-3f5f7fede775","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"1958efbd-7577-4130-9f78-8cc539fae591","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"283c1e57-b245-45a4-8027-90dd90bb8d5d","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"bc391f85-e83f-4a8f-9fe7-685afdeada68","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"b530c8ce-2404-4e7b-a83e-48b100f260b3","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"e6fc06a5-23b4-48b1-93cd-bc3e64158323","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"5f83e7be-ed33-47fe-a043-45fc43574d83","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"7aa6dc1f-15c1-4649-b6d2-cc5234deace7","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"717c3ce0-cb9f-471e-9dbf-d1e9275320b8","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"dbb4d126-e418-434a-aa9e-908f65283548","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"fe704b4a-eaed-4f70-9a27-aa0c87daaf35","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"f83a7abb-53e5-4b62-a725-732821aa44d7","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"f06c0ef2-f3a4-4174-9894-b1a934949e92","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"1c7e2039-4b97-449c-871d-53b70d4f8665","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"677f4195-474b-4026-8a84-d18c502b3c2f","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"61bf9a95-781a-4880-85e8-ae1099ae26eb","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"8407dfd7-0ac3-4845-8434-3496d10fef17","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"448b1ecd-074f-4358-8646-146551f91399","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"f98c0e46-2b85-420c-9ece-7dddea19617c","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"17497fe7-e5a9-4faf-9560-3744148a2094","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"d0615cbc-8c4b-4586-a531-d08a348f6a96","code":"UNAUTHENTICATED"}
+[48/92] [mobile] › tests\e2e\accounting-api.spec.ts:16:1 › accounting writes require a session and fail without leaking data (P04-T002)
+[WebServer] {"event":"request_failed","requestId":"e2556c82-5918-4956-beb3-873d085b545b","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"c907eb7d-e64a-4e84-9827-ec3954cb41ff","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"edc9b050-7a37-4b16-83cb-8429a023cc11","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"abf2f2e6-aa22-4d74-8415-885d03790cc1","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"e56c7dcb-d053-4baf-bae0-ffe7327e2499","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"a23e0fd3-72db-42f2-93c0-11c8a67cdc05","code":"UNAUTHENTICATED"}
+
+[49/92] [mobile] › tests\e2e\accounting-api.spec.ts:23:1 › accounting writes reject cross-origin, missing-origin and malformed JSON (P04-T002)
+[WebServer] {"event":"request_failed","requestId":"f620950d-41bb-42b2-859e-3657b148c7ec","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"6704a8f5-444e-4cf8-ad49-79b6f75cb61b","code":"FORBIDDEN"}
+
+
+[WebServer] {"event":"request_failed","requestId":"724081fa-5eb0-4955-b621-a3b432fd6907","code":"INVALID_INPUT"}
+[WebServer] {"event":"request_failed","requestId":"a984c3e4-7b2e-4708-9320-fba572261530","code":"FORBIDDEN"}
+
+
+[WebServer] {"event":"request_failed","requestId":"34e3149b-bcbb-4b8f-aa9a-9e621454a0c1","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"3bf5f791-37ea-47ed-81b4-ac8ea223401c","code":"INVALID_INPUT"}
+[WebServer] {"event":"request_failed","requestId":"8da91bdc-1e43-42a3-a667-d34240bfda16","code":"FORBIDDEN"}
+
+
+[WebServer] {"event":"request_failed","requestId":"44d61bde-26ad-46c6-92ef-fd6c730fc83c","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"70412f3d-2a59-4531-aa3e-9e3820623b22","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"e086acbd-2b39-4bf5-a382-270910c3e508","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"7f495933-18de-482c-b352-455fe51f286f","code":"FORBIDDEN"}
+
+
+[WebServer] {"event":"request_failed","requestId":"83e3f811-9687-4fe2-882b-8b681a850e57","code":"INVALID_INPUT"}
+[WebServer] {"event":"request_failed","requestId":"a021e46b-3136-4f7b-b31f-bc83aa2dde96","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"3065d409-8bc6-42b8-a410-b272235eab11","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"e6c225b9-7f9b-440e-9f00-a13ff227f139","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"b10e5c82-8755-48ea-9f82-e0d939df54e1","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"aea76dfc-c3fb-43d5-b79b-9a8de695ca2b","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"b662fa1d-3867-44ee-995a-550af92ff842","code":"INVALID_INPUT"}
+
+[50/92] [mobile] › tests\e2e\accounting-api.spec.ts:35:1 › accounting records are not writable or removable through unsupported methods (P04-T002)
+[51/92] [mobile] › tests\e2e\cooperatives-access.spec.ts:3:1 › organization reads authenticate before validating guessed scopes and never cache private data
+
+[WebServer] {"event":"request_failed","requestId":"600260b4-2698-4623-94f7-a4ce17af0fe6","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"1029bf04-0785-40fe-b021-8e3b314944e8","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"e10a3e19-a14c-454b-b2d5-94221ee80e9a","code":"UNAUTHENTICATED"}
+
+[52/92] [mobile] › tests\e2e\cooperatives-access.spec.ts:9:1 › organization creation, consent and ledger writes enforce session and same origin
+[WebServer] {"event":"request_failed","requestId":"b0ba73fc-fbcf-470e-b0a8-67fb4a3ad6fa","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"52503f21-b92c-4cdb-bb29-a1c69672fa03","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"f42fbc82-65c4-4899-a65a-d6613b5256ad","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"cc3e82e1-ef3c-4187-9f50-6ee96c0979cb","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"a5fb6a95-cac2-457a-9624-45915c48d980","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"0e3740c7-3068-42d6-8efe-98c213915747","code":"FORBIDDEN"}
+
+[53/92] [mobile] › tests\e2e\farmer-registry.spec.ts:3:1 › anonymous users cannot open registry pages
+[54/92] [mobile] › tests\e2e\farmer-registry.spec.ts:8:1 › anonymous protected pages get a real redirect, not a streamed page
+[55/92] [mobile] › tests\e2e\farmer-registry.spec.ts:17:1 › header account link leads anonymous visitors to sign-in
+[56/92] [mobile] › tests\e2e\farmer-registry.spec.ts:23:1 › anonymous registry APIs fail closed with no caching or detail
+[WebServer] {"event":"request_failed","requestId":"da1f25fd-cd32-421e-98fe-7a3145ffa243","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"6347d178-1a74-453a-99a9-3f5db94a1eda","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"0ef73aad-bcc3-40c5-8f10-50541639f6f1","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"d51129ed-3df5-4511-98bc-3e12554f038b","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"933f2f32-2b58-4958-a764-9b98d3c55fb9","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"b24304e4-c442-44ec-87f6-4abda12c201b","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"ddfaeeac-a481-4898-bee6-556e1cbbbf00","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"c73ec89e-fc32-4257-952a-0f97e6ea1859","code":"UNAUTHENTICATED"}
+
+[57/92] [mobile] › tests\e2e\farmer-registry.spec.ts:34:1 › registry commands reject cross-origin requests
+
+[WebServer] {"event":"request_failed","requestId":"45c172e6-7d7d-4171-88f5-0f5f911f0af5","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"46ee38dc-0b2f-4ae0-8687-c579fb4197d4","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"3ba153d0-96e2-445e-8fb2-cb3d7f990b2e","code":"FORBIDDEN"}
+
+[58/92] [mobile] › tests\e2e\foundation.spec.ts:2:1 › public shell works on desktop and mobile
+[59/92] [mobile] › tests\e2e\foundation.spec.ts:11:1 › anonymous users cannot open protected workspace
+[60/92] [mobile] › tests\e2e\foundation.spec.ts:16:1 › anonymous APIs fail closed with no caching
+[WebServer] {"event":"request_failed","requestId":"4f7ee432-b03c-4261-8d03-fbed5bbc5029","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"4736854d-2f2c-4ba2-96bb-e60151f64842","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"8823a4b6-1baa-4e47-b049-9403b8b4b65a","code":"UNAUTHENTICATED"}
+[61/92] [mobile] › tests\e2e\foundation.spec.ts:22:1 › health and manifest expose no secrets
+[62/92] [mobile] › tests\e2e\foundation.spec.ts:27:1 › keyboard skip link targets content
+[63/92] [mobile] › tests\e2e\foundation.spec.ts:32:1 › invalid sign-in is rejected without auth request
+[64/92] [mobile] › tests\e2e\foundation.spec.ts:37:1 › private-file grants reject cross-origin requests
+[WebServer] {"event":"request_failed","requestId":"f22e5861-1e4a-49e7-a3e2-69eda755a0f4","code":"FORBIDDEN"}
+
+[65/92] [mobile] › tests\e2e\officer-access.spec.ts:3:1 › officer dashboard and consent reads authenticate before scope validation
+[WebServer] {"event":"request_failed","requestId":"ead3dfaa-c3b1-4971-9e3f-1d4114bd3164","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"cdb75835-110e-40be-8be9-6b5fcc6e7e5a","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"151a79a7-1d0d-4c5d-a225-6d74bd23f91c","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"7a6eba77-5a7b-476d-a3ef-9f60262befec","code":"UNAUTHENTICATED"}
+[66/92] [mobile] › tests\e2e\officer-access.spec.ts:12:1 › registration and visit writes authenticate and reject cross-origin requests
+[WebServer] {"event":"request_failed","requestId":"937be7c4-5b33-4e68-84a3-a2f3c6041892","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"f9c89ec0-1427-4bbb-a5dd-490a8c39d2a6","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"ea9ec1a9-c08a-4157-90db-792f18712652","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"d57acaec-35ff-4fda-8d3c-47b15840c7dc","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"ef5dfaff-4a80-430d-86a6-dc9a250a25ad","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"2f6183e1-568f-44c5-b058-d10bba892a4e","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"5d02e24d-e725-476a-ab6e-27d72d186255","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"2af5759f-28a4-4efa-b0f8-15dd70029701","code":"FORBIDDEN"}
+[67/92] [mobile] › tests\e2e\officer-access.spec.ts:18:1 › officer consent writes require a current session and same origin
+
+[WebServer] {"event":"request_failed","requestId":"0e5bff51-7b8d-43bc-a3d2-c9cb3668ef02","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"35ccadf0-8488-436e-a4f6-40dbf4db77d0","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"584f0f89-bb20-4106-bb0e-11687d91b06a","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"1a05b18e-1698-4e6f-a5a7-2197e4d805ef","code":"FORBIDDEN"}
+[68/92] [mobile] › tests\e2e\pilot.spec.ts:5:1 › pilot pages send anonymous users to sign-in before showing anything (P09-T003)
+[69/92] [mobile] › tests\e2e\pilot.spec.ts:14:1 › pilot API routes deny anonymous callers and cross-origin writes without leaking data
+
+[WebServer] {"event":"request_failed","requestId":"eae58701-e1b6-46ac-9c99-515fcd60defb","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"6dea4d9d-0dd8-4eb8-a910-6f50eff09da6","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"aec15bcd-a3fa-4148-a092-09ef655cabe9","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"f660ac54-ab3f-455e-a5f2-68244dc5279f","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"8b318532-2e6d-43c3-a2b6-6e614fa759c4","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"a08198ab-a32d-47fb-944d-06f9741abacc","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"b5d8eb10-f4aa-4919-a30c-89874a6de69f","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"1a1d2104-6cc8-43ff-9e59-636aa2901809","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"e1a0009e-ed11-472a-a705-12f1a0fbf163","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"c8e01f98-a17d-4678-a731-2c572a9e82ef","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"a606fd47-0a4e-470b-a341-9b49cbb954df","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"ef404d9e-99c3-46f7-b043-bbfbcfb47117","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"26fc01d9-8034-48dd-ba2c-5342d125b95e","code":"FORBIDDEN"}
+
+
+[WebServer] {"event":"request_failed","requestId":"b6ccf9e8-9eda-4ad3-bd81-1866097115f0","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"d1c0891c-9ee9-4252-baab-46b7fe41be64","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"5d0927f5-65c3-4d77-8a3b-adbd6307883c","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"70b29197-da31-4c20-aa84-a0f8236423f9","code":"FORBIDDEN"}
+
+[70/92] [mobile] › tests\e2e\pilot.spec.ts:26:1 › pilot evidence routes deny anonymous callers and cross-origin writes (P09-T006)
+[WebServer] {"event":"request_failed","requestId":"c744ecc7-185c-4ab1-88d7-5a6ae1175a41","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"98a48127-8dda-4c94-89e5-8bd7251c4ea5","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"bc6d8acf-e352-4444-96ab-38225e4f1ac6","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"51ab4ed7-8043-4100-9317-f8684ffb98d7","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"9b409729-fdb5-42e9-a7fc-30badb236f04","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"b63e6728-6671-4020-b7ae-378d01675779","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"cabd33cd-afa2-4a9c-8fec-cd7e4e07c827","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"19d21e36-d16a-46ad-aacd-314d411217b2","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"f322930a-60f1-4459-a169-2d87f8eb09ab","code":"FORBIDDEN"}
+
+[71/92] [mobile] › tests\e2e\production-api.spec.ts:4:1 › weather checks and confirmations require authentication, same-origin JSON and private failures
+[WebServer] {"event":"request_failed","requestId":"3cc8d061-88e1-4bce-8aa2-9d923f825f57","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"cba15a86-bf5e-4fe8-be51-cde0051c7b0e","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"73a325b5-0eb3-4d8f-ba42-b2982644b81d","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"a1613644-4dd7-478d-aea1-18b1f0f5f788","code":"FORBIDDEN"}
+
+
+[WebServer] {"event":"request_failed","requestId":"4a8a9cde-238a-4647-a8ca-484c718c2674","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"759230e3-172e-4c1f-a12c-253b6be588e2","code":"FORBIDDEN"}
+
+[72/92] [mobile] › tests\e2e\production-api.spec.ts:12:1 › closure commands require authentication, same-origin JSON and private failures
+[WebServer] {"event":"request_failed","requestId":"1b8e7624-c649-4d6d-b6c6-5b3de7b7df5e","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"d621e965-be6a-47f4-be69-5c30a255836a","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"20ce906d-1333-41f0-9631-2e00e4969f6b","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"32752116-d9ae-4b66-9415-46302cd2086f","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"ceb1a7f1-1bc6-46c1-8291-c7eec9ef0589","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"706ad33d-5592-4bc0-917f-4bf308c8ce94","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"1ef26051-0c30-4ab9-bb40-de57afa848e1","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"e55871c4-5139-46bc-9cf7-67777c81de80","code":"INVALID_INPUT"}
+
+[73/92] [mobile] › tests\e2e\production-api.spec.ts:24:1 › production reads deny anonymous callers before query or ID validation
+[WebServer] {"event":"request_failed","requestId":"390b93f1-e188-4e0d-9b58-114fa50b18e3","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"e5b3fdd3-af4f-407a-be89-777bcc56f21b","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"3ca39f1a-954b-4a3d-b432-68ccb26d9570","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"9664ed97-930c-4b7c-be1f-f71c63486aaa","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"2b09cf3a-8340-4365-b791-6e8cee74eff7","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"2d7afc35-d959-40dd-9e4c-566bfcc6f16e","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"575db02d-553a-4258-ac4d-ebd93f2764e5","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"3d71ac4d-0c3d-4634-a8ba-bd4b16bc08ff","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"f2996dc5-b6df-4e48-bc8e-b5f9ac237636","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"04251c55-e154-4afd-a89a-eae9d9f8e23d","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"de8878bb-5351-4941-a032-195a17906211","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"a689c6eb-0813-41a5-a988-608df7170d19","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"6abd18b5-3828-4f60-9fb5-46fd556082b1","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"3bca9f47-b879-469d-88c2-ad7a3183ac56","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"1ea98c92-db3d-4613-acd5-598c2b993de4","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"80823042-23cb-488b-8f9d-cf8c640198fd","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"d0a4b5f7-f7fa-46de-a97b-e996d66e9468","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"9b84d79e-20be-4fbc-bd4e-db5ffd0a0c29","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"1cc2afd5-7895-471b-9be8-21b6b6457ba0","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"e281032b-dbe6-4cd7-a994-49ecbde93e2a","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"7ed5377f-5bf0-4238-8797-c06dfb23d900","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"f28f1c35-850c-4390-b204-c99574178c07","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"1a1705c5-1b5b-4427-a8a8-a5fa264bd239","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"68112d62-9199-4a96-97c9-0decd8db6fb3","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"efd02409-5d8c-4ad8-b2e4-91c014aa8428","code":"UNAUTHENTICATED"}
+[74/92] [mobile] › tests\e2e\production-api.spec.ts:34:1 › production writes require a session and fail without leaking data
+[WebServer] {"event":"request_failed","requestId":"5af5cd1b-ae06-4e8f-89ae-ee361e24204a","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"55adcdca-e7e6-4a3d-a2df-127a71574e40","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"2f3d80f4-4935-40c1-a2d1-43f7454bd733","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"ade40b8a-08d8-4f1f-84c4-7212acc7b974","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"74d6081e-44ba-4dbd-bd3a-c1f9c9e74ab3","code":"UNAUTHENTICATED"}
+
+[75/92] [mobile] › tests\e2e\production-api.spec.ts:41:1 › production writes reject cross-origin, missing-origin and malformed JSON
+[WebServer] {"event":"request_failed","requestId":"8038c418-e5fb-4720-9ce9-276c0260cfca","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"7e7c645e-2214-4863-91b7-440df541bc8d","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"14a00e71-1b95-4560-9e97-1dead6ca7c14","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"e070955c-0e01-4179-a62b-9d56de69e4b6","code":"FORBIDDEN"}
+
+
+[WebServer] {"event":"request_failed","requestId":"51efd9bb-1588-4cd3-b1e3-761dd2af4da0","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"35d87cf6-5b6f-429d-a71d-bcd8465691d4","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"bc7c4e22-6681-40a8-9068-90e0350669a1","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"3f2a5a51-29c5-4657-aef7-6b3c553a2c16","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"3637f049-f7ad-4073-bf54-2636ad738a8a","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"4a2b6706-3ea2-4fc1-90ac-66e516340497","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"bd65f9bf-1d1b-44f3-8e54-0685707ea8a8","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"1525f720-c8fd-4a16-937d-b38365059180","code":"INVALID_INPUT"}
+
+[WebServer] {"event":"request_failed","requestId":"ac63ba78-80f0-4ac6-b7b9-f6ece5497955","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"7c89c66b-2e89-4925-89b6-0f3dfcf02699","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"67f8a351-5a18-40ab-a55f-3e648ae8946b","code":"INVALID_INPUT"}
+
+[76/92] [mobile] › tests\e2e\production-api.spec.ts:54:1 › crop and animal-type catalog reads require farm authorization and remain private
+[WebServer] {"event":"request_failed","requestId":"f6e5486b-c72b-4187-8e1d-773c68e446a8","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"455d8a86-835c-4cdc-9077-6051470b0570","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"4ffb66da-349c-4d62-9010-a8a7c623373b","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"89d5d2e2-80b6-4583-83a7-30a2a1817707","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"39ef5e7b-f1bc-4350-84be-4c67e9878b08","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"8615222d-6821-491e-b178-7a9a99d95463","code":"UNAUTHENTICATED"}
+
+[77/92] [mobile] › tests\e2e\production-api.spec.ts:63:1 › activity reads and writes deny anonymous callers without leaking data
+[WebServer] {"event":"request_failed","requestId":"d062b3a5-30b4-4e5f-b086-687c2029f46c","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"70894216-51b4-40aa-8cf8-5093ab9f8681","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"4e4c286d-12bf-4b00-8d4a-b42798a9196a","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"5eaf0e4b-4cc4-4027-9a2b-cdaf2829fc3d","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"daff829b-3e29-48a7-a7dc-ccea5e8f27cf","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"b3577f80-b31a-44f4-a3d2-4fee3e1d5c16","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"b26808bb-892a-4f6d-b900-cc7d1602bba8","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"8c7db2d8-1f84-43ca-a683-9c14a057ffd6","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"e4e6ad7c-f3ad-438e-9825-c447a5dd45e2","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"649f089d-3b28-4263-a878-bfefc043610a","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"a1811b79-4b59-4693-ba23-a4b37cc7efde","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"13055bff-985f-4fac-8720-cd02aa589912","code":"FORBIDDEN"}
+
+
+[WebServer] {"event":"request_failed","requestId":"43c63e2d-1e76-4299-b0b5-b70082fc49d8","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"8d639b1d-1d15-45b2-a211-6deb6105c961","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"097d0e1a-f67a-420e-9ca8-d917fde81195","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"19a257dd-8eef-475f-a1da-431072e935db","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"2034b53a-ca9b-4716-9ed5-94d829e50cf7","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"9e376f31-4c0d-4c78-abb4-adc1666fb4d3","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"b64641d8-00ae-4d38-9816-6514b0c9805c","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"154b5ede-51e0-43fc-b37e-f36172065f03","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"728acccb-1544-4a43-a110-c8b00c42c5c2","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"b50154c5-168e-4993-a6b3-4e7c317a1fed","code":"FORBIDDEN"}
+
+[78/92] [mobile] › tests\e2e\production-api.spec.ts:78:1 › the offline account route denies anonymous callers without leaking data
+[WebServer] {"event":"request_failed","requestId":"dd63462d-872a-4beb-b1f2-bfcfdef55e91","code":"UNAUTHENTICATED"}
+
+[79/92] [mobile] › tests\e2e\production-api.spec.ts:83:1 › the sync push route requires a session and same-origin JSON
+[WebServer] {"event":"request_failed","requestId":"c26fb416-ffef-4d67-98d7-bd18e79987dc","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"cd7513fb-864b-4c8a-ae03-967e7f1ec961","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"e1a38ded-820e-4e8a-bc1e-49663d1cf16f","code":"FORBIDDEN"}
+
+[80/92] [mobile] › tests\e2e\production-api.spec.ts:90:1 › offline pull and photo routes deny anonymous callers without leaking data
+[WebServer] {"event":"request_failed","requestId":"effe2290-e19b-43aa-b49a-235ad95bc71b","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"d75140fd-006a-481a-a65e-cf06f55ddb1b","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"43523265-9b26-42e3-b12e-beee093281c5","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"d6c9e598-ad29-4b7d-a44a-caa9b8200949","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"e96ba39b-6a03-42ff-ba6f-32b1975e3a19","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"a8c71289-ec80-4e76-af44-9c99de31aeff","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"5bc1f343-91fb-4701-988e-4c03d333627c","code":"FORBIDDEN"}
+
+[81/92] [mobile] › tests\e2e\production-api.spec.ts:104:1 › assistant questions deny anonymous callers and cross-origin writes without leaking data (P11)
+[WebServer] {"event":"request_failed","requestId":"803f3225-74f2-4eaa-8e5a-b515f02ce537","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"b7c58fc9-1355-431c-8e12-936a0215e685","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"b7e56ad4-8e00-4f98-9519-25eb8d71d4ff","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"679e0381-604c-4b4f-a5b0-00ba7d1683ce","code":"FORBIDDEN"}
+
+
+[WebServer] {"event":"request_failed","requestId":"8193ca63-3ab8-44b8-b382-196156cf9336","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"14cfbb8c-85a2-46ff-84c3-dedc3ad4e9eb","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"930e4754-e072-4fb8-882c-eafc59443fd4","code":"FORBIDDEN"}
+
+[82/92] [mobile] › tests\e2e\production-pages.spec.ts:2:1 › weather tests redirect anonymous users before reading farm context
+[83/92] [mobile] › tests\e2e\production-pages.spec.ts:8:1 › production pages send anonymous users to sign-in before rendering farm records
+[84/92] [mobile] › tests\e2e\production-pages.spec.ts:17:1 › production pages return a private, real redirect for anonymous requests
+[85/92] [mobile] › tests\e2e\production-pages.spec.ts:25:1 › accounting pages send anonymous users to sign-in before rendering farm money records (P04-T003)
+[86/92] [mobile] › tests\e2e\production-pages.spec.ts:34:1 › activity calendar and repeating pages send anonymous users to sign-in
+[87/92] [mobile] › tests\e2e\production-pages.spec.ts:42:1 › the Ask page sends anonymous users to sign-in before rendering any question (P11)
+[88/92] [mobile] › tests\e2e\production-pages.spec.ts:49:1 › the offline shell is public, static and free of farm data
+[89/92] [mobile] › tests\e2e\voice-api.spec.ts:3:1 › voice draft reads authenticate before validation and remain private
+[WebServer] {"event":"request_failed","requestId":"32f2a3b5-6e2b-4a10-a169-735905449dd6","code":"UNAUTHENTICATED"}
+
+
+[WebServer] {"event":"request_failed","requestId":"30227f2a-6073-485d-bcf0-b0a71885ea1a","code":"UNAUTHENTICATED"}
+[90/92] [mobile] › tests\e2e\voice-api.spec.ts:11:1 › the expense review page requires sign-in and keeps microphone access disabled
+[91/92] [mobile] › tests\e2e\voice-api.spec.ts:18:1 › voice draft writes and confirmation enforce origin, JSON and authentication
+[WebServer] {"event":"request_failed","requestId":"1528c871-0f14-4817-976b-671d9b0f5198","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"268235e5-c900-4e7d-a534-b86e78a92f58","code":"FORBIDDEN"}
+
+
+[WebServer] {"event":"request_failed","requestId":"12441afc-a6ca-4f30-b9e8-5470efe799d9","code":"UNAUTHENTICATED"}
+[WebServer] {"event":"request_failed","requestId":"5d3369c5-31b0-45ac-a9f5-b411e2f2c5f9","code":"INVALID_INPUT"}
+
+
+[WebServer] {"event":"request_failed","requestId":"a1ff74fe-4086-42e5-9028-746afa17b729","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"7d9bd90a-c479-4d38-ac84-03f432b4734e","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"6689fd10-8adc-45b2-bcdb-c243a0938428","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"255be13e-e6a2-47b3-8a26-c35cefaf05f8","code":"INVALID_INPUT"}
+
+
+[WebServer] {"event":"request_failed","requestId":"eeae18dd-7ecd-41b3-aff1-090ac90fd880","code":"FORBIDDEN"}
+[WebServer] {"event":"request_failed","requestId":"f1b7fb6d-1877-4808-9bef-b72932298985","code":"FORBIDDEN"}
+
+[WebServer] {"event":"request_failed","requestId":"4fcc52d9-4559-4aec-9cce-eb4cb08e9899","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"0cc57e0c-f979-4d40-973a-a91f67f0db5f","code":"INVALID_INPUT"}
+
+[92/92] [mobile] › tests\e2e\voice-api.spec.ts:33:1 › voice input capabilities and suggestions are authenticated and cannot take scope from a body
+[WebServer] {"event":"request_failed","requestId":"6a33eed7-d240-4237-8bb0-bd4da1b0f262","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"ce588536-11a1-40f5-9ee9-baffba39a0c1","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"dad7f321-2475-45ab-bf24-db41a293f88c","code":"UNAUTHENTICATED"}
+
+[WebServer] {"event":"request_failed","requestId":"be294707-8753-4ef8-b292-4f2e17b10ff2","code":"FORBIDDEN"}
+
+  92 passed (28.6s)

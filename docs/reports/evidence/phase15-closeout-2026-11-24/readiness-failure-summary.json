@@ -1,0 +1,10 @@
+{
+  "errors": [
+    {
+      "message": "Failed to load resource: net::ERR_NO_BUFFER_SPACE",
+      "path": "/_next/static/chunks/0gy1dczh8t-w0.js"
+    }
+  ],
+  "networkEvents": 11,
+  "syncPullRequests": 0
+}

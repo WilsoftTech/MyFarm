@@ -60,6 +60,14 @@ jobs:
         run: node tests/support/phase14-recovery.mjs
         env:
           MYFARM_TEST_CONTAINER: ${{ job.services.postgres.id }}
+      - name: Cooperative consent, procurement and ledger verification outside UTC
+        run: npm run test:integration -- tests/integration/cooperatives.test.ts
+        env:
+          TZ: Africa/Nairobi
+      - name: Cooperative ledger recovery rehearsal
+        run: node tests/support/phase15-recovery.mjs
+        env:
+          MYFARM_TEST_CONTAINER: ${{ job.services.postgres.id }}
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e

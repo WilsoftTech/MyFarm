@@ -1,0 +1,65 @@
+
+ RUN  v5.0.3 D:/Myfarm
+
+ ❯ |integration| tests/integration/farmer-registry-runtime-role.test.ts (5 tests | 1 failed) 888ms
+   ❯ registry under the restricted runtime role (5)
+     × cannot join, escalate or revoke memberships 45ms
+ ❯ |integration| tests/integration/catalog-release-migration.test.ts (4 tests | 4 skipped) 418ms
+node :
+At line:2 char:173
++ ... DIRECT_URL; node node_modules/vitest/vitest.mjs run --project integra ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| tests/integration/catalog-release-migration.test.ts [
+tests/integration/catalog-release-migration.test.ts ]
+error: relation "CooperativeMember" does not exist
+ ❯ node_modules/pg/lib/client.js:545:17
+ ❯ runSqlFile tests/support/provisioning.ts:12:7
+     10|
+     11| export async function runSqlFile(client: Client, path: string, transfo…
+     12| try { await client.query(transform(readFileSync(path, "utf8"))); }
+       |       ^
+     13| catch (error) { await client.query("ROLLBACK").catch(() => {}); throw …
+     14| }
+ ❯ tests/integration/catalog-release-migration.test.ts:31:91
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |integration| tests/integration/farmer-registry-runtime-role.test.ts > registry under the restricted runtime
+role > cannot join, escalate or revoke memberships
+AssertionError: promise resolved "{ …(4) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "createdAt": 2026-11-23T21:21:24.227Z,
++   "id": "41e87fdf-ed9e-47f8-8165-b3d817f65f64",
++   "kind": "ORGANIZATION",
++   "name": "Co-op",
+  }
+
+ ❯ tests/integration/farmer-registry-runtime-role.test.ts:73:93
+     71| await expect(runtime.membership.create({ data: { userId: users.b, orga…
+     72| await expect(runtime.membership.create({ data: { userId: users.b, orga…
+     73| await expect(runtime.organization.create({ data: { name: "Co-op", kind…
+       |                                                                                             ^
+     74| await expect(runtime.membership.updateMany({ where: { userId: users.a …
+     75| expect(await owner.membership.count({ where: { organizationId: tenantA…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 42 passed (44)
+      Tests  1 failed | 475 passed | 4 skipped (480)
+   Start at  00:18:47
+   Duration  163.45s (tests 90%, import 8%, transform 2%)

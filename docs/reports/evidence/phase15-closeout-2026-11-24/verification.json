@@ -1,0 +1,53 @@
+{
+  "scope": "local synthetic PostgreSQL and fixture Auth; no hosted deployment",
+  "unitComponent": {
+    "passed": 1496,
+    "exitCode": 0
+  },
+  "focusedUnitComponent": {
+    "passed": 27,
+    "exitCode": 0
+  },
+  "integration": {
+    "passed": 481,
+    "exitCode": 0
+  },
+  "nonUtcCooperative": {
+    "passed": 21,
+    "exitCode": 0
+  },
+  "anonymousBrowser": {
+    "passed": 92,
+    "exitCode": 0
+  },
+  "signedInBrowser": {
+    "passed": 274,
+    "exitCode": 0
+  },
+  "focusedBrowser": {
+    "passed": 10,
+    "exitCode": 0
+  },
+  "lint": {
+    "exitCode": 0
+  },
+  "typecheck": {
+    "exitCode": 0
+  },
+  "boundaries": {
+    "exitCode": 0
+  },
+  "normalBuild": {
+    "exitCode": 0
+  },
+  "fixtureBuild": {
+    "exitCode": 0
+  },
+  "schemaDrift": {
+    "exitCode": 0,
+    "differences": 0
+  },
+  "actualRecovery": {
+    "exitCode": 0
+  }
+}

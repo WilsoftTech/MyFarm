@@ -2,11 +2,11 @@
 
 <!-- MYFARM-STATUS-START -->
 - Documentation review: REVIEWED - approved scope, source P0718-P0743, services, policies, offline acceptance and final evidence.
-- Implementation status: COMPLETED - 7/7 software tasks locally verified; owner phase acceptance remains pending.
-- Last reviewed: 2026-11-22 (Africa/Nairobi).
+- Implementation status: CLOSED - 7/7 software tasks locally and hosted-CI verified; owner accepted 2026-11-23.
+- Last reviewed: 2026-11-23 (Africa/Nairobi).
 - Related phase/task IDs: MYF-P14-T001 through T007; MYF-P14-AC001, MYF-P14-AC002; D-P14-001 through D-P14-006.
 - Verified completed work: Both acceptance criteria, local recovery and cumulative final software checks pass.
-- Remaining work/blockers: Owner acceptance, hosted officer provisioning/application verification and inherited release conditions.
+- Remaining work/blockers: P14-C2 through C4: hosted officer provisioning/application verification, field/device and inherited release conditions; P14-C1 resolved.
 - Evidence/report links: [Work implementation](phase-14-t005-t006-2026-11-22.md); [review inventory](phase-14-document-review-2026-11-22.md).
 <!-- MYFARM-STATUS-END -->
 
@@ -63,6 +63,8 @@ Earlier failures were corrected and are not waived. Test cleanup omitted organiz
 
 ## Acceptance and verdict
 
+Owner acceptance, 2026-11-23 (D-P14-008): the owner instructed "close 14 and implement phase 15" after the final hosted CI result was reported. Phase 14 is **CLOSED - PASS WITH CONDITIONS - LOCAL AND HOSTED CI VERIFICATION**, 7/7 software tasks. P14-C1 is resolved; P14-C2 through C4 remain. This acceptance supersedes the pending-owner-acceptance statements below, which describe the original engineering closeout. [Transition and Phase 15 authorization](phase-14-15-transition-2026-11-23.md).
+
 | Criterion | Result |
 |---|---|
 | MYF-P14-AC001 | PASS locally: permitted assignment counts, real empty/unavailable states, pagination, consent, reassignment, revocation and denied search/export; examples are not live numbers. |
@@ -81,6 +83,12 @@ Verdict: **PASS WITH CONDITIONS - LOCAL VERIFICATION**. T001-T007 software tasks
 Next: publish the verified implementation under D-P14-003, observe CI separately, obtain owner phase acceptance, and undertake hosted rollout only when separately authorized.
 
 ## Status-update evidence
+
+### Hosted CI follow-up - 2026-11-23
+
+The published final implementation commit `73dddd04a26709dafe42ab4b67254e67b9085a78` passed [MyFarm quality run 44995078487](https://github.com/WilsoftTech/MyFarm/actions/runs/44995078487), triggered on 2026-11-22 and observed on 2026-11-23 (Africa/Nairobi). The completed `verify` job reports success for lint, typecheck, boundaries, unit/component tests, integration tests, non-UTC suites, migration deployment and zero-drift check, all four recovery rehearsals including officer consent/visits, normal and signed-in fixture builds, anonymous browser tests and signed-in desktop/mobile acceptance. Only the failure-artifact upload was skipped. This is hosted CI using synthetic fixtures, not hosted-development application, session or storage acceptance.
+
+The CI portion of P14-C1 is now verified; owner review/acceptance remains pending. Verdict remains **PASS WITH CONDITIONS**, now with local and hosted CI verification. P14-C2 through C4 remain unchanged. No shared/hosted-development database change, deployment or Phase 15 start was performed. This documentation follow-up has not rerun local software suites because application, schema and test code are unchanged.
 
 Project checkpoint, roadmap, phase checklist, requirements traceability, affected architecture notes and task addenda are reconciled to these results. The document review register distinguishes deeper affected-content review from metadata/scope inventory. Historical evidence is preserved; source-extract body is not modified.
 

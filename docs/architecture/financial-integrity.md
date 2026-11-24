@@ -1,13 +1,13 @@
 # Financial and inventory integrity
 
 <!-- MYFARM-STATUS-START -->
-- Documentation review: REVIEWED - Phase 5 task-relevant contracts, implementation, status and evidence; historical sections preserved.
-- Implementation status: Phase 1-4 accepted with documented conditions; Phase 5 T001-T013 verified locally and in hosted CI; deployment conditions remain. No whole-architecture completion percentage claimed.
-- Last reviewed: 2026-11-03 (Africa/Nairobi), Phase 7 T013 audit.
-- Related phase/task IDs: Future phase architecture as referenced; Phase01 review session T001–T013; Phase02 review session (MYF-P02-T001–T013).
-- Verified completed work: Scope/status/provider applicability reviewed; no financial/offline/farm-domain runtime implementation verified.
-- Remaining work/blockers: Phase 7 awaits owner acceptance; real-device measurement, hosted CI and the hosted photo schema remain, with inherited production conditions.
-- Evidence/report links: [Current Phase 5 audit](../reports/phase-05-closeout-2026-10-29.md); [document review](../reports/phase-05-document-review-2026-10-29.md). Historical task evidence remains linked below.
+- Documentation review: REVIEWED - affected Phase 15 scope, ownership, current access, ledger and connectivity behavior; historical evidence retained below.
+- Implementation status: Phase 15 COMPLETED - 7/7 software tasks locally verified; conditional phase acceptance pending.
+- Last reviewed: 2026-11-24 (Africa/Nairobi).
+- Related phase/task IDs: MYF-P15-T001 through T007; D-P15-001 and D-P15-002; earlier references retained in dated sections.
+- Verified completed work: Phase 15 acceptance, cumulative local quality/browser/integration, zero drift and actual recovery checks pass; see closeout for counts and limits.
+- Remaining work/blockers: P15-C1 through C4; owner acceptance, hosted CI/rollout and inherited release conditions remain separate.
+- Evidence/report links: [Phase 15 closeout](../reports/phase-15-closeout-2026-11-24.md).
 <!-- MYFARM-STATUS-END -->
 
 All authoritative money/quantity calculations are deterministic application/domain services. AI may explain returned values; it cannot invent balances, recognize revenue or post financial entries. Money uses exact decimals plus currency, explicit rounding and approved basis (Q09). Do not aggregate currencies or confuse household consumption, transfers and income.
@@ -49,3 +49,8 @@ Final Phase 5 audit: T001-T013 and the hosted quality workflow pass at f999449 (
 Phase 6 activities link to an existing posted expense or purchase and store no money, so only the accounting record counts in totals and reversals show on the activity (D-P06-005). No activity command creates or changes an accounting record. Final Phase 6 audit: [hosted run 41524090703](https://github.com/WilsoftTech/MyFarm/actions/runs/41524090703); [closeout](../reports/phase-06-closeout-2026-11-03.md).
 
 Offline money entries go through the existing accounting service, so a lost response or retry creates one record, proved under racing retries on real PostgreSQL. Offline sale stays online-only because stock cannot be guaranteed offline. [Closeout](../reports/phase-07-closeout-2026-11-03.md).
+
+
+## Phase 15 organization implementation - 2026-11-24
+
+Organization procurement uses the existing exact four-place money and six-place quantity helpers. Price multiplication rounds half up once; overflows, mixed currencies, fractional birds/eggs, overpayment and negative effective-date stock are refused. One organization lot creates one acquisition entry, receipt and audit atomically. Store transfers and their reversals conserve quantity; payments never create stock/revenue. Reverse payments before reversing procurement. The organization ledger records its own accepted produce; no farmer stock/accounting deduction occurs and no provider payment is executed. [Implementation, verification and release limits](../reports/phase-15-closeout-2026-11-24.md).
